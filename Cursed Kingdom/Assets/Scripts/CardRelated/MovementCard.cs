@@ -14,14 +14,5 @@ public class MovementCard : Card
 
     public int DefaultMovementNumber { get => defaultMovementNumber; set => defaultMovementNumber = value; }
     public MovementCardData MovementCardData { get => movementCardData; set => movementCardData = value; }
-
-    private void Start()
-    {
-        InitializeCard();
-    }
-    protected override void InitializeCard()
-    {
-        //Test data. Will grab this from scriptable.
-        defaultMovementNumber = MovementCardData.DefaultCardValue;
-    }
+ 
 }

@@ -6,15 +6,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-public class Card : MonoBehaviour
+public class Card
 {
-    private Image cardBackImage;
+    [SerializeField] int cardNumber;
+    [SerializeField] string cardName;
+    [SerializeField] Sprite cardSprite;
+  
+    public int CardNumber { get => cardNumber; set => cardNumber = value; }
+    public string CardName { get => cardName; set => cardName = value; }
+    public Sprite CardSprite { get => cardSprite; set => cardSprite = value; }
+   
 
-    protected Image CardBackImage { get => cardBackImage; set => cardBackImage = value; }
-
-    protected virtual void InitializeCard()
+    public Card(int cardNumber = 0, string cardName = null, Image cardImage = null, Sprite cardSprite = null)
     {
-
+        CardNumber = cardNumber;
+        CardName = cardName;
+        CardSprite = cardSprite;
     }
 }
