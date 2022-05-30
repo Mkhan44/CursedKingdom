@@ -19,7 +19,7 @@ public class Card
     public Sprite CardSprite { get => cardSprite; set => cardSprite = value; }
    
 
-    public Card(int cardNumber = 0, string cardName = null, Image cardImage = null, Sprite cardSprite = null)
+    public Card(int cardNumber = 0, string cardName = null, Sprite cardSprite = null)
     {
         CardNumber = cardNumber;
         CardName = cardName;

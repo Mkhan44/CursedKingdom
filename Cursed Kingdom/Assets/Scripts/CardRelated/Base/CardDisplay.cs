@@ -12,15 +12,17 @@ public class CardDisplay : MonoBehaviour
 {
     //Test.
     public MovementCardData testCard;
-    [SerializeField] Card newCard;
+    [SerializeField] private Card newCard;
 
-    [SerializeField] Image cardImage;
-    [SerializeField] TextMeshProUGUI cardNameText;
-    [SerializeField] TextMeshProUGUI cardNumberText;
-    private void Start()
+    [SerializeField] private Image cardImage;
+    [SerializeField] private TextMeshProUGUI cardNameText;
+    [SerializeField] private TextMeshProUGUI cardNumberText;
+    protected virtual void Start()
     {
-        newCard = new Card(testCard.DefaultCardValue);
+        newCard = new Card(testCard.MovementValue, testCard.CardName, testCard.CardSprite);
 
         cardNumberText.text = newCard.CardNumber.ToString();
+        cardNameText.text = newCard.CardName.ToString();
+        cardImage.sprite = newCard.CardSprite;
     }
 }

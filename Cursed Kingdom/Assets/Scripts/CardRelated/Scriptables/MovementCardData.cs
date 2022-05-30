@@ -5,11 +5,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Movement Card Data", menuName = "Movement Card Data", order = 0)]
-public class MovementCardData : ScriptableObject
+public class MovementCardData : CardData
 {
-    [SerializeField] int defaultMovementValue = 1;
+    [SerializeField] private int movementValue = 1;
+    [SerializeField] private Sprite cardSprite;
 
-    public int DefaultCardValue { get => defaultMovementValue; set => defaultMovementValue = value; }
+
+    public int MovementValue { get => movementValue; set => movementValue = value; }
+    public Sprite CardSprite { get => cardSprite; set => cardSprite = value; }
 }
