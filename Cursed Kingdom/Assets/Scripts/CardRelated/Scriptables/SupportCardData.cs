@@ -7,13 +7,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(fileName = "Movement Card Data", menuName = "Card Data/Movement Card Data", order = 0)]
-public class MovementCardData : CardData
+[CreateAssetMenu(fileName = "Support Card Data", menuName = "Card Data/Support Card Data", order = 0)]
+public class SupportCardData : CardData
 {
-    [SerializeField] private int movementValue = 1;
     [SerializeField] private Sprite cardSprite;
 
-
-    public int MovementValue { get => movementValue; set => movementValue = value; }
     public Sprite CardSprite { get => cardSprite; set => cardSprite = value; }
 }
