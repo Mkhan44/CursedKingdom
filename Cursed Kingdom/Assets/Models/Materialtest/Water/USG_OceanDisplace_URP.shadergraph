@@ -37,7 +37,11 @@
             "m_Id": "ae2ab45be7c71689b266fbd14ddcfe49"
         }
     ],
-    "m_Keywords": [],
+    "m_Keywords": [
+        {
+            "m_Id": "56f0e54b6d1d4b56a33a5f206af9bae4"
+        }
+    ],
     "m_Dropdowns": [],
     "m_CategoryData": [
         {
@@ -1145,20 +1149,6 @@
                     "m_Id": "b20b1016ef2bb289b71be28949b07561"
                 },
                 "m_SlotId": 1
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
-                    "m_Id": "930da4088e998388b5a2d2969faac3b9"
-                },
-                "m_SlotId": 3
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "7c368d37429e477bbc6e254fbc05f7d3"
-                },
-                "m_SlotId": 0
             }
         },
         {
@@ -3638,6 +3628,9 @@
         },
         {
             "m_Id": "ae2ab45be7c71689b266fbd14ddcfe49"
+        },
+        {
+            "m_Id": "56f0e54b6d1d4b56a33a5f206af9bae4"
         }
     ]
 }
@@ -5091,6 +5084,30 @@
     "m_Property": {
         "m_Id": "e2fbe9a0090a6c86a668fc34e070b218"
     }
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
+    "m_ObjectId": "56f0e54b6d1d4b56a33a5f206af9bae4",
+    "m_Guid": {
+        "m_GuidSerialized": "1bbf15a1-7d85-45fe-985d-5ce28ea62022"
+    },
+    "m_Name": "Receive Shadows Off",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Receive Shadows Off",
+    "m_DefaultReferenceName": "_RECEIVE_SHADOWS_OFF",
+    "m_OverrideReferenceName": "_RECEIVE_SHADOWS_OFF",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_KeywordType": 0,
+    "m_KeywordDefinition": 0,
+    "m_KeywordScope": 1,
+    "m_KeywordStages": 63,
+    "m_Entries": [],
+    "m_Value": 1,
+    "m_IsEditable": true
 }
 
 {

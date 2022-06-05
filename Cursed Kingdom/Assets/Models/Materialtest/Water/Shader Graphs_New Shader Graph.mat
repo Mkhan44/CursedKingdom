@@ -9,8 +9,10 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Shader Graphs_New Shader Graph
   m_Shader: {fileID: -6465566751694194690, guid: e8d9a950c5b2dd04a830105ac31ef40c, type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ValidKeywords:
+  - _RECEIVE_SHADOWS_OFF
+  m_InvalidKeywords:
+  - _RECEIVE_SHADOWS_ON
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -25,7 +27,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_F61624DA:
-        m_Texture: {fileID: 2800000, guid: 50f0afaa02e84bc4bb5f2426a8e1b937, type: 3}
+        m_Texture: {fileID: 2800000, guid: da103b3b3f9b3e449bc579bd26ba6fce, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -86,13 +88,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Vector1_1C8FEA19: 1.14
-    - Vector1_50C74F87: 0.16
-    - Vector1_5DE38BA8: 0.782
+    - Vector1_1C8FEA19: 1
+    - Vector1_50C74F87: 0
+    - Vector1_5DE38BA8: 0.082
     - Vector1_712C90A3: 50
-    - Vector1_C8CD7BB7: 0
+    - Vector1_C8CD7BB7: 0.05
     - Vector1_EBF894A3: 0.12
-    - Vector1_F8D9205E: 1.6
+    - Vector1_F8D9205E: 0
     - _AlphaClip: 1
     - _Blend: 0
     - _BumpScale: 1
@@ -114,6 +116,8 @@ Material:
     - _Parallax: 0.005
     - _QueueControl: 1
     - _QueueOffset: 0
+    - _RECEIVE_SHADOWS: 1
+    - _RECEIVE_SHADOWS_OFF: 1
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
