@@ -11,6 +11,7 @@ public class TestManager : MonoBehaviour
     public GameObject cardToSpawn;
     public Transform cardParentCanvas;
 
+    Cinemachine.CinemachineVirtualCamera cinemachineVirtualCamera;
 
     private void Start()
     {
@@ -18,5 +19,12 @@ public class TestManager : MonoBehaviour
         {
             Instantiate(cardToSpawn, cardParentCanvas);
         }
+    }
+
+    void TestFunc()
+    {
+        cinemachineVirtualCamera = GameObject.Find("Player Cam").GetComponent<Cinemachine.CinemachineVirtualCamera>();
+
+        cinemachineVirtualCamera.m_Lens.Dutch = 55;
     }
 }

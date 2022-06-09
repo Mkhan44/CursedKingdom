@@ -8,5 +8,19 @@ using UnityEngine;
 
 public class Space : MonoBehaviour
 {
+    private void Start()
+    {
 
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"The: {collision.gameObject.name} just touched the {this.name}!");
+    }
 }
