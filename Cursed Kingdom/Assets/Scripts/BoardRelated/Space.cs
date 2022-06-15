@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class Space : MonoBehaviour
 {
+
+    public Transform spawnPoint;
     private void Start()
     {
 
