@@ -9,4 +9,20 @@ using UnityEngine;
 public class Space : MonoBehaviour
 {
 
+    public Transform spawnPoint;
+    private void Start()
+    {
+
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"The: {collision.gameObject.name} just touched the {this.name}!");
+    }
 }
