@@ -11,6 +11,8 @@ public class TestManager : MonoBehaviour
     public GameObject cardToSpawn;
     public Transform cardParentCanvas;
     public List<Transform> spaceSpawnPoints;
+    public GameObject spaceHolderParent;
+    public GameObject spacePrefab;
     public Transform playerCharacter;
     bool isPlayerMoving = false;
 
@@ -21,7 +23,17 @@ public class TestManager : MonoBehaviour
     private void Start()
     {
         currentListIndex = 0;
+
+        foreach (Transform child in spaceHolderParent.transform)
+        {
+            spaceSpawnPoints.Add(child.GetChild(0));
+        }
         //CardTest();
+    }
+
+    private void SpawnSpaces()
+    {
+
     }
 
     private void Update()
@@ -76,7 +88,7 @@ public class TestManager : MonoBehaviour
 
         while (Vector3.Distance(playerCharacter.localPosition, targetTransform.position) > 0.1f)
         {
-            Debug.Log(playerCharacter.localPosition);
+          //  Debug.Log(playerCharacter.localPosition);
             finalRate = rate * Time.deltaTime;
             playerCharacter.localPosition = Vector3.MoveTowards(playerCharacter.localPosition, targetTransform.position, finalRate);
             yield return null;
