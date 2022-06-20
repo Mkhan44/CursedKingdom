@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class TestManager : MonoBehaviour
 {
@@ -18,7 +19,12 @@ public class TestManager : MonoBehaviour
 
     int currentListIndex;
 
-    Cinemachine.CinemachineVirtualCamera cinemachineVirtualCamera;
+    CinemachineVirtualCamera cinemachineVirtualCamera;
+
+    public CinemachineVirtualCamera currentActiveCamera;
+    int currentActiveCameraIndex = 0;
+
+    public List<CinemachineVirtualCamera> cinemachineVirtualCameras;
 
     private void Start()
     {
@@ -28,6 +34,15 @@ public class TestManager : MonoBehaviour
         {
             spaceSpawnPoints.Add(child.GetChild(0));
         }
+
+        foreach(CinemachineVirtualCamera camera in cinemachineVirtualCameras)
+        {
+            camera.enabled = false;
+        }
+
+        currentActiveCamera.enabled = true;
+
+        
         //CardTest();
     }
 
@@ -38,9 +53,14 @@ public class TestManager : MonoBehaviour
 
     private void Update()
     {
-        if(!isPlayerMoving && Input.GetKeyDown(KeyCode.Space))
+        if (!isPlayerMoving && Input.GetKeyDown(KeyCode.Space))
         {
             StartMove();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            SwitchCamera();
         }
     }
 
@@ -105,9 +125,28 @@ public class TestManager : MonoBehaviour
         yield return null;
     }
 
+    //Right now this only works for 2 cameras. Anymore we'll have to specify the target based on what's clicked.
+    private void SwitchCamera(int index = 0)
+    {
+        index = currentActiveCameraIndex;
+        currentActiveCamera.enabled = false;
+        if(currentActiveCameraIndex == cinemachineVirtualCameras.Count - 1)
+        {
+            currentActiveCameraIndex = 0;
+            currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
+        }
+        else
+        {
+            currentActiveCameraIndex++;
+        }
+
+        currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
+        currentActiveCamera.enabled = true;
+    }
+
     void TestFunc()
     {
-        cinemachineVirtualCamera = GameObject.Find("Player Cam").GetComponent<Cinemachine.CinemachineVirtualCamera>();
+        cinemachineVirtualCamera = GameObject.Find("Player Cam").GetComponent<CinemachineVirtualCamera>();
 
         cinemachineVirtualCamera.m_Lens.Dutch = 55;
     }
@@ -119,4 +158,6 @@ public class TestManager : MonoBehaviour
             Instantiate(cardToSpawn, cardParentCanvas);
         }
     }
+
+
 }
