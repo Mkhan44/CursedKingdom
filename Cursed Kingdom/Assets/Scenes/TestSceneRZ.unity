@@ -604,7 +604,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.4594595, y: 1}
+    m_SensorSize: {x: 1.777027, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1024,7 +1024,7 @@ GameObject:
   - component: {fileID: 1172693060}
   - component: {fileID: 1172693059}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: CenterPiece [DONTDELETE]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1342,6 +1342,7 @@ GameObject:
   - component: {fileID: 1243701324}
   - component: {fileID: 1243701323}
   - component: {fileID: 1243701322}
+  - component: {fileID: 1243701326}
   m_Layer: 0
   m_Name: guy1idle1
   m_TagString: Untagged
@@ -1445,6 +1446,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1243701326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243701321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0def50232889eee45874cd1d0388e220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerIDIntVal: 0
 --- !u!1001 &1299181802
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1707,7 +1721,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.4594595, y: 1}
+    m_SensorSize: {x: 1.777027, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1723,7 +1737,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1466127767}
-  m_LocalRotation: {x: 0.61541224, y: -0.000000013979556, z: 0.000000010914907, w: 0.78820544}
+  m_LocalRotation: {x: 0.61541224, y: 0.000000013979556, z: -0.000000010914907, w: 0.78820544}
   m_LocalPosition: {x: 0, y: 38.9, z: -7.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1916,7 +1930,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1655089536}
-  m_LocalRotation: {x: 0.61541224, y: -0.000000013979556, z: 0.000000010914907, w: 0.78820544}
+  m_LocalRotation: {x: 0.61541224, y: 0.000000013979556, z: -0.000000010914907, w: 0.78820544}
   m_LocalPosition: {x: 0, y: 38.9, z: -7.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1943,7 +1957,7 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 2
+    m_Style: 3
     m_Time: 2
     m_CustomCurve:
       serializedVersion: 2
@@ -2096,6 +2110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1815364435}
   - component: {fileID: 1815364436}
+  - component: {fileID: 1815364437}
   m_Layer: 0
   m_Name: TestManager
   m_TagString: Untagged
@@ -2136,10 +2151,28 @@ MonoBehaviour:
   spaceHolderParent: {fileID: 2089887948}
   spacePrefab: {fileID: 4757597193770669747, guid: 2799510e6d7a85848a27ca473539695e, type: 3}
   playerCharacter: {fileID: 1243701325}
+  players:
+  - {fileID: 1243701326}
+  testMapManager: {fileID: 0}
   currentActiveCamera: {fileID: 603952623}
   cinemachineVirtualCameras:
   - {fileID: 603952623}
   - {fileID: 1466127768}
+--- !u!114 &1815364437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1815364434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a01e0f8c17dbb5c4c8759cb52d84259e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHighlightedSpace: {fileID: 0}
+  testManager: {fileID: 0}
+  currentSpaceInfo: {fileID: 0}
 --- !u!224 &1860666538 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3210510977898461854, guid: ffa6bcaf5d39d8a4fa397c3ebcf2537f, type: 3}
@@ -2650,10 +2683,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2089887949}
     m_Modifications:
-    - target: {fileID: 4757597193770669745, guid: 2799510e6d7a85848a27ca473539695e, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
     - target: {fileID: 4757597193770669747, guid: 2799510e6d7a85848a27ca473539695e, type: 3}
       propertyPath: m_Name
       value: Cube

@@ -8,21 +8,20 @@ using UnityEngine;
 
 public class Space : MonoBehaviour
 {
-
     public Transform spawnPoint;
-    private void Start()
-    {
-
-
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        
-    }
+    public GameObject selectedBorder;
 
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log($"The: {collision.gameObject.name} just touched the {this.name}!");
+
+        TestPlayer playerReference = collision.gameObject.GetComponent<TestPlayer>();
+
+        if(playerReference != null)
+        {
+            playerReference.CurrentSpacePlayerIsOn = this;
+        }
     }
+
+
 }

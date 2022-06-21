@@ -17,6 +17,9 @@ public class TestManager : MonoBehaviour
     public Transform playerCharacter;
     bool isPlayerMoving = false;
 
+    public List<TestPlayer> players;
+    public TestMapManager testMapManager;
+
     int currentListIndex;
 
     CinemachineVirtualCamera cinemachineVirtualCamera;
@@ -28,6 +31,7 @@ public class TestManager : MonoBehaviour
 
     private void Start()
     {
+        testMapManager = GetComponent<TestMapManager>();
         currentListIndex = 0;
 
         foreach (Transform child in spaceHolderParent.transform)
@@ -134,7 +138,10 @@ public class TestManager : MonoBehaviour
         {
             currentActiveCameraIndex = 0;
             currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
+            testMapManager.ActivateHighlight();
         }
+
+        //For now this is the UI camera.
         else
         {
             currentActiveCameraIndex++;
