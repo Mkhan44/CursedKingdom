@@ -15,11 +15,15 @@ public class Space : MonoBehaviour
     {
         Debug.Log($"The: {collision.gameObject.name} just touched the {this.name}!");
 
-        TestPlayer playerReference = collision.gameObject.GetComponent<TestPlayer>();
+        Player playerReference = collision.gameObject.GetComponent<Player>();
 
         if(playerReference != null)
         {
             playerReference.CurrentSpacePlayerIsOn = this;
+        }
+        else
+        {
+            Debug.LogWarning("playerReference is null!");
         }
     }
 
