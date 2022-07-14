@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     private int maxHealth;
     private int currentHealth;
     private int currentLevel;
+    private int spacesLeftToMove;
+    private bool isMoving;
     private bool isOnCooldown;
     private bool isPoisoned;
     private bool isCursed;
@@ -25,9 +27,9 @@ public class Player : MonoBehaviour
 
     public int MaxHealth { get => maxHealth; set => maxHealth = value; }
     public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
-
     public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
-
+    public int SpacesLeftToMove { get => spacesLeftToMove; set => spacesLeftToMove = value; }
+    public bool IsMoving { get => isMoving; set => isMoving = value; }
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
     public bool IsCursed { get => isCursed; set => isCursed = value; }
@@ -45,6 +47,7 @@ public class Player : MonoBehaviour
         currentHealth = maxHealth;
         CurrentLevel = 1;
         AbleToLevelUp = false;
+        SpacesLeftToMove = 0;
        // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
 
@@ -52,5 +55,22 @@ public class Player : MonoBehaviour
     {
         CurrentLevel += 1;
         AbleToLevelUp = false;
+    }
+
+    public void HandleLevelUp(int level)
+    {
+        switch(level)
+        {
+            case 2:
+                {
+                    Debug.Log("lol");
+                    break;
+                }
+            default:
+                {
+                    Debug.Log("Def.");
+                    break;
+                }
+        }
     }
 }

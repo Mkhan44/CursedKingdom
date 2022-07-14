@@ -20,6 +20,7 @@ public class TestManager : MonoBehaviour
     bool isPlayerMoving = false;
 
     public List<ClassData> classdatas;
+    public List<SpaceData> spaceDatasTest;
     public List<Player> players;
     public TestMapManager testMapManager;
 
@@ -63,6 +64,8 @@ public class TestManager : MonoBehaviour
 
         currentActiveCamera.enabled = true;
 
+        InitializeSpaces();
+
         //TEST
 
         //int randomNum = Random.Range(0, classdatas.Count);
@@ -71,9 +74,26 @@ public class TestManager : MonoBehaviour
         //CardTest();
     }
 
-    private void SpawnSpaces()
+    private void InitializeSpaces()
     {
+        int spaceDataNum = 0;
+        foreach(Transform space in spaceSpawnPoints)
+        {
+            Space theSpaceData = space.transform.parent.GetComponent<Space>();
 
+            if(theSpaceData is null)
+            {
+                Debug.LogWarning("Failed to find Space component on the space.");
+                return;
+            }
+
+            theSpaceData.spaceData = spaceDatasTest[spaceDataNum];
+
+            if (spaceDataNum < spaceDatasTest.Count -1)
+            {
+                spaceDataNum += 1;
+            }
+        }
     }
 
     private void Update()
@@ -122,12 +142,19 @@ public class TestManager : MonoBehaviour
 
     public IEnumerator MoveTowards(Transform targetTransform, int spacesToMove = 1)
     {
+        //Test. We'll need to find a way to find out which player is currently moving.
+        Player playerReference = playerCharacter.GetComponent<Player>();
+
+        playerReference.SpacesLeftToMove = spacesToMove;
+
+        playerReference.IsMoving = true;
         isPlayerMoving = true;
+        
         float rate = 1.5f;
 
         if(spacesToMove > 1)
         {
-            rate = 2.0f;
+            rate = 3.0f;
         }
         float finalRate;
 
@@ -145,6 +172,10 @@ public class TestManager : MonoBehaviour
         if (spacesToMove > 1)
         {
             StartMove(spacesToMove - 1);
+        }
+        else
+        {
+            playerCharacter.GetComponent<Player>().SpacesLeftToMove = 0;
         }
 
         yield return null;
