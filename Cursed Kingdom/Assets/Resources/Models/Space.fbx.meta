@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 6e801ed8c061f044596adba2adb479e8
+guid: 4a7adf41316a55341be9721ce095785f
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable: []
@@ -7,11 +7,16 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Space
-    second: {fileID: 2100000, guid: e6881b38a0d80ab48b6d66ec68a3aadb, type: 2}
+      name: SpaceSides
+    second: {fileID: 2100000, guid: 89182577d270b294abfd109142e9a77f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SpaceTop
+    second: {fileID: 2100000, guid: 99d3d6a2a6e479f41a8978c990d5333f, type: 2}
   materials:
     materialImportMode: 2
-    materialName: 1
+    materialName: 0
     materialSearch: 1
     materialLocation: 1
   animations:
@@ -93,7 +98,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 0.01
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

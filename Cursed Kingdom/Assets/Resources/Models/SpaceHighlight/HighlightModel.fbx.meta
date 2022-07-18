@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4a7adf41316a55341be9721ce095785f
+guid: a9d240efd2c75844d86b903f86c6e27c
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable: []
@@ -7,18 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Niraj_Shoe_Stitching
-    second: {fileID: 2100000, guid: 1a0c8aacd945a03499489bc57eea38c2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: SpaceSides
-    second: {fileID: 2100000, guid: 89182577d270b294abfd109142e9a77f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: SpaceTop
-    second: {fileID: 2100000, guid: 99d3d6a2a6e479f41a8978c990d5333f, type: 2}
+      name: HighlightBox
+    second: {fileID: 2100000, guid: b67f9cbcad1b7f345a635a2e806ca7ad, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -50,7 +40,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 10
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -103,7 +93,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.099999994
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
