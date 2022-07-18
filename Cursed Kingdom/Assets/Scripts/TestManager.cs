@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using Random = UnityEngine.Random;
 
 public class TestManager : MonoBehaviour
 {
@@ -14,8 +15,14 @@ public class TestManager : MonoBehaviour
     public List<Transform> spaceSpawnPoints;
     public GameObject spaceHolderParent;
     public GameObject spacePrefab;
+    public GameObject playerPrefab;
     public Transform playerCharacter;
     bool isPlayerMoving = false;
+
+    public List<ClassData> classdatas;
+    public List<SpaceData> spaceDatasTest;
+    public List<Player> players;
+    public TestMapManager testMapManager;
 
     int currentListIndex;
 
@@ -28,27 +35,65 @@ public class TestManager : MonoBehaviour
 
     private void Start()
     {
-        currentListIndex = 0;
+        
+        testMapManager = GetComponent<TestMapManager>();
 
         foreach (Transform child in spaceHolderParent.transform)
         {
             spaceSpawnPoints.Add(child.GetChild(0));
         }
 
-        foreach(CinemachineVirtualCamera camera in cinemachineVirtualCameras)
+        //Spawn player.
+        int randomSpawnSpace = Random.Range(0, spaceSpawnPoints.Count-1);
+        currentListIndex = randomSpawnSpace;
+        GameObject tempPlayer = Instantiate(playerPrefab, spaceSpawnPoints[randomSpawnSpace].transform);
+        
+        tempPlayer.transform.parent = null;
+        players.Add(tempPlayer.GetComponent<Player>());
+
+        playerCharacter = tempPlayer.transform;
+
+        cinemachineVirtualCameras[0].LookAt = playerCharacter;
+        cinemachineVirtualCameras[0].Follow = playerCharacter;
+
+
+        foreach (CinemachineVirtualCamera camera in cinemachineVirtualCameras)
         {
             camera.enabled = false;
         }
 
         currentActiveCamera.enabled = true;
 
-        
+        InitializeSpaces();
+
+        //TEST
+
+        //int randomNum = Random.Range(0, classdatas.Count);
+
+        //players[0].InitializePlayer(classdatas[randomNum]);
         //CardTest();
     }
 
-    private void SpawnSpaces()
+    private void InitializeSpaces()
     {
+        int spaceDataNum = 0;
+        foreach(Transform space in spaceSpawnPoints)
+        {
+            Space theSpaceData = space.transform.parent.GetComponent<Space>();
 
+            if(theSpaceData is null)
+            {
+                Debug.LogWarning("Failed to find Space component on the space.");
+                return;
+            }
+
+            theSpaceData.spaceData = spaceDatasTest[spaceDataNum];
+
+            if (spaceDataNum < spaceDatasTest.Count -1)
+            {
+                spaceDataNum += 1;
+            }
+        }
     }
 
     private void Update()
@@ -97,12 +142,19 @@ public class TestManager : MonoBehaviour
 
     public IEnumerator MoveTowards(Transform targetTransform, int spacesToMove = 1)
     {
+        //Test. We'll need to find a way to find out which player is currently moving.
+        Player playerReference = playerCharacter.GetComponent<Player>();
+
+        playerReference.SpacesLeftToMove = spacesToMove;
+
+        playerReference.IsMoving = true;
         isPlayerMoving = true;
+        
         float rate = 1.5f;
 
         if(spacesToMove > 1)
         {
-            rate = 2.0f;
+            rate = 3.0f;
         }
         float finalRate;
 
@@ -121,6 +173,10 @@ public class TestManager : MonoBehaviour
         {
             StartMove(spacesToMove - 1);
         }
+        else
+        {
+            playerCharacter.GetComponent<Player>().SpacesLeftToMove = 0;
+        }
 
         yield return null;
     }
@@ -134,9 +190,12 @@ public class TestManager : MonoBehaviour
         {
             currentActiveCameraIndex = 0;
             currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
+            
         }
+
         else
         {
+            testMapManager.ActivateHighlight();
             currentActiveCameraIndex++;
         }
 
