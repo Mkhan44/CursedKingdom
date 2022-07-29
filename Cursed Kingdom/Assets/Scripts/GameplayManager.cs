@@ -8,11 +8,11 @@ using UnityEngine;
 using Cinemachine;
 using Random = UnityEngine.Random;
 
-public class TestManager : MonoBehaviour
+public class GameplayManager : MonoBehaviour
 {
     public GameObject cardToSpawn;
     public Transform cardParentCanvas;
-    public List<Transform> spaceSpawnPoints;
+    public List<Space> spaces;
     public GameObject spaceHolderParent;
     public GameObject spacePrefab;
     public GameObject playerPrefab;
@@ -23,6 +23,7 @@ public class TestManager : MonoBehaviour
     public List<SpaceData> spaceDatasTest;
     public List<Player> players;
     public TestMapManager testMapManager;
+    public BoardManager boardManager;
 
     int currentListIndex;
 
@@ -35,18 +36,26 @@ public class TestManager : MonoBehaviour
 
     private void Start()
     {
-        
+        boardManager = GetComponent<BoardManager>();
         testMapManager = GetComponent<TestMapManager>();
+
+        boardManager.SetupBoard();
 
         foreach (Transform child in spaceHolderParent.transform)
         {
-            spaceSpawnPoints.Add(child.GetChild(0));
+            Space childSpace = child.GetComponent<Space>();
+
+            if(childSpace != null)
+            {
+                spaces.Add(childSpace);
+            }
+         
         }
 
         //Spawn player.
-        int randomSpawnSpace = Random.Range(0, spaceSpawnPoints.Count-1);
+        int randomSpawnSpace = Random.Range(0, spaces.Count-1);
         currentListIndex = randomSpawnSpace;
-        GameObject tempPlayer = Instantiate(playerPrefab, spaceSpawnPoints[randomSpawnSpace].transform);
+        GameObject tempPlayer = Instantiate(playerPrefab, spaces[randomSpawnSpace].transform);
         
         tempPlayer.transform.parent = null;
         players.Add(tempPlayer.GetComponent<Player>());
@@ -77,17 +86,10 @@ public class TestManager : MonoBehaviour
     private void InitializeSpaces()
     {
         int spaceDataNum = 0;
-        foreach(Transform space in spaceSpawnPoints)
+        foreach(Space space in spaces)
         {
-            Space theSpaceData = space.transform.parent.GetComponent<Space>();
-
-            if(theSpaceData is null)
-            {
-                Debug.LogWarning("Failed to find Space component on the space.");
-                return;
-            }
-
-            theSpaceData.spaceData = spaceDatasTest[spaceDataNum];
+            space.spaceData = spaceDatasTest[spaceDataNum];
+            space.SetupSpace();
 
             if (spaceDataNum < spaceDatasTest.Count -1)
             {
@@ -115,20 +117,20 @@ public class TestManager : MonoBehaviour
     {
         // Debug.Log("clicked space.");
         //We're at the end, so spawn at the first point.
-        if (currentListIndex == spaceSpawnPoints.Count - 1)
+        if (currentListIndex == spaces.Count - 1)
         {
-            StartCoroutine(MoveTowards(spaceSpawnPoints[0], spacesToMove));
+            StartCoroutine(MoveTowards(spaces[0].spawnPoint, spacesToMove));
             //playerCharacter.localPosition = spaceSpawnPoints[0].position;
             currentListIndex = 0;
             //  Debug.Log("At last index.");
             return;
         }
 
-        for (int i = 0; i < spaceSpawnPoints.Count; i++)
+        for (int i = 0; i < spaces.Count; i++)
         {
             if (i == currentListIndex)
             {
-                StartCoroutine(MoveTowards(spaceSpawnPoints[i + 1], spacesToMove));
+                StartCoroutine(MoveTowards(spaces[i + 1].spawnPoint, spacesToMove));
                 //playerCharacter.localPosition = spaceSpawnPoints[i + 1].position;
                 currentListIndex = i + 1;
                 //  Debug.Log($"Moving to index {i+1}");

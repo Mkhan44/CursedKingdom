@@ -13,10 +13,10 @@ public class TestCardMoveButton : MonoBehaviour
     public int testMoveNumber;
     public TextMeshProUGUI moveText;
 
-    public TestManager testManagerRef;
+    public GameplayManager testManagerRef;
     private void Start()
     {
-        testManagerRef = GameObject.Find("TestManager").GetComponent<TestManager>();
+        testManagerRef = GameObject.Find("TestManager").GetComponent<GameplayManager>();
         if(testManagerRef != null)
         {
             this.GetComponent<Button>().onClick.AddListener(() => testManagerRef.StartMove(testMoveNumber));

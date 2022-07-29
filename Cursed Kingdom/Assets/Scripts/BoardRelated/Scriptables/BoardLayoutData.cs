@@ -9,8 +9,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Board layout Data", menuName = "Board Layout/Board layout Data", order = 0)]
 public class BoardLayoutData : ScriptableObject
 {
-    public List<SpaceData> MagicianLevelOneRow;
-    public List<SpaceData> ArcherLevelOneRow;
-    public List<SpaceData> ThiefLevelOneRow;
-    public List<SpaceData> WarriorLevelOneRow;
+    public GameObject regularSpacePrefab;
+    public GameObject smallSpacePrefab;
+
+    public Vector3 boardCenter;
+
+    //Prolly not needed, we'll do calculations to figure this out.
+    public Vector3 firstSpaceSpawnPoint;
+
+    [Range(1,20)]
+    public int numSpacesPerRow;
 }

@@ -9,12 +9,12 @@ using UnityEngine;
 public class TestMapManager : MonoBehaviour
 {
     public GameObject currentHighlightedSpace;
-    public TestManager testManager;
+    public GameplayManager testManager;
     public Space currentSpaceInfo;
 
     private void Start()
     {
-        testManager = this.GetComponent<TestManager>();
+        testManager = this.GetComponent<GameplayManager>();
     }
 
     public void ActivateHighlight(int playerIntVal = 0)

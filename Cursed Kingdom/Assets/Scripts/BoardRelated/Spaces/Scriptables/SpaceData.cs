@@ -27,5 +27,6 @@ public class SpaceData : ScriptableObject
     public List<SpaceType> thisSpaceTypes;
     public string spaceName = "Space";
     public string spaceDescription = "Please input a space description...";
-    public Texture spaceTexture;
+    public Sprite spaceSprite;
+    public Material spaceMaterial;
 }

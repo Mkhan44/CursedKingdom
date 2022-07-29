@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f454f9c3391ebe4b8887214178040fd, type: 3}
-  m_Name: Test Board layout Data
+  m_Name: Board layout Data
   m_EditorClassIdentifier: 
-  MagicianLevelOneRow:
-  - {fileID: 11400000, guid: 2e324dd6a150bcc4abb4704354556dfa, type: 2}
-  ArcherLevelOneRow: []
-  ThiefLevelOneRow: []
-  WarriorLevelOneRow: []
+  regularSpacePrefab: {fileID: 463655295303739658, guid: 7903f45d78e05074ea395ca142b5ee3d, type: 3}
+  smallSpacePrefab: {fileID: 7540217166602125123, guid: 4d82e92591d399f4aac9a9db202dff9a, type: 3}
+  boardCenter: {x: 0, y: 0, z: 0}
+  firstSpaceSpawnPoint: {x: 0, y: 0, z: 0}
+  numSpacesPerRow: 10

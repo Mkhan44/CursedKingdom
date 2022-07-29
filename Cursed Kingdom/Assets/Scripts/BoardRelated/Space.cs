@@ -11,21 +11,22 @@ public class Space : MonoBehaviour
     public Transform spawnPoint;
     public GameObject selectedBorder;
     public SpaceData spaceData;
-
-    public TestManager testManagerRef;
+    public GameplayManager testManagerRef;
+    public MeshRenderer meshRenderer;
+    public SpriteRenderer spriteRenderer;
 
     private void Start()
     {
-        testManagerRef = GameObject.Find("TestManager").GetComponent<TestManager>();
+        testManagerRef = GameObject.Find("TestManager").GetComponent<GameplayManager>();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void CollisionEntry(Collision collision)
     {
-        Debug.Log($"The: {collision.gameObject.name} just touched the {this.name}!");
+        //Debug.Log($"The: {collision.gameObject.name} just touched the {this.name}!");
 
         Player playerReference = collision.gameObject.GetComponent<Player>();
 
-        if(playerReference != null)
+        if (playerReference != null)
         {
             playerReference.CurrentSpacePlayerIsOn = this;
         }
@@ -35,16 +36,16 @@ public class Space : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay(Collision collision)
+    public void CollisionStay(Collision collision)
     {
         Player playerReference = collision.gameObject.GetComponent<Player>();
 
         if (playerReference != null)
         {
-            if(playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
+            if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
             {
                 playerReference.IsMoving = false;
-                Debug.Log($"Player landed on space: {spaceData.spaceName}");
+               // Debug.Log($"Player landed on space: {spaceData.spaceName}");
                 ApplySpaceEffects();
             }
         }
@@ -54,13 +55,46 @@ public class Space : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+       
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        
+    }
+
     private void ApplySpaceEffects()
     {
         for (int i = 0; i < spaceData.thisSpaceTypes.Count; i++)
         {
-            Debug.Log($"Applying space effect: {spaceData.thisSpaceTypes[i]}");
+          //  Debug.Log($"Applying space effect: {spaceData.thisSpaceTypes[i]}");
         }
     }
 
+    public void SetupSpace()
+    {
+        SetSpaceMat();
+        SetSpaceSprite();
+    }
+
+    public void SetSpaceMat()
+    {
+        Material[] currentMats = (meshRenderer.materials);
+
+        for (int i = 0; i < currentMats.Length; i++)
+        {
+            currentMats[i] = spaceData.spaceMaterial;
+        }
+
+        meshRenderer.materials = currentMats;
+
+    }
+
+    public void SetSpaceSprite()
+    {
+        spriteRenderer.sprite = spaceData.spaceSprite;
+    }
 
 }
