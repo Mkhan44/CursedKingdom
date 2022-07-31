@@ -19,4 +19,15 @@ public class BoardLayoutData : ScriptableObject
 
     [Range(1,20)]
     public int numSpacesPerRow;
+
+    [Range(1, 10)]
+    public int numMiddleSpacesPerColumn;
+
+    private void OnValidate()
+    {
+        if (numSpacesPerRow % 2 == 0)
+        {
+            Debug.LogWarning("number of spaces per row should be odd so middle spaces can be spawned correctly!");
+        }
+    }
 }

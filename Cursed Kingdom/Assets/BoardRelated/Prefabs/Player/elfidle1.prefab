@@ -125,9 +125,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8804806973748040698}
   - component: {fileID: 3382278914954345268}
-  - component: {fileID: 5162598583367807011}
   - component: {fileID: 7904563902616261366}
   - component: {fileID: 8325634510494661577}
+  - component: {fileID: 3062353639651468951}
   m_Layer: 0
   m_Name: elfidle1
   m_TagString: Untagged
@@ -203,19 +203,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &5162598583367807011
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6264876491439458418}
-  m_Material: {fileID: 13400000, guid: d6f9e416dbf5b8f4a8c9b82c0a64122e, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 2, z: 0.2}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &7904563902616261366
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -245,3 +232,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIDIntVal: 0
+--- !u!136 &3062353639651468951
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6264876491439458418}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.8000002
+  m_Height: 2.4
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
