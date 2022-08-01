@@ -53,6 +53,8 @@ public class BoardManager : MonoBehaviour
 
                 Vector3 nextSpawnPointSmall = nextSpawnPoint;
 
+                //MIDDLE PATHS
+
                 //We're 1 away from the halfway point, so start spawning in the middle path.
                 if (j * 2 == boardLayoutData.numSpacesPerRow - 1)
                 {
@@ -92,6 +94,10 @@ public class BoardManager : MonoBehaviour
 
                     //Spawn 2 spaces horizontally to the left.
                     nextSpawnPointSmall = SpawnSmallHorizontalSpace(spaceRotation, i, nextSpawnPointSmall, out newSmallSpace, out tempRotSmall, out currentPosSmall);
+
+                    //Spawn the top barricade space. If i = 3 , spawn the final space in the middle of the board.
+
+
                     nextSpawnPointSmall = SpawnSmallHorizontalSpace(spaceRotation, i, nextSpawnPointSmall, out newSmallSpace, out tempRotSmall, out currentPosSmall);
 
 
@@ -117,6 +123,8 @@ public class BoardManager : MonoBehaviour
                         newSmallSpace.transform.localPosition = nextSpawnPointSmall;
                     }
                 }
+
+                //MIDDLE PATHS END
 
                 GameObject newSpace = Instantiate(boardLayoutData.regularSpacePrefab, boardHolder.transform);
 

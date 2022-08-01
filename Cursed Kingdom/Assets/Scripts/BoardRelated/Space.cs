@@ -10,6 +10,7 @@ public class Space : MonoBehaviour
 {
     public Transform spawnPoint;
     public GameObject selectedBorder;
+    public GameObject highlightAnimationObject;
     public SpaceData spaceData;
     public GameplayManager testManagerRef;
     public MeshRenderer meshRenderer;
@@ -75,6 +76,7 @@ public class Space : MonoBehaviour
 
     public void SetupSpace()
     {
+        gameObject.name = spaceData.spaceName;
         SetSpaceMat();
         SetSpaceSprite();
     }
@@ -97,4 +99,13 @@ public class Space : MonoBehaviour
         spriteRenderer.sprite = spaceData.spaceSprite;
     }
 
+    public void EnableHighlight()
+    {
+        highlightAnimationObject.SetActive(true);
+    }
+
+    public void DisableHighlight()
+    {
+        highlightAnimationObject.SetActive(false);
+    }
 }

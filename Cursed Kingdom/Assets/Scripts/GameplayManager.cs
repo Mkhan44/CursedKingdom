@@ -16,6 +16,8 @@ public class GameplayManager : MonoBehaviour
     public GameObject spaceHolderParent;
     public GameObject spacePrefab;
     public GameObject playerPrefab;
+    public GameObject boardParent;
+    public GameObject boardPrefab;
     public Transform playerCharacter;
     bool isPlayerMoving = false;
 
@@ -38,10 +40,19 @@ public class GameplayManager : MonoBehaviour
     {
         boardManager = GetComponent<BoardManager>();
         testMapManager = GetComponent<TestMapManager>();
+        GameObject boardHolder;
+        if (boardPrefab == null)
+        {
+            Debug.LogWarning("Missing board prefab. Do you need to generate a board?");
+            return;
+        }
+        else
+        {
+            boardHolder = Instantiate(boardPrefab, boardParent.transform);
+        }
+        
 
-        boardManager.SetupBoard();
-
-        foreach (Transform child in spaceHolderParent.transform)
+        foreach (Transform child in boardHolder.transform)
         {
             Space childSpace = child.GetComponent<Space>();
 
