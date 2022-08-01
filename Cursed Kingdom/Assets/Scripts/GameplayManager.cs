@@ -25,7 +25,7 @@ public class GameplayManager : MonoBehaviour
     public List<SpaceData> spaceDatasTest;
     public List<Player> players;
     public TestMapManager testMapManager;
-    public BoardManager boardManager;
+    public BoardSpawner boardManager;
 
     int currentListIndex;
 
@@ -38,7 +38,7 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {
-        boardManager = GetComponent<BoardManager>();
+        boardManager = GetComponent<BoardSpawner>();
         testMapManager = GetComponent<TestMapManager>();
         GameObject boardHolder;
         if (boardPrefab == null)
@@ -54,12 +54,17 @@ public class GameplayManager : MonoBehaviour
 
         foreach (Transform child in boardHolder.transform)
         {
-            Space childSpace = child.GetComponent<Space>();
-
-            if(childSpace != null)
+            //Rows
+            foreach(Transform childChild in child)
             {
-                spaces.Add(childSpace);
+                Space childSpace = childChild.GetComponent<Space>();
+
+                if (childSpace != null && childSpace.gameObject.activeInHierarchy)
+                {
+                    spaces.Add(childSpace);
+                }
             }
+            
          
         }
 
@@ -75,6 +80,9 @@ public class GameplayManager : MonoBehaviour
 
         cinemachineVirtualCameras[0].LookAt = playerCharacter;
         cinemachineVirtualCameras[0].Follow = playerCharacter;
+
+        cinemachineVirtualCameras[1].LookAt = spaces[spaces.Count-1].gameObject.transform;
+        cinemachineVirtualCameras[1].Follow = spaces[spaces.Count - 1].gameObject.transform;
 
 
         foreach (CinemachineVirtualCamera camera in cinemachineVirtualCameras)

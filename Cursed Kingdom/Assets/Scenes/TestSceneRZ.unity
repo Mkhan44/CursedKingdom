@@ -873,7 +873,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 10}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1172693058}
   m_Father: {fileID: 0}
@@ -978,7 +978,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1172693057}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1, y: -0.06, z: 1.004}
+  m_LocalPosition: {x: -0.87, y: -0.06, z: 0.87}
   m_LocalScale: {x: 0.22, y: 0.22, z: 0.22}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1307,7 +1307,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 1172693058}
   m_Follow: {fileID: 1172693058}
   m_Lens:
-    FieldOfView: 13.48
+    FieldOfView: 36
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -1331,8 +1331,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1466127767}
-  m_LocalRotation: {x: 0.5847103, y: -0.000000019740355, z: 0.000000014228043, w: 0.8112422}
-  m_LocalPosition: {x: -10, y: 28.9, z: 0.03999901}
+  m_LocalRotation: {x: 0.5847103, y: 0.000000019740359, z: -0.0000000142280445, w: 0.8112422}
+  m_LocalPosition: {x: -8.7, y: 28.9, z: -1.3000002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1499,7 +1499,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 13.48
+  field of view: 36
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1524,8 +1524,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1655089536}
-  m_LocalRotation: {x: 0.5847103, y: -0.000000019740355, z: 0.000000014228043, w: 0.8112422}
-  m_LocalPosition: {x: -10, y: 28.9, z: 0.03999901}
+  m_LocalRotation: {x: 0.5847103, y: 0.000000019740359, z: -0.0000000142280445, w: 0.8112422}
+  m_LocalPosition: {x: -8.7, y: 28.9, z: -1.3000002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1818,7 +1818,7 @@ MonoBehaviour:
   spacePrefab: {fileID: 463655295303739658, guid: 7903f45d78e05074ea395ca142b5ee3d, type: 3}
   playerPrefab: {fileID: 6264876491439458418, guid: e2bf29a1bac8d9645b1d7cac5469e44f, type: 3}
   boardParent: {fileID: 901891290}
-  boardPrefab: {fileID: 7682274598374016991, guid: c30d54596a513af449a35fea1a36ce83, type: 3}
+  boardPrefab: {fileID: 833112086530220966, guid: 1e18d6e4c4347f94c88278b9eacbcc4a, type: 3}
   playerCharacter: {fileID: 0}
   classdatas:
   - {fileID: 11400000, guid: 2201c247b05ec524598b195c9934e69f, type: 2}

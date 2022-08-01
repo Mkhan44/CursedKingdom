@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Responsible for setting up the board.
-public class BoardManager : MonoBehaviour
+public class BoardSpawner : MonoBehaviour
 {
     [Header("Data")]
     public BoardLayoutData boardLayoutData;
