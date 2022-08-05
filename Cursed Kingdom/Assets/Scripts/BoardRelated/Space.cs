@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Space : MonoBehaviour
 {
@@ -15,6 +16,10 @@ public class Space : MonoBehaviour
     public GameplayManager testManagerRef;
     public MeshRenderer meshRenderer;
     public SpriteRenderer spriteRenderer;
+    public TextMeshPro spaceTitleTextMesh;
+
+    [Header("Space Icons")]
+    public Sprite drawMovementCardIcon;
 
     private void Start()
     {
@@ -79,6 +84,7 @@ public class Space : MonoBehaviour
         gameObject.name = spaceData.spaceName;
         SetSpaceMat();
         SetSpaceSprite();
+        SetSpaceTitle();
     }
 
     public void SetSpaceMat()
@@ -97,6 +103,11 @@ public class Space : MonoBehaviour
     public void SetSpaceSprite()
     {
         spriteRenderer.sprite = spaceData.spaceSprite;
+    }
+
+    public void SetSpaceTitle()
+    {
+        spaceTitleTextMesh.text = spaceData.spaceName;
     }
 
     public void EnableHighlight()

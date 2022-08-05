@@ -25,7 +25,7 @@ public class GameplayManager : MonoBehaviour
     public List<SpaceData> spaceDatasTest;
     public List<Player> players;
     public TestMapManager testMapManager;
-    public BoardSpawner boardManager;
+    public BoardManager boardManager;
 
     int currentListIndex;
 
@@ -38,7 +38,6 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {
-        boardManager = GetComponent<BoardSpawner>();
         testMapManager = GetComponent<TestMapManager>();
         GameObject boardHolder;
         if (boardPrefab == null)
@@ -50,12 +49,14 @@ public class GameplayManager : MonoBehaviour
         {
             boardHolder = Instantiate(boardPrefab, boardParent.transform);
         }
-        
+
+        boardManager = boardHolder.GetComponent<BoardManager>();
+
 
         foreach (Transform child in boardHolder.transform)
         {
             //Rows
-            foreach(Transform childChild in child)
+            foreach (Transform childChild in child)
             {
                 Space childSpace = childChild.GetComponent<Space>();
 
@@ -64,8 +65,8 @@ public class GameplayManager : MonoBehaviour
                     spaces.Add(childSpace);
                 }
             }
-            
-         
+
+
         }
 
         //Spawn player.
@@ -92,8 +93,7 @@ public class GameplayManager : MonoBehaviour
 
         currentActiveCamera.enabled = true;
 
-        InitializeSpaces();
-
+        boardManager.StartupSetupSpaces();
         //TEST
 
         //int randomNum = Random.Range(0, classdatas.Count);
@@ -102,20 +102,6 @@ public class GameplayManager : MonoBehaviour
         //CardTest();
     }
 
-    private void InitializeSpaces()
-    {
-        int spaceDataNum = 0;
-        foreach(Space space in spaces)
-        {
-            space.spaceData = spaceDatasTest[spaceDataNum];
-            space.SetupSpace();
-
-            if (spaceDataNum < spaceDatasTest.Count -1)
-            {
-                spaceDataNum += 1;
-            }
-        }
-    }
 
     private void Update()
     {

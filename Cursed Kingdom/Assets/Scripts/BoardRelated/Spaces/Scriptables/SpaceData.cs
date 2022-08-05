@@ -16,16 +16,19 @@ public class SpaceData : ScriptableObject
         DrawSupportCard,
         Poison,
         Curse,
-        Recovery,
+        RecoverHealth,
         LoseHealth,
         Barricade,
         NonDuel,
         SpecialAttack,
+        LevelUp,
+        ArrowSpace,
         Misc,
     }
 
     public List<SpaceType> thisSpaceTypes;
     public string spaceName = "Space";
+    [TextArea(3,10)]
     public string spaceDescription = "Please input a space description...";
     public Sprite spaceSprite;
     public Material spaceMaterial;
