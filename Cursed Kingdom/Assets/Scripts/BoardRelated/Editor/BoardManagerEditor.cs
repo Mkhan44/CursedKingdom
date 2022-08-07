@@ -25,8 +25,6 @@ public class BoardManagerEditor : Editor
             AssetDatabase.Refresh();
         }
 
-       
-
         GUILayout.Space(40f);
 
         if(GUILayout.Button("Manually save changes"))

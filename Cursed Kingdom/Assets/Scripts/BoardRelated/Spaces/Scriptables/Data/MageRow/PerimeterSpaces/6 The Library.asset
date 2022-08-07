@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
-  m_Name: Test Space Data 2
+  m_Name: 6 The Library
   m_EditorClassIdentifier: 
-  drawMovementCardAmount: 0
+  drawMovementCardAmount: 1
   drawSupportCardAmount: 0
+  turnsPoisoned: 0
+  turnsCursed: 0
   healthRecoveryAmount: 0
   damageTakenAmount: 0
   damageGivenAmount: 0
-  thisSpaceTypes: 04000000
-  spaceName: TestSpace 2
-  spaceDescription: This is the description of space 2!
-  spaceSprite: {fileID: 21300042, guid: e35b1509688e6294cad1ada6c91b7693, type: 3}
+  thisSpaceTypes: 00000000
+  spaceName: The Library
+  spaceDescription: Draw 1 movement card.
+  spaceSprite: {fileID: 21300000, guid: 60fcdec4eb60a8c48853645e17c44aed, type: 3}
   spaceMaterial: {fileID: 2100000, guid: 26fb16c682a2bc744b48acc8da3ad970, type: 2}

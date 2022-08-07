@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
-    public BoardSpacesData boardSpacesData;
+    public List<BoardSpacesData> boardSpacesData;
 
     // Start is called before the first frame update
     private void Start()
@@ -23,10 +23,16 @@ public class BoardManager : MonoBehaviour
             Debug.LogError("Hey, you don't have any data to use for generating the board!");
             return;
         }
+
         int currentBoardSpacesDataPerimeterIndex = 0;
         int currentBoardSpacesDataInsideIndex = 0;
+        int currentRowIndex = 0;
         foreach (Transform row in this.transform)
         {
+            if (currentRowIndex > boardSpacesData.Count)
+            {
+                return;
+            }
             foreach (Transform space in row.transform)
             {
                 if (space.gameObject.activeInHierarchy)
@@ -34,14 +40,14 @@ public class BoardManager : MonoBehaviour
                     Space theSpace = space.GetComponent<Space>();
                     if (theSpace != null)
                     {
-                        if (currentBoardSpacesDataPerimeterIndex < boardSpacesData.perimeterSpaces.Count)
+                        if (currentBoardSpacesDataPerimeterIndex < boardSpacesData[currentRowIndex].perimeterSpaces.Count)
                         {
-                            theSpace.spaceData = boardSpacesData.perimeterSpaces[currentBoardSpacesDataPerimeterIndex];
+                            theSpace.spaceData = boardSpacesData[currentRowIndex].perimeterSpaces[currentBoardSpacesDataPerimeterIndex];
                             currentBoardSpacesDataPerimeterIndex += 1;
                         }
-                        else if (currentBoardSpacesDataInsideIndex < boardSpacesData.insideSpaces.Count)
+                        else if (currentBoardSpacesDataInsideIndex < boardSpacesData[currentRowIndex].insideSpaces.Count)
                         {
-                            theSpace.spaceData = boardSpacesData.insideSpaces[currentBoardSpacesDataInsideIndex];
+                            theSpace.spaceData = boardSpacesData[currentRowIndex].insideSpaces[currentBoardSpacesDataInsideIndex];
                             currentBoardSpacesDataInsideIndex += 1;
                         }
                         theSpace.SetupSpace();
@@ -49,6 +55,7 @@ public class BoardManager : MonoBehaviour
                     }
                 }
             }
+            currentRowIndex += 1;
             currentBoardSpacesDataPerimeterIndex = 0;
             currentBoardSpacesDataInsideIndex = 0;
         }

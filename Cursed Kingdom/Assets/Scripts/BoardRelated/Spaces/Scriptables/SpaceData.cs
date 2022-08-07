@@ -23,8 +23,38 @@ public class SpaceData : ScriptableObject
         SpecialAttack,
         LevelUp,
         ArrowSpace,
+        Attack,
+        StartEffect,
+        AfterDuel,
         Misc,
     }
+
+    #region Custom Editor
+    [Range(1, 10)]
+    [HideInInspector] public int drawMovementCardAmount;
+
+    [Range(1, 10)]
+    [HideInInspector] public int drawSupportCardAmount;
+
+    [Range(1,10)]
+    [HideInInspector] public int turnsPoisoned;
+
+    [Range(1, 10)]
+    [HideInInspector] public int turnsCursed;
+
+    [Range(1, 10)]
+    [HideInInspector] public int healthRecoveryAmount;
+
+    [Range(1, 10)]
+    [HideInInspector] public int damageTakenAmount;
+
+    [Range(1, 10)]
+    [HideInInspector] public int levelToPassBarricade;
+
+    [Range(1, 10)]
+    [HideInInspector] public int damageGivenAmount;
+    #endregion
+
 
     public List<SpaceType> thisSpaceTypes;
     public string spaceName = "Space";
