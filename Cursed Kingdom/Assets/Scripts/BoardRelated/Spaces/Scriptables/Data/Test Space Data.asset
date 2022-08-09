@@ -12,8 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: Test Space Data
   m_EditorClassIdentifier: 
+  drawMovementCardAmount: 0
+  drawSupportCardAmount: 0
+  turnsPoisoned: 0
+  turnsCursed: 0
+  healthRecoveryAmount: 0
+  damageTakenAmount: 0
+  levelToPassBarricade: 0
+  damageGivenAmount: 0
   thisSpaceTypes: 000000000100000002000000
   spaceName: Space
   spaceDescription: Please input a space description...
   spaceSprite: {fileID: 21300000, guid: adefae72f9a558e45bc9fe0a152bb362, type: 3}
   spaceMaterial: {fileID: 2100000, guid: b8d1a0dea553c2947b14584bfef9d5be, type: 2}
+  materialTilings: []
+  materialOffsets: []

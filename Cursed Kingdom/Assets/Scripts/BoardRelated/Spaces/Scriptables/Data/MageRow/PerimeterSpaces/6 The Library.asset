@@ -18,9 +18,13 @@ MonoBehaviour:
   turnsCursed: 0
   healthRecoveryAmount: 0
   damageTakenAmount: 0
+  levelToPassBarricade: 0
   damageGivenAmount: 0
   thisSpaceTypes: 00000000
   spaceName: The Library
   spaceDescription: Draw 1 movement card.
   spaceSprite: {fileID: 21300000, guid: 60fcdec4eb60a8c48853645e17c44aed, type: 3}
-  spaceMaterial: {fileID: 2100000, guid: 26fb16c682a2bc744b48acc8da3ad970, type: 2}
+  spaceMaterials:
+  - {fileID: 2100000, guid: 26fb16c682a2bc744b48acc8da3ad970, type: 2}
+  - {fileID: 2100000, guid: 26fb16c682a2bc744b48acc8da3ad970, type: 2}
+  - {fileID: 2100000, guid: 26fb16c682a2bc744b48acc8da3ad970, type: 2}

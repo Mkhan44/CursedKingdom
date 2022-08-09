@@ -18,10 +18,14 @@ MonoBehaviour:
   turnsCursed: 0
   healthRecoveryAmount: 0
   damageTakenAmount: 0
+  levelToPassBarricade: 0
   damageGivenAmount: 0
   thisSpaceTypes: 010000000c000000
   spaceName: Masterful Magic
   spaceDescription: Draw 3 support cards. Halve the value of all movement cards if
     you start your turn on this space.
   spaceSprite: {fileID: 21300000, guid: 2e2a251cafd78744da2dad360e671b04, type: 3}
-  spaceMaterial: {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}
+  spaceMaterials:
+  - {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}
+  - {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}
+  - {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}

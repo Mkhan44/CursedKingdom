@@ -93,11 +93,21 @@ public class Space : MonoBehaviour
 
         for (int i = 0; i < currentMats.Length; i++)
         {
-            currentMats[i] = spaceData.spaceMaterial;
+            currentMats[i] = spaceData.spaceMaterials[i];
         }
 
         meshRenderer.materials = currentMats;
 
+        //Only do in play mode.
+        if(Application.isPlaying)
+        {
+            Material[] theMats = (meshRenderer.materials);
+            for (int i = 0; i < currentMats.Length; i++)
+            {
+                Material instancedMat = new Material(meshRenderer.materials[i]);
+                theMats[i] = instancedMat;
+            }
+        }
     }
 
     public void SetSpaceSprite()

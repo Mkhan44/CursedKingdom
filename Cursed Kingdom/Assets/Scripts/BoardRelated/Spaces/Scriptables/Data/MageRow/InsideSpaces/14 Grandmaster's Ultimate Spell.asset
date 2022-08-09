@@ -18,10 +18,14 @@ MonoBehaviour:
   turnsCursed: 0
   healthRecoveryAmount: 0
   damageTakenAmount: 0
+  levelToPassBarricade: 0
   damageGivenAmount: 0
   thisSpaceTypes: 08000000
   spaceName: Grandmaster's Ultimate Spell
   spaceDescription: You can discard 3 support cards to deal 3 damage to an opponent
     of your choosing.
   spaceSprite: {fileID: 21300064, guid: 4d607b49daa68454d8d9c340754721d8, type: 3}
-  spaceMaterial: {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}
+  spaceMaterials:
+  - {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}
+  - {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}
+  - {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}

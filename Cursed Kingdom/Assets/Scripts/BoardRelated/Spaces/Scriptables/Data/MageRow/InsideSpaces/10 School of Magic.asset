@@ -18,9 +18,13 @@ MonoBehaviour:
   turnsCursed: 0
   healthRecoveryAmount: 0
   damageTakenAmount: 0
+  levelToPassBarricade: 0
   damageGivenAmount: 0
   thisSpaceTypes: 01000000
   spaceName: School of Magic
   spaceDescription: Draw 2 support cards.
   spaceSprite: {fileID: 21300000, guid: 16acca81f849eaa428557438ff9ac779, type: 3}
-  spaceMaterial: {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}
+  spaceMaterials:
+  - {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}
+  - {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}
+  - {fileID: 2100000, guid: da2c7491f6f337144bb0bf693a68c8ef, type: 2}

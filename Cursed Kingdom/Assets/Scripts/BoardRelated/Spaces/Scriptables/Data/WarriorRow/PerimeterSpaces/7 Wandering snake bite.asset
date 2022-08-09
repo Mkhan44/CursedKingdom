@@ -18,9 +18,13 @@ MonoBehaviour:
   turnsCursed: 0
   healthRecoveryAmount: 2
   damageTakenAmount: 2
+  levelToPassBarricade: 0
   damageGivenAmount: 0
   thisSpaceTypes: 02000000
   spaceName: Wandering Snake Bite
   spaceDescription: Afflicted with Poison status for 1 turn.
   spaceSprite: {fileID: 21300012, guid: e07f5b884e9b81a4ea181fcf10cbcc52, type: 3}
-  spaceMaterial: {fileID: 2100000, guid: c30a3535e1b93b84e9b28d49418ebba4, type: 2}
+  spaceMaterials:
+  - {fileID: 2100000, guid: c30a3535e1b93b84e9b28d49418ebba4, type: 2}
+  - {fileID: 2100000, guid: c30a3535e1b93b84e9b28d49418ebba4, type: 2}
+  - {fileID: 2100000, guid: c30a3535e1b93b84e9b28d49418ebba4, type: 2}

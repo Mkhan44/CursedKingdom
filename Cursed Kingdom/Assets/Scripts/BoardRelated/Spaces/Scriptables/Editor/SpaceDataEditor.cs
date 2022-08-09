@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(SpaceData))]
+[CanEditMultipleObjects]
 public class SpaceDataEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -100,6 +101,8 @@ public class SpaceDataEditor : Editor
                     }
             }
         }
+
+
 
         EditorUtility.SetDirty(serializedObject.targetObject);
         serializedObject.ApplyModifiedProperties();

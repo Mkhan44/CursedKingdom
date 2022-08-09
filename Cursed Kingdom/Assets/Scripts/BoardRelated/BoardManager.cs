@@ -29,8 +29,10 @@ public class BoardManager : MonoBehaviour
         int currentRowIndex = 0;
         foreach (Transform row in this.transform)
         {
-            if (currentRowIndex > boardSpacesData.Count)
+
+            if (currentRowIndex >= boardSpacesData.Count)
             {
+                //Conference room code will go here.
                 return;
             }
             foreach (Transform space in row.transform)

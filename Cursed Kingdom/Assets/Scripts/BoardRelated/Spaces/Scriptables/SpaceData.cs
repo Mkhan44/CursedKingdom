@@ -9,6 +9,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Space Data", menuName = "Board Layout/Space Data", order = 0)]
 public class SpaceData : ScriptableObject
 {
+
     //Determines icon to be used. Should be moved to whatever script we'll have on the space prefabs.
     public enum SpaceType
     {
@@ -53,6 +54,8 @@ public class SpaceData : ScriptableObject
 
     [Range(1, 10)]
     [HideInInspector] public int damageGivenAmount;
+
+    
     #endregion
 
 
@@ -61,5 +64,7 @@ public class SpaceData : ScriptableObject
     [TextArea(3,10)]
     public string spaceDescription = "Please input a space description...";
     public Sprite spaceSprite;
-    public Material spaceMaterial;
+    [Header("Material related")]
+    public List<Material> spaceMaterials;
+ 
 }

@@ -18,9 +18,13 @@ MonoBehaviour:
   turnsCursed: 0
   healthRecoveryAmount: 0
   damageTakenAmount: 0
+  levelToPassBarricade: 0
   damageGivenAmount: 0
   thisSpaceTypes: 09000000
   spaceName: Mage Start
   spaceDescription: Level up if you're the magician class when passing this space!
   spaceSprite: {fileID: 21300012, guid: e07f5b884e9b81a4ea181fcf10cbcc52, type: 3}
-  spaceMaterial: {fileID: 2100000, guid: b8d1a0dea553c2947b14584bfef9d5be, type: 2}
+  spaceMaterials:
+  - {fileID: 2100000, guid: b8d1a0dea553c2947b14584bfef9d5be, type: 2}
+  - {fileID: 2100000, guid: b8d1a0dea553c2947b14584bfef9d5be, type: 2}
+  - {fileID: 2100000, guid: b8d1a0dea553c2947b14584bfef9d5be, type: 2}

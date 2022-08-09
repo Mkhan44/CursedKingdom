@@ -18,9 +18,13 @@ MonoBehaviour:
   turnsCursed: 0
   healthRecoveryAmount: 0
   damageTakenAmount: 1
+  levelToPassBarricade: 0
   damageGivenAmount: 0
   thisSpaceTypes: 05000000
   spaceName: Apprentice's Mistake
   spaceDescription: Lose 1 health.
   spaceSprite: {fileID: 21300000, guid: adefae72f9a558e45bc9fe0a152bb362, type: 3}
-  spaceMaterial: {fileID: 2100000, guid: 26fb16c682a2bc744b48acc8da3ad970, type: 2}
+  spaceMaterials:
+  - {fileID: 2100000, guid: 26fb16c682a2bc744b48acc8da3ad970, type: 2}
+  - {fileID: 2100000, guid: 26fb16c682a2bc744b48acc8da3ad970, type: 2}
+  - {fileID: 2100000, guid: 26fb16c682a2bc744b48acc8da3ad970, type: 2}

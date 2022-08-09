@@ -18,9 +18,13 @@ MonoBehaviour:
   turnsCursed: 1
   healthRecoveryAmount: 1
   damageTakenAmount: 1
+  levelToPassBarricade: 0
   damageGivenAmount: 2
   thisSpaceTypes: 03000000
   spaceName: Cursed Altar
   spaceDescription: Afflicted with Curse status for 1 turn.
   spaceSprite: {fileID: 21300000, guid: 5979169054f1ee44d9eeba5d4bdfc905, type: 3}
-  spaceMaterial: {fileID: 2100000, guid: 2b87c35a90df4534fa86bb0f1e50390e, type: 2}
+  spaceMaterials:
+  - {fileID: 2100000, guid: 2b87c35a90df4534fa86bb0f1e50390e, type: 2}
+  - {fileID: 2100000, guid: 2b87c35a90df4534fa86bb0f1e50390e, type: 2}
+  - {fileID: 2100000, guid: 2b87c35a90df4534fa86bb0f1e50390e, type: 2}
