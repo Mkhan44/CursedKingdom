@@ -53,6 +53,8 @@ public class Space : MonoBehaviour
                 playerReference.IsMoving = false;
                // Debug.Log($"Player landed on space: {spaceData.spaceName}");
                 ApplySpaceEffects();
+                playerReference.CurrentSpacePlayerIsOn = this;
+                //playerReference.DebugTheSpace();
             }
         }
         else
