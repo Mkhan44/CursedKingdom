@@ -26,6 +26,7 @@ public class GameplayManager : MonoBehaviour
     public GameObject testMoveButtonParent;
     public GameObject directionChoiceButtonHolder;
     public GameObject moveButtonPrefab;
+    public float raycastLength = 2f;
 
     //
 
@@ -145,45 +146,57 @@ public class GameplayManager : MonoBehaviour
         Space nextSpace;
 
         nextSpace = GetNextSpace(playerCurrentSpace, playerCurrentSpace.transform.forward);
-        if (nextSpace != null)
+        if (nextSpace != null && nextSpace.name != playerReference.PreviousSpacePlayerWasOn.name)
         {
             spacesNextToCurrent.Add(nextSpace);
+            //Debug.Log($"Added {nextSpace} to the spacesNextToCurrent: Count = {spacesNextToCurrent.Count}");
         }
         nextSpace = GetNextSpace(playerCurrentSpace, -playerCurrentSpace.transform.forward);
-        if (nextSpace != null)
+        if (nextSpace != null && nextSpace.name != playerReference.PreviousSpacePlayerWasOn.name)
         {
             spacesNextToCurrent.Add(nextSpace);
+            //Debug.Log($"Added {nextSpace} to the spacesNextToCurrent: Count = {spacesNextToCurrent.Count}");
         }
         nextSpace = GetNextSpace(playerCurrentSpace, playerCurrentSpace.transform.right);
-        if (nextSpace != null)
+        if (nextSpace != null && nextSpace.name != playerReference.PreviousSpacePlayerWasOn.name)
         {
             spacesNextToCurrent.Add(nextSpace);
+           // Debug.Log($"Added {nextSpace} to the spacesNextToCurrent: Count = {spacesNextToCurrent.Count}");
         }
         nextSpace = GetNextSpace(playerCurrentSpace, -playerCurrentSpace.transform.right);
-        if (nextSpace != null)
+        if (nextSpace != null && nextSpace.name != playerReference.PreviousSpacePlayerWasOn.name)
         {
             spacesNextToCurrent.Add(nextSpace);
+            //Debug.Log($"Added {nextSpace} to the spacesNextToCurrent: Count = {spacesNextToCurrent.Count}");
         }
-
-
-        
 
         //Figure out how to know which spaces are valid for the Player to travel to. If there is more than 1, give them an option...Otherwise just move the Player.
-        for(int i = 0; i < spacesNextToCurrent.Count; i++)
+
+        if (spacesNextToCurrent.Count < 2 && spacesNextToCurrent.Count != 0)
         {
-            GameObject directionButtonObj = Instantiate(moveButtonPrefab, directionChoiceButtonHolder.transform);
-            TestCardMoveButton directionButton = directionButtonObj.GetComponent<TestCardMoveButton>();
-            Button directionButtonButton = directionButtonObj.GetComponent<Button>();
-            directionButton.buttonType = TestCardMoveButton.MoveButtonType.Direction;
-            Space nextSpaceInList = spacesNextToCurrent[i];
-            directionButton.moveText.text = $"Move to: {nextSpaceInList.spaceData.spaceName}";
-            directionButtonButton.onClick.AddListener(() => ChooseDirection(nextSpaceInList, playerReference, spacesToMove));
-
+            StartCoroutine(MoveTowards(spacesNextToCurrent[0].spawnPoint.position, playerReference, spacesToMove));
         }
+        else
+        {
+            if(spacesNextToCurrent.Count == 0)
+            {
+                Debug.LogError($"Couldn't find anything with a Raycast value of: {raycastLength}. Increasing by 0.5f.");
+                raycastLength += 0.5f;
+                StartMove(spacesToMove);
+                return;
+            }
+            for (int i = 0; i < spacesNextToCurrent.Count; i++)
+            {
+                GameObject directionButtonObj = Instantiate(moveButtonPrefab, directionChoiceButtonHolder.transform);
+                TestCardMoveButton directionButton = directionButtonObj.GetComponent<TestCardMoveButton>();
+                Button directionButtonButton = directionButtonObj.GetComponent<Button>();
+                directionButton.buttonType = TestCardMoveButton.MoveButtonType.Direction;
+                Space nextSpaceInList = spacesNextToCurrent[i];
+                directionButton.moveText.text = $"Move to: {nextSpaceInList.spaceData.spaceName}";
+                directionButtonButton.onClick.AddListener(() => ChooseDirection(nextSpaceInList, playerReference, spacesToMove));
 
-        
-
-        //StartCoroutine(MoveTowards(spacesNextToCurrent[0].spawnPoint.position, playerReference, spacesToMove));
+            }
+        }
 
 
         //We're at the end, so spawn at the first point.
@@ -230,11 +243,11 @@ public class GameplayManager : MonoBehaviour
         GameObject lastHitObject;
         Ray ray = new Ray(playerCurrentSpace.transform.position, raycastDirection);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 2f))
+        if (Physics.Raycast(ray, out hit, raycastLength))
         {
             lastHitObject = hit.transform.gameObject;
             nextSpace = lastHitObject.transform.parent.gameObject.GetComponent<Space>();
-            Debug.Log($"We hit: {lastHitObject.transform.parent.gameObject.name} , nextSpace is now: {nextSpace.spaceData.spaceName}");
+           // Debug.Log($"We hit: {lastHitObject.transform.parent.gameObject.name} , nextSpace is now: {nextSpace.spaceData.spaceName}");
         }
         else
         {
@@ -248,12 +261,12 @@ public class GameplayManager : MonoBehaviour
 
     public IEnumerator MoveTowards(Vector3 targetPosition, Player playerReference, int spacesToMove = 1)
     {
-  
-
+        playerReference.PreviousSpacePlayerWasOn = playerReference.CurrentSpacePlayerIsOn;
         playerReference.SpacesLeftToMove = spacesToMove;
 
         playerReference.IsMoving = true;
         isPlayerMoving = true;
+
         
         float rate = 3.0f;
 

@@ -10,18 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
-  m_Name: Test Space Data
+  m_Name: 3 Hunting Grounds
   m_EditorClassIdentifier: 
-  drawMovementCardAmount: 0
-  drawSupportCardAmount: 0
+  drawMovementCardAmount: 1
+  drawSupportCardAmount: 1
   turnsPoisoned: 0
   turnsCursed: 0
   healthRecoveryAmount: 0
   damageTakenAmount: 0
   levelToPassBarricade: 0
   damageGivenAmount: 0
-  thisSpaceTypes: 000000000100000002000000
-  spaceName: Space
-  spaceDescription: Please input a space description...
-  spaceSprite: {fileID: 21300000, guid: adefae72f9a558e45bc9fe0a152bb362, type: 3}
-  spaceMaterials: []
+  thisSpaceTypes: 01000000
+  spaceName: Hunting Grounds
+  spaceDescription: Draw 1 support card.
+  spaceSprite: {fileID: 21300000, guid: a8f1210cae5357440a345370e9f46e7f, type: 3}
+  spaceMaterials:
+  - {fileID: 2100000, guid: 6e2a6db1c3207f642b0b4cea3e0c8db7, type: 2}
+  - {fileID: 2100000, guid: 6e2a6db1c3207f642b0b4cea3e0c8db7, type: 2}
+  - {fileID: 2100000, guid: 6e2a6db1c3207f642b0b4cea3e0c8db7, type: 2}

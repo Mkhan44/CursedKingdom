@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     private bool ableToLevelUp;
     private ClassData classData;
     private Space currentSpacePlayerIsOn;
+    private Space previousSpacePlayerWasOn;
 
     public int MaxHealth { get => maxHealth; set => maxHealth = value; }
     public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
@@ -89,6 +90,8 @@ public class Player : MonoBehaviour
             currentSpacePlayerIsOn = value;
         } 
     }
+
+    public Space PreviousSpacePlayerWasOn { get => previousSpacePlayerWasOn; set => previousSpacePlayerWasOn = value; }
 
     public void InitializePlayer(ClassData data)
     {

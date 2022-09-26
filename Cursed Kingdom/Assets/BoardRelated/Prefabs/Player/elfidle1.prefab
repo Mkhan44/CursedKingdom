@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 3382278914954345268}
   - component: {fileID: 7904563902616261366}
   - component: {fileID: 8325634510494661577}
-  - component: {fileID: 2415638674550218442}
+  - component: {fileID: 6811609303460852829}
   m_Layer: 2
   m_Name: elfidle1
   m_TagString: Untagged
@@ -232,8 +232,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIDIntVal: 0
---- !u!136 &2415638674550218442
-CapsuleCollider:
+--- !u!65 &6811609303460852829
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -242,7 +242,6 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.8
-  m_Height: 2.4
-  m_Direction: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7, y: 1.9, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}

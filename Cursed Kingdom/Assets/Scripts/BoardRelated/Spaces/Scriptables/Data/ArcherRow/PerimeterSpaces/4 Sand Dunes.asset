@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
-  m_Name: 14 Grandmaster's Ultimate Spell
+  m_Name: 4 Sand Dunes
   m_EditorClassIdentifier: 
   drawMovementCardAmount: 0
   drawSupportCardAmount: 0
   turnsPoisoned: 0
   turnsCursed: 0
   healthRecoveryAmount: 0
-  damageTakenAmount: 0
+  damageTakenAmount: 1
   levelToPassBarricade: 0
   damageGivenAmount: 0
-  thisSpaceTypes: 08000000
-  spaceName: Grandmaster's Ultimate Spell
-  spaceDescription: You can discard 3 support cards to deal 3 damage to an opponent
-    of your choosing.
-  spaceSprite: {fileID: 21300064, guid: 4d607b49daa68454d8d9c340754721d8, type: 3}
+  thisSpaceTypes: 0e000000
+  spaceName: Sand Dunes
+  spaceDescription: Halve the value of all movement cards in your hand if your turn
+    begins on this space.
+  spaceSprite: {fileID: 21300000, guid: adefae72f9a558e45bc9fe0a152bb362, type: 3}
   spaceMaterials:
-  - {fileID: 2100000, guid: 50ac2f3e1f2191540a8724a48b08ad91, type: 2}
-  - {fileID: 2100000, guid: 50ac2f3e1f2191540a8724a48b08ad91, type: 2}
-  - {fileID: 2100000, guid: 50ac2f3e1f2191540a8724a48b08ad91, type: 2}
+  - {fileID: 2100000, guid: 6e2a6db1c3207f642b0b4cea3e0c8db7, type: 2}
+  - {fileID: 2100000, guid: 6e2a6db1c3207f642b0b4cea3e0c8db7, type: 2}
+  - {fileID: 2100000, guid: 6e2a6db1c3207f642b0b4cea3e0c8db7, type: 2}

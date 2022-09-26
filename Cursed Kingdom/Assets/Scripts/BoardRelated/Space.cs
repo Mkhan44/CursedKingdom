@@ -34,6 +34,11 @@ public class Space : MonoBehaviour
 
         if (playerReference != null)
         {
+            if(playerReference.PreviousSpacePlayerWasOn is null)
+            {
+                playerReference.PreviousSpacePlayerWasOn = this;
+                Debug.Log($"Previous space was null, assigning current space as previous space.");
+            }
             playerReference.CurrentSpacePlayerIsOn = this;
         }
         else
@@ -61,16 +66,6 @@ public class Space : MonoBehaviour
         {
             Debug.LogWarning("playerReference is null STAY!");
         }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-       
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        
     }
 
     private void ApplySpaceEffects()

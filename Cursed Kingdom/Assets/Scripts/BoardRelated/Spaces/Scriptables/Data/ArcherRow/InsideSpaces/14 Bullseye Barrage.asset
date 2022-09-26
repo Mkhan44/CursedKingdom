@@ -10,21 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
-  m_Name: 12 Contaminated Chemicals
+  m_Name: 14 Bullseye Barrage
   m_EditorClassIdentifier: 
   drawMovementCardAmount: 0
   drawSupportCardAmount: 0
   turnsPoisoned: 0
-  turnsCursed: 1
+  turnsCursed: 0
   healthRecoveryAmount: 0
   damageTakenAmount: 0
   levelToPassBarricade: 0
   damageGivenAmount: 0
-  thisSpaceTypes: 03000000
-  spaceName: Contaminated Chemicals
-  spaceDescription: Afflicted with Curse status for 1 turn.
-  spaceSprite: {fileID: 21300000, guid: 78f856def36f97d4a8c14dcea58ed4a5, type: 3}
+  thisSpaceTypes: 08000000
+  spaceName: Bullseye Barrage
+  spaceDescription: You can discard 3 support cards to deal 2 damage to all other
+    players.
+  spaceSprite: {fileID: 21300064, guid: 4d607b49daa68454d8d9c340754721d8, type: 3}
   spaceMaterials:
-  - {fileID: 2100000, guid: 50ac2f3e1f2191540a8724a48b08ad91, type: 2}
-  - {fileID: 2100000, guid: 50ac2f3e1f2191540a8724a48b08ad91, type: 2}
-  - {fileID: 2100000, guid: 50ac2f3e1f2191540a8724a48b08ad91, type: 2}
+  - {fileID: 2100000, guid: 9109ba8525f988b488742f9937e89a4a, type: 2}
+  - {fileID: 2100000, guid: 9109ba8525f988b488742f9937e89a4a, type: 2}
+  - {fileID: 2100000, guid: 9109ba8525f988b488742f9937e89a4a, type: 2}
