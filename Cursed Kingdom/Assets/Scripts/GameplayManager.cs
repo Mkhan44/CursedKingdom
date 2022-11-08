@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Cinemachine;
 using Random = UnityEngine.Random;
 
@@ -20,6 +21,14 @@ public class GameplayManager : MonoBehaviour
     public GameObject boardPrefab;
     public Transform playerCharacter;
     bool isPlayerMoving = false;
+
+    //Movement code for character -- Need to extract this out of here.
+    public GameObject testMoveButtonParent;
+    public GameObject directionChoiceButtonHolder;
+    public GameObject moveButtonPrefab;
+    public float raycastLength = 2f;
+
+    //
 
     public List<ClassData> classdatas;
     public List<SpaceData> spaceDatasTest;
@@ -65,19 +74,20 @@ public class GameplayManager : MonoBehaviour
                     spaces.Add(childSpace);
                 }
             }
-
-
         }
 
         //Spawn player.
         int randomSpawnSpace = Random.Range(0, spaces.Count-1);
         currentListIndex = randomSpawnSpace;
-        GameObject tempPlayer = Instantiate(playerPrefab, spaces[randomSpawnSpace].transform);
+        GameObject playerTempReference = Instantiate(playerPrefab, spaces[randomSpawnSpace].transform);
         
-        tempPlayer.transform.parent = null;
-        players.Add(tempPlayer.GetComponent<Player>());
+        playerTempReference.transform.parent = null;
+        playerTempReference.transform.localScale = playerPrefab.transform.localScale;
 
-        playerCharacter = tempPlayer.transform;
+
+        players.Add(playerTempReference.GetComponent<Player>());
+
+        playerCharacter = playerTempReference.transform;
 
         cinemachineVirtualCameras[0].LookAt = playerCharacter;
         cinemachineVirtualCameras[0].Follow = playerCharacter;
@@ -90,6 +100,8 @@ public class GameplayManager : MonoBehaviour
         {
             camera.enabled = false;
         }
+
+        testMoveButtonParent.SetActive(true);
 
         currentActiveCamera.enabled = true;
 
@@ -108,56 +120,155 @@ public class GameplayManager : MonoBehaviour
         if (!isPlayerMoving && Input.GetKeyDown(KeyCode.Space))
         {
             StartMove();
+           
         }
 
         if (Input.GetKeyDown(KeyCode.Y))
         {
             SwitchCamera();
         }
+
+       
     }
 
 
-
+    //Movement code for player. Should probably be in a different script...
     public void StartMove(int spacesToMove = 1)
-    {
-        // Debug.Log("clicked space.");
-        //We're at the end, so spawn at the first point.
-        if (currentListIndex == spaces.Count - 1)
-        {
-            StartCoroutine(MoveTowards(spaces[0].spawnPoint, spacesToMove));
-            //playerCharacter.localPosition = spaceSpawnPoints[0].position;
-            currentListIndex = 0;
-            //  Debug.Log("At last index.");
-            return;
-        }
-
-        for (int i = 0; i < spaces.Count; i++)
-        {
-            if (i == currentListIndex)
-            {
-                StartCoroutine(MoveTowards(spaces[i + 1].spawnPoint, spacesToMove));
-                //playerCharacter.localPosition = spaceSpawnPoints[i + 1].position;
-                currentListIndex = i + 1;
-                //  Debug.Log($"Moving to index {i+1}");
-                return;
-            }
-        }
-
-    }
-
-
-
-    public IEnumerator MoveTowards(Transform targetTransform, int spacesToMove = 1)
     {
         //Test. We'll need to find a way to find out which player is currently moving.
         Player playerReference = playerCharacter.GetComponent<Player>();
 
+        GameObject playerCurrentSpace = playerReference.CurrentSpacePlayerIsOn.gameObject;
+
+        List<Space> spacesNextToCurrent = new List<Space>();
+
+
+        Space nextSpace;
+
+        nextSpace = GetNextSpace(playerCurrentSpace, playerCurrentSpace.transform.forward);
+        if (nextSpace != null && nextSpace.name != playerReference.PreviousSpacePlayerWasOn.name)
+        {
+            spacesNextToCurrent.Add(nextSpace);
+            //Debug.Log($"Added {nextSpace} to the spacesNextToCurrent: Count = {spacesNextToCurrent.Count}");
+        }
+        nextSpace = GetNextSpace(playerCurrentSpace, -playerCurrentSpace.transform.forward);
+        if (nextSpace != null && nextSpace.name != playerReference.PreviousSpacePlayerWasOn.name)
+        {
+            spacesNextToCurrent.Add(nextSpace);
+            //Debug.Log($"Added {nextSpace} to the spacesNextToCurrent: Count = {spacesNextToCurrent.Count}");
+        }
+        nextSpace = GetNextSpace(playerCurrentSpace, playerCurrentSpace.transform.right);
+        if (nextSpace != null && nextSpace.name != playerReference.PreviousSpacePlayerWasOn.name)
+        {
+            spacesNextToCurrent.Add(nextSpace);
+           // Debug.Log($"Added {nextSpace} to the spacesNextToCurrent: Count = {spacesNextToCurrent.Count}");
+        }
+        nextSpace = GetNextSpace(playerCurrentSpace, -playerCurrentSpace.transform.right);
+        if (nextSpace != null && nextSpace.name != playerReference.PreviousSpacePlayerWasOn.name)
+        {
+            spacesNextToCurrent.Add(nextSpace);
+            //Debug.Log($"Added {nextSpace} to the spacesNextToCurrent: Count = {spacesNextToCurrent.Count}");
+        }
+
+        //Figure out how to know which spaces are valid for the Player to travel to. If there is more than 1, give them an option...Otherwise just move the Player.
+
+        if (spacesNextToCurrent.Count < 2 && spacesNextToCurrent.Count != 0)
+        {
+            StartCoroutine(MoveTowards(spacesNextToCurrent[0].spawnPoint.position, playerReference, spacesToMove));
+        }
+        else
+        {
+            if(spacesNextToCurrent.Count == 0)
+            {
+                Debug.LogError($"Couldn't find anything with a Raycast value of: {raycastLength}. Increasing by 0.5f.");
+                raycastLength += 0.5f;
+                StartMove(spacesToMove);
+                return;
+            }
+            for (int i = 0; i < spacesNextToCurrent.Count; i++)
+            {
+                GameObject directionButtonObj = Instantiate(moveButtonPrefab, directionChoiceButtonHolder.transform);
+                TestCardMoveButton directionButton = directionButtonObj.GetComponent<TestCardMoveButton>();
+                Button directionButtonButton = directionButtonObj.GetComponent<Button>();
+                directionButton.buttonType = TestCardMoveButton.MoveButtonType.Direction;
+                Space nextSpaceInList = spacesNextToCurrent[i];
+                directionButton.moveText.text = $"Move to: {nextSpaceInList.spaceData.spaceName}";
+                directionButtonButton.onClick.AddListener(() => ChooseDirection(nextSpaceInList, playerReference, spacesToMove));
+
+            }
+        }
+
+
+        //We're at the end, so spawn at the first point.
+        //if (currentListIndex == spaces.Count - 1)
+        //{
+        //    StartCoroutine(MoveTowards(spaces[0].spawnPoint.position, playerReference, spacesToMove));
+        //    //playerCharacter.localPosition = spaceSpawnPoints[0].position;
+        //    currentListIndex = 0;
+        //    Debug.Log("At last index.");
+        //    return;
+        //}
+
+        //for (int i = 0; i < spaces.Count; i++)
+        //{
+        //    if (i == currentListIndex)
+        //    {
+        //        StartCoroutine(MoveTowards(spaces[i + 1].spawnPoint.position, playerReference, spacesToMove));
+        //        //playerCharacter.localPosition = spaceSpawnPoints[i + 1].position;
+        //        currentListIndex = i + 1;
+        //         Debug.Log($"Moving to space: {spaces[i+1].name} You have {spacesToMove - 1} spaces left.");
+        //        return;
+        //    }
+        //}
+
+    }
+
+    //Used when a direction is chosen. This function should be called by clicking a button.
+    public void ChooseDirection(Space targetSpace,Player playerReference, int spacesLeftToMove)
+    {
+        StartCoroutine(MoveTowards(targetSpace.spawnPoint.position, playerReference, spacesLeftToMove));
+
+        //Cleanup button holder.
+        foreach(Transform child in directionChoiceButtonHolder.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    public Space GetNextSpace(GameObject playerCurrentSpace, Vector3 raycastDirection)
+    {
+        Space nextSpace = default;
+
+        //Raycast. We need to do all 4 directions and see what spaces are around the player.
+        GameObject lastHitObject;
+        Ray ray = new Ray(playerCurrentSpace.transform.position, raycastDirection);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, raycastLength))
+        {
+            lastHitObject = hit.transform.gameObject;
+            nextSpace = lastHitObject.transform.parent.gameObject.GetComponent<Space>();
+           // Debug.Log($"We hit: {lastHitObject.transform.parent.gameObject.name} , nextSpace is now: {nextSpace.spaceData.spaceName}");
+        }
+        else
+        {
+            Debug.LogWarning($"{ray} Didn't hit anything.");
+            return null;
+        }
+        return nextSpace;
+    }
+
+
+
+    public IEnumerator MoveTowards(Vector3 targetPosition, Player playerReference, int spacesToMove = 1)
+    {
+        playerReference.PreviousSpacePlayerWasOn = playerReference.CurrentSpacePlayerIsOn;
         playerReference.SpacesLeftToMove = spacesToMove;
 
         playerReference.IsMoving = true;
         isPlayerMoving = true;
+
         
-        float rate = 1.5f;
+        float rate = 3.0f;
 
         if(spacesToMove > 1)
         {
@@ -165,11 +276,11 @@ public class GameplayManager : MonoBehaviour
         }
         float finalRate;
 
-        while (Vector3.Distance(playerCharacter.localPosition, targetTransform.position) > 0.1f)
+        while (Vector3.Distance(playerCharacter.localPosition, targetPosition) > 0.1f)
         {
           //  Debug.Log(playerCharacter.localPosition);
             finalRate = rate * Time.deltaTime;
-            playerCharacter.localPosition = Vector3.MoveTowards(playerCharacter.localPosition, targetTransform.position, finalRate);
+            playerCharacter.localPosition = Vector3.MoveTowards(playerCharacter.localPosition, targetPosition, finalRate);
             yield return null;
         }
         // Debug.Log("Done moving");
@@ -182,6 +293,7 @@ public class GameplayManager : MonoBehaviour
         }
         else
         {
+            testMoveButtonParent.SetActive(true);
             playerCharacter.GetComponent<Player>().SpacesLeftToMove = 0;
         }
 

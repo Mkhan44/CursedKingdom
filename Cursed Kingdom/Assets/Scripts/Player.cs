@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     private bool ableToLevelUp;
     private ClassData classData;
     private Space currentSpacePlayerIsOn;
+    private Space previousSpacePlayerWasOn;
 
     public int MaxHealth { get => maxHealth; set => maxHealth = value; }
     public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
@@ -37,7 +38,60 @@ public class Player : MonoBehaviour
     public int CurseDuration { get => curseDuration; set => curseDuration = value; }
     public bool AbleToLevelUp { get => ableToLevelUp; set => ableToLevelUp = value; }
     public ClassData ClassData { get => classData; set => classData = value; }
-    public Space CurrentSpacePlayerIsOn { get => currentSpacePlayerIsOn; set => currentSpacePlayerIsOn = value; }
+    public Space CurrentSpacePlayerIsOn
+    {
+        get => currentSpacePlayerIsOn; 
+
+        set
+        {
+            //Check if we have moved to a new part of the board. If we did then increase the rotation. If we hit the center don't do anything...need to account for that though.
+            if(currentSpacePlayerIsOn != null)
+            {
+                //Might want to lerp this so it's not a sudden jump.
+                if (value.transform.parent != currentSpacePlayerIsOn.transform.parent && value.transform.parent.name != "LastSpaceHolder")
+                {
+                    Vector3 thisRot = this.transform.localEulerAngles;
+                    float parentRot;
+                    parentRot = value.transform.parent.localEulerAngles.y;
+                    switch(parentRot)
+                    {
+                        case 0f:
+                            {
+                                thisRot.y = 180f;
+                                break;
+                            }
+                        case 90f:
+                            {
+                                thisRot.y = 270f;
+                                break;
+                            }
+                        case 180f:
+                            {
+                                thisRot.y = 0f;
+                                break;
+                            }
+                        case 270f:
+                            {
+                                thisRot.y = 90f;
+                                break;
+                            }
+                            //Nothing needed to change.
+                        default:
+                            {
+                                
+                                break;
+                            }
+                    }
+                    
+                    transform.localEulerAngles = thisRot;
+                }
+            }
+
+            currentSpacePlayerIsOn = value;
+        } 
+    }
+
+    public Space PreviousSpacePlayerWasOn { get => previousSpacePlayerWasOn; set => previousSpacePlayerWasOn = value; }
 
     public void InitializePlayer(ClassData data)
     {
@@ -49,6 +103,11 @@ public class Player : MonoBehaviour
         AbleToLevelUp = false;
         SpacesLeftToMove = 0;
        // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
+    }
+
+    public void DebugTheSpace()
+    {
+        Debug.Log(CurrentSpacePlayerIsOn);
     }
 
     public void LevelUp()

@@ -10,8 +10,16 @@ using UnityEngine.UI;
 
 public class TestCardMoveButton : MonoBehaviour
 {
+    public enum MoveButtonType
+    {
+        Movement,
+        Direction,
+    }
+
     public int testMoveNumber;
     public TextMeshProUGUI moveText;
+    public MoveButtonType buttonType;
+    public GameObject parentObj;
 
     public GameplayManager testManagerRef;
     private void Start()
@@ -19,22 +27,47 @@ public class TestCardMoveButton : MonoBehaviour
         testManagerRef = GameObject.Find("TestManager").GetComponent<GameplayManager>();
         if(testManagerRef != null)
         {
-            this.GetComponent<Button>().onClick.AddListener(() => testManagerRef.StartMove(testMoveNumber));
+            if (buttonType == MoveButtonType.Movement)
+            {
+                parentObj = transform.parent.gameObject;
+                this.GetComponent<Button>().onClick.AddListener(() => testManagerRef.StartMove(testMoveNumber));
+            }
+            //If it's supposed to be an arrow.
+            //else
+            //{
+            //    gameObject.SetActive(false);
+            //}
+
+            
         }
         else
         {
             Debug.LogWarning("Hey, the testManager reference is null!");
         }
+
+
         
     }
     private void OnValidate()
     {
-        if(testMoveNumber <= 0 || testMoveNumber > 10)
+        if(buttonType == MoveButtonType.Movement)
         {
-            Debug.LogWarning("Hey, invalid movement number!", this);
-            return;
-        }
+            if (testMoveNumber <= 0 || testMoveNumber > 10)
+            {
+                Debug.LogWarning("Hey, invalid movement number!", this);
+                return;
+            }
 
-        moveText.text = $"Move {testMoveNumber}";
+            moveText.text = $"Move {testMoveNumber}";
+        }
+      
+    }
+
+    public void TurnOffParent()
+    {
+        if(parentObj != null)
+        {
+            parentObj.SetActive(false);
+        }
     }
 }

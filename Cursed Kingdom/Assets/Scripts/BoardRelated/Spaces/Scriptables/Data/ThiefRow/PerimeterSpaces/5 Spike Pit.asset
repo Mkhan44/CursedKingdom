@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
-  m_Name: 6 The Library
+  m_Name: 5 Spike Pit
   m_EditorClassIdentifier: 
   drawMovementCardAmount: 1
   drawSupportCardAmount: 0
   turnsPoisoned: 0
   turnsCursed: 0
-  healthRecoveryAmount: 0
-  damageTakenAmount: 0
+  healthRecoveryAmount: 1
+  damageTakenAmount: 1
   levelToPassBarricade: 0
   damageGivenAmount: 0
-  thisSpaceTypes: 00000000
-  spaceName: The Library
-  spaceDescription: Draw 1 movement card.
-  spaceSprite: {fileID: 21300000, guid: 60fcdec4eb60a8c48853645e17c44aed, type: 3}
+  thisSpaceTypes: 0500000000000000
+  spaceName: Spike Pit
+  spaceDescription: Lose 2 health then draw 1 movement card.
+  spaceSprite: {fileID: 21300000, guid: 5890beda7e2449646a64838102f4e4a1, type: 3}
   spaceMaterials:
   - {fileID: 2100000, guid: c237240ba9ebafa4cb4eb855b2c35208, type: 2}
   - {fileID: 2100000, guid: c237240ba9ebafa4cb4eb855b2c35208, type: 2}

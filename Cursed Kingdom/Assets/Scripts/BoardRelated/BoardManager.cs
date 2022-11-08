@@ -5,6 +5,8 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
     public List<BoardSpacesData> boardSpacesData;
+    public SpaceData middleSpace;
+    public Space middleSpaceObject;
 
     // Start is called before the first frame update
     private void Start()
@@ -33,6 +35,12 @@ public class BoardManager : MonoBehaviour
             if (currentRowIndex >= boardSpacesData.Count)
             {
                 //Conference room code will go here.
+                if (middleSpace != null)
+                {
+                    middleSpaceObject.spaceData = middleSpace;
+                    middleSpaceObject.SetupSpace();
+                    Debug.Log("TEST");
+                }
                 return;
             }
             foreach (Transform space in row.transform)
@@ -61,6 +69,8 @@ public class BoardManager : MonoBehaviour
             currentBoardSpacesDataPerimeterIndex = 0;
             currentBoardSpacesDataInsideIndex = 0;
         }
+
+        
     }
 
 }

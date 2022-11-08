@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
-  m_Name: Mage Level 2 Barricade
+  m_Name: 10 Arrow Sharpening
   m_EditorClassIdentifier: 
   drawMovementCardAmount: 0
-  drawSupportCardAmount: 0
+  drawSupportCardAmount: 2
   turnsPoisoned: 0
   turnsCursed: 0
-  healthRecoveryAmount: 0
+  healthRecoveryAmount: 2
   damageTakenAmount: 0
   levelToPassBarricade: 0
   damageGivenAmount: 0
-  thisSpaceTypes: 06000000
-  spaceName: Barricade Space
-  spaceDescription: You must be level 2 before you can pass this barricade.
-  spaceSprite: {fileID: 21300000, guid: 2800fd9be72598649bfc1a420194e814, type: 3}
+  thisSpaceTypes: 04000000
+  spaceName: Arrow Sharpening
+  spaceDescription: Recover 2 health.
+  spaceSprite: {fileID: 21300000, guid: 16acca81f849eaa428557438ff9ac779, type: 3}
   spaceMaterials:
-  - {fileID: 2100000, guid: 50ac2f3e1f2191540a8724a48b08ad91, type: 2}
-  - {fileID: 2100000, guid: 50ac2f3e1f2191540a8724a48b08ad91, type: 2}
-  - {fileID: 2100000, guid: 50ac2f3e1f2191540a8724a48b08ad91, type: 2}
+  - {fileID: 2100000, guid: 9109ba8525f988b488742f9937e89a4a, type: 2}
+  - {fileID: 2100000, guid: 9109ba8525f988b488742f9937e89a4a, type: 2}
+  - {fileID: 2100000, guid: 9109ba8525f988b488742f9937e89a4a, type: 2}
