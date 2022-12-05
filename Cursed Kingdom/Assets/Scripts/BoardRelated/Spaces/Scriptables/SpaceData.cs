@@ -30,6 +30,8 @@ public class SpaceData : ScriptableObject
         Misc,
     }
 
+    public bool choiceOfOptions;
+
     #region Custom Editor
     [Range(1, 10)]
     [HideInInspector] public int drawMovementCardAmount;
