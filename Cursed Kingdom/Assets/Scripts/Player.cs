@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     private int currentHealth;
     private int currentLevel;
     private int spacesLeftToMove;
+    private int movementCardsInHand;
+    private int supportCardsInHand;
+    private int maxHandSize;
     private bool isMoving;
     private bool isOnCooldown;
     private bool isPoisoned;
@@ -30,6 +33,9 @@ public class Player : MonoBehaviour
     public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
     public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
     public int SpacesLeftToMove { get => spacesLeftToMove; set => spacesLeftToMove = value; }
+    public int MovementCardsInHand { get => movementCardsInHand; set => movementCardsInHand = value; }
+    public int SupportCardsInHand { get => supportCardsInHand; set => supportCardsInHand = value; }
+    public int MaxHandSize { get => maxHandSize; set => maxHandSize = value; }
     public bool IsMoving { get => isMoving; set => isMoving = value; }
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
@@ -92,6 +98,8 @@ public class Player : MonoBehaviour
     }
 
     public Space PreviousSpacePlayerWasOn { get => previousSpacePlayerWasOn; set => previousSpacePlayerWasOn = value; }
+    
+    
 
     public void InitializePlayer(ClassData data)
     {
