@@ -30,7 +30,8 @@ public class Player : MonoBehaviour
     private Space previousSpacePlayerWasOn;
 
     public int MaxHealth { get => maxHealth; set => maxHealth = value; }
-    public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
+    //Clean this up vvvvv
+    public int CurrentHealth { get => currentHealth; set { if ((currentHealth + value) > MaxHealth) currentHealth = maxHealth; else { currentHealth = value; } }  }
     public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
     public int SpacesLeftToMove { get => spacesLeftToMove; set => spacesLeftToMove = value; }
     public int MovementCardsInHand { get => movementCardsInHand; set => movementCardsInHand = value; }

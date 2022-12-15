@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 10 School of Magic
   m_EditorClassIdentifier: 
-  choiceOfOptions: 0
+  spaceTypeList: []
   drawMovementCardAmount: 0
   drawSupportCardAmount: 2
   turnsPoisoned: 0
@@ -21,6 +21,11 @@ MonoBehaviour:
   damageTakenAmount: 0
   levelToPassBarricade: 0
   damageGivenAmount: 0
+  spaceTypeWrappers:
+  - spaceEffectData: {fileID: 11400000, guid: 4c8974428ec28274cb0ac690819c00bf, type: 2}
+    spaceTypeStringHidden: DrawCardSpace
+  - spaceEffectData: {fileID: 11400000, guid: 08d70dda539c50a49bf65258baa115ca, type: 2}
+    spaceTypeStringHidden: RecoverHealthSpace
   thisSpaceTypes: 01000000
   spaceName: School of Magic
   spaceDescription: Draw 2 support cards.
