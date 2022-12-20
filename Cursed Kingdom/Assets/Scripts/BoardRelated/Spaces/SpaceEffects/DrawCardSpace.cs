@@ -5,21 +5,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Draw Card", menuName = "Space Effect Data/Draw Card", order = 0)]
+[CreateAssetMenu(fileName = "DrawCardSpace", menuName = "Space Effect Data/Draw Card Space", order = 0)]
 public class DrawCardSpace : SpaceEffectData, ISpaceEffect
 {
-    public enum CardType
-    {
-        MovementCard,
-        SupportCard,
-        Both,
-    }
-
     [SerializeField] private CardType cardTypeToDraw;
-    [SerializeField] [Range(0,10)] private int numToDraw;
+    [SerializeField] [Range(1,10)] private int numToDraw;
 
-    public void EffectOfSpace(Player playerReference, bool afterDuel = false, bool startOfTurn = false)
+    public CardType CardTypeToDraw { get => cardTypeToDraw; set => cardTypeToDraw = value; }
+    public int NumToDraw { get => numToDraw; set => numToDraw = value; }
+
+    public void EffectOfSpace(Player playerReference)
     {
-        throw new System.NotImplementedException();
+        Debug.Log($"Landed on: {this.name} space and should draw: {NumToDraw} {CardTypeToDraw} card(s)");
     }
 }

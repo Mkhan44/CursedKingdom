@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 11 Cursed Altar
   m_EditorClassIdentifier: 
-  choiceOfOptions: 0
+  spaceTypeList: []
   drawMovementCardAmount: 2
   drawSupportCardAmount: 0
   turnsPoisoned: 0
@@ -21,6 +21,7 @@ MonoBehaviour:
   damageTakenAmount: 1
   levelToPassBarricade: 0
   damageGivenAmount: 2
+  spaceTypeWrappers: []
   thisSpaceTypes: 03000000
   spaceName: Cursed Altar
   spaceDescription: Afflicted with Curse status for 1 turn.

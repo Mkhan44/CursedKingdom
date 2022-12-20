@@ -5,12 +5,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Recover Health", menuName = "Space Effect Data/Recover Health", order = 0)]
+[CreateAssetMenu(fileName = "RecoverHealthSpace", menuName = "Space Effect Data/Recover Health Space", order = 0)]
 public class RecoverHealthSpace : SpaceEffectData, ISpaceEffect
 {
-    public int healthToRecover;
-    public void EffectOfSpace(Player playerReference, bool afterDuel = false, bool startOfTurn = false)
+    [Range(1,10)] [SerializeField] private int healthToRecover;
+
+    public int HealthToRecover { get => healthToRecover; set => healthToRecover = value; }
+
+    public void EffectOfSpace(Player playerReference)
     {
-        playerReference.CurrentHealth += healthToRecover;
+        Debug.Log($"Landed on: {this.name} space and should recover: {HealthToRecover} health.");
+       // playerReference.CurrentHealth += HealthToRecover;
     }
 }

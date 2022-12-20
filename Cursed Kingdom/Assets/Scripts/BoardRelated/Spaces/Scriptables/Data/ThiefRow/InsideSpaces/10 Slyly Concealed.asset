@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 10 Slyly Concealed
   m_EditorClassIdentifier: 
-  choiceOfOptions: 0
+  spaceTypeList: []
   drawMovementCardAmount: 2
   drawSupportCardAmount: 2
   turnsPoisoned: 0
@@ -21,6 +21,7 @@ MonoBehaviour:
   damageTakenAmount: 0
   levelToPassBarricade: 0
   damageGivenAmount: 0
+  spaceTypeWrappers: []
   thisSpaceTypes: 00000000
   spaceName: Slyly Concealed
   spaceDescription: Draw 2 movement cards.
