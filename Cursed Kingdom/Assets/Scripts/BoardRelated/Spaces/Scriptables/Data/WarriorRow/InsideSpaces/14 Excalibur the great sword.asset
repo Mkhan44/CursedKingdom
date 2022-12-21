@@ -12,16 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 14 Excalibur the great sword
   m_EditorClassIdentifier: 
-  spaceTypeList: []
-  drawMovementCardAmount: 3
-  drawSupportCardAmount: 0
-  turnsPoisoned: 0
-  turnsCursed: 1
-  healthRecoveryAmount: 3
-  damageTakenAmount: 1
-  levelToPassBarricade: 0
-  damageGivenAmount: 2
-  spaceTypeWrappers: []
+  afterDuelEffect: 0
+  onSpaceTurnStartEffect: 0
+  passingOverSpaceEffect: 0
+  isMandatory: 1
+  isNonDuelSpace: 0
+  hasCostToPay: 0
+  spaceTypes: []
   thisSpaceTypes: 08000000
   spaceName: 'Excalibur: The Great Sword'
   spaceDescription: You can discard 3 movement cards to deal 3 damage to an opponent

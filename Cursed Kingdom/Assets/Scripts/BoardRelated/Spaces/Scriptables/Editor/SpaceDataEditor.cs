@@ -39,7 +39,7 @@ public class SpaceDataEditor : Editor
     {
         base.OnInspectorGUI();
 
-        numSpaceTypesProp = serializedObject.FindProperty(nameof(SpaceData.spaceTypeWrappers));
+        numSpaceTypesProp = serializedObject.FindProperty(nameof(SpaceData.spaceTypes));
         spaceData = target as SpaceData;
 
         List<Type> currentTypes = new();
@@ -48,28 +48,28 @@ public class SpaceDataEditor : Editor
 
         GUILayout.Label("FOR EDITOR ONLY -- GENERATE SCRIPTABLES BELOW.");
 
-        Array.Resize(ref choiceIndeces, spaceData.spaceTypeWrappers.Count);
+        Array.Resize(ref choiceIndeces, spaceData.spaceTypes.Count);
 
         for (int i = 0; i < numSpaceTypesProp.arraySize; i++)
         {
             EditorGUILayout.Space();
 
-            if(spaceData.spaceTypeWrappers[i].spaceTypeStringHidden == string.Empty)
+            if(spaceData.spaceTypes[i].spaceTypeStringHidden == string.Empty)
             {
-                spaceData.spaceTypeWrappers[i].spaceTypeStringHidden = choices[0];
+                spaceData.spaceTypes[i].spaceTypeStringHidden = choices[0];
             }
 
-            if (spaceData.spaceTypeWrappers[i].spaceEffectData != null)
+            if (spaceData.spaceTypes[i].spaceEffectData != null)
             {
-                choiceIndeces[i] = Array.IndexOf(choices, spaceData.spaceTypeWrappers[i].spaceEffectData.GetType().ToString());
+                choiceIndeces[i] = Array.IndexOf(choices, spaceData.spaceTypes[i].spaceEffectData.GetType().ToString());
             }
             else
             {
-                choiceIndeces[i] = Array.IndexOf(choices, spaceData.spaceTypeWrappers[i].spaceTypeStringHidden);
+                choiceIndeces[i] = Array.IndexOf(choices, spaceData.spaceTypes[i].spaceTypeStringHidden);
             }
 
             choiceIndeces[i] = EditorGUILayout.Popup($"Space Type {i}: ", choiceIndeces[i], choices);
-            spaceData.spaceTypeWrappers[i].spaceTypeStringHidden = choices[choiceIndeces[i]];
+            spaceData.spaceTypes[i].spaceTypeStringHidden = choices[choiceIndeces[i]];
             EditorUtility.SetDirty(target);
 
         }
@@ -110,7 +110,7 @@ public class SpaceDataEditor : Editor
 
             spaceEffectFolderPath = spaceEffectNewFolderPath;
 
-            for (int i = 0; i < spaceData.spaceTypeWrappers.Count(); i++)
+            for (int i = 0; i < spaceData.spaceTypes.Count(); i++)
             {
 
                 Type scriptableType = GetTypeFromString(i);
@@ -121,7 +121,7 @@ public class SpaceDataEditor : Editor
                 Debug.Log(test);
                 //AssetDatabase.RenameAsset(scriptableTypePath, spaceData.name + " " + scriptableType.ToString());
                 AssetDatabase.SaveAssets();
-                spaceData.spaceTypeWrappers[i].spaceEffectData = scriptableInstance as SpaceEffectData;
+                spaceData.spaceTypes[i].spaceEffectData = scriptableInstance as SpaceEffectData;
                 AssetDatabase.Refresh();
 
             }
@@ -134,7 +134,7 @@ public class SpaceDataEditor : Editor
     private Type GetTypeFromString(int i)
     {
         Type textType = null;
-        string typeName = spaceData.spaceTypeWrappers[i].spaceTypeStringHidden;
+        string typeName = spaceData.spaceTypes[i].spaceTypeStringHidden;
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         foreach (var assembly in assemblies)
         {

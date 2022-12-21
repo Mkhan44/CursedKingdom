@@ -12,16 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 13 Hall Of Rest
   m_EditorClassIdentifier: 
-  spaceTypeList: []
-  drawMovementCardAmount: 3
-  drawSupportCardAmount: 0
-  turnsPoisoned: 0
-  turnsCursed: 1
-  healthRecoveryAmount: 3
-  damageTakenAmount: 1
-  levelToPassBarricade: 0
-  damageGivenAmount: 2
-  spaceTypeWrappers: []
+  afterDuelEffect: 0
+  onSpaceTurnStartEffect: 0
+  passingOverSpaceEffect: 0
+  isMandatory: 1
+  isNonDuelSpace: 0
+  hasCostToPay: 0
+  spaceTypes: []
   thisSpaceTypes: 0d00000000000000
   spaceName: Hall Of Rest
   spaceDescription: If you are on this space after winning a duel, draw 3 movement

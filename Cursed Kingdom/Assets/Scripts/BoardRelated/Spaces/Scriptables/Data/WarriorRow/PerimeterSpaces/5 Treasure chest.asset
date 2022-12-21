@@ -12,16 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 5 Treasure chest
   m_EditorClassIdentifier: 
-  spaceTypeList: []
-  drawMovementCardAmount: 1
-  drawSupportCardAmount: 1
-  turnsPoisoned: 0
-  turnsCursed: 0
-  healthRecoveryAmount: 2
-  damageTakenAmount: 2
-  levelToPassBarricade: 0
-  damageGivenAmount: 0
-  spaceTypeWrappers: []
+  afterDuelEffect: 0
+  onSpaceTurnStartEffect: 0
+  passingOverSpaceEffect: 0
+  isMandatory: 1
+  isNonDuelSpace: 0
+  hasCostToPay: 0
+  spaceTypes: []
   thisSpaceTypes: 0100000000000000
   spaceName: Treasure Chest
   spaceDescription: Draw 1 support card or 1 movement card.

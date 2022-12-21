@@ -12,15 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: Warrior Level 2 Barricade
   m_EditorClassIdentifier: 
-  choiceOfOptions: 0
-  drawMovementCardAmount: 0
-  drawSupportCardAmount: 0
-  turnsPoisoned: 0
-  turnsCursed: 0
-  healthRecoveryAmount: 0
-  damageTakenAmount: 0
-  levelToPassBarricade: 2
-  damageGivenAmount: 0
+  afterDuelEffect: 0
+  onSpaceTurnStartEffect: 0
+  passingOverSpaceEffect: 0
+  isMandatory: 1
+  isNonDuelSpace: 0
+  hasCostToPay: 0
+  spaceTypes: []
   thisSpaceTypes: 06000000
   spaceName: Barricade Space
   spaceDescription: You must be level 2 before you can pass this barricade.

@@ -12,16 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 10 Combat Preparations
   m_EditorClassIdentifier: 
-  spaceTypeList: []
-  drawMovementCardAmount: 2
-  drawSupportCardAmount: 0
-  turnsPoisoned: 0
-  turnsCursed: 0
-  healthRecoveryAmount: 1
-  damageTakenAmount: 1
-  levelToPassBarricade: 0
-  damageGivenAmount: 2
-  spaceTypeWrappers: []
+  afterDuelEffect: 0
+  onSpaceTurnStartEffect: 0
+  passingOverSpaceEffect: 0
+  isMandatory: 1
+  isNonDuelSpace: 0
+  hasCostToPay: 0
+  spaceTypes: []
   thisSpaceTypes: 0000000004000000
   spaceName: Combat Preparations
   spaceDescription: Draw 2 movement cards, then recover 1 health.

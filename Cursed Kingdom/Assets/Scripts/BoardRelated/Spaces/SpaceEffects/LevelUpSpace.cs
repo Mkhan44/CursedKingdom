@@ -8,8 +8,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "LevelUpSpace", menuName = "Space Effect Data/Level Up Space", order = 0)]
 public class LevelUpSpace : SpaceEffectData, ISpaceEffect
 {
-    [Range(1, 5)] [SerializeField] private int levelsToIncrease;
-    [Range(1, 5)] [SerializeField] private int numHealthToRecover;
+    [Space(10f)]
+    [Range(1, 5)] [SerializeField] private int levelsToIncrease = 1;
+    [Range(1, 5)] [SerializeField] private int numHealthToRecover = 1;
 
     public int LevelsToIncrease { get => levelsToIncrease; set => levelsToIncrease = value; }
     public int NumHealthToRecover { get => numHealthToRecover; set => numHealthToRecover = value; }

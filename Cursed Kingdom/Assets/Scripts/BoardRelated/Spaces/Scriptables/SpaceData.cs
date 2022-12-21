@@ -12,11 +12,37 @@ using UnityEngine;
 public class SpaceData : ScriptableObject
 {
     [Serializable]
-    public class SpaceTypeWrapper
+    public class SpaceTypes
     {
         [SerializeField] public SpaceEffectData spaceEffectData;
         [HideInInspector] public string spaceTypeStringHidden;
     }
+
+    [Header("Space Effect trigger timing [HOVER FOR TOOLTIPS]")]
+    [Space(2f)]
+    [Tooltip("This should be true if the space effect happens AFTER a duel.")]
+    [SerializeField] private bool afterDuelEffect;
+    [Tooltip("This should be true if the space effect happens when a player starts their turn on the space.")]
+    [SerializeField] private bool onSpaceTurnStartEffect;
+    [Tooltip("This should be true if the player can activate this space effect when passing over it.")]
+    [SerializeField] private bool passingOverSpaceEffect;
+    [Tooltip("If the space effect is mandatory -- the game will try and activate it. Otherwise popup will ask the player if they want to. Default = true.")]
+    [SerializeField] private bool isMandatory = true;
+    [Space(10f)]
+
+    //might need another bool for barricade???
+
+    [Header("Extra Space Stipulations")]
+    [Space(2f)]
+    [Tooltip("If a duel cannot be commenced with a player that is on this space, this should be true.")]
+    [SerializeField] private bool isNonDuelSpace;
+    [Tooltip("If the player needs to have something before the effects can happen this should be true. Example: Discarding a card to then draw a card. NOTE: COST SHOULD BE THE 1ST EFFECT IN SPACE EFFECTS LIST.")]
+    [SerializeField] private bool hasCostToPay;
+
+    public bool AfterDuelEffect { get => afterDuelEffect; set => afterDuelEffect = value; }
+    public bool OnSpaceStartEffect { get => onSpaceTurnStartEffect; set => onSpaceTurnStartEffect = value; }
+    public bool PassingOverSpaceEffect { get => passingOverSpaceEffect; set => passingOverSpaceEffect = value; }
+    public bool IsMandatory { get => isMandatory; set => isMandatory = value; }
 
     //Determines icon to be used. Should be moved to whatever script we'll have on the space prefabs.
     public enum SpaceType
@@ -38,37 +64,7 @@ public class SpaceData : ScriptableObject
         Misc,
     }
 
-    public List<SpaceTypeWrapper> spaceTypeList;
-
-    #region Custom Editor
-    [Range(1, 10)]
-    [HideInInspector] public int drawMovementCardAmount;
-
-    [Range(1, 10)]
-    [HideInInspector] public int drawSupportCardAmount;
-
-    [Range(1,10)]
-    [HideInInspector] public int turnsPoisoned;
-
-    [Range(1, 10)]
-    [HideInInspector] public int turnsCursed;
-
-    [Range(1, 10)]
-    [HideInInspector] public int healthRecoveryAmount;
-
-    [Range(1, 10)]
-    [HideInInspector] public int damageTakenAmount;
-
-    [Range(1, 10)]
-    [HideInInspector] public int levelToPassBarricade;
-
-    [Range(1, 10)]
-    [HideInInspector] public int damageGivenAmount;
-
-
-    #endregion
-
-    public List<SpaceTypeWrapper> spaceTypeWrappers;
+    public List<SpaceTypes> spaceTypes;
     public List<SpaceType> thisSpaceTypes;
     public string spaceName = "Space";
     [TextArea(3,10)]
