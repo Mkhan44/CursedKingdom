@@ -17,8 +17,12 @@ MonoBehaviour:
   passingOverSpaceEffect: 0
   isMandatory: 1
   isNonDuelSpace: 0
-  hasCostToPay: 0
-  spaceTypes: []
+  hasCostToPay: 1
+  spaceEffects:
+  - spaceEffectData: {fileID: 11400000, guid: 41fb4d50bd9993b4f88cccb659f9e9af, type: 2}
+    spaceTypeStringHidden: DiscardCardSpace
+  - spaceEffectData: {fileID: 11400000, guid: 14d8f27191f51b648b1f01fdb3223da6, type: 2}
+    spaceTypeStringHidden: AttackSpace
   thisSpaceTypes: 0e0000000b000000
   spaceName: Sniping Point
   spaceDescription: Discard 1 support card to deal 2 damage to an opponent of your
