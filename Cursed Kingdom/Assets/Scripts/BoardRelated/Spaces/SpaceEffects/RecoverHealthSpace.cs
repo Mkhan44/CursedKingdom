@@ -5,10 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "RecoverHealthSpace", menuName = "Space Effect Data/Recover Health Space", order = 0)]
+[CreateAssetMenu(fileName = "RecoverHealthSpaceEffect", menuName = "Space Effect Data/Recover Health Space", order = 0)]
 public class RecoverHealthSpace : SpaceEffectData, ISpaceEffect
 {
-    [Range(1,10)] [SerializeField] private int healthToRecover;
+    [Range(1,10)] [SerializeField] private int healthToRecover = 1;
 
     public int HealthToRecover { get => healthToRecover; set => healthToRecover = value; }
 

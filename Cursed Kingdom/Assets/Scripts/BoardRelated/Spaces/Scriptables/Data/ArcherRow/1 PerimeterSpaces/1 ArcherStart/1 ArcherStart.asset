@@ -18,7 +18,9 @@ MonoBehaviour:
   isMandatory: 1
   isNonDuelSpace: 0
   hasCostToPay: 0
-  spaceTypes: []
+  spaceEffects:
+  - spaceEffectData: {fileID: 11400000, guid: 0bfaca845d382c347b121ea57fed148c, type: 2}
+    spaceTypeStringHidden: LevelUpSpace
   thisSpaceTypes: 09000000
   spaceName: ArcherStart
   spaceDescription: Level up if you're the archer class when passing this space!

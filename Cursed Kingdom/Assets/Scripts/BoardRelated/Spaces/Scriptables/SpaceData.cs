@@ -8,11 +8,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+
 [CreateAssetMenu(fileName = "Space Data", menuName = "Board Layout/Space Data", order = 0)]
 public class SpaceData : ScriptableObject
 {
+    [Tooltip("A list of effects that are on the space.")]
     [Serializable]
-    public class SpaceTypes
+    public class SpaceEffect
     {
         [SerializeField] public SpaceEffectData spaceEffectData;
         [HideInInspector] public string spaceTypeStringHidden;
@@ -64,7 +66,7 @@ public class SpaceData : ScriptableObject
         Misc,
     }
 
-    public List<SpaceTypes> spaceTypes;
+    public List<SpaceEffect> spaceEffects;
     public List<SpaceType> thisSpaceTypes;
     public string spaceName = "Space";
     [TextArea(3,10)]

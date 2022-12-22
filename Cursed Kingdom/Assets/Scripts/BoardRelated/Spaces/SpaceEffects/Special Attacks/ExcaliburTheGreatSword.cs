@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ExcaliburTheGreatSword", menuName = "Space Effect Data/ExcaliburTheGreatSword", order = 0)]
+[CreateAssetMenu(fileName = "ExcaliburTheGreatSwordEffect", menuName = "Space Effect Data/ExcaliburTheGreatSword", order = 0)]
 public class ExcaliburTheGreatSword : SpecialAttackSpace, ISpaceEffect
 {
     [Range(1, 10)] [SerializeField] private int numCardsToDiscard;

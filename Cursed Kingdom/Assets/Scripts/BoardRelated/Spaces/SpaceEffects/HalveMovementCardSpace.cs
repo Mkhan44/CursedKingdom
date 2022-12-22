@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "HalveMovementCardSpace", menuName = "Space Effect Data/Halve Movement Card Space", order = 0)]
+[CreateAssetMenu(fileName = "HalveMovementCardSpaceEffect", menuName = "Space Effect Data/Halve Movement Card Space", order = 0)]
 public class HalveMovementCardSpace : SpaceEffectData, ISpaceEffect
 {
 

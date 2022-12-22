@@ -5,12 +5,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "DiscardCardSpace", menuName = "Space Effect Data/Discard Card Space", order = 0)]
+[CreateAssetMenu(fileName = "DiscardCardSpaceEffect", menuName = "Space Effect Data/Discard Card Space", order = 0)]
 public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
 {
 
     [SerializeField] private CardType cardTypeToDiscard;
-    [SerializeField] [Range(1, 10)] private int numToDiscard;
+    [SerializeField] [Range(1, 10)] private int numToDiscard = 1;
 
     public CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
     public int NumToDiscard { get => numToDiscard; set => numToDiscard = value; }

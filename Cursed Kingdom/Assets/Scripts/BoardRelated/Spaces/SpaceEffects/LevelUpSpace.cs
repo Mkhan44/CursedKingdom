@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "LevelUpSpace", menuName = "Space Effect Data/Level Up Space", order = 0)]
+[CreateAssetMenu(fileName = "LevelUpSpaceEffect", menuName = "Space Effect Data/Level Up Space", order = 0)]
 public class LevelUpSpace : SpaceEffectData, ISpaceEffect
 {
     [Space(10f)]

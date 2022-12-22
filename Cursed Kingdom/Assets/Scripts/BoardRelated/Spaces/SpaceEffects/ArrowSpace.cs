@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ArrowSpace", menuName = "Space Effect Data/ArrowSpace", order = 0)]
+[CreateAssetMenu(fileName = "ArrowSpaceEffect", menuName = "Space Effect Data/ArrowSpace", order = 0)]
 public class ArrowSpace : SpaceEffectData, ISpaceEffect
 {
     [SerializeField] private List<DirectionToTravel> directionToTravel;

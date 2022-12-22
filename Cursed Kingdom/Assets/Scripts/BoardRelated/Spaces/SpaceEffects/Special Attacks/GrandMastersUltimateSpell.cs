@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GrandMastersUltimateSpell", menuName = "Space Effect Data/GrandMastersUltimateSpell", order = 0)]
+[CreateAssetMenu(fileName = "GrandMastersUltimateSpellEffect", menuName = "Space Effect Data/GrandMastersUltimateSpell", order = 0)]
 public class GrandMastersUltimateSpell : SpecialAttackSpace, ISpaceEffect
 {
     [Range(1, 10)] [SerializeField] private int numCardsToDiscard;

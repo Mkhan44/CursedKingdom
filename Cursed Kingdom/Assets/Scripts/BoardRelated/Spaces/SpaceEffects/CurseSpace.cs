@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CurseSpace", menuName = "Space Effect Data/Curse Space", order = 0)]
+[CreateAssetMenu(fileName = "CurseSpaceEffect", menuName = "Space Effect Data/Curse Space", order = 0)]
 public class CurseSpace : SpaceEffectData, ISpaceEffect
 {
     [Range(1, 10)] [SerializeField] private int numTurnsToBeCursed;

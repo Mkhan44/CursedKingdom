@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ConferenceRoomSpace", menuName = "Space Effect Data/ConferenceRoom Space", order = 0)]
+[CreateAssetMenu(fileName = "ConferenceRoomSpaceEffect", menuName = "Space Effect Data/ConferenceRoom Space", order = 0)]
 public class ConferenceRoomSpace : SpaceEffectData, ISpaceEffect
 {
     [SerializeField] private List<CardType> cardTypeToDraw;

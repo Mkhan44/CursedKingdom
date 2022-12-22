@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PoisonSpace", menuName = "Space Effect Data/Poison Space", order = 0)]
+[CreateAssetMenu(fileName = "PoisonSpaceEffect", menuName = "Space Effect Data/Poison Space", order = 0)]
 public class PoisonSpace : SpaceEffectData, ISpaceEffect
 {
     [Range(1, 10)] [SerializeField] private int numTurnsToBePoisoned;

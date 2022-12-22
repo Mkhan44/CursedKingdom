@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SwiftSwipe", menuName = "Space Effect Data/Swift Swipe", order = 0)]
+[CreateAssetMenu(fileName = "SwiftSwipeEffect", menuName = "Space Effect Data/Swift Swipe", order = 0)]
 public class SwiftSwipe : SpecialAttackSpace, ISpaceEffect
 {
     [Range(1, 10)] [SerializeField] private int numCardsToDiscard;

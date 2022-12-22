@@ -5,9 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BullseyeBarrage", menuName = "Space Effect Data/BullseyeBarrage", order = 0)]
+[CreateAssetMenu(fileName = "BullseyeBarrageEffect", menuName = "Space Effect Data/BullseyeBarrage", order = 0)]
 public class BullseyeBarrage : SpecialAttackSpace, ISpaceEffect
 {
+    //
     [Range(1, 10)] [SerializeField] private int numCardsToDiscard;
     [SerializeField] private CardType cardTypeToDiscard;
     [Range(1, 10)] [SerializeField] private int damageToDeal;

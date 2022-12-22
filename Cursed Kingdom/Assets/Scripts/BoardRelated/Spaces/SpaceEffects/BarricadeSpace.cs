@@ -5,10 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BarricadeSpace", menuName = "Space Effect Data/Barricade Space", order = 0)]
+[CreateAssetMenu(fileName = "BarricadeSpaceEffect", menuName = "Space Effect Data/Barricade Space", order = 0)]
 public class BarricadeSpace : SpaceEffectData, ISpaceEffect
 {
-    [Range(1, 5)] [SerializeField] private int levelNeededToPass;
+    [Range(1, 5)] [SerializeField] private int levelNeededToPass = 1;
 
     public int LevelNeededToPass { get => levelNeededToPass; set => levelNeededToPass = value; }
 
