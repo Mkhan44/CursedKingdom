@@ -17,8 +17,12 @@ MonoBehaviour:
   passingOverSpaceEffect: 0
   isMandatory: 1
   isNonDuelSpace: 0
-  hasCostToPay: 0
-  spaceTypes: []
+  hasCostToPay: 1
+  spaceEffects:
+  - spaceEffectData: {fileID: 11400000, guid: 6ff083b6f8c167f4f9b88c5079f8d1cb, type: 2}
+    spaceTypeStringHidden: DiscardCardSpace
+  - spaceEffectData: {fileID: 11400000, guid: a8073371f36be6942867484a699d2f85, type: 2}
+    spaceTypeStringHidden: DrawCardSpace
   thisSpaceTypes: 0e00000001000000
   spaceName: Supply
   spaceDescription: Discard 1 support card to draw 2 support cards.
