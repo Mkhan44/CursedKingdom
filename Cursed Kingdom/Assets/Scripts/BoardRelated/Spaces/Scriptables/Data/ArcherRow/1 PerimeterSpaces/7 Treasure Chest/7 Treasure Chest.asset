@@ -18,7 +18,9 @@ MonoBehaviour:
   isMandatory: 1
   isNonDuelSpace: 0
   hasCostToPay: 0
-  spaceTypes: []
+  spaceEffects:
+  - spaceEffectData: {fileID: 11400000, guid: 582b951b4270f3342ac6ed191a62d8ea, type: 2}
+    spaceTypeStringHidden: DrawCardSpace
   thisSpaceTypes: 0000000001000000
   spaceName: Treasure Chest
   spaceDescription: Draw 1 support card or 1 movement card.
