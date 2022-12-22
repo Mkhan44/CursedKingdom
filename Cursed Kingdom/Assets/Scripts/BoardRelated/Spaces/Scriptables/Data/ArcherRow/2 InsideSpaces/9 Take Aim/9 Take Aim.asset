@@ -18,7 +18,9 @@ MonoBehaviour:
   isMandatory: 1
   isNonDuelSpace: 0
   hasCostToPay: 0
-  spaceTypes: []
+  spaceEffects:
+  - spaceEffectData: {fileID: 11400000, guid: 4a43673f69a1022428c525ebeb9dac4f, type: 2}
+    spaceTypeStringHidden: DrawCardSpace
   thisSpaceTypes: 00000000
   spaceName: Take Aim
   spaceDescription: Draw 2 movement cards.
