@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
-  m_Name: 12 Accuracy Up!
+  m_Name: 12 Accuracy Up
   m_EditorClassIdentifier: 
   afterDuelEffect: 0
   onSpaceTurnStartEffect: 0
@@ -18,7 +18,9 @@ MonoBehaviour:
   isMandatory: 1
   isNonDuelSpace: 0
   hasCostToPay: 0
-  spaceTypes: []
+  spaceEffects:
+  - spaceEffectData: {fileID: 11400000, guid: e3a8473a5da111c4d9b5d26125a3c3d8, type: 2}
+    spaceTypeStringHidden: DrawCardSpace
   thisSpaceTypes: 01000000
   spaceName: Accuracy Up!
   spaceDescription: Draw 2 support cards.
