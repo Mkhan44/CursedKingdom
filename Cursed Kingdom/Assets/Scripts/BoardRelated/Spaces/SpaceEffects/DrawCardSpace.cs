@@ -12,10 +12,13 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
     [SerializeField] [Range(1,10)] private int numToDraw = 1;
     [Tooltip("If the user can pick any card type, this should be true. This overrides the cardTypeToDraw field.")]
     [SerializeField] private bool canBeEitherCard;
+    [Tooltip("If the user needs to draw from the discard pile instead of the respective deck, this should be true.")]
+    [SerializeField] private bool drawFromDiscardPile;
 
     public CardType CardTypeToDraw { get => cardTypeToDraw; set => cardTypeToDraw = value; }
     public int NumToDraw { get => numToDraw; set => numToDraw = value; }
     public bool CanBeEitherCard { get => canBeEitherCard; set => canBeEitherCard = value; }
+    public bool DrawFromDiscardPile { get => drawFromDiscardPile; set => drawFromDiscardPile = value; }
 
     public override void EffectOfSpace(Player playerReference)
     {

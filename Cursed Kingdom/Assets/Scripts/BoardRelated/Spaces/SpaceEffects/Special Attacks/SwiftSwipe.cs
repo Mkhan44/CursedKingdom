@@ -8,7 +8,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SwiftSwipeEffect", menuName = "Space Effect Data/Swift Swipe", order = 0)]
 public class SwiftSwipe : SpecialAttackSpace, ISpaceEffect
 {
-    [Range(1, 10)] [SerializeField] private int numCardsToDiscard;
+    [Range(1, 10)] [SerializeField] private int numCardsToDiscard = 1;
     [SerializeField] private CardType cardTypeToDiscard;
 
     public int NumCardsToDiscard { get => numCardsToDiscard; set => numCardsToDiscard = value; }

@@ -8,7 +8,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CurseSpaceEffect", menuName = "Space Effect Data/Curse Space", order = 0)]
 public class CurseSpace : SpaceEffectData, ISpaceEffect
 {
-    [Range(1, 10)] [SerializeField] private int numTurnsToBeCursed = 0;
+    [Range(1, 10)] [SerializeField] private int numTurnsToBeCursed = 1;
 
     public int NumTurnsToBeCursed { get => numTurnsToBeCursed; set => numTurnsToBeCursed = value; }
 
