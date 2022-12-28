@@ -20,7 +20,7 @@ public class ConferenceRoomSpace : SpaceEffectData, ISpaceEffect
     public int HealthToRecover { get => healthToRecover; set => healthToRecover = value; }
     public int DamageToDeal { get => damageToDeal; set => damageToDeal = value; }
 
-    public void EffectOfSpace(Player playerReference)
+    public override void EffectOfSpace(Player playerReference)
     {
         Debug.Log($"Landed on: {this.name} space...lots of stuff should happen lolol");
     }

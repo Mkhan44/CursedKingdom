@@ -12,7 +12,7 @@ public class LoseHealthSpace : SpaceEffectData, ISpaceEffect
 
     public int HealthToLose { get => healthToLose; set => healthToLose = value; }
 
-    public void EffectOfSpace(Player playerReference)
+    public override void EffectOfSpace(Player playerReference)
     {
         Debug.Log($"Landed on: {this.name} space and should lose: {HealthToLose} health.");
     }

@@ -16,7 +16,7 @@ public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
     public int NumToDiscard { get => numToDiscard; set => numToDiscard = value; }
 
     //Check if the player can discard before activating any other space effects. This will have to be determined by whatever is queueing up the space effects to trigger.
-    public void EffectOfSpace(Player playerReference)
+    public override void EffectOfSpace(Player playerReference)
     {
         //CAN PLAYER DISCARD? IF NO -- SKIP THIS EFFECT AND ANYTHING RELYING ON THE DISCARD.
 

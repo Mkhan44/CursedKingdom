@@ -12,7 +12,7 @@ public class BarricadeSpace : SpaceEffectData, ISpaceEffect
 
     public int LevelNeededToPass { get => levelNeededToPass; set => levelNeededToPass = value; }
 
-    public void EffectOfSpace(Player playerReference)
+    public override void EffectOfSpace(Player playerReference)
     {
         //If player's level is too low: Force them to the other path. Otherwise, check if it's the first time passing it and play an animation.
         //Finally, if it's not the 1st time or after the animation plays: Player can choose to move to this space.

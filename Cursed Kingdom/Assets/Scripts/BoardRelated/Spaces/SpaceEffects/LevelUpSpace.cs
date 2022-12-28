@@ -16,7 +16,7 @@ public class LevelUpSpace : SpaceEffectData, ISpaceEffect
     public int NumHealthToRecover { get => numHealthToRecover; set => numHealthToRecover = value; }
 
     //NEED TO ENSURE THAT SPACES-TO-LEVELUP ARE RESET ONCE THIS EFFECT IS TRIGGERED.
-    public void EffectOfSpace(Player playerReference)
+    public override void EffectOfSpace(Player playerReference)
     {
         Debug.Log($"Landed on: {this.name} space and level should be increased by: {LevelsToIncrease} and health recovered by: {NumHealthToRecover}");
         //Reset player's spaces to the level up space so they can't get the effect again until they've traveled around the board.

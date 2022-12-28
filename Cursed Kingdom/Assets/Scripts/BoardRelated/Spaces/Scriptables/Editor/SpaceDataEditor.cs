@@ -121,7 +121,8 @@ public class SpaceDataEditor : Editor
 
                 Type scriptableType = GetTypeFromString(i);
                 ScriptableObject scriptableInstance = CreateInstance(scriptableType);
-                string scriptableTypePath = AssetDatabase.GenerateUniqueAssetPath($"{spaceEffectFolderPath}/{spaceData.name} {scriptableType.ToString()}.asset");
+                string scriptableFinalName = TrimStringName($"{scriptableType.ToString()}.asset", spaceData.name);
+                string scriptableTypePath = AssetDatabase.GenerateUniqueAssetPath($"{spaceEffectFolderPath}/{scriptableFinalName}");
                 AssetDatabase.CreateAsset(scriptableInstance, scriptableTypePath);
                 string test = (AssetDatabase.GetAssetPath(scriptableInstance));
                 AssetDatabase.SaveAssets();
@@ -150,6 +151,17 @@ public class SpaceDataEditor : Editor
         return textType;
     }
 
+    private string TrimStringName(string stringToTrim, string contentToTrimOff = null)
+    {
+        if(contentToTrimOff == null)
+        {
+            contentToTrimOff = string.Empty;
+        }
+        stringToTrim.Replace(contentToTrimOff, string.Empty);
+
+        return stringToTrim;
+    }
+
     private static List<Type> FindClassesUsingInterface(out int numTypes)
     {
         List<Type> theTypes = new();
@@ -163,7 +175,10 @@ public class SpaceDataEditor : Editor
         {
             ISpaceEffect obj = CreateInstance(t) as ISpaceEffect;
             numTypes += 1;
-            theTypes.Add(t);
+            if(obj.GetType() != typeof(SpaceEffectData))
+            {
+                theTypes.Add(t);
+            }
             // Debug.Log(t.Name);
         }
 

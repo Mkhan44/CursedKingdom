@@ -17,7 +17,7 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
     public int NumToDraw { get => numToDraw; set => numToDraw = value; }
     public bool CanBeEitherCard { get => canBeEitherCard; set => canBeEitherCard = value; }
 
-    public void EffectOfSpace(Player playerReference)
+    public override void EffectOfSpace(Player playerReference)
     {
         Debug.Log($"Landed on: {this.name} space and should draw: {NumToDraw} {CardTypeToDraw} card(s)");
     }

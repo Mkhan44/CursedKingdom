@@ -24,7 +24,7 @@ public class SpaceData : ScriptableObject
     [Space(2f)]
     [Tooltip("This should be true if the space effect happens AFTER a duel.")]
     [SerializeField] private bool afterDuelEffect;
-    [Tooltip("This should be true if the space effect happens when a player starts their turn on the space.")]
+    [Tooltip("This should be true if the space effect happens when a player starts their turn on the space. NOTE: SHOULD BE THE 1ST EFFECT IN SPACE EFFECTS LIST.")]
     [SerializeField] private bool onSpaceTurnStartEffect;
     [Tooltip("This should be true if the player can activate this space effect when passing over it.")]
     [SerializeField] private bool passingOverSpaceEffect;

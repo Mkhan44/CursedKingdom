@@ -8,11 +8,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PoisonSpaceEffect", menuName = "Space Effect Data/Poison Space", order = 0)]
 public class PoisonSpace : SpaceEffectData, ISpaceEffect
 {
-    [Range(1, 10)] [SerializeField] private int numTurnsToBePoisoned;
+    [Range(1, 10)] [SerializeField] private int numTurnsToBePoisoned = 1;
 
     public int NumTurnsToBePoisoned { get => numTurnsToBePoisoned; set => numTurnsToBePoisoned = value; }
 
-    public void EffectOfSpace(Player playerReference)
+    public override void EffectOfSpace(Player playerReference)
     {
         Debug.Log($"Landed on: {this.name} space and should be poisoned for: {NumTurnsToBePoisoned} turn(s).");
         //playerReference.IsPoisoned = true;

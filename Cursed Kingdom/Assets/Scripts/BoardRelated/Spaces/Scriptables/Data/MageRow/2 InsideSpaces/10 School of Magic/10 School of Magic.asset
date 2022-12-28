@@ -18,7 +18,9 @@ MonoBehaviour:
   isMandatory: 1
   isNonDuelSpace: 0
   hasCostToPay: 0
-  spaceTypes: []
+  spaceEffects:
+  - spaceEffectData: {fileID: 11400000, guid: 8060b85de522ac34a971afa4e83d684e, type: 2}
+    spaceTypeStringHidden: DrawCardSpace
   thisSpaceTypes: 01000000
   spaceName: School of Magic
   spaceDescription: Draw 2 support cards.

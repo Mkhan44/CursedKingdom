@@ -56,8 +56,8 @@ public class Space : MonoBehaviour
             if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
             {
                 playerReference.IsMoving = false;
-               // Debug.Log($"Player landed on space: {spaceData.spaceName}");
-                ApplySpaceEffects();
+                Debug.Log($"Player landed on space: {spaceData.spaceName}");
+                ApplySpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
                 //playerReference.DebugTheSpace();
             }
@@ -68,11 +68,18 @@ public class Space : MonoBehaviour
         }
     }
 
-    private void ApplySpaceEffects()
+    //Will probably need a way to check if it's the beginning of the turn, if the player just landed on the space, etc.
+    private void ApplySpaceEffects(Player player)
     {
-        for (int i = 0; i < spaceData.thisSpaceTypes.Count; i++)
+        if(spaceData.spaceEffects.Count < 1)
         {
-          //  Debug.Log($"Applying space effect: {spaceData.thisSpaceTypes[i]}");
+            Debug.LogWarning("Hey, no space effects on this space currently!");
+        }
+
+        for (int i = 0; i < spaceData.spaceEffects.Count; i++)
+        {
+            //Do the space effect in sequence. We'll check for any external triggers here as well.
+            spaceData.spaceEffects[i].spaceEffectData.EffectOfSpace(player);
         }
     }
 

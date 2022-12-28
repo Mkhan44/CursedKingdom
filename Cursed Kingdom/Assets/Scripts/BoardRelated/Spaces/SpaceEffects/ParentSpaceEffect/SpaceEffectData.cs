@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpaceEffectData : ScriptableObject
+public class SpaceEffectData : ScriptableObject , ISpaceEffect
 {
+
     public enum CardType
     {
         MovementCard,
@@ -17,6 +18,11 @@ public class SpaceEffectData : ScriptableObject
         Down,
         Left,
         Right,
+    }
+
+    public virtual void EffectOfSpace(Player playerReference)
+    {
+
     }
 
 
