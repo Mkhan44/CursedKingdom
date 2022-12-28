@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SpaceEffectData : ScriptableObject , ISpaceEffect
 {
+    [SerializeField] private bool isACost;
+
+    public bool IsACost { get => isACost; set => isACost = value; }
 
     public enum CardType
     {

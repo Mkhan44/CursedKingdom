@@ -12,14 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: Conference Room
   m_EditorClassIdentifier: 
-  drawMovementCardAmount: 1
-  drawSupportCardAmount: 1
-  turnsPoisoned: 0
-  turnsCursed: 0
-  healthRecoveryAmount: 1
-  damageTakenAmount: 0
-  levelToPassBarricade: 0
-  damageGivenAmount: 0
+  afterDuelEffect: 0
+  onSpaceTurnStartEffect: 0
+  passingOverSpaceEffect: 0
+  isMandatory: 1
+  isNonDuelSpace: 0
+  spaceEffects: []
   thisSpaceTypes: 0c0000000000000001000000040000000d000000
   spaceName: Conference Room
   spaceDescription: 'If you begin your turn on this space: draw 1 support card and

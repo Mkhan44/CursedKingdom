@@ -12,15 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: Test Space Data 2
   m_EditorClassIdentifier: 
-  choiceOfOptions: 0
-  drawMovementCardAmount: 0
-  drawSupportCardAmount: 0
-  turnsPoisoned: 0
-  turnsCursed: 0
-  healthRecoveryAmount: 0
-  damageTakenAmount: 0
-  levelToPassBarricade: 0
-  damageGivenAmount: 0
+  afterDuelEffect: 0
+  onSpaceTurnStartEffect: 0
+  passingOverSpaceEffect: 0
+  isMandatory: 1
+  isNonDuelSpace: 0
+  spaceEffects: []
   thisSpaceTypes: 04000000
   spaceName: TestSpace 2
   spaceDescription: This is the description of space 2!

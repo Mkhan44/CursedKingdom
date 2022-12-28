@@ -38,8 +38,6 @@ public class SpaceData : ScriptableObject
     [Space(2f)]
     [Tooltip("If a duel cannot be commenced with a player that is on this space, this should be true.")]
     [SerializeField] private bool isNonDuelSpace;
-    [Tooltip("If the player needs to have something before the effects can happen this should be true. Example: Discarding a card to then draw a card. NOTE: COST SHOULD BE THE 1ST EFFECT IN SPACE EFFECTS LIST.")]
-    [SerializeField] private bool hasCostToPay;
 
     public bool AfterDuelEffect { get => afterDuelEffect; set => afterDuelEffect = value; }
     public bool OnSpaceStartEffect { get => onSpaceTurnStartEffect; set => onSpaceTurnStartEffect = value; }
