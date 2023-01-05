@@ -26,4 +26,14 @@ public class SpaceChild : MonoBehaviour
         parentSpaceRef.CollisionStay(collision);
     }
 
+    private void OnTriggerEnter(Collider collider)
+    {
+        parentSpaceRef.TriggerEnter(collider);
+    }
+
+    private void OnTriggerStay(Collider collider)
+    {
+        parentSpaceRef.TriggerStay(collider);
+    }
+
 }

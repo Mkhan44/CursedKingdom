@@ -11,24 +11,25 @@ public class Player : MonoBehaviour
     public int playerIDIntVal;
 
     //Properties
-    private int maxHealth;
-    private int currentHealth;
-    private int currentLevel;
-    private int spacesLeftToMove;
-    private int movementCardsInHand;
-    private int supportCardsInHand;
-    private int maxHandSize;
-    private bool isMoving;
-    private bool isOnCooldown;
-    private bool isPoisoned;
-    private bool isCursed;
-    private int poisonDuration;
-    private int curseDuration;
-    private bool ableToLevelUp;
-    private ClassData classData;
-    private Space currentSpacePlayerIsOn;
-    private Space previousSpacePlayerWasOn;
+    [SerializeField] private int maxHealth;
+    [SerializeField] private int currentHealth;
+    [SerializeField] private int currentLevel;
+    [SerializeField] private int spacesLeftToMove;
+    [SerializeField] private int movementCardsInHand;
+    [SerializeField] private int supportCardsInHand;
+    [SerializeField] private int maxHandSize;
+    [SerializeField] private bool isMoving;
+    [SerializeField] private bool isOnCooldown;
+    [SerializeField] private bool isPoisoned;
+    [SerializeField] private bool isCursed;
+    [SerializeField] private int poisonDuration;
+    [SerializeField] private int curseDuration;
+    [SerializeField] private bool ableToLevelUp;
+    [SerializeField] private ClassData classData;
+    [SerializeField] private Space currentSpacePlayerIsOn;
+    [SerializeField] private Space previousSpacePlayerWasOn;
 
+   
     public int MaxHealth { get => maxHealth; set => maxHealth = value; }
     //Clean this up vvvvv
     public int CurrentHealth { get => currentHealth; set { if ((currentHealth + value) > MaxHealth) currentHealth = maxHealth; else { currentHealth = value; } }  }

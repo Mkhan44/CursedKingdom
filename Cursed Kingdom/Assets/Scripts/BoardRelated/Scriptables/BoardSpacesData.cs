@@ -39,13 +39,13 @@ public class BoardSpacesData : ScriptableObject
 
             if(numPerimeterSpacesInPrefab != perimeterSpaces.Count)
             {
-                Debug.LogWarning($"Your perimeter space count does not match the amount in the prefab on the {name} scriptable. The prefab has: {numPerimeterSpacesInPrefab} and your perimeterSpaces list count is:  {perimeterSpaces.Count}");
+              //  Debug.LogWarning($"Your perimeter space count does not match the amount in the prefab on the {name} scriptable. The prefab has: {numPerimeterSpacesInPrefab} and your perimeterSpaces list count is:  {perimeterSpaces.Count}");
                 return;
             }
 
             if (numInsideSpacesInPrefab != insideSpaces.Count)
             {
-                Debug.LogWarning($"Your inside space count does not match the amount in the prefab on the {name} scriptable. The prefab has: {numInsideSpacesInPrefab} and your insideSpaces list count is:  {insideSpaces.Count}");
+                //Debug.LogWarning($"Your inside space count does not match the amount in the prefab on the {name} scriptable. The prefab has: {numInsideSpacesInPrefab} and your insideSpaces list count is:  {insideSpaces.Count}");
                 return;
             }
         }

@@ -39,7 +39,7 @@ public class BoardManager : MonoBehaviour
                 {
                     middleSpaceObject.spaceData = middleSpace;
                     middleSpaceObject.SetupSpace();
-                    Debug.Log("TEST");
+                  //  Debug.Log("TEST");
                 }
                 return;
             }

@@ -232,6 +232,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIDIntVal: 0
+  maxHealth: 0
+  currentHealth: 0
+  currentLevel: 0
+  spacesLeftToMove: 0
+  movementCardsInHand: 0
+  supportCardsInHand: 0
+  maxHandSize: 0
+  isMoving: 0
+  isOnCooldown: 0
+  isPoisoned: 0
+  isCursed: 0
+  poisonDuration: 0
+  curseDuration: 0
+  ableToLevelUp: 0
+  classData: {fileID: 0}
+  currentSpacePlayerIsOn: {fileID: 0}
+  previousSpacePlayerWasOn: {fileID: 0}
 --- !u!65 &6811609303460852829
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -243,5 +260,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.7, y: 1.9, z: 0.5}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.7, y: 1.7028291, z: 0.5}
+  m_Center: {x: 0, y: 0.09858537, z: -0}

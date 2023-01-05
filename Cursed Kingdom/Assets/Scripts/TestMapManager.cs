@@ -19,12 +19,12 @@ public class TestMapManager : MonoBehaviour
 
     public void ActivateHighlight(int playerIntVal = 0)
     {
-        if(testManager.players[playerIntVal] is null)
+        if(testManager.Players[playerIntVal] is null)
         {
             Debug.LogWarning("Invalid index.");
             return;
         }
-        currentSpaceInfo = testManager.players[playerIntVal].CurrentSpacePlayerIsOn;
+        currentSpaceInfo = testManager.Players[playerIntVal].CurrentSpacePlayerIsOn;
         currentHighlightedSpace = currentSpaceInfo.gameObject;
         currentSpaceInfo.selectedBorder.gameObject.SetActive(true);
     }

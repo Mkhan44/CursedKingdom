@@ -21,16 +21,16 @@ public class TestCardMoveButton : MonoBehaviour
     public MoveButtonType buttonType;
     public GameObject parentObj;
 
-    public GameplayManager testManagerRef;
+    public GameplayManager gameManagerRef;
     private void Start()
     {
-        testManagerRef = GameObject.Find("TestManager").GetComponent<GameplayManager>();
-        if(testManagerRef != null)
+        gameManagerRef = GameObject.Find("Game Manager").GetComponent<GameplayManager>();
+        if(gameManagerRef != null)
         {
             if (buttonType == MoveButtonType.Movement)
             {
                 parentObj = transform.parent.gameObject;
-                this.GetComponent<Button>().onClick.AddListener(() => testManagerRef.StartMove(testMoveNumber));
+                this.GetComponent<Button>().onClick.AddListener(() => gameManagerRef.StartMove(testMoveNumber));
             }
             //If it's supposed to be an arrow.
             //else
