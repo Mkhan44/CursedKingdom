@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class GameplayManager : MonoBehaviour
@@ -117,7 +118,7 @@ public class GameplayManager : MonoBehaviour
         //Get all space neighbors for board movement..
         foreach(Space space in spaces)
         {
-            space.GetSpaceNeighbors();
+            space.SpaceTravelSetup();
         }
 
 
@@ -141,6 +142,11 @@ public class GameplayManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Y))
         {
             SwitchCamera();
+        }
+
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
         }
 
        

@@ -9,6 +9,14 @@ using TMPro;
 
 public class Space : MonoBehaviour
 {
+    public enum Direction
+    {
+        North,
+        South,
+        East,
+        West,
+    }
+
     public Transform spawnPoint;
     public GameObject selectedBorder;
     public GameObject highlightAnimationObject;
@@ -29,13 +37,26 @@ public class Space : MonoBehaviour
     [SerializeField] private Space northNeighbor;
     [SerializeField] private Space southNeighbor;
     [Tooltip("Used to determine how far we cast rays.")]
-    private float spaceBetweenSpaces = 2f;
+    [SerializeField] private float spaceBetweenSpaces = 2f;
 
+    [SerializeField] private HashSet<Direction> validDirectionsFromThisSpace;
+
+    //Debug
+    [SerializeField] private List<Direction> directionsHashsetVisual;
     public Space EastNeighbor { get => eastNeighbor; set => eastNeighbor = value; }
     public Space WestNeighbor { get => westNeighbor; set => westNeighbor = value; }
     public Space NorthNeighbor { get => northNeighbor; set => northNeighbor = value; }
     public Space SouthNeighbor { get => southNeighbor; set => southNeighbor = value; }
+    public HashSet<Direction> ValidDirectionsFromThisSpace { get => validDirectionsFromThisSpace; set => validDirectionsFromThisSpace = value; }
 
+    //Debug
+    public List<Direction> DirectionsHashsetVisual { get => directionsHashsetVisual; set => directionsHashsetVisual = value; }
+
+    private void Awake()
+    {
+        ValidDirectionsFromThisSpace = new();
+        DirectionsHashsetVisual = new();
+    }
     private void Start()
     {
         gameplayManagerRef = GameObject.Find("Game Manager").GetComponent<GameplayManager>();
@@ -122,6 +143,22 @@ public class Space : MonoBehaviour
         }
     }
 
+    public void SetupSpace()
+    {
+        gameObject.name = spaceData.spaceName;
+        SetSpaceMat();
+        SetSpaceSprite();
+        SetSpaceTitle();
+    }
+
+    public void SpaceTravelSetup()
+    {
+        GetSpaceNeighbors();
+        GetValidDirections();
+    }
+
+
+
     //Will probably need a way to check if it's the beginning of the turn, if the player just landed on the space, etc.
     private void ApplySpaceEffects(Player player)
     {
@@ -137,15 +174,8 @@ public class Space : MonoBehaviour
         }
     }
 
-    public void SetupSpace()
-    {
-        gameObject.name = spaceData.spaceName;
-        SetSpaceMat();
-        SetSpaceSprite();
-        SetSpaceTitle();
-    }
 
-    public void SetSpaceMat()
+    private void SetSpaceMat()
     {
         Material[] currentMats = (meshRenderer.materials);
 
@@ -168,17 +198,17 @@ public class Space : MonoBehaviour
         }
     }
 
-    public void SetSpaceSprite()
+    private void SetSpaceSprite()
     {
         spriteRenderer.sprite = spaceData.spaceSprite;
     }
 
-    public void SetSpaceTitle()
+    private void SetSpaceTitle()
     {
         spaceTitleTextMesh.text = spaceData.spaceName;
     }
 
-    public void GetSpaceNeighbors()
+    private void GetSpaceNeighbors()
     {
         Space nextSpace = default;
 
@@ -231,13 +261,92 @@ public class Space : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"{raysToCast[i]} Didn't hit anything.");
+            //    Debug.LogWarning($"{raysToCast[i]} Didn't hit anything.");
 
             }
         }
+    }
 
-        
-        
+    //Which directions should the player be able to travel from this space?
+    private void GetValidDirections()
+    {
+        Direction direction;
+
+        //All perimeter spaces.
+        if (SouthNeighbor is null)
+        {
+            direction = Direction.West;
+            ValidDirectionsFromThisSpace.Add(direction);
+        }
+
+        //Space next to 2nd barricade.
+        if(NorthNeighbor is null && EastNeighbor is null)
+        {
+            direction = Direction.West;
+            ValidDirectionsFromThisSpace.Add(direction);
+        }
+        //If the space above is is a barricade space and we have spaces all around us except below us.
+        //**THIS IS TOO SPECIFIC FOR BARRICADE...NEED A BETTER WAY TO DO THIS.**
+        if (NorthNeighbor != null && EastNeighbor != null && WestNeighbor != null && SouthNeighbor == null && NorthNeighbor.spaceData.spaceEffects[0].spaceEffectData.GetType() == typeof(BarricadeSpace))
+        {
+            direction = Direction.North;
+            ValidDirectionsFromThisSpace.Add(direction);
+        }
+
+        //All inner spaces going up.
+        if (westNeighbor is null && EastNeighbor is null)
+        {
+            direction = Direction.North;
+            ValidDirectionsFromThisSpace.Add(direction);
+
+
+            //Last barricade and special attack spaces.
+            if(SouthNeighbor.SouthNeighbor is null || NorthNeighbor.isCenterSpace)
+            {
+                direction = Direction.South;
+                ValidDirectionsFromThisSpace.Add(direction);
+            }
+
+            //CHANGE THIS IT'S SUPER BAD OMG...
+            if(spaceData.spaceEffects[0].spaceEffectData.GetType() == typeof(BarricadeSpace))
+            {
+                BarricadeSpace barricadeSpace = spaceData.spaceEffects[0].spaceEffectData as BarricadeSpace;
+                if (barricadeSpace.LevelNeededToPass == 2)
+                {
+                    ValidDirectionsFromThisSpace.Remove(Direction.South);
+                }
+            }
+
+        }
+
+        //TOO SPECIFIC. This is for the left side of inside spaces where there are not barricade spaces. Need to clean this up.
+        if(WestNeighbor is null &&  spaceData.spaceEffects[0].spaceEffectData.GetType() != typeof(BarricadeSpace))
+        {
+            if(SouthNeighbor != null && SouthNeighbor.spaceData.spaceEffects[0].spaceEffectData.GetType() != typeof(BarricadeSpace))
+            {
+                ValidDirectionsFromThisSpace.Remove(Direction.North);
+                direction = Direction.South;
+                ValidDirectionsFromThisSpace.Add(direction);
+            }
+        }
+
+
+
+        //Center space. (Conference room)
+        if(isCenterSpace)
+        {
+            ValidDirectionsFromThisSpace.Clear();
+
+            ValidDirectionsFromThisSpace.Add(Direction.North);
+            ValidDirectionsFromThisSpace.Add(Direction.South);
+            ValidDirectionsFromThisSpace.Add(Direction.West);
+            ValidDirectionsFromThisSpace.Add(Direction.East);
+        }
+
+        foreach(Direction validDirection in ValidDirectionsFromThisSpace)
+        {
+            DirectionsHashsetVisual.Add(validDirection);
+        }
     }
 
     public void EnableHighlight()

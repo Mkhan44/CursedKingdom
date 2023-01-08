@@ -3,6 +3,7 @@
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,73 +21,148 @@ public class PlayerMovementManager : MonoBehaviour
         GameplayManagerRef = GetComponent<GameplayManager>();
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
-
     public void SetupMove(Player playerToMove)
     {
-        int validSpacesCount = 0;
 
         Space currentSpacePlayerIsOn = playerToMove.CurrentSpacePlayerIsOn;
 
         //Figure out how to know which spaces are valid for the Player to travel to. If there is more than 1, give them an option...Otherwise just move the Player.
 
-        if(CheckIfValidSpaceToMoveTo(playerToMove, currentSpacePlayerIsOn.NorthNeighbor))
-        {
-            validSpacesCount += 1;
-            CreateDirectionChoicePopup(playerToMove, currentSpacePlayerIsOn.NorthNeighbor);
-        }
+        //Just 1 valid space. No choice needed.
+        //if(currentSpacePlayerIsOn.NorthNeighbor is null && currentSpacePlayerIsOn.SouthNeighbor is null && currentSpacePlayerIsOn.WestNeighbor != null)
+        //{
+        //    StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+        //    return;
+        //}
+        //else if(currentSpacePlayerIsOn.EastNeighbor is null && currentSpacePlayerIsOn.SouthNeighbor is null && currentSpacePlayerIsOn.WestNeighbor != null)
+        //{
+        //    StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+        //    return;
+        //}
 
-    
-        if (CheckIfValidSpaceToMoveTo(playerToMove, currentSpacePlayerIsOn.SouthNeighbor))
+        //Multiple valid spaces you can go from this space.
+        if(currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.Count > 1)
         {
-            validSpacesCount += 1;
-            CreateDirectionChoicePopup(playerToMove, currentSpacePlayerIsOn.SouthNeighbor);
-        }
-        
+            List<Space> spaceChoicesToGive = new();
+            foreach(Space.Direction direction in currentSpacePlayerIsOn.ValidDirectionsFromThisSpace)
+            {
+                if(direction == Space.Direction.North)
+                {
+                    if (CheckIfValidSpaceToMoveTo(playerToMove, currentSpacePlayerIsOn.NorthNeighbor))
+                    {
+                        spaceChoicesToGive.Add(currentSpacePlayerIsOn.NorthNeighbor);
+                    }
+                }
+                if (direction == Space.Direction.South)
+                {
+                    if (CheckIfValidSpaceToMoveTo(playerToMove, currentSpacePlayerIsOn.SouthNeighbor))
+                    {
+                        spaceChoicesToGive.Add(currentSpacePlayerIsOn.SouthNeighbor);
+                    }
+                }
+                if (direction == Space.Direction.West)
+                {
+                    if (CheckIfValidSpaceToMoveTo(playerToMove, currentSpacePlayerIsOn.WestNeighbor))
+                    {
+                        spaceChoicesToGive.Add(currentSpacePlayerIsOn.WestNeighbor);
+                    }
+                }
+                if (direction == Space.Direction.East)
+                {
+                    if (CheckIfValidSpaceToMoveTo(playerToMove, currentSpacePlayerIsOn.EastNeighbor))
+                    {
+                        spaceChoicesToGive.Add(currentSpacePlayerIsOn.EastNeighbor);
+                    }                    
+                }
+            }
 
-        if (CheckIfValidSpaceToMoveTo(playerToMove, currentSpacePlayerIsOn.EastNeighbor))
-        {
-            validSpacesCount += 1;
-            CreateDirectionChoicePopup(playerToMove, currentSpacePlayerIsOn.EastNeighbor);
-        }
-        
+            if(spaceChoicesToGive.Count <= 0)
+            {
+                Debug.LogError("Could not find a valid space to travel to from your current space. Check the current space's valid directions?");
+                return;
+            }
 
-        if (CheckIfValidSpaceToMoveTo(playerToMove, currentSpacePlayerIsOn.WestNeighbor))
+            if(spaceChoicesToGive.Count > 1)
+            {
+                CreateDirectionChoicePopup(playerToMove, spaceChoicesToGive);
+            }
+            else
+            {
+                StartCoroutine(MoveTowards(spaceChoicesToGive[0].spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+            }
+        }
+        //Only 1 valid way to go from this space.
+        else
         {
-            validSpacesCount += 1;
-            CreateDirectionChoicePopup(playerToMove, currentSpacePlayerIsOn.WestNeighbor);
+            Space.Direction validDirection;
+
+            if (currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.Count == 1)
+            {
+                validDirection = currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.First();
+            }
+            else
+            {
+                Debug.LogError($"There should only be 1 element in the HashSet of valid directions. However, the count is: {currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.Count}");
+                return;
+            }
+            
+
+            if(validDirection == Space.Direction.North)
+            {
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.NorthNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+            }
+
+            if (validDirection == Space.Direction.South)
+            {
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.SouthNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+            }
+
+            if (validDirection == Space.Direction.East)
+            {
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.EastNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+            }
+
+            if (validDirection == Space.Direction.West)
+            {
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+            }
         }
         
     }
 
     private bool CheckIfValidSpaceToMoveTo(Player player, Space spaceToTryMovingTo)
     {
+        bool isValid = true;
+
         if(spaceToTryMovingTo is null)
         {
-            return false;
+            isValid = false;
+            return isValid;
         }
 
-        if(player.PreviousSpacePlayerWasOn != spaceToTryMovingTo)
+
+        if (player.PreviousSpacePlayerWasOn == spaceToTryMovingTo)
         {
-            return true;
+            isValid = false;
         }
-        else
-        {
-            return false;
-        }
+
+        return isValid;
     }
 
-    private void CreateDirectionChoicePopup(Player playerToMove, Space targetSpaceToMoveTo)
+    private void CreateDirectionChoicePopup(Player playerToMove, List<Space> targetSpacesToMoveTo)
     {
-        GameObject directionButtonObj = Instantiate(gameplayManagerRef.moveButtonPrefab, gameplayManagerRef.directionChoiceButtonHolder.transform);
-        TestCardMoveButton directionButton = directionButtonObj.GetComponent<TestCardMoveButton>();
-        Button directionButtonButton = directionButtonObj.GetComponent<Button>();
-        directionButton.buttonType = TestCardMoveButton.MoveButtonType.Direction;
-        directionButton.moveText.text = $"Move to: {targetSpaceToMoveTo.spaceData.spaceName}";
-        directionButtonButton.onClick.AddListener(() => ChooseDirection(targetSpaceToMoveTo, playerToMove, playerToMove.SpacesLeftToMove));
+        for(int i = 0; i < targetSpacesToMoveTo.Count; i++)
+        {
+            int currentIndex = i;
+            GameObject directionButtonObj = Instantiate(gameplayManagerRef.moveButtonPrefab, gameplayManagerRef.directionChoiceButtonHolder.transform);
+            TestCardMoveButton directionButton = directionButtonObj.GetComponent<TestCardMoveButton>();
+            Button directionButtonButton = directionButtonObj.GetComponent<Button>();
+            directionButton.buttonType = TestCardMoveButton.MoveButtonType.Direction;
+            directionButton.moveText.text = $"Move to: {targetSpacesToMoveTo[currentIndex].spaceData.spaceName}";
+            directionButtonButton.onClick.AddListener(() => ChooseDirection(targetSpacesToMoveTo[currentIndex], playerToMove, playerToMove.SpacesLeftToMove));
+        }
+
+        
     }
 
     //Used when a direction is chosen. This function should be called by clicking a button.
@@ -148,28 +224,6 @@ public class PlayerMovementManager : MonoBehaviour
         }
 
         yield return null;
-    }
-
-    private Space GetNextSpace(GameObject playerCurrentSpace, Vector3 raycastDirection)
-    {
-        Space nextSpace = default;
-
-        //Raycast. We need to do all 4 directions and see what spaces are around the player.
-        GameObject lastHitObject;
-        Ray ray = new Ray(playerCurrentSpace.transform.position, raycastDirection);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, RayCastLength))
-        {
-            lastHitObject = hit.transform.gameObject;
-            nextSpace = lastHitObject.transform.parent.gameObject.GetComponent<Space>();
-            // Debug.Log($"We hit: {lastHitObject.transform.parent.gameObject.name} , nextSpace is now: {nextSpace.spaceData.spaceName}");
-        }
-        else
-        {
-            Debug.LogWarning($"{ray} Didn't hit anything.");
-            return null;
-        }
-        return nextSpace;
     }
 
     private void MovementExecute(Player playerToMove, Space targetSpace)
