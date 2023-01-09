@@ -490,11 +490,16 @@ MonoBehaviour:
   selectedBorder: {fileID: 1737863794140784802}
   highlightAnimationObject: {fileID: 1737863794140784802}
   spaceData: {fileID: 0}
-  testManagerRef: {fileID: 0}
+  gameplayManagerRef: {fileID: 0}
   meshRenderer: {fileID: 3214470293115516055}
   spriteRenderer: {fileID: 513084805590981778}
   spaceTitleTextMesh: {fileID: 994856940502314192}
   drawMovementCardIcon: {fileID: 0}
+  isCenterSpace: 0
+  eastNeighbor: {fileID: 0}
+  westNeighbor: {fileID: 0}
+  northNeighbor: {fileID: 0}
+  southNeighbor: {fileID: 0}
 --- !u!4 &947142012056810416 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 894ade8aac2188648812881ad42ec619, type: 3}
@@ -518,10 +523,10 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3269421924213216450}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.71999997, y: 0.12, z: 0.71999997}
+  m_Size: {x: 0.71999997, y: 1, z: 0.71999997}
   m_Center: {x: 0, y: -0.06, z: 0}
 --- !u!114 &1443779918105962778
 MonoBehaviour:

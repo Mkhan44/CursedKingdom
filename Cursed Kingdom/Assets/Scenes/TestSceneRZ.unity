@@ -581,7 +581,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7766323, y: 1}
+    m_SensorSize: {x: 1, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1032,6 +1032,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -1433,7 +1434,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7766323, y: 1}
+    m_SensorSize: {x: 1, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1618,7 +1619,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 36
+  field of view: 26.991467
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1643,8 +1644,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1655089536}
-  m_LocalRotation: {x: 0.5847103, y: 0.000000019740359, z: -0.0000000142280445, w: 0.8112422}
-  m_LocalPosition: {x: -8.7, y: 28.9, z: -1.3000002}
+  m_LocalRotation: {x: 0.000000030489367, y: -0.122183256, z: 0.0000000037534122, w: 0.9925076}
+  m_LocalPosition: {x: 0.5, y: -1.0999999, z: 0.29999995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1859,7 +1860,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.7766666, y: 1}
+    m_SensorSize: {x: 1, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1896,8 +1897,9 @@ GameObject:
   - component: {fileID: 1815364436}
   - component: {fileID: 1815364437}
   - component: {fileID: 1815364438}
+  - component: {fileID: 1815364439}
   m_Layer: 0
-  m_Name: TestManager
+  m_Name: Game Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1939,9 +1941,12 @@ MonoBehaviour:
   boardParent: {fileID: 901891290}
   boardPrefab: {fileID: 6953770271459722323, guid: 49b3a25a452187b4582aa06b3eb51613, type: 3}
   playerCharacter: {fileID: 0}
+  playerMovementManager: {fileID: 0}
   testMoveButtonParent: {fileID: 302056170}
   directionChoiceButtonHolder: {fileID: 214831250}
   moveButtonPrefab: {fileID: 3210510977898461855, guid: ffa6bcaf5d39d8a4fa397c3ebcf2537f, type: 3}
+  raycastLength: 2
+  players: []
   classdatas:
   - {fileID: 11400000, guid: 2201c247b05ec524598b195c9934e69f, type: 2}
   - {fileID: 11400000, guid: 2081031c2ab5d734784cfeaa196551f4, type: 2}
@@ -1950,7 +1955,6 @@ MonoBehaviour:
   spaceDatasTest:
   - {fileID: 11400000, guid: 2e324dd6a150bcc4abb4704354556dfa, type: 2}
   - {fileID: 11400000, guid: 13de77643623dbe4c937fbda1ac9bf47, type: 2}
-  players: []
   testMapManager: {fileID: 0}
   boardManager: {fileID: 0}
   currentActiveCamera: {fileID: 603952623}
@@ -1990,6 +1994,19 @@ MonoBehaviour:
   smallSpaceAboveBigSpace: 1.6
   smallSpaceVerticalGap: 1.09
   smallSpaceHorizontalGap: 2.184
+--- !u!114 &1815364439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1815364434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44e8bc2b1d0ea284aafad5c42491460a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameplayManagerRef: {fileID: 0}
 --- !u!224 &1860666538 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3210510977898461854, guid: ffa6bcaf5d39d8a4fa397c3ebcf2537f, type: 3}
@@ -2115,7 +2132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2067425395}
   m_Layer: 0
-  m_Name: LOGIC
+  m_Name: LOGIC - GAME MANAGER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
