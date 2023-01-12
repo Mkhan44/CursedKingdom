@@ -6,13 +6,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class MovementCard : Card
 {
+    //Data
     [SerializeField] private MovementCardData movementCardData; 
-    [SerializeField] private int defaultMovementNumber;
 
-    public int DefaultMovementNumber { get => defaultMovementNumber; set => defaultMovementNumber = value; }
     public MovementCardData MovementCardData { get => movementCardData; set => movementCardData = value; }
- 
+
+    public MovementCard()
+    {
+        SetCardType(CardType.Movement);
+    }
 }

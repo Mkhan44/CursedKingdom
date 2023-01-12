@@ -86,7 +86,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2214905014671918869}
   - component: {fileID: 2214905014671918871}
-  - component: {fileID: 2214905014671918870}
   m_Layer: 5
   m_Name: SupportCardBack
   m_TagString: Untagged
@@ -123,25 +122,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2214905014671918874}
   m_CullTransparentMesh: 1
---- !u!114 &2214905014671918870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2214905014671918874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 672d13e012c31d54c8568899ed90fd0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  testCard: {fileID: 11400000, guid: 2090c7e006a2f4d4cbbbe23b6250fb11, type: 2}
-  cardImage: {fileID: 0}
-  cardNameText: {fileID: 0}
-  cardNumberText: {fileID: 0}
-  hoveredOverCard: 0
-  originalSize: {x: 1, y: 1, z: 1}
-  hoveredSized: {x: 1.2, y: 1.2, z: 1.2}
 --- !u!1 &3423193756947277619
 GameObject:
   m_ObjectHideFlags: 0

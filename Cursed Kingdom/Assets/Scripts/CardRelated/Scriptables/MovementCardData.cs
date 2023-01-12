@@ -10,7 +10,7 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "Movement Card Data", menuName = "Card Data/Movement Card Data", order = 0)]
 public class MovementCardData : CardData
 {
-    [SerializeField] private int movementValue = 1;
+    [SerializeField] [Range(1,10)]private int movementValue = 1;
     [SerializeField] private Sprite cardSprite;
 
 

@@ -2,27 +2,32 @@
 //All code is written by me (Above name) unless otherwise stated via comments below.
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class Card
+public class Card : MonoBehaviour
 {
-    [SerializeField] int cardNumber;
-    [SerializeField] string cardName;
-    [SerializeField] Sprite cardSprite;
-  
-    public int CardNumber { get => cardNumber; set => cardNumber = value; }
-    public string CardName { get => cardName; set => cardName = value; }
-    public Sprite CardSprite { get => cardSprite; set => cardSprite = value; }
-   
-
-    public Card(int cardNumber = 0, string cardName = null, Sprite cardSprite = null)
+    public enum CardType 
     {
-        CardNumber = cardNumber;
-        CardName = cardName;
-        CardSprite = cardSprite;
+        Movement,
+        Support,
+    }
+
+    [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private Image cardArtworkImage;
+    [SerializeField] private Image cardBorderImage;
+    [SerializeField] private CardType thisCardType;
+
+    public TextMeshProUGUI TitleText { get => titleText; set => titleText = value; }
+    public Image CardArtworkImage { get => cardArtworkImage; set => cardArtworkImage = value; }
+    public Image CardBorderImage { get => cardBorderImage; set => cardBorderImage = value; }
+    public CardType ThisCardType { get => thisCardType; }
+
+
+    protected void SetCardType(CardType cardType)
+    {
+        //Probably shouldn't use this, and should instead use the property. We just don't want things outside of the cards to touch this value...
+        thisCardType = cardType;
     }
 }

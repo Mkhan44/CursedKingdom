@@ -47,30 +47,30 @@ public class CardDisplay : MonoBehaviour , IPointerEnterHandler , IPointerDownHa
         if(testCard is MovementCardData)
         {
             MovementCardData tempMovementCardData = (MovementCardData)testCard;
-            newCard = new Card(tempMovementCardData.MovementValue, tempMovementCardData.CardName, tempMovementCardData.CardSprite);
+           // newCard = new Card(tempMovementCardData.MovementValue, tempMovementCardData.CardName, tempMovementCardData.CardSprite);
         }
         //For now we only have 2 so this will be a support. However, we may need to make this scalable just in case for future use.
         else if(testCard is SupportCardData)
         {
             SupportCardData tempSupportCardData = (SupportCardData)testCard;
-            newCard = new Card(0, tempSupportCardData.CardName, tempSupportCardData.CardSprite);
+           // newCard = new Card(0, tempSupportCardData.CardName, tempSupportCardData.CardSprite);
         }    
         else
         {
             return;
         }
 
-        if(newCard.CardNumber > 0)
-        {
-            cardNumberText.text = newCard.CardNumber.ToString();
-        }
-        else
-        {
-            cardNumberText.gameObject.SetActive(false);
-        }
+        //if(newCard.CardNumber > 0)
+        //{
+        //    cardNumberText.text = newCard.CardNumber.ToString();
+        //}
+        //else
+        //{
+        //    cardNumberText.gameObject.SetActive(false);
+        //}
         
-        cardNameText.text = newCard.CardName.ToString();
-        cardImage.sprite = newCard.CardSprite;
+        //cardNameText.text = newCard.CardName.ToString();
+        //cardImage.sprite = newCard.CardSprite;
     }
 
     public IEnumerator HoverCardEffect()
