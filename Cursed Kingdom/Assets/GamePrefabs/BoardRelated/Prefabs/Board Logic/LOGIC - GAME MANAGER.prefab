@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 711935881092096548}
   - component: {fileID: 711935881092096551}
   - component: {fileID: 711935881092096550}
+  - component: {fileID: 7166908049358683936}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -62,6 +63,9 @@ MonoBehaviour:
   directionChoiceButtonHolder: {fileID: 0}
   moveButtonPrefab: {fileID: 3210510977898461855, guid: ffa6bcaf5d39d8a4fa397c3ebcf2537f, type: 3}
   raycastLength: 2
+  deckManager: {fileID: 0}
+  movementCardPrefab: {fileID: 8549054513579610354, guid: 5f5e3d4fbf94ee743a753bc6cda8a507, type: 3}
+  supportCardPrefab: {fileID: 959177630722259936, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
   players: []
   classdatas:
   - {fileID: 11400000, guid: 2201c247b05ec524598b195c9934e69f, type: 2}
@@ -124,6 +128,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameplayManagerRef: {fileID: 0}
   rayCastLength: 0
+--- !u!114 &7166908049358683936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711935881092096547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2e819b4a8b656e428704bc67dd3d5b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementDeckData: {fileID: 11400000, guid: 75798b26066e1ba49a67e62c75628cbc, type: 2}
+  supportDeckData: {fileID: 0}
+  movementDeckList: []
+  supportDeckList: []
 --- !u!1 &711935881242953987
 GameObject:
   m_ObjectHideFlags: 0

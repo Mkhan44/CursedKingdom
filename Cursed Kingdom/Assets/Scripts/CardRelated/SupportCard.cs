@@ -21,8 +21,26 @@ public class SupportCard : Card
     public SupportCardData SupportCardData { get => supportCardData; set => supportCardData = value; }
 
 
-    public SupportCard()
+    private void Start()
     {
         SetCardType(CardType.Support);
+    }
+
+    public void CardDataSetup(SupportCardData supportCardData)
+    {
+        SetupCard(supportCardData);
+    }
+
+    public override void AddCardUseListener(GameplayManager gameplayManager)
+    {
+        base.AddCardUseListener(gameplayManager);
+    }
+
+    protected override void SetupCard(CardData cardData)
+    {
+        base.SetupCard(cardData);
+        supportCardData = cardData as SupportCardData;
+
+        DescriptionText.text = supportCardData.CardDescription;
     }
 }

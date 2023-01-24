@@ -87,8 +87,8 @@ GameObject:
   m_Component:
   - component: {fileID: 959177630722259951}
   - component: {fileID: 959177630722259949}
-  - component: {fileID: 6552844123078778405}
   - component: {fileID: 8194840002078301710}
+  - component: {fileID: 6552844123078778405}
   m_Layer: 5
   m_Name: SupportCardFront
   m_TagString: Untagged
@@ -128,24 +128,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 959177630722259936}
   m_CullTransparentMesh: 1
---- !u!114 &6552844123078778405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 959177630722259936}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fd10743870788e429e881d7527af32d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  titleText: {fileID: 4484197816524573013}
-  cardArtworkImage: {fileID: 2461497947193884349}
-  cardBorderImage: {fileID: 2254910237170926910}
-  thisCardType: 1
-  descriptionText: {fileID: 9080343164873135323}
-  supportCardData: {fileID: 0}
 --- !u!114 &8194840002078301710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,6 +148,25 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: 1
   m_LayoutPriority: 1
+--- !u!114 &6552844123078778405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959177630722259936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fd10743870788e429e881d7527af32d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleText: {fileID: 4484197816524573013}
+  cardArtworkImage: {fileID: 2461497947193884349}
+  cardBorderImage: {fileID: 2254910237170926910}
+  thisCardType: 1
+  clickableAreaButton: {fileID: 7623665038140841134}
+  descriptionText: {fileID: 9080343164873135323}
+  supportCardData: {fileID: 0}
 --- !u!1 &4355792334435015625
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,10 +523,10 @@ RectTransform:
   m_Father: {fileID: 959177630722259951}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.5575, y: -1.3961945}
-  m_SizeDelta: {x: 341.115, y: 470.7155}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1511728449751365955
 CanvasRenderer:

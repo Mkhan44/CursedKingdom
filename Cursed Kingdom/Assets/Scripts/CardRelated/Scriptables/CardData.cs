@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class CardData : ScriptableObject
 {
-    [SerializeField] string cardName;
+    [SerializeField] private string cardTitle;
+    [SerializeField] private Sprite cardArtwork;
 
-    public string CardName { get => cardName; set => cardName = value; }
+    public string CardTitle { get => cardTitle; set => cardTitle = value; }
+    public Sprite CardArtwork { get => cardArtwork; set => cardArtwork = value; }
 }

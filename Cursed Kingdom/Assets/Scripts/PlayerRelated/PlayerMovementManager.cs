@@ -219,7 +219,7 @@ public class PlayerMovementManager : MonoBehaviour
         }
         else
         {
-            gameplayManagerRef.testMoveButtonParent.SetActive(true);
+            gameplayManagerRef.playerMovementCardsDisplayPanel.SetActive(true);
             playerCharacter.GetComponent<Player>().SpacesLeftToMove = 0;
         }
 

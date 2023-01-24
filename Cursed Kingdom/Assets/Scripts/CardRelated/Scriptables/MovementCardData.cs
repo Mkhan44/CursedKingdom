@@ -11,9 +11,7 @@ using UnityEngine.UI;
 public class MovementCardData : CardData
 {
     [SerializeField] [Range(1,10)]private int movementValue = 1;
-    [SerializeField] private Sprite cardSprite;
 
 
     public int MovementValue { get => movementValue; set => movementValue = value; }
-    public Sprite CardSprite { get => cardSprite; set => cardSprite = value; }
 }

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "Support Card Data", menuName = "Card Data/Support Card Data", order = 0)]
 public class SupportCardData : CardData
 {
-    [SerializeField] private Sprite cardSprite;
+    [SerializeField] private string cardDescription;
 
-    public Sprite CardSprite { get => cardSprite; set => cardSprite = value; }
+    public string CardDescription { get => cardDescription; set => cardDescription = value; }
 }

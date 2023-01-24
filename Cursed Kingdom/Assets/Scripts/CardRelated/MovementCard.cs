@@ -11,12 +11,38 @@ using TMPro;
 public class MovementCard : Card
 {
     //Data
-    [SerializeField] private MovementCardData movementCardData; 
+    [SerializeField] private MovementCardData movementCardData;
+    [SerializeField] private int movementCardValue;
+
+    //References
+    [SerializeField] private TextMeshProUGUI movementValueText;
 
     public MovementCardData MovementCardData { get => movementCardData; set => movementCardData = value; }
+    public int MovementCardValue { get => movementCardValue; set => movementCardValue = value; }
 
-    public MovementCard()
+
+    private void Start()
     {
         SetCardType(CardType.Movement);
+    }
+
+    public void CardDataSetup(MovementCardData movementCardData)
+    {
+        SetupCard(movementCardData);
+    }
+
+    public override void AddCardUseListener(GameplayManager gameplayManager)
+    {
+        base.AddCardUseListener(gameplayManager);
+        ClickableAreaButton.onClick.AddListener(() => gameplayManager.StartMove(MovementCardValue));
+    }
+
+    protected override void SetupCard(CardData cardData)
+    {
+        base.SetupCard(cardData);
+        MovementCardData = cardData as MovementCardData;
+        MovementCardValue = movementCardData.MovementValue;
+        TitleText.text = "Movement";
+        movementValueText.text = MovementCardValue.ToString();
     }
 }

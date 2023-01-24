@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     [SerializeField] private int movementCardsInHand;
     [SerializeField] private int supportCardsInHand;
     [SerializeField] private int maxHandSize;
+    [SerializeField] private List<Card> cardsInhand;
+    [SerializeField] private GameObject cardsInHandHolderPanel;
     [SerializeField] private bool isMoving;
     [SerializeField] private bool isOnCooldown;
     [SerializeField] private bool isPoisoned;
@@ -29,6 +31,9 @@ public class Player : MonoBehaviour
     [SerializeField] private Space currentSpacePlayerIsOn;
     [SerializeField] private Space previousSpacePlayerWasOn;
 
+    //References
+    [SerializeField] private GameplayManager gameplayManagerRef;
+
    
     public int MaxHealth { get => maxHealth; set => maxHealth = value; }
     //Clean this up vvvvv
@@ -38,6 +43,9 @@ public class Player : MonoBehaviour
     public int MovementCardsInHand { get => movementCardsInHand; set => movementCardsInHand = value; }
     public int SupportCardsInHand { get => supportCardsInHand; set => supportCardsInHand = value; }
     public int MaxHandSize { get => maxHandSize; set => maxHandSize = value; }
+    public List<Card> CardsInhand { get => cardsInhand; set => cardsInhand = value; }
+
+    public GameObject CardsInHandHolderPanel { get => cardsInHandHolderPanel; set => cardsInHandHolderPanel = value; }
     public bool IsMoving { get => isMoving; set => isMoving = value; }
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
@@ -100,8 +108,7 @@ public class Player : MonoBehaviour
     }
 
     public Space PreviousSpacePlayerWasOn { get => previousSpacePlayerWasOn; set => previousSpacePlayerWasOn = value; }
-    
-    
+    public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
 
     public void InitializePlayer(ClassData data)
     {
@@ -140,6 +147,48 @@ public class Player : MonoBehaviour
                     Debug.Log("Def.");
                     break;
                 }
+        }
+    }
+
+    public void DrawCard(Card card)
+    {
+        CardsInhand.Add(card);
+    }
+
+    public void DrawCards(List<Card> cards)
+    {
+        foreach(Card card in cards)
+        {
+            CardsInhand.Add(card);
+        }
+    }
+
+    //Shows this player's hand on screen.
+    public void ShowHand()
+    {
+        foreach(Card card in CardsInhand)
+        {
+            if(card.ThisCardType == Card.CardType.Movement)
+            {
+                MovementCard currentMovementCard = card as MovementCard;
+                currentMovementCard.AddCardUseListener(GameplayManagerRef);
+                card.gameObject.transform.SetParent(CardsInHandHolderPanel.transform);
+            }
+        }
+
+        cardsInHandHolderPanel.SetActive(true);
+    }
+
+    public void HideHand()
+    {
+        cardsInHandHolderPanel.SetActive(false);
+    }
+
+    public void DiscardAfterUse(Card.CardType cardType , Card cardToDiscard)
+    {
+        if(cardType == Card.CardType.Movement)
+        {
+          //  GameplayManagerRef.ThisDeckManager.MovementDeckData
         }
     }
 }
