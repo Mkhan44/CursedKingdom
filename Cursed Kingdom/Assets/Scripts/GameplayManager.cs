@@ -36,6 +36,9 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private GameObject supportCardPrefab;
     [SerializeField] private GameObject movementDeckCardHolder;
     [SerializeField] private GameObject supportDeckCardHolder;
+    [SerializeField] private GameObject movementCardDiscardPileHolder;
+    [SerializeField] private GameObject supportCardDiscardPileHolder;
+
 
 
     [SerializeField] private List<Player> players;
@@ -63,6 +66,8 @@ public class GameplayManager : MonoBehaviour
     public GameObject SupportCardPrefab { get => supportCardPrefab; set => supportCardPrefab = value; }
     public GameObject MovementDeckCardHolder { get => movementDeckCardHolder; set => movementDeckCardHolder = value; }
     public GameObject SupportDeckCardHolder { get => supportDeckCardHolder; set => supportDeckCardHolder = value; }
+    public GameObject MovementCardDiscardPileHolder { get => movementCardDiscardPileHolder; set => movementCardDiscardPileHolder = value; }
+    public GameObject SupportCardDiscardPileHolder { get => supportCardDiscardPileHolder; set => supportCardDiscardPileHolder = value; }
 
     private void Start()
     {
@@ -74,7 +79,7 @@ public class GameplayManager : MonoBehaviour
         ThisDeckManager = GetComponent<DeckManager>();
 
         //Get a list of movement cards, pass them in.
-        ThisDeckManager.CreateDeck(this);
+        ThisDeckManager.CreateDeck();
        
 
         //Deck related
@@ -189,8 +194,6 @@ public class GameplayManager : MonoBehaviour
         Player playerReference = playerCharacter.GetComponent<Player>();
         playerReference.SpacesLeftToMove = spacesToMove;
         playerMovementManager.SetupMove(playerReference);
-
-
     }
 
 
@@ -214,6 +217,12 @@ public class GameplayManager : MonoBehaviour
 
         currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
         currentActiveCamera.enabled = true;
+    }
+
+    private void TurnOver()
+    {
+        //Player's turn ends: They draw a card.
+        ThisDeckManager.DrawCard(Card.CardType.Movement, playerCharacter.GetComponent<Player>());
     }
 
     void TestFunc()

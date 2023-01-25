@@ -171,6 +171,7 @@ public class Player : MonoBehaviour
             if(card.ThisCardType == Card.CardType.Movement)
             {
                 MovementCard currentMovementCard = card as MovementCard;
+                currentMovementCard.RemoveListeners();
                 currentMovementCard.AddCardUseListener(GameplayManagerRef);
                 card.gameObject.transform.SetParent(CardsInHandHolderPanel.transform);
             }
@@ -186,9 +187,6 @@ public class Player : MonoBehaviour
 
     public void DiscardAfterUse(Card.CardType cardType , Card cardToDiscard)
     {
-        if(cardType == Card.CardType.Movement)
-        {
-          //  GameplayManagerRef.ThisDeckManager.MovementDeckData
-        }
+        GameplayManagerRef.ThisDeckManager.AddCardToDiscardPile(cardType, cardToDiscard, CardsInhand);
     }
 }

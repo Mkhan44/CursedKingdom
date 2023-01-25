@@ -35,6 +35,8 @@ public class MovementCard : Card
     {
         base.AddCardUseListener(gameplayManager);
         ClickableAreaButton.onClick.AddListener(() => gameplayManager.StartMove(MovementCardValue));
+        ClickableAreaButton.onClick.AddListener(() => gameplayManager.Players[0].DiscardAfterUse(ThisCardType, this));
+        ClickableAreaButton.onClick.AddListener(() => RemoveListeners());
     }
 
     protected override void SetupCard(CardData cardData)

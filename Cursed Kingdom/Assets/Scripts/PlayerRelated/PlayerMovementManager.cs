@@ -23,7 +23,6 @@ public class PlayerMovementManager : MonoBehaviour
 
     public void SetupMove(Player playerToMove)
     {
-
         Space currentSpacePlayerIsOn = playerToMove.CurrentSpacePlayerIsOn;
 
         //Figure out how to know which spaces are valid for the Player to travel to. If there is more than 1, give them an option...Otherwise just move the Player.
@@ -127,7 +126,9 @@ public class PlayerMovementManager : MonoBehaviour
                 StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
             }
         }
-        
+
+        playerToMove.HideHand();
+
     }
 
     private bool CheckIfValidSpaceToMoveTo(Player player, Space spaceToTryMovingTo)
@@ -161,8 +162,6 @@ public class PlayerMovementManager : MonoBehaviour
             directionButton.moveText.text = $"Move to: {targetSpacesToMoveTo[currentIndex].spaceData.spaceName}";
             directionButtonButton.onClick.AddListener(() => ChooseDirection(targetSpacesToMoveTo[currentIndex], playerToMove, playerToMove.SpacesLeftToMove));
         }
-
-        
     }
 
     //Used when a direction is chosen. This function should be called by clicking a button.
@@ -188,7 +187,7 @@ public class PlayerMovementManager : MonoBehaviour
 
         playerReference.IsMoving = true;
         gameplayManagerRef.isPlayerMoving = true;
-
+        playerReference.HideHand();
 
         float rate = 3.0f;
 
@@ -220,7 +219,12 @@ public class PlayerMovementManager : MonoBehaviour
         else
         {
             gameplayManagerRef.playerMovementCardsDisplayPanel.SetActive(true);
-            playerCharacter.GetComponent<Player>().SpacesLeftToMove = 0;
+            playerReference.SpacesLeftToMove = 0;
+
+            //TEST
+            Debug.Log("TEST DRAW!");
+            gameplayManagerRef.ThisDeckManager.DrawCard(Card.CardType.Movement, playerReference);
+            playerReference.ShowHand();
         }
 
         yield return null;
