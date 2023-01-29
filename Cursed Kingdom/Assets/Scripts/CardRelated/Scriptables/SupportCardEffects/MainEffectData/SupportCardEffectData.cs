@@ -7,22 +7,12 @@ using UnityEngine;
 
 public class SupportCardEffectData : ScriptableObject , ISupportEffect
 {
-    public enum SupportCardType
-    {
-        Board,
-        Duel,
-        Special,
-    }
-
-    [SerializeField] private SupportCardType thisSupportCardType;
     [SerializeField] private bool isElemental = false;
     
-
-    public SupportCardType ThisSupportCardType { get => thisSupportCardType; set => thisSupportCardType = value; }
     public bool IsElemental { get => isElemental; set => isElemental = value; }
 
     public virtual void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
-
+        
     }
 }
