@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c465ab46e455f844b3734b01e62cb14, type: 3}
+  m_Name: Cursed Armor
+  m_EditorClassIdentifier: 
+  cardTitle: Cursed Armor
+  cardArtwork: {fileID: 21300052, guid: fe9aa33e50412c242bd73e9324bc7922, type: 3}
+  supportCardEffects:
+  - supportCardEffectData: {fileID: 11400000, guid: a4ad053125292554e82816fb7a4c3e11, type: 2}
+    supportTypeStringHidden: HigherMovementToWinEffect
+  - supportCardEffectData: {fileID: 11400000, guid: 6e239d9b5d30be14e9b92b34a673b39e, type: 2}
+    supportTypeStringHidden: CurseEffect
+  thisSupportCardType: 1
+  isElemental: 0
+  cardDescription: The opponent's movement card must be at least 4 higher than yours
+    to win this duel. You are cursed during your next turn after using this card.

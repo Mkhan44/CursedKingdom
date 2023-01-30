@@ -7,10 +7,6 @@ using UnityEngine;
 
 public class SupportCardEffectData : ScriptableObject , ISupportEffect
 {
-    [SerializeField] private bool isElemental = false;
-    
-    public bool IsElemental { get => isElemental; set => isElemental = value; }
-
     public virtual void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
         

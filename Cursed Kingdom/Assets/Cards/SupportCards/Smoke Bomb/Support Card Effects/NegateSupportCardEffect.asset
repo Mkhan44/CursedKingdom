@@ -9,13 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c465ab46e455f844b3734b01e62cb14, type: 3}
-  m_Name: Cure
+  m_Script: {fileID: 11500000, guid: 1e627cb7df75f09409cff3fe33aaf82f, type: 3}
+  m_Name: NegateSupportCardEffect
   m_EditorClassIdentifier: 
-  cardTitle: 
-  cardArtwork: {fileID: 0}
-  supportCardEffects:
-  - supportCardEffectData: {fileID: 0}
-    supportTypeStringHidden: AttackPlayerEffect
-  thisSupportCardType: 0
-  cardDescription: 
+  requiresSingleTarget: 1

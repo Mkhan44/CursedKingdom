@@ -28,10 +28,12 @@ public class SupportCardData : CardData
 
     [SerializeField] public List<SupportCardEffect> supportCardEffects;
     [SerializeField] private SupportCardType thisSupportCardType;
+    [SerializeField] private bool isElemental;
     [SerializeField] [TextArea(3,10)] private string cardDescription;
 
 
     //Need a field for specific animation that will be played when this support card is used.
     public string CardDescription { get => cardDescription; set => cardDescription = value; }
     public SupportCardType ThisSupportCardType { get => thisSupportCardType; set => thisSupportCardType = value; }
+    public bool IsElemental { get => isElemental; set => isElemental = value; }
 }

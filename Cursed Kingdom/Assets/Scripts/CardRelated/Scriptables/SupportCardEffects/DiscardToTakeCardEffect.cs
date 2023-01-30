@@ -14,9 +14,9 @@ using UnityEngine;
 public class DiscardToTakeCardEffect : SupportCardEffectData, ISupportEffect
 {
     [SerializeField] private Card.CardType cardTypeToDiscard;
-    [SerializeField] private int numCardsToDiscard;
+    [SerializeField] [Range(1, 10)] private int numCardsToDiscard = 1;
     [SerializeField] private Card.CardType cardToTakeFromOpponent;
-    [SerializeField] private int numCardsToTake;
+    [SerializeField] [Range(1, 10)] private int numCardsToTake = 1;
 
     public Card.CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
     public int NumCardsToDiscard { get => numCardsToDiscard; set => numCardsToDiscard = value; }
