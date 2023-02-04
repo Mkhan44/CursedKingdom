@@ -124,7 +124,9 @@ public class GameplayManager : MonoBehaviour
         playerTempReference.GetComponent<Player>().CardsInHandHolderPanel = GameObject.Find("CardsInHandLayout");
         //1st 5 cards in player's hand.
         ThisDeckManager.ShuffleDeck(Card.CardType.Movement);
-        ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReference.GetComponent<Player>(), 5);
+        ThisDeckManager.ShuffleDeck(Card.CardType.Support);
+        ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReference.GetComponent<Player>(), 3);
+        ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReference.GetComponent<Player>(), 2);
         playerTempReference.GetComponent<Player>().GameplayManagerRef = this;
         playerTempReference.GetComponent<Player>().ShowHand();
 
@@ -181,10 +183,15 @@ public class GameplayManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
+            ReloadScene();
         }
 
        
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 

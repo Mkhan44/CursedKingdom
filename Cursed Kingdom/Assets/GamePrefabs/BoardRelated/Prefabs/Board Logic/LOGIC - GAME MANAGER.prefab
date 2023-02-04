@@ -59,13 +59,17 @@ MonoBehaviour:
   playerCharacter: {fileID: 0}
   isPlayerMoving: 0
   playerMovementManager: {fileID: 0}
-  testMoveButtonParent: {fileID: 0}
+  playerMovementCardsDisplayPanel: {fileID: 0}
   directionChoiceButtonHolder: {fileID: 0}
   moveButtonPrefab: {fileID: 3210510977898461855, guid: ffa6bcaf5d39d8a4fa397c3ebcf2537f, type: 3}
   raycastLength: 2
-  deckManager: {fileID: 0}
+  thisDeckManager: {fileID: 0}
   movementCardPrefab: {fileID: 8549054513579610354, guid: 5f5e3d4fbf94ee743a753bc6cda8a507, type: 3}
   supportCardPrefab: {fileID: 959177630722259936, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
+  movementDeckCardHolder: {fileID: 0}
+  supportDeckCardHolder: {fileID: 0}
+  movementCardDiscardPileHolder: {fileID: 0}
+  supportCardDiscardPileHolder: {fileID: 0}
   players: []
   classdatas:
   - {fileID: 11400000, guid: 2201c247b05ec524598b195c9934e69f, type: 2}
@@ -141,9 +145,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementDeckData: {fileID: 11400000, guid: 75798b26066e1ba49a67e62c75628cbc, type: 2}
-  supportDeckData: {fileID: 0}
+  supportDeckData: {fileID: 11400000, guid: e47b3a0f0d63ce549aa5456f0eb0240d, type: 2}
   movementDeckList: []
   supportDeckList: []
+  movementDiscardPileList: []
+  supportDiscardPileList: []
+  gameplayManager: {fileID: 0}
 --- !u!1 &711935881242953987
 GameObject:
   m_ObjectHideFlags: 0

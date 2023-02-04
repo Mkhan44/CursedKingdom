@@ -48,9 +48,9 @@ public class DeckManager : MonoBehaviour
             MovementDeckList = new();
             List<Card> movementDeckBuilder = new();
 
-            if (movementDeckData is not null)
+            if (MovementDeckData is not null)
             {
-                foreach (MovementCardData movementCardData in movementDeckData.MovementCardDatas)
+                foreach (MovementCardData movementCardData in MovementDeckData.MovementCardDatas)
                 {
                     GameObject tempCard = Instantiate(GameplayManager.MovementCardPrefab);
                     MovementCard movementCard = tempCard.GetComponent<MovementCard>();
@@ -65,7 +65,26 @@ public class DeckManager : MonoBehaviour
             }
         }
 
-        //Same thing for support cards copy pasta...
+        if(SupportDeckList.Count == 0)
+        {
+            SupportDeckList = new();
+            List<Card> supportDeckBuilder = new();
+
+            if(SupportDeckData is not null)
+            {
+                foreach(SupportCardData supportCardData in SupportDeckData.SupportCardDatas)
+                {
+                    GameObject tempCard = Instantiate(GameplayManager.SupportCardPrefab);
+                    SupportCard supportCard = tempCard.GetComponent<SupportCard>();
+                    supportCard.CardDataSetup(supportCardData);
+                    tempCard.name = supportCardData.name;
+                    tempCard.transform.SetParent(GameplayManager.SupportDeckCardHolder.transform);
+                    supportDeckBuilder.Add(supportCard);
+                }
+
+                AddToDeck(Card.CardType.Support, supportDeckBuilder);
+            }
+        }
     }
 
 
@@ -126,7 +145,14 @@ public class DeckManager : MonoBehaviour
         }
         else
         {
-
+            if (SupportDeckList.Count == 0)
+            {
+                //Shuffle discard pile into the deck.
+                ShuffleDeck(deckTypeToDrawFrom, true);
+                Debug.LogWarning($"{nameof(SupportDeckList)} is out of cards! Shuffling the deck...");
+            }
+            playerDrawingCard.DrawCard(SupportDeckList[0]);
+            SupportDeckList.Remove(SupportDeckList[0]);
         }
     }
 
@@ -281,7 +307,7 @@ public class DeckManager : MonoBehaviour
             }
 
             SupportDiscardPileList.Add(supportCard);
-            supportCard.transform.SetParent(gameplayManager.MovementCardDiscardPileHolder.transform);
+            supportCard.transform.SetParent(gameplayManager.SupportCardDiscardPileHolder.transform);
         }
     }
 

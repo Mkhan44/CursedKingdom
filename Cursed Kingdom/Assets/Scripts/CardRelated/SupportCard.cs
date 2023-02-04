@@ -34,13 +34,16 @@ public class SupportCard : Card
     public override void AddCardUseListener(GameplayManager gameplayManager)
     {
         base.AddCardUseListener(gameplayManager);
+        ClickableAreaButton.onClick.AddListener(() => gameplayManager.Players[0].DiscardAfterUse(ThisCardType, this));
+        ClickableAreaButton.onClick.AddListener(() => RemoveListeners());
     }
 
     protected override void SetupCard(CardData cardData)
     {
         base.SetupCard(cardData);
         supportCardData = cardData as SupportCardData;
-
+        TitleText.text = supportCardData.CardTitle;
         DescriptionText.text = supportCardData.CardDescription;
+        CardArtworkImage.sprite = supportCardData.CardArtwork;
     }
 }

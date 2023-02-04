@@ -175,6 +175,13 @@ public class Player : MonoBehaviour
                 currentMovementCard.AddCardUseListener(GameplayManagerRef);
                 card.gameObject.transform.SetParent(CardsInHandHolderPanel.transform);
             }
+            else
+            {
+                SupportCard currentSupportCard = card as SupportCard;
+                currentSupportCard.RemoveListeners();
+                currentSupportCard.AddCardUseListener(GameplayManagerRef);
+                card.gameObject.transform.SetParent(CardsInHandHolderPanel.transform);
+            }
         }
 
         cardsInHandHolderPanel.SetActive(true);
