@@ -23,6 +23,7 @@ public class AttackSpace : SpaceEffectData, ISpaceEffect
     //We'll need a way to get the reference to the Player or Players that is going to be attacked.
     public override void EffectOfSpace(Player playerReference)
     {
+        base.EffectOfSpace(playerReference);
         Debug.Log($"Landed on: {this.name} space and should give: {DamageToGive} damage out to {NumPlayersToAttack} players each.");
     }
 }

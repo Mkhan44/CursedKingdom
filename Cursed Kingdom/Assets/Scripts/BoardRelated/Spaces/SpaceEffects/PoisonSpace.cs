@@ -14,6 +14,7 @@ public class PoisonSpace : SpaceEffectData, ISpaceEffect
 
     public override void EffectOfSpace(Player playerReference)
     {
+        base.EffectOfSpace(playerReference);
         Debug.Log($"Landed on: {this.name} space and should be poisoned for: {NumTurnsToBePoisoned} turn(s).");
         //playerReference.IsPoisoned = true;
     }

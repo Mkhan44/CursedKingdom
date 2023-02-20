@@ -22,6 +22,7 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
 
     public override void EffectOfSpace(Player playerReference)
     {
+        base.EffectOfSpace(playerReference);
         Debug.Log($"Landed on: {this.name} space and should draw: {NumToDraw} {CardTypeToDraw} card(s)");
     }
 }

@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -33,6 +34,8 @@ public class Player : MonoBehaviour
 
     //References
     [SerializeField] private GameplayManager gameplayManagerRef;
+    [SerializeField] private AnimatorController animatorController;
+    [SerializeField] private Animator animator;
 
    
     public int MaxHealth { get => maxHealth; set => maxHealth = value; }
@@ -73,22 +76,22 @@ public class Player : MonoBehaviour
                     {
                         case 0f:
                             {
-                                thisRot.y = 180f;
+                                thisRot.y = 0f;
                                 break;
                             }
                         case 90f:
                             {
-                                thisRot.y = 270f;
+                                thisRot.y = 90f;
                                 break;
                             }
                         case 180f:
                             {
-                                thisRot.y = 0f;
+                                thisRot.y = 180f;
                                 break;
                             }
                         case 270f:
                             {
-                                thisRot.y = 90f;
+                                thisRot.y = 270f;
                                 break;
                             }
                             //Nothing needed to change.
@@ -109,6 +112,8 @@ public class Player : MonoBehaviour
 
     public Space PreviousSpacePlayerWasOn { get => previousSpacePlayerWasOn; set => previousSpacePlayerWasOn = value; }
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
+    public AnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
+    public Animator Animator { get => animator; set => animator = value; }
 
     public void InitializePlayer(ClassData data)
     {

@@ -129,6 +129,7 @@ public class GameplayManager : MonoBehaviour
         ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReference.GetComponent<Player>(), 2);
         playerTempReference.GetComponent<Player>().GameplayManagerRef = this;
         playerTempReference.GetComponent<Player>().ShowHand();
+        playerMovementManager.Animator = playerTempReference.GetComponent<Animator>();
 
         Players.Add(playerTempReference.GetComponent<Player>());
 

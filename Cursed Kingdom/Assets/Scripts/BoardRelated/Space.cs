@@ -17,6 +17,9 @@ public class Space : MonoBehaviour
         West,
     }
 
+    [SerializeField] private const string NEGATIVEEFFECT = "NegativeEffect";
+    [SerializeField] private const string POSITIVEEFFECT = "PositiveEffect";
+
     public Transform spawnPoint;
     public GameObject selectedBorder;
     public GameObject highlightAnimationObject;
@@ -167,11 +170,44 @@ public class Space : MonoBehaviour
             Debug.LogWarning("Hey, no space effects on this space currently!");
         }
 
+
+        if (spaceData.IsNegative)
+        {
+            player.Animator.SetBool(NEGATIVEEFFECT, true);
+            Debug.LogWarning("NEGATIVE SPACE EFFECT");
+        }
+        else
+        {
+            player.Animator.SetBool(POSITIVEEFFECT, true);
+            Debug.LogWarning("POSITIVE SPACE EFFECT");
+        }
+
         for (int i = 0; i < spaceData.spaceEffects.Count; i++)
         {
             //Do the space effect in sequence. We'll check for any external triggers here as well.
             spaceData.spaceEffects[i].spaceEffectData.EffectOfSpace(player);
         }
+
+        StartCoroutine(WaitASec(player));
+
+
+    
+    }
+
+    private IEnumerator WaitASec(Player player)
+    {
+        yield return new WaitForSeconds(1.3f);
+
+        if (spaceData.IsNegative)
+        {
+            player.Animator.SetBool(NEGATIVEEFFECT, false);
+        }
+        else
+        {
+            player.Animator.SetBool(POSITIVEEFFECT, false);
+        }
+
+        player.ShowHand();
     }
 
 

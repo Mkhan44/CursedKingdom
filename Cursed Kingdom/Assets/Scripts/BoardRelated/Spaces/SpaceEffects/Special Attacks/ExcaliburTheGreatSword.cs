@@ -19,6 +19,7 @@ public class ExcaliburTheGreatSword : SpecialAttackSpace, ISpaceEffect
     public override void EffectOfSpace(Player playerReference)
     {
         base.EffectOfSpace(playerReference);
+        base.EffectOfSpace(playerReference);
         //Need a reference to another player.
         Debug.Log($"Landed on: {this.name} special attack space. Discard {NumCardsToDiscard} {CardTypeToDiscard}(s) to deal {DamageToDeal} damage to an opponent of your choice.");
     }

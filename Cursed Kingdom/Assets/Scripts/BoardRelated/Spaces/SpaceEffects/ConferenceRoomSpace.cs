@@ -22,6 +22,7 @@ public class ConferenceRoomSpace : SpaceEffectData, ISpaceEffect
 
     public override void EffectOfSpace(Player playerReference)
     {
+        base.EffectOfSpace(playerReference);
         Debug.Log($"Landed on: {this.name} space...lots of stuff should happen lolol");
     }
 }

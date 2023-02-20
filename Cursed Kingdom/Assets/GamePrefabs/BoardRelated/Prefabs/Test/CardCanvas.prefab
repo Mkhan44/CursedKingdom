@@ -315,6 +315,7 @@ GameObject:
   - component: {fileID: 5034642293403635657}
   - component: {fileID: 5034642293403635662}
   - component: {fileID: 5034642293403635663}
+  - component: {fileID: 5618222099506663404}
   m_Layer: 5
   m_Name: CardCanvas
   m_TagString: Untagged
@@ -406,6 +407,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &5618222099506663404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5034642293403635660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae712610f8314694791d9ae82ee53d9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resoX: 0
+  resoY: 0
 --- !u!1 &5956111698459867870
 GameObject:
   m_ObjectHideFlags: 0

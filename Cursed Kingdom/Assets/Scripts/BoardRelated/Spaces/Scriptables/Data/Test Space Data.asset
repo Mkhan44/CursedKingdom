@@ -12,14 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: Test Space Data
   m_EditorClassIdentifier: 
-  drawMovementCardAmount: 0
-  drawSupportCardAmount: 0
-  turnsPoisoned: 0
-  turnsCursed: 0
-  healthRecoveryAmount: 0
-  damageTakenAmount: 0
-  levelToPassBarricade: 0
-  damageGivenAmount: 0
+  afterDuelEffect: 0
+  onSpaceTurnStartEffect: 0
+  passingOverSpaceEffect: 0
+  isMandatory: 1
+  isNonDuelSpace: 0
+  isNegative: 0
+  spaceEffects: []
   thisSpaceTypes: 000000000100000002000000
   spaceName: Space
   spaceDescription: Please input a space description...

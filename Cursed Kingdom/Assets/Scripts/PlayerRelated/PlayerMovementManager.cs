@@ -4,17 +4,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
 //This script should be attached to the Game Manager object in the hierarchy.
 public class PlayerMovementManager : MonoBehaviour
 {
+
+    private const string ISMOVINGPARAMETER = "IsMoving";
     [SerializeField] private GameplayManager gameplayManagerRef;
     [SerializeField] private float rayCastLength;
+    [SerializeField] private Animator animator;
 
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
     public float RayCastLength { get => rayCastLength; set => rayCastLength = value; }
+    public Animator Animator { get => animator; set => animator = value; }
 
     private void Start()
     {
@@ -187,6 +192,7 @@ public class PlayerMovementManager : MonoBehaviour
 
         playerReference.IsMoving = true;
         gameplayManagerRef.isPlayerMoving = true;
+        animator.SetBool(ISMOVINGPARAMETER, true);
         playerReference.HideHand();
 
         float rate = 3.0f;
@@ -210,6 +216,7 @@ public class PlayerMovementManager : MonoBehaviour
         // Debug.Log("Done moving");
 
         gameplayManagerRef.isPlayerMoving = false;
+        animator.SetBool(ISMOVINGPARAMETER, false);
 
         if (spacesToMove > 1)
         {
@@ -218,13 +225,13 @@ public class PlayerMovementManager : MonoBehaviour
         }
         else
         {
-            gameplayManagerRef.playerMovementCardsDisplayPanel.SetActive(true);
+           // gameplayManagerRef.playerMovementCardsDisplayPanel.SetActive(true);
             playerReference.SpacesLeftToMove = 0;
 
             //TEST
             Debug.Log("TEST DRAW!");
             gameplayManagerRef.ThisDeckManager.DrawCard(Card.CardType.Movement, playerReference);
-            playerReference.ShowHand();
+           // playerReference.ShowHand();
         }
 
         yield return null;

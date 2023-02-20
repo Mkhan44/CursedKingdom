@@ -14,6 +14,7 @@ public class BarricadeSpace : SpaceEffectData, ISpaceEffect
 
     public override void EffectOfSpace(Player playerReference)
     {
+        base.EffectOfSpace(playerReference);
         //If player's level is too low: Force them to the other path. Otherwise, check if it's the first time passing it and play an animation.
         //Finally, if it's not the 1st time or after the animation plays: Player can choose to move to this space.
         Debug.Log($"Landed on: {this.name} space and the level required to pass is: {LevelNeededToPass}");

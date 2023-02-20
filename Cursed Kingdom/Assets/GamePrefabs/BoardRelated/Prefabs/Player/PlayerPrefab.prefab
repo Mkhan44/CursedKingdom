@@ -128,8 +128,9 @@ GameObject:
   - component: {fileID: 7904563902616261366}
   - component: {fileID: 8325634510494661577}
   - component: {fileID: 6811609303460852829}
+  - component: {fileID: -6543908066680211804}
   m_Layer: 2
-  m_Name: elfidle1
+  m_Name: PlayerPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,15 +143,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6264876491439458418}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8711418571382445370}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3382278914954345268
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -192,7 +193,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 35
-  m_Sprite: {fileID: 21300000, guid: c0ecd3ef6fec61548a2dc15622adc3e7, type: 3}
+  m_Sprite: {fileID: -1096353015, guid: 10b34c8fc5a143644bce1faed58012f2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -239,6 +240,8 @@ MonoBehaviour:
   movementCardsInHand: 0
   supportCardsInHand: 0
   maxHandSize: 0
+  cardsInhand: []
+  cardsInHandHolderPanel: {fileID: 0}
   isMoving: 0
   isOnCooldown: 0
   isPoisoned: 0
@@ -249,6 +252,9 @@ MonoBehaviour:
   classData: {fileID: 0}
   currentSpacePlayerIsOn: {fileID: 0}
   previousSpacePlayerWasOn: {fileID: 0}
+  gameplayManagerRef: {fileID: 0}
+  animatorController: {fileID: 0}
+  animator: {fileID: -6543908066680211804}
 --- !u!65 &6811609303460852829
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -260,5 +266,25 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.7, y: 1.7028291, z: 0.5}
-  m_Center: {x: 0, y: 0.09858537, z: -0}
+  m_Size: {x: 0.16, y: 0.27, z: 0.14}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &-6543908066680211804
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6264876491439458418}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 43f2d9b8e1cff8f4e8c8d8b205724f56, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

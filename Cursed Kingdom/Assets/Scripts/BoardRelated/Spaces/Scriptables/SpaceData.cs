@@ -38,11 +38,14 @@ public class SpaceData : ScriptableObject
     [Space(2f)]
     [Tooltip("If a duel cannot be commenced with a player that is on this space, this should be true.")]
     [SerializeField] private bool isNonDuelSpace;
+    [Tooltip("Is this a negative space the impacts the player negatively? If so: True, else: should be False.")]
+    [SerializeField] private bool isNegative;
 
     public bool AfterDuelEffect { get => afterDuelEffect; set => afterDuelEffect = value; }
     public bool OnSpaceStartEffect { get => onSpaceTurnStartEffect; set => onSpaceTurnStartEffect = value; }
     public bool PassingOverSpaceEffect { get => passingOverSpaceEffect; set => passingOverSpaceEffect = value; }
     public bool IsMandatory { get => isMandatory; set => isMandatory = value; }
+    public bool IsNegative { get => isNegative; set => isNegative = value; }
 
     //Determines icon to be used. Should be moved to whatever script we'll have on the space prefabs.
     public enum SpaceType

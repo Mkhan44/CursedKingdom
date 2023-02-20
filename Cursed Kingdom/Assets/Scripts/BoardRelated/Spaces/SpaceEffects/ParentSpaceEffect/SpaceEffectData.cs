@@ -5,8 +5,12 @@ using UnityEngine;
 public class SpaceEffectData : ScriptableObject , ISpaceEffect
 {
     [SerializeField] private bool isACost;
+    [SerializeField] private bool isPositiveEffect;
+    [SerializeField] private const string NEGATIVEEFFECT = "NegativeEffect";
+    [SerializeField] private const string POSITIVEEFFECT = "PositiveEffect";
 
     public bool IsACost { get => isACost; set => isACost = value; }
+    public bool IsPositiveEffect { get => isPositiveEffect; set => isPositiveEffect = value; }
 
     public enum CardType
     {
@@ -25,7 +29,7 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
 
     public virtual void EffectOfSpace(Player playerReference)
     {
-
+   
     }
 
 
