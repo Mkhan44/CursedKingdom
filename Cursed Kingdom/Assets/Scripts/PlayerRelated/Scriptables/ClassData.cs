@@ -4,7 +4,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Class Data", menuName = "Player /Class Data", order = 0)]
@@ -22,6 +21,6 @@ public class ClassData : ScriptableObject
     public int startingHealth;
     [TextArea(3, 5)]
     public string description;
-    public AnimatorController animatorController;
+    public RuntimeAnimatorController animatorController;
 
 }
