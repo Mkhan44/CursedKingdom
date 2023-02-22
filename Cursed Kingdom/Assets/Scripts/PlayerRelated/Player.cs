@@ -4,7 +4,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -34,7 +33,7 @@ public class Player : MonoBehaviour
 
     //References
     [SerializeField] private GameplayManager gameplayManagerRef;
-    [SerializeField] private AnimatorController animatorController;
+    [SerializeField] private RuntimeAnimatorController animatorController;
     [SerializeField] private Animator animator;
 
    
@@ -112,7 +111,7 @@ public class Player : MonoBehaviour
 
     public Space PreviousSpacePlayerWasOn { get => previousSpacePlayerWasOn; set => previousSpacePlayerWasOn = value; }
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
-    public AnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
+    public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
     public Animator Animator { get => animator; set => animator = value; }
 
     public void InitializePlayer(ClassData data)
