@@ -5517,7 +5517,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &556376114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5551,9 +5551,9 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 73.3
-  m_Range: 5.1277947
+  m_Range: 5.42
   m_SpotAngle: 46.77632
-  m_InnerSpotAngle: 9.673908
+  m_InnerSpotAngle: 17.69884
   m_CookieSize: 10
   m_Shadows:
     m_Type: 1
@@ -5752,7 +5752,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 1037151714}
   m_Follow: {fileID: 1037151714}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 45
     OrthographicSize: 5
     NearClipPlane: 0.01
     FarClipPlane: 1000
@@ -5776,7 +5776,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 655759660}
-  m_LocalRotation: {x: 0.21275976, y: -0.67302305, z: 0.21184126, w: 0.6759412}
+  m_LocalRotation: {x: 0.21275975, y: -0.6730231, z: 0.21184124, w: 0.6759413}
   m_LocalPosition: {x: 46.78, y: 13.860001, z: 23.850002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6590,7 +6590,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 60
+  field of view: 45
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -6615,7 +6615,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.21275976, y: -0.67302305, z: 0.21184126, w: 0.6759412}
+  m_LocalRotation: {x: 0.21275975, y: -0.6730231, z: 0.21184124, w: 0.6759413}
   m_LocalPosition: {x: 46.78, y: 13.860001, z: 23.850002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8207,7 +8207,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1351802093
 Transform:
   m_ObjectHideFlags: 0
