@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 185116683581417333}
   - component: {fileID: 185116683581417338}
   - component: {fileID: 185116683581417339}
-  - component: {fileID: 185116683581417336}
   m_Layer: 4
   m_Name: Water
   m_TagString: Untagged
@@ -26,7 +25,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 185116683581417342}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
@@ -68,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c6c16a186e411a241925826203115539, type: 2}
+  - {fileID: 2100000, guid: 40f02f2cac6db6b4a86e961b0ce0abcc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -90,142 +89,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &185116683581417336
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185116683581417342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16629e6f345891348b53ecc2ace028bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  refractionExpanded: 0
-  vertexPaintingExpanded: 0
-  surfaceFoamExpanded: 0
-  foamShadowsExpanded: 0
-  intersectionEffectsExpanded: 0
-  planarReflectionsExpanded: 0
-  reflectionStrength: 0.14
-  reflectionFresnel: 3.58
-  useColorGradient: 0
-  colorGradient:
-    serializedVersion: 2
-    key0: {r: 0.5764706, g: 0, b: 0.827451, a: 1}
-    key1: {r: 0.29411766, g: 0, b: 0.50980395, a: 1}
-    key2: {r: 0, g: 0, b: 1, a: 0}
-    key3: {r: 0, g: 1, b: 0, a: 0}
-    key4: {r: 1, g: 1, b: 0, a: 0}
-    key5: {r: 1, g: 0.49803922, b: 0, a: 0}
-    key6: {r: 1, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 9306
-    ctime1: 18612
-    ctime2: 27918
-    ctime3: 37224
-    ctime4: 46530
-    ctime5: 55836
-    ctime6: 65535
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 1
-    m_NumColorKeys: 7
-    m_NumAlphaKeys: 2
-  colorGradientTexture: {fileID: 0}
-  shallowColor: {r: 0, g: 0, b: 0, a: 1}
-  deepColor: {r: 0.03875934, g: 0.07201276, b: 0.12222529, a: 1}
-  colorDepth: 0
-  horizonColor: {r: 0, g: 0, b: 0, a: 1}
-  horizonDistance: 20
-  shoreFade: 0
-  shoreColor: {r: 1, g: 1, b: 1, a: 0}
-  shoreStrength: 0
-  shoreBlend: 0
-  shoreDepth: 0
-  waveColor: {r: 0, g: 0, b: 0, a: 0}
-  underwaterColor: {r: 0.2031365, g: 0.30897564, b: 0.517647, a: 1}
-  underwaterColorStrength: 1
-  underwaterRefractionStrength: 0.099
-  surfaceFoamTexture: {fileID: 2800000, guid: 2765adc4b9e04f84a8fedc48a5caf3d9, type: 3}
-  surfaceFoamSampling: {x: 0.849, y: 0.49}
-  surfaceFoamCutoff: 0.849
-  surfaceFoamDistortion: 0.49
-  surfaceFoamBlend: 0.625
-  surfaceFoamColor1: {r: 0.0751433, g: 0.0751433, b: 0.0751433, a: 1}
-  surfaceFoamColor2: {r: 0.1411145, g: 0.1411145, b: 0.1411145, a: 0.7294118}
-  surfaceFoamMovement: {x: 0.461, y: 0.07, z: 0.21, w: 0.09}
-  surfaceFoamDirection1: 0.461
-  surfaceFoamDirection2: 0.21
-  surfaceFoamSpeed1: 0.07
-  surfaceFoamSpeed2: 0.09
-  surfaceFoamTilingAndOffset: {x: -1, y: -1, z: 0.5, w: 0.5}
-  surfaceFoamOffsetX: -1
-  surfaceFoamOffsetY: -1
-  surfaceFoamScale1: 0.5
-  surfaceFoamScale2: 0.5
-  enableSurfaceFoam: 0
-  surfaceFoamHeightMask: 0
-  surfaceFoamHeightMaskSmoothness: 0
-  enableHeightMask: 1
-  foamShadowStrength: 0
-  foamShadowDepth: 10
-  surfaceFoamShadowProjection: 15
-  intersectionFoamShadowProjection: 7.02
-  foamMovement: 0
-  intersectionFoamDepth: 0.47
-  intersectionFoamTexture: {fileID: 2800000, guid: 2765adc4b9e04f84a8fedc48a5caf3d9, type: 3}
-  intersectionFoamColor: {r: 0.53773564, g: 0.53773564, b: 0.53773564, a: 1}
-  intersectionFoamMovement: {x: 0.546, y: 0.1}
-  intersectionFoamDirection: 0.546
-  intersectionFoamSpeed: 0.1
-  intersectionFoamScale: 0.11
-  intersectionFoamSampling: {x: 1, y: 3}
-  intersectionFoamCutoff: 1
-  intersectionFoamDistortion: 3
-  enableIntersectionEffects: 1
-  intersectionFoamBlend: 1
-  intersectionWaterBlend: 1
-  shoreFoamSpeed: 0
-  shoreFoamWidth: 0
-  shoreFoamFrequency: 0
-  shoreFoamBreakupStrength: 0
-  shoreFoamBreakupScale: 0
-  lighting: 0
-  lightingSmoothness: 1
-  lightingSpecularColor: {r: 1, g: 1, b: 1, a: 0}
-  lightingDiffuseColor: {r: 0, g: 0, b: 0, a: 0}
-  lightingHardness: 0
-  normalsTexture: {fileID: 2800000, guid: 2765adc4b9e04f84a8fedc48a5caf3d9, type: 3}
-  normalsMovement: {x: 0.09, y: 0.66}
-  normalsStrength: 1
-  normalsScale: 0.66
-  normalsSpeed: 0.09
-  refractionStrength: 0.038
-  waveVisuals: {x: 0.2, y: 7.6, z: 0.5}
-  waveSteepness: 0.242
-  waveLength: 2.4
-  waveSpeed: 0.14
-  waveDirections: {x: 0, y: 0.64, z: 1, w: 0.33}
-  waveDirection1: 0
-  waveDirection2: 0.64
-  waveDirection3: 1
-  waveDirection4: 0.33
-  waterUVs: 1
-  hideComponents: 0
-  enableFoamShadows: 1
-  enableRefraction: 0
-  meshRenderer: {fileID: 185116683581417339}
-  meshFilter: {fileID: 185116683581417338}
-  material: {fileID: 2100000, guid: c6c16a186e411a241925826203115539, type: 2}
 --- !u!1 &185116684866874257
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,7 +107,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &185116684866874253
 Transform:
   m_ObjectHideFlags: 0
@@ -253,9 +116,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 185116684866874257}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.008, z: 0}
-  m_LocalScale: {x: 0.06, y: 0.06, z: 0.06}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -0.0878, y: 0.008, z: 0.0882}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 185116683581417333}
   m_RootOrder: 0
