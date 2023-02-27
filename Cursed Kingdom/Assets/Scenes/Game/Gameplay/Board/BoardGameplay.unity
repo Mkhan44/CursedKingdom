@@ -1404,34 +1404,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 552496509598875668, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: m_LookaheadTime
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509598875668, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: m_LookaheadSmoothing
-      value: 8.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509598875668, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: m_TrackedObjectOffset.y
-      value: -0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509598875674, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: Damping.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509598875674, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: Damping.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509598875674, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: ShoulderOffset.z
-      value: -5
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509646438508, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: m_Lens.FieldOfView
-      value: 45
-      objectReference: {fileID: 0}
     - target: {fileID: 552496509646438509, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
       propertyPath: m_Name
       value: Player Cam Cinemachine
@@ -2175,10 +2147,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
-    - target: {fileID: 3337721393476324783, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
-      propertyPath: m_RenderPostProcessing
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
 --- !u!114 &1653587192 stripped
@@ -2731,9 +2699,133 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: material
+      value: 
+      objectReference: {fileID: 2100000, guid: 40f02f2cac6db6b4a86e961b0ce0abcc, type: 2}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: deepColor.b
+      value: 0.12167346
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: deepColor.g
+      value: 0.07161305
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: waveVisuals.x
+      value: 0.242
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: waveVisuals.y
+      value: 2.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: waveVisuals.z
+      value: 0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: enableFoamShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: enableSurfaceFoam
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: underwaterColor.g
+      value: 0.30842382
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: underwaterColor.r
+      value: 0.20261344
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: surfaceFoamColor1.b
+      value: 0.07477083
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: surfaceFoamColor1.g
+      value: 0.07477083
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: surfaceFoamColor1.r
+      value: 0.07477083
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: surfaceFoamColor2.b
+      value: 0.14059144
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: surfaceFoamColor2.g
+      value: 0.14059144
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: surfaceFoamColor2.r
+      value: 0.14059144
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: intersectionFoamDepth
+      value: 0.52
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: surfaceFoamDistortion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: surfaceFoamSampling.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417336, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: enableIntersectionEffects
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417339, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417339, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 40f02f2cac6db6b4a86e961b0ce0abcc, type: 2}
     - target: {fileID: 185116683581417342, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
       propertyPath: m_Name
       value: Water
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116683581417342, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116684866874253, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116684866874253, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116684866874253, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116684866874253, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0878
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116684866874253, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.0882
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116684866874253, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 185116684866874257, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f8393b3a472eb441a025ee822cdfc24, type: 3}
