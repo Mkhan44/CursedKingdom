@@ -1625,9 +1625,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: fpsCap
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: fpsText
       value: 
       objectReference: {fileID: 96062222}
+    - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: lockFPS
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: boardParent
       value: 

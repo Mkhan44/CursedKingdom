@@ -60,6 +60,8 @@ public class GameplayManager : MonoBehaviour
 
     //Debug
     public TextMeshProUGUI fpsText;
+    public bool lockFPS;
+    [Range(10, 200)] public int fpsCap = 60;
     private int lastFrameIndex;
     private float[] frameDeltaTimeArray;
 
@@ -77,7 +79,11 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
+        if(lockFPS)
+        {
+            Application.targetFrameRate = fpsCap;
+        }
+        
         frameDeltaTimeArray = new float[50];
 
         testMapManager = GetComponent<TestMapManager>();
