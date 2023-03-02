@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using Cinemachine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+using TMPro;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -57,6 +58,11 @@ public class GameplayManager : MonoBehaviour
 
     public List<CinemachineVirtualCamera> cinemachineVirtualCameras;
 
+    //Debug
+    public TextMeshProUGUI fpsText;
+    private int lastFrameIndex;
+    private float[] frameDeltaTimeArray;
+
     //Properties
     public List<Player> Players { get => players; set => players = value; }
 
@@ -71,6 +77,9 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = 60;
+        frameDeltaTimeArray = new float[50];
+
         testMapManager = GetComponent<TestMapManager>();
         playerMovementManager = GetComponent<PlayerMovementManager>();
 
@@ -174,8 +183,12 @@ public class GameplayManager : MonoBehaviour
         //if (!isPlayerMoving && Input.GetKeyDown(KeyCode.Space))
         //{
         //    StartMove();
-           
+
         //}
+        frameDeltaTimeArray[lastFrameIndex] = Time.unscaledDeltaTime;
+        lastFrameIndex = (lastFrameIndex + 1) % frameDeltaTimeArray.Length;
+
+        fpsText.text = "FPS: " + Mathf.RoundToInt(CalculateFPS()).ToString();
 
         if (Input.GetKeyDown(KeyCode.Y))
         {
@@ -189,6 +202,18 @@ public class GameplayManager : MonoBehaviour
 
        
     }
+
+    //Debug function!
+    private float CalculateFPS()
+    {
+        float total = 0f;
+        foreach(float deltaTime in frameDeltaTimeArray)
+        {
+            total += deltaTime;
+        }
+        return frameDeltaTimeArray.Length / total;
+    }
+    //Debug function!
 
     public void ReloadScene()
     {
