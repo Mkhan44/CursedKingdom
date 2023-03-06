@@ -1087,6 +1087,7 @@ GameObject:
   - component: {fileID: 1397390597548466386}
   - component: {fileID: 1397390597548466384}
   - component: {fileID: 1397390597548466385}
+  - component: {fileID: 4480929613397946412}
   m_Layer: 5
   m_Name: PInfo_1
   m_TagString: Untagged
@@ -1164,6 +1165,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4480929613397946412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397390597548466387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6edb514ce84ffd4f985efe90c218e4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerClassText: {fileID: 1397390596479036919}
+  playerNameText: {fileID: 1397390597406827980}
+  playerLevelText: {fileID: 1397390597609108746}
+  playerMovementCardsInHandText: {fileID: 1397390596945565323}
+  playerSupportCardsInHandText: {fileID: 1397390598307323308}
+  playerPortraitImage: {fileID: 1397390596830987792}
+  heartsHolder: {fileID: 1397390598537052682}
+  hearts: []
+  filledHeartSpriteTest: {fileID: 0}
 --- !u!1 &1397390597609108748
 GameObject:
   m_ObjectHideFlags: 0

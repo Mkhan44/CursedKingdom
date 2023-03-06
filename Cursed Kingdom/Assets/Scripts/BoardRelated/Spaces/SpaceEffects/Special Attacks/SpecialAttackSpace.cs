@@ -12,8 +12,19 @@ public class SpecialAttackSpace : SpaceEffectData, ISpaceEffect
 
     public ClassData.ClassType ClassTypeNeeded { get => classTypeNeeded; set => classTypeNeeded = value; }
 
-    public virtual void EffectOfSpace(Player playerReference)
+    public virtual void LandedOnEffect(Player playerReference)
     {
+        base.LandedOnEffect(playerReference);
         Debug.Log($"Landed on: {this.name} special attack space and class is: {playerReference.ClassData.classType} while the class type needed is: {ClassTypeNeeded}");
+    }
+
+    public override void StartOfTurnEffect(Player playerReference)
+    {
+        base.StartOfTurnEffect(playerReference);
+    }
+
+    public override void EndOfTurnEffect(Player playerReference)
+    {
+        base.EndOfTurnEffect(playerReference);
     }
 }

@@ -27,9 +27,19 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
         Right,
     }
 
-    public virtual void EffectOfSpace(Player playerReference)
+    public virtual void LandedOnEffect(Player playerReference)
     {
    
+    }
+
+    public virtual void StartOfTurnEffect(Player playerReference)
+    {
+        
+    }
+
+    public virtual void EndOfTurnEffect(Player playerReference)
+    {
+        
     }
 
 

@@ -185,7 +185,7 @@ public class Space : MonoBehaviour
         for (int i = 0; i < spaceData.spaceEffects.Count; i++)
         {
             //Do the space effect in sequence. We'll check for any external triggers here as well.
-            spaceData.spaceEffects[i].spaceEffectData.EffectOfSpace(player);
+            spaceData.spaceEffects[i].spaceEffectData.LandedOnEffect(player);
         }
 
         StartCoroutine(WaitASec(player));

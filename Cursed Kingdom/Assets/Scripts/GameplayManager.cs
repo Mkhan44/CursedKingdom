@@ -10,6 +10,7 @@ using Cinemachine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 using TMPro;
+using Unity.VisualScripting;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class GameplayManager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject boardParent;
     public GameObject boardPrefab;
+    public GameObject PlayerInfoCanvas;
     public Transform playerCharacter;
     public bool isPlayerMoving = false;
 
@@ -43,6 +45,7 @@ public class GameplayManager : MonoBehaviour
 
 
     [SerializeField] private List<Player> players;
+    [SerializeField] private List<PlayerInfoDisplay> playerInfoDisplays;
 
     public List<ClassData> classdatas;
     public List<SpaceData> spaceDatasTest;
@@ -76,26 +79,22 @@ public class GameplayManager : MonoBehaviour
     public GameObject SupportDeckCardHolder { get => supportDeckCardHolder; set => supportDeckCardHolder = value; }
     public GameObject MovementCardDiscardPileHolder { get => movementCardDiscardPileHolder; set => movementCardDiscardPileHolder = value; }
     public GameObject SupportCardDiscardPileHolder { get => supportCardDiscardPileHolder; set => supportCardDiscardPileHolder = value; }
+    public List<PlayerInfoDisplay> PlayerInfoDisplays { get => playerInfoDisplays; set => playerInfoDisplays = value; }
 
     private void Start()
     {
-        if(lockFPS)
-        {
-            Application.targetFrameRate = fpsCap;
-        }
-        
-        frameDeltaTimeArray = new float[50];
+        FPSCounter();
 
         testMapManager = GetComponent<TestMapManager>();
         playerMovementManager = GetComponent<PlayerMovementManager>();
 
-        
+
         //Deck related
         ThisDeckManager = GetComponent<DeckManager>();
 
         //Get a list of movement cards, pass them in.
         ThisDeckManager.CreateDeck();
-       
+
 
         //Deck related
 
@@ -128,32 +127,62 @@ public class GameplayManager : MonoBehaviour
         }
 
         //Spawn player.
-        int randomSpawnSpace = Random.Range(0, spaces.Count-1);
+        int randomSpawnSpace = Random.Range(0, spaces.Count - 1);
         currentListIndex = randomSpawnSpace;
         GameObject playerTempReference = Instantiate(playerPrefab, spaces[randomSpawnSpace].spawnPoint);
-        
+
         playerTempReference.transform.parent = null;
         playerTempReference.transform.localScale = playerPrefab.transform.localScale;
         playerTempReference.transform.position = spaces[randomSpawnSpace].spawnPoint.position;
         //TODO: CHANGE THIS TO BE MORE DYNAMIC.
-        playerTempReference.GetComponent<Player>().CardsInHandHolderPanel = GameObject.Find("CardsInHandLayout");
+        Player playerTempReferencePlayer = playerTempReference.GetComponent<Player>();
+        playerTempReferencePlayer.CardsInHandHolderPanel = GameObject.Find("CardsInHandLayout");
         //1st 5 cards in player's hand.
         ThisDeckManager.ShuffleDeck(Card.CardType.Movement);
         ThisDeckManager.ShuffleDeck(Card.CardType.Support);
-        ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReference.GetComponent<Player>(), 3);
-        ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReference.GetComponent<Player>(), 2);
-        playerTempReference.GetComponent<Player>().GameplayManagerRef = this;
-        playerTempReference.GetComponent<Player>().ShowHand();
+        ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReferencePlayer, 3);
+        ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReferencePlayer, 2);
+        playerTempReferencePlayer.GameplayManagerRef = this;
+        playerTempReferencePlayer.SetSupportCardsInHand();
+        playerTempReferencePlayer.SetMovementCardsInHand();
+        playerTempReferencePlayer.ShowHand();
+        //debug
+        playerTempReferencePlayer.InitializePlayer();
+
         playerMovementManager.Animator = playerTempReference.GetComponent<Animator>();
 
-        Players.Add(playerTempReference.GetComponent<Player>());
+        Players.Add(playerTempReferencePlayer);
+
+
+
+        if (Players.Count > 1)
+        {
+            //Assuming Player canvas is already setup. We will need to change this to be more dynamic.
+            int childNum = 0;
+            foreach (Transform child in PlayerInfoCanvas.transform)
+            {
+                PlayerInfoDisplay tempPlayerInfoDisp = child.GetComponent<PlayerInfoDisplay>();
+                PlayerInfoDisplays.Add(tempPlayerInfoDisp);
+                tempPlayerInfoDisp.SetupPlayerInfo(Players[childNum]);
+                childNum++;
+            }
+        }
+        //for debug purposes with only 1 player.
+        else
+        {
+            PlayerInfoDisplay tempPlayerInfoDisp = PlayerInfoCanvas.transform.GetChild(0).GetComponent<PlayerInfoDisplay>();
+            PlayerInfoDisplays.Add(tempPlayerInfoDisp);
+            tempPlayerInfoDisp.SetupPlayerInfo(Players[0]);
+        }
+
+
 
         playerCharacter = playerTempReference.transform;
 
         cinemachineVirtualCameras[0].LookAt = playerCharacter;
         cinemachineVirtualCameras[0].Follow = playerCharacter;
 
-        cinemachineVirtualCameras[1].LookAt = spaces[spaces.Count-1].gameObject.transform;
+        cinemachineVirtualCameras[1].LookAt = spaces[spaces.Count - 1].gameObject.transform;
         cinemachineVirtualCameras[1].Follow = spaces[spaces.Count - 1].gameObject.transform;
 
 
@@ -169,7 +198,7 @@ public class GameplayManager : MonoBehaviour
         boardManager.StartupSetupSpaces();
 
         //Get all space neighbors for board movement..
-        foreach(Space space in spaces)
+        foreach (Space space in spaces)
         {
             space.SpaceTravelSetup();
         }
@@ -183,6 +212,7 @@ public class GameplayManager : MonoBehaviour
         //CardTest();
     }
 
+   
 
     private void Update()
     {
@@ -191,10 +221,15 @@ public class GameplayManager : MonoBehaviour
         //    StartMove();
 
         //}
-        frameDeltaTimeArray[lastFrameIndex] = Time.unscaledDeltaTime;
-        lastFrameIndex = (lastFrameIndex + 1) % frameDeltaTimeArray.Length;
+        
 
-        fpsText.text = "FPS: " + Mathf.RoundToInt(CalculateFPS()).ToString();
+        if(fpsText is not null)
+        {
+            frameDeltaTimeArray[lastFrameIndex] = Time.unscaledDeltaTime;
+            lastFrameIndex = (lastFrameIndex + 1) % frameDeltaTimeArray.Length;
+            fpsText.text = "FPS: " + Mathf.RoundToInt(CalculateFPS()).ToString();
+        }
+        
 
         if (Input.GetKeyDown(KeyCode.Y))
         {
@@ -209,18 +244,6 @@ public class GameplayManager : MonoBehaviour
        
     }
 
-    //Debug function!
-    private float CalculateFPS()
-    {
-        float total = 0f;
-        foreach(float deltaTime in frameDeltaTimeArray)
-        {
-            total += deltaTime;
-        }
-        return frameDeltaTimeArray.Length / total;
-    }
-    //Debug function!
-
     public void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -234,6 +257,19 @@ public class GameplayManager : MonoBehaviour
         playerReference.SpacesLeftToMove = spacesToMove;
         playerMovementManager.SetupMove(playerReference);
     }
+
+
+    public void UpdatePlayerInfoUI(Player playerRef)
+    {
+        int playerNum = Players.IndexOf(playerRef);
+
+        if (playerNum is not -1)
+        {
+            PlayerInfoDisplays[playerNum].UpdateEntireUI();
+        }
+    }
+
+
 
 
     //Right now this only works for 2 cameras. Anymore we'll have to specify the target based on what's clicked.
@@ -258,11 +294,35 @@ public class GameplayManager : MonoBehaviour
         currentActiveCamera.enabled = true;
     }
 
-    private void TurnOver()
+    private void EndOfTurn()
     {
         //Player's turn ends: They draw a card.
         ThisDeckManager.DrawCard(Card.CardType.Movement, playerCharacter.GetComponent<Player>());
     }
+    
+
+    #region Debug functions
+    private void FPSCounter()
+    {
+        if (lockFPS)
+        {
+            Application.targetFrameRate = fpsCap;
+        }
+
+        frameDeltaTimeArray = new float[50];
+    }
+
+    //Debug function!
+    private float CalculateFPS()
+    {
+        float total = 0f;
+        foreach (float deltaTime in frameDeltaTimeArray)
+        {
+            total += deltaTime;
+        }
+        return frameDeltaTimeArray.Length / total;
+    }
+    //Debug function!
 
     void TestFunc()
     {
@@ -278,6 +338,7 @@ public class GameplayManager : MonoBehaviour
             Instantiate(cardToSpawn, cardParentCanvas);
         }
     }
+    #endregion
 
 
 }

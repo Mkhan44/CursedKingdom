@@ -126,6 +126,17 @@ public class Player : MonoBehaviour
        // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
 
+    //Debug version where we hardcode the class.
+    public void InitializePlayer()
+    {
+        MaxHealth = ClassData.startingHealth;
+        currentHealth = maxHealth;
+        CurrentLevel = 1;
+        AbleToLevelUp = false;
+        SpacesLeftToMove = 0;
+        // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
+    }
+
     public void DebugTheSpace()
     {
         Debug.Log(CurrentSpacePlayerIsOn);
@@ -135,6 +146,8 @@ public class Player : MonoBehaviour
     {
         CurrentLevel += 1;
         AbleToLevelUp = false;
+
+        GameplayManagerRef.UpdatePlayerInfoUI(this);
     }
 
     public void HandleLevelUp(int level)
@@ -152,11 +165,16 @@ public class Player : MonoBehaviour
                     break;
                 }
         }
+
+        GameplayManagerRef.UpdatePlayerInfoUI(this);
     }
 
     public void DrawCard(Card card)
     {
         CardsInhand.Add(card);
+
+        SetMovementCardsInHand();
+        SetSupportCardsInHand();
     }
 
     public void DrawCards(List<Card> cards)
@@ -165,6 +183,9 @@ public class Player : MonoBehaviour
         {
             CardsInhand.Add(card);
         }
+
+        SetMovementCardsInHand();
+        SetSupportCardsInHand();
     }
 
     //Shows this player's hand on screen.
@@ -199,5 +220,52 @@ public class Player : MonoBehaviour
     public void DiscardAfterUse(Card.CardType cardType , Card cardToDiscard)
     {
         GameplayManagerRef.ThisDeckManager.AddCardToDiscardPile(cardType, cardToDiscard, CardsInhand);
+        if(cardType == Card.CardType.Movement)
+        {
+            SetMovementCardsInHand();
+        }
+        else
+        {
+            SetSupportCardsInHand();
+        }
+    }
+
+    public void SetMovementCardsInHand()
+    {
+        MovementCardsInHand = 0;
+        foreach (Card card in CardsInhand)
+        {
+            MovementCard movementCard = card as MovementCard;
+            
+            if(card is MovementCard)
+            {
+                MovementCardsInHand++;
+            }
+        }
+
+        if(GameplayManagerRef is not null)
+        {
+            GameplayManagerRef.UpdatePlayerInfoUI(this);
+        }
+        
+    }
+
+    public void SetSupportCardsInHand()
+    {
+        SupportCardsInHand = 0;
+        foreach (Card card in CardsInhand)
+        {
+            SupportCard movementCard = card as SupportCard;
+
+            if (card is SupportCard)
+            {
+                SupportCardsInHand++;
+            }
+        }
+
+        if (GameplayManagerRef is not null)
+        {
+            GameplayManagerRef.UpdatePlayerInfoUI(this);
+        }
     }
 }

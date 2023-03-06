@@ -12,10 +12,20 @@ public class RecoverHealthSpace : SpaceEffectData, ISpaceEffect
 
     public int HealthToRecover { get => healthToRecover; set => healthToRecover = value; }
 
-    public override void EffectOfSpace(Player playerReference)
+    public override void LandedOnEffect(Player playerReference)
     {
-        base.EffectOfSpace(playerReference);
+        base.LandedOnEffect(playerReference);
         Debug.Log($"Landed on: {this.name} space and should recover: {HealthToRecover} health.");
        // playerReference.CurrentHealth += HealthToRecover;
+    }
+
+    public override void StartOfTurnEffect(Player playerReference)
+    {
+        base.StartOfTurnEffect(playerReference);
+    }
+
+    public override void EndOfTurnEffect(Player playerReference)
+    {
+        base.EndOfTurnEffect(playerReference);
     }
 }

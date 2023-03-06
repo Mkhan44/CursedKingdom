@@ -16,11 +16,21 @@ public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
     public int NumToDiscard { get => numToDiscard; set => numToDiscard = value; }
 
     //Check if the player can discard before activating any other space effects. This will have to be determined by whatever is queueing up the space effects to trigger.
-    public override void EffectOfSpace(Player playerReference)
+    public override void LandedOnEffect(Player playerReference)
     {
-        base.EffectOfSpace(playerReference);
+        base.LandedOnEffect(playerReference);
         //CAN PLAYER DISCARD? IF NO -- SKIP THIS EFFECT AND ANYTHING RELYING ON THE DISCARD.
 
         Debug.Log($"Landed on: {this.name} space and should discard: {NumToDiscard} {CardTypeToDiscard} card(s)");
+    }
+
+    public override void StartOfTurnEffect(Player playerReference)
+    {
+        base.StartOfTurnEffect(playerReference);
+    }
+
+    public override void EndOfTurnEffect(Player playerReference)
+    {
+        base.EndOfTurnEffect(playerReference);
     }
 }

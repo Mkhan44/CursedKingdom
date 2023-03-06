@@ -17,9 +17,19 @@ public class UseExtraCardSpace : SpaceEffectData, ISpaceEffect
     public int NumToDiscard { get => numExtraToUse; set => numExtraToUse = value; }
 
     //Should be something on the Player script we can increase for the turn to have max amount of cards able to be used.
-    public override void EffectOfSpace(Player playerReference)
+    public override void LandedOnEffect(Player playerReference)
     {
-        base.EffectOfSpace(playerReference);
+        base.LandedOnEffect(playerReference);
         Debug.Log($"Landed on: {this.name} space and can use {NumToDiscard} extra {CardTypeToDiscard} card(s) this turn.");
+    }
+
+    public override void StartOfTurnEffect(Player playerReference)
+    {
+        base.StartOfTurnEffect(playerReference);
+    }
+
+    public override void EndOfTurnEffect(Player playerReference)
+    {
+        base.EndOfTurnEffect(playerReference);
     }
 }

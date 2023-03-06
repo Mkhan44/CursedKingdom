@@ -14,11 +14,20 @@ public class SwiftSwipe : SpecialAttackSpace, ISpaceEffect
     public int NumCardsToDiscard { get => numCardsToDiscard; set => numCardsToDiscard = value; }
     public CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
 
-    public override void EffectOfSpace(Player playerReference)
+    public override void LandedOnEffect(Player playerReference)
     {
-        base.EffectOfSpace(playerReference);
-        base.EffectOfSpace(playerReference);
+        base.LandedOnEffect(playerReference);
         //Need a reference to another player that has at least 2 cards in their hand. Otherwise just don't do this effect.
         Debug.Log($"Landed on: {this.name} special attack space. Discard {NumCardsToDiscard} {CardTypeToDiscard}(s) to look at opponent's hand and discard 1 card then take 1 card.");
+    }
+
+    public override void StartOfTurnEffect(Player playerReference)
+    {
+        base.StartOfTurnEffect(playerReference);
+    }
+
+    public override void EndOfTurnEffect(Player playerReference)
+    {
+        base.EndOfTurnEffect(playerReference);
     }
 }

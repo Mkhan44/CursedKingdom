@@ -12,9 +12,19 @@ public class LoseHealthSpace : SpaceEffectData, ISpaceEffect
 
     public int HealthToLose { get => healthToLose; set => healthToLose = value; }
 
-    public override void EffectOfSpace(Player playerReference)
+    public override void LandedOnEffect(Player playerReference)
     {
-        base.EffectOfSpace(playerReference);
+        base.LandedOnEffect(playerReference);
         Debug.Log($"Landed on: {this.name} space and should lose: {HealthToLose} health.");
+    }
+
+    public override void StartOfTurnEffect(Player playerReference)
+    {
+        base.StartOfTurnEffect(playerReference);
+    }
+
+    public override void EndOfTurnEffect(Player playerReference)
+    {
+        base.EndOfTurnEffect(playerReference);
     }
 }

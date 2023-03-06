@@ -21,9 +21,19 @@ public class AttackSpace : SpaceEffectData, ISpaceEffect
     public bool AttackAllPlayers { get => attackAllPlayers; set => attackAllPlayers = value; }
 
     //We'll need a way to get the reference to the Player or Players that is going to be attacked.
-    public override void EffectOfSpace(Player playerReference)
+    public override void LandedOnEffect(Player playerReference)
     {
-        base.EffectOfSpace(playerReference);
+        base.LandedOnEffect(playerReference);
         Debug.Log($"Landed on: {this.name} space and should give: {DamageToGive} damage out to {NumPlayersToAttack} players each.");
+    }
+
+    public override void StartOfTurnEffect(Player playerReference)
+    {
+        base.StartOfTurnEffect(playerReference);
+    }
+
+    public override void EndOfTurnEffect(Player playerReference)
+    {
+        base.EndOfTurnEffect(playerReference);
     }
 }

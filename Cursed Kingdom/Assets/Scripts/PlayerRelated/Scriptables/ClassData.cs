@@ -22,5 +22,6 @@ public class ClassData : ScriptableObject
     [TextArea(3, 5)]
     public string description;
     public RuntimeAnimatorController animatorController;
+    public Sprite defaultPortraitImage;
 
 }

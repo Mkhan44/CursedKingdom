@@ -16,11 +16,20 @@ public class ExcaliburTheGreatSword : SpecialAttackSpace, ISpaceEffect
     public CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
     public int DamageToDeal { get => damageToDeal; set => damageToDeal = value; }
 
-    public override void EffectOfSpace(Player playerReference)
+    public override void LandedOnEffect(Player playerReference)
     {
-        base.EffectOfSpace(playerReference);
-        base.EffectOfSpace(playerReference);
+        base.LandedOnEffect(playerReference);
         //Need a reference to another player.
         Debug.Log($"Landed on: {this.name} special attack space. Discard {NumCardsToDiscard} {CardTypeToDiscard}(s) to deal {DamageToDeal} damage to an opponent of your choice.");
+    }
+
+    public override void StartOfTurnEffect(Player playerReference)
+    {
+        base.StartOfTurnEffect(playerReference);
+    }
+
+    public override void EndOfTurnEffect(Player playerReference)
+    {
+        base.EndOfTurnEffect(playerReference);
     }
 }

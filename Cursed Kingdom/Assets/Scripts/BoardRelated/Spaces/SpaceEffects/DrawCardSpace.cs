@@ -20,9 +20,19 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
     public bool CanBeEitherCard { get => canBeEitherCard; set => canBeEitherCard = value; }
     public bool DrawFromDiscardPile { get => drawFromDiscardPile; set => drawFromDiscardPile = value; }
 
-    public override void EffectOfSpace(Player playerReference)
+    public override void LandedOnEffect(Player playerReference)
     {
-        base.EffectOfSpace(playerReference);
+        base.LandedOnEffect(playerReference);
         Debug.Log($"Landed on: {this.name} space and should draw: {NumToDraw} {CardTypeToDraw} card(s)");
+    }
+
+    public override void StartOfTurnEffect(Player playerReference)
+    {
+        base.StartOfTurnEffect(playerReference);
+    }
+
+    public override void EndOfTurnEffect(Player playerReference)
+    {
+        base.EndOfTurnEffect(playerReference);
     }
 }
