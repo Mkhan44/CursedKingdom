@@ -10,14 +10,18 @@ using UnityEngine.UI;
 public class PlayerInfoDisplay : MonoBehaviour
 {
     [Header("References")]
-   [SerializeField] private TextMeshProUGUI playerClassText;
-   [SerializeField] private TextMeshProUGUI playerNameText;
-   [SerializeField] private TextMeshProUGUI playerLevelText;
-   [SerializeField] private TextMeshProUGUI playerMovementCardsInHandText;
-   [SerializeField] private TextMeshProUGUI playerSupportCardsInHandText;
-   [SerializeField] private Image playerPortraitImage;
-   [SerializeField] private GameObject heartsHolder;
-   [SerializeField] private List<Image> hearts;
+    [SerializeField] private TextMeshProUGUI playerClassText;
+    [SerializeField] private TextMeshProUGUI playerNameText;
+    [SerializeField] private TextMeshProUGUI playerLevelText;
+    [SerializeField] private TextMeshProUGUI playerMovementCardsInHandText;
+    [SerializeField] private TextMeshProUGUI playerSupportCardsInHandText;
+    [SerializeField] private Image playerPortraitImage;
+    [SerializeField] private GameObject heartsHolder;
+    [SerializeField] private List<Image> hearts;
+    [SerializeField] private Image curseImage;
+    [SerializeField] private Image poisonImage;
+    [SerializeField] private TextMeshProUGUI cooldownText;
+
 
     //TEST
     public Sprite filledHeartSpriteTest;
@@ -33,6 +37,9 @@ public class PlayerInfoDisplay : MonoBehaviour
     public GameObject HeartsHolder { get => heartsHolder; set => heartsHolder = value; }
     public List<Image> Hearts { get => hearts; set => hearts = value; }
     public Player PlayerReference { get => playerReference; set => playerReference = value; }
+    public Image CurseImage { get => curseImage; set => curseImage = value; }
+    public Image PoisonImage { get => poisonImage; set => poisonImage = value; }
+    public TextMeshProUGUI CooldownText { get => cooldownText; set => cooldownText = value; }
 
     public void SetupPlayerInfo(Player playerRef)
     {
@@ -43,8 +50,11 @@ public class PlayerInfoDisplay : MonoBehaviour
         PlayerMovementCardsInHandText.text = playerRef.MovementCardsInHand.ToString();
         PlayerSupportCardsInHandText.text = playerRef.SupportCardsInHand.ToString();
         PlayerPortraitImage.sprite = playerRef.ClassData.defaultPortraitImage;
+        CooldownText.text = string.Empty;
+        CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
+        PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
 
-        foreach(Transform child in HeartsHolder.transform)
+        foreach (Transform child in HeartsHolder.transform)
         {
             hearts.Add(child.GetComponent<Image>());
         }
@@ -58,10 +68,14 @@ public class PlayerInfoDisplay : MonoBehaviour
         }
     }
 
-    public void UpdateEntireUI()
+    public void UpdateCardTotals()
     {
-        PlayerLevelText.text = "Level: " + PlayerReference.CurrentLevel.ToString();
         PlayerMovementCardsInHandText.text = PlayerReference.MovementCardsInHand.ToString();
         PlayerSupportCardsInHandText.text = PlayerReference.SupportCardsInHand.ToString();
+    }
+
+    public void UpdateLevel()
+    {
+        PlayerLevelText.text = "Level: " + PlayerReference.CurrentLevel.ToString();
     }
 }

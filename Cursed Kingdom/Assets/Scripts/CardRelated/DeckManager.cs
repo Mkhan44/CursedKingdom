@@ -230,9 +230,9 @@ public class DeckManager : MonoBehaviour
                 currentDeck[randomNum] = temp;
             }
 
-            Debug.Log("Before shuffle -> " + string.Join(", ", MovementDeckList));
+           // Debug.Log("Before shuffle -> " + string.Join(", ", MovementDeckList));
             MovementDeckList = currentDeck;
-            Debug.Log("After shuffle -> " + string.Join(", ", MovementDeckList));
+           // Debug.Log("After shuffle -> " + string.Join(", ", MovementDeckList));
         }
 
         else
@@ -248,9 +248,9 @@ public class DeckManager : MonoBehaviour
                 currentDeck[randomNum] = temp;
             }
 
-            Debug.Log("Before shuffle -> " + string.Join(", ", SupportDeckList));
+           // Debug.Log("Before shuffle -> " + string.Join(", ", SupportDeckList));
             SupportDeckList = currentDeck;
-            Debug.Log("After shuffle -> " + string.Join(", ", SupportDeckList));
+           // Debug.Log("After shuffle -> " + string.Join(", ", SupportDeckList));
         }
 
         ResetDeckTransformsHierarchy();
