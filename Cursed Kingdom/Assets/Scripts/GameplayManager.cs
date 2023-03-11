@@ -29,6 +29,7 @@ public class GameplayManager : MonoBehaviour
     //Movement code for character -- Need to extract this out of here.
     public PlayerMovementManager playerMovementManager;
     public GameObject playerMovementCardsDisplayPanel;
+    public GameObject playerSupportCardsDisplayPanel;
     public GameObject directionChoiceButtonHolder;
     public GameObject moveButtonPrefab;
     public float raycastLength = 2f;
@@ -136,7 +137,8 @@ public class GameplayManager : MonoBehaviour
         playerTempReference.transform.position = spaces[randomSpawnSpace].spawnPoint.position;
         //TODO: CHANGE THIS TO BE MORE DYNAMIC.
         Player playerTempReferencePlayer = playerTempReference.GetComponent<Player>();
-        playerTempReferencePlayer.CardsInHandHolderPanel = GameObject.Find("CardsInHandLayout");
+        playerTempReferencePlayer.MovementCardsInHandHolderPanel = playerMovementCardsDisplayPanel;
+        playerTempReferencePlayer.SupportCardsInHandHolderPanel = playerSupportCardsDisplayPanel;
         //1st 5 cards in player's hand.
         ThisDeckManager.ShuffleDeck(Card.CardType.Movement);
         ThisDeckManager.ShuffleDeck(Card.CardType.Support);
@@ -162,15 +164,18 @@ public class GameplayManager : MonoBehaviour
             foreach (Transform child in PlayerInfoCanvas.transform)
             {
                 PlayerInfoDisplay tempPlayerInfoDisp = child.GetComponent<PlayerInfoDisplay>();
-                PlayerInfoDisplays.Add(tempPlayerInfoDisp);
-                tempPlayerInfoDisp.SetupPlayerInfo(Players[childNum]);
-                childNum++;
+                if(tempPlayerInfoDisp is not null)
+                {
+                    PlayerInfoDisplays.Add(tempPlayerInfoDisp);
+                    tempPlayerInfoDisp.SetupPlayerInfo(Players[childNum]);
+                    childNum++;
+                }
             }
         }
         //for debug purposes with only 1 player.
         else
         {
-            PlayerInfoDisplay tempPlayerInfoDisp = PlayerInfoCanvas.transform.GetChild(0).GetComponent<PlayerInfoDisplay>();
+            PlayerInfoDisplay tempPlayerInfoDisp = PlayerInfoCanvas.transform.GetChild(1).GetComponent<PlayerInfoDisplay>();
             PlayerInfoDisplays.Add(tempPlayerInfoDisp);
             tempPlayerInfoDisp.SetupPlayerInfo(Players[0]);
         }
@@ -192,6 +197,7 @@ public class GameplayManager : MonoBehaviour
         }
 
         playerMovementCardsDisplayPanel.SetActive(true);
+        playerSupportCardsDisplayPanel.SetActive(true);
 
         currentActiveCamera.enabled = true;
 
@@ -265,7 +271,7 @@ public class GameplayManager : MonoBehaviour
 
         if (playerNum is not -1)
         {
-            PlayerInfoDisplays[playerNum].UpdateEntireUI();
+            PlayerInfoDisplays[playerNum].UpdateCardTotals();
         }
     }
 

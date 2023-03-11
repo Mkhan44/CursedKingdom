@@ -19,7 +19,8 @@ public class Player : MonoBehaviour
     [SerializeField] private int supportCardsInHand;
     [SerializeField] private int maxHandSize;
     [SerializeField] private List<Card> cardsInhand;
-    [SerializeField] private GameObject cardsInHandHolderPanel;
+    [SerializeField] private GameObject movementCardsInHandHolderPanel;
+    [SerializeField] private GameObject supportCardsInHandHolderPanel;
     [SerializeField] private bool isMoving;
     [SerializeField] private bool isOnCooldown;
     [SerializeField] private bool isPoisoned;
@@ -46,8 +47,8 @@ public class Player : MonoBehaviour
     public int SupportCardsInHand { get => supportCardsInHand; set => supportCardsInHand = value; }
     public int MaxHandSize { get => maxHandSize; set => maxHandSize = value; }
     public List<Card> CardsInhand { get => cardsInhand; set => cardsInhand = value; }
-
-    public GameObject CardsInHandHolderPanel { get => cardsInHandHolderPanel; set => cardsInHandHolderPanel = value; }
+    public GameObject MovementCardsInHandHolderPanel { get => movementCardsInHandHolderPanel; set => movementCardsInHandHolderPanel = value; }
+    public GameObject SupportCardsInHandHolderPanel { get => supportCardsInHandHolderPanel; set => supportCardsInHandHolderPanel = value; }
     public bool IsMoving { get => isMoving; set => isMoving = value; }
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
@@ -198,23 +199,25 @@ public class Player : MonoBehaviour
                 MovementCard currentMovementCard = card as MovementCard;
                 currentMovementCard.RemoveListeners();
                 currentMovementCard.AddCardUseListener(GameplayManagerRef);
-                card.gameObject.transform.SetParent(CardsInHandHolderPanel.transform);
+                card.gameObject.transform.SetParent(MovementCardsInHandHolderPanel.transform);
             }
             else
             {
                 SupportCard currentSupportCard = card as SupportCard;
                 currentSupportCard.RemoveListeners();
                 currentSupportCard.AddCardUseListener(GameplayManagerRef);
-                card.gameObject.transform.SetParent(CardsInHandHolderPanel.transform);
+                card.gameObject.transform.SetParent(SupportCardsInHandHolderPanel.transform);
             }
         }
 
-        cardsInHandHolderPanel.SetActive(true);
+        MovementCardsInHandHolderPanel.SetActive(true);
+        SupportCardsInHandHolderPanel.SetActive(true);
     }
 
     public void HideHand()
     {
-        cardsInHandHolderPanel.SetActive(false);
+        MovementCardsInHandHolderPanel.SetActive(false);
+        SupportCardsInHandHolderPanel.SetActive(false);
     }
 
     public void DiscardAfterUse(Card.CardType cardType , Card cardToDiscard)
