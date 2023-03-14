@@ -35,6 +35,7 @@ public class SupportCard : Card
     {
         base.AddCardUseListener(gameplayManager);
         ClickableAreaButton.onClick.AddListener(() => gameplayManager.Players[0].DiscardAfterUse(ThisCardType, this));
+        ClickableAreaButton.onClick.AddListener(() => gameplayManager.HandDisplayPanel.ShrinkHand());
         ClickableAreaButton.onClick.AddListener(() => RemoveListeners());
     }
 

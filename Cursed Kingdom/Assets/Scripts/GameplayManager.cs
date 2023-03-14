@@ -43,6 +43,9 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private GameObject movementCardDiscardPileHolder;
     [SerializeField] private GameObject supportCardDiscardPileHolder;
 
+    //Player UI related
+    [SerializeField] private PlayerHandDisplayUI handDisplayPanel;
+
 
 
     [SerializeField] private List<Player> players;
@@ -81,6 +84,7 @@ public class GameplayManager : MonoBehaviour
     public GameObject MovementCardDiscardPileHolder { get => movementCardDiscardPileHolder; set => movementCardDiscardPileHolder = value; }
     public GameObject SupportCardDiscardPileHolder { get => supportCardDiscardPileHolder; set => supportCardDiscardPileHolder = value; }
     public List<PlayerInfoDisplay> PlayerInfoDisplays { get => playerInfoDisplays; set => playerInfoDisplays = value; }
+    public PlayerHandDisplayUI HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
 
     private void Start()
     {
@@ -139,6 +143,7 @@ public class GameplayManager : MonoBehaviour
         Player playerTempReferencePlayer = playerTempReference.GetComponent<Player>();
         playerTempReferencePlayer.MovementCardsInHandHolderPanel = playerMovementCardsDisplayPanel;
         playerTempReferencePlayer.SupportCardsInHandHolderPanel = playerSupportCardsDisplayPanel;
+        playerTempReferencePlayer.HandDisplayPanel = HandDisplayPanel.gameObject;
         //1st 5 cards in player's hand.
         ThisDeckManager.ShuffleDeck(Card.CardType.Movement);
         ThisDeckManager.ShuffleDeck(Card.CardType.Support);
@@ -198,6 +203,7 @@ public class GameplayManager : MonoBehaviour
 
         playerMovementCardsDisplayPanel.SetActive(true);
         playerSupportCardsDisplayPanel.SetActive(true);
+        HandDisplayPanel.gameObject.SetActive(true);
 
         currentActiveCamera.enabled = true;
 

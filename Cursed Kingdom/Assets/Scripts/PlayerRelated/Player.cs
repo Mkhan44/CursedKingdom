@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] private List<Card> cardsInhand;
     [SerializeField] private GameObject movementCardsInHandHolderPanel;
     [SerializeField] private GameObject supportCardsInHandHolderPanel;
+    [SerializeField] private GameObject handDisplayPanel;
     [SerializeField] private bool isMoving;
     [SerializeField] private bool isOnCooldown;
     [SerializeField] private bool isPoisoned;
@@ -49,6 +50,7 @@ public class Player : MonoBehaviour
     public List<Card> CardsInhand { get => cardsInhand; set => cardsInhand = value; }
     public GameObject MovementCardsInHandHolderPanel { get => movementCardsInHandHolderPanel; set => movementCardsInHandHolderPanel = value; }
     public GameObject SupportCardsInHandHolderPanel { get => supportCardsInHandHolderPanel; set => supportCardsInHandHolderPanel = value; }
+    public GameObject HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
     public bool IsMoving { get => isMoving; set => isMoving = value; }
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
@@ -212,12 +214,14 @@ public class Player : MonoBehaviour
 
         MovementCardsInHandHolderPanel.SetActive(true);
         SupportCardsInHandHolderPanel.SetActive(true);
+        HandDisplayPanel.SetActive(true);
     }
 
     public void HideHand()
     {
         MovementCardsInHandHolderPanel.SetActive(false);
         SupportCardsInHandHolderPanel.SetActive(false);
+        HandDisplayPanel.SetActive(false);
     }
 
     public void DiscardAfterUse(Card.CardType cardType , Card cardToDiscard)
