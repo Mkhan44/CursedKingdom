@@ -54,6 +54,7 @@ public class DeckManager : MonoBehaviour
                 {
                     GameObject tempCard = Instantiate(GameplayManager.MovementCardPrefab);
                     MovementCard movementCard = tempCard.GetComponent<MovementCard>();
+                    movementCard.GameplayManager = gameplayManager;
                     movementCard.CardDataSetup(movementCardData);
                     tempCard.name = movementCardData.name;
                     tempCard.transform.SetParent(GameplayManager.MovementDeckCardHolder.transform);
@@ -76,6 +77,7 @@ public class DeckManager : MonoBehaviour
                 {
                     GameObject tempCard = Instantiate(GameplayManager.SupportCardPrefab);
                     SupportCard supportCard = tempCard.GetComponent<SupportCard>();
+                    supportCard.GameplayManager = gameplayManager;
                     supportCard.CardDataSetup(supportCardData);
                     tempCard.name = supportCardData.name;
                     tempCard.transform.SetParent(GameplayManager.SupportDeckCardHolder.transform);

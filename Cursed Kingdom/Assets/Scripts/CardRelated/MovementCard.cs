@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class MovementCard : Card
 {
@@ -33,10 +34,11 @@ public class MovementCard : Card
 
     public override void AddCardUseListener(GameplayManager gameplayManager)
     {
-        base.AddCardUseListener(gameplayManager);
-        ClickableAreaButton.onClick.AddListener(() => gameplayManager.StartMove(MovementCardValue));
-        ClickableAreaButton.onClick.AddListener(() => gameplayManager.Players[0].DiscardAfterUse(ThisCardType, this));
-        ClickableAreaButton.onClick.AddListener(() => RemoveListeners());
+        //base.AddCardUseListener(gameplayManager);
+        //ClickableAreaButton.onClick.AddListener(() => gameplayManager.StartMove(MovementCardValue));
+        //ClickableAreaButton.onClick.AddListener(() => gameplayManager.Players[0].DiscardAfterUse(ThisCardType, this));
+        //ClickableAreaButton.onClick.AddListener(() => gameplayManager.HandDisplayPanel.ShrinkHand());
+        //ClickableAreaButton.onClick.AddListener(() => RemoveListeners());
     }
 
     protected override void SetupCard(CardData cardData)
@@ -46,5 +48,40 @@ public class MovementCard : Card
         MovementCardValue = movementCardData.MovementValue;
         TitleText.text = "Movement";
         movementValueText.text = MovementCardValue.ToString();
+    }
+
+    public override void OnPointerClick(PointerEventData eventData)
+    {
+        //If card is small, search through and call 'leaveCardEffect' on all other cards in hand.
+        //Once that happens, make this card big with 'hovercardeffect' and have the outline effect popup.
+        //If card is big, use it and then shrink the panel.
+        //DON'T WANT TO KEEP DOING GETCOMPONENT ON THIS!
+        PlayerHandDisplayUI handExpandUI = GetComponentInParent<PlayerHandDisplayUI>();
+
+        if (handExpandUI is not null)
+        {
+            if (!handExpandUI.IsExpanded)
+            {
+                handExpandUI.ExpandHand(ThisCardType);
+            }
+            else
+            {
+                DeselectOtherSelectedCards();
+
+                if (!CardIsSelected)
+                {
+                    CardIsSelected = true;
+                    StartCoroutine(HoverCardEffect());
+                }
+                else
+                {
+                    GameplayManager.StartMove(MovementCardValue);
+                    GameplayManager.Players[0].DiscardAfterUse(ThisCardType, this);
+                    GameplayManager.HandDisplayPanel.ShrinkHand();
+                    transform.localScale = OriginalSize;
+                    CardIsSelected = false;
+                }
+            }
+        }
     }
 }
