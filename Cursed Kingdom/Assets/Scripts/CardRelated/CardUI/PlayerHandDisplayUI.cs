@@ -43,14 +43,23 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 
     public void ExpandHand(Card.CardType cardTypeToExpand)
     {
-        if(cardTypeToExpand == Card.CardType.Movement)
-        {
-
-        }
-
         Vector2 smallCardHolderAnchorMaxTemp = SmallCardHolderPanelTransform.anchorMax;
         smallCardHolderAnchorMaxTemp.y = 1;
         SmallCardHolderPanelTransform.anchorMax = smallCardHolderAnchorMaxTemp;
+
+        if (cardTypeToExpand == Card.CardType.Movement)
+        {
+            MovementCardsHolder.anchorMin = new Vector2(0, 0);
+            MovementCardsHolder.anchorMax = new Vector2(1, 1);
+            SupportCardsHolder.gameObject.SetActive(false);
+        }
+        else
+        {
+            SupportCardsHolder.anchorMin = new Vector2(0, 0);
+            SupportCardsHolder.anchorMax = new Vector2(1, 1);
+            MovementCardsHolder.gameObject.SetActive(false);
+        }
+
         IsExpanded = true;
     }
 
@@ -59,14 +68,58 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         Vector2 smallCardHolderAnchorMaxTemp = SmallCardHolderPanelTransform.anchorMax;
         smallCardHolderAnchorMaxTemp.y = 0.4f;
         SmallCardHolderPanelTransform.anchorMax = smallCardHolderAnchorMaxTemp;
+        MovementCardsHolder.anchorMin = movementCardAnchorMinInitial;
+        MovementCardsHolder.anchorMax = movementCardAnchorMaxInitial;
+        MovementCardsHolder.gameObject.SetActive(true);
+        SupportCardsHolder.anchorMin = supportCardAnchorMinInitial;
+        SupportCardsHolder.anchorMax = supportCardAnchorMaxInitial;
+        SupportCardsHolder.gameObject.SetActive(true);
+        DeselectedSelectedCards();
+
         IsExpanded = false;
     }
 
+
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(IsExpanded)
+        if (IsExpanded)
         {
             ShrinkHand();
         }
     }
+
+    private void DeselectedSelectedCards()
+    {
+        Transform movementCardParentTransform = movementCardsHolder.GetChild(0).GetChild(0).GetChild(0);
+        Transform supportCardParentTransform = supportCardsHolder.GetChild(0).GetChild(0).GetChild(0);
+
+        foreach (Transform child in movementCardParentTransform.transform)
+        {
+            Card theCard = child.GetComponent<Card>();
+
+            if (theCard is not null)
+            {
+                if (theCard.CardIsSelected)
+                {
+                    theCard.DeselectCard();
+                    break;
+                }
+            }
+        }
+
+        foreach (Transform child in supportCardParentTransform.transform)
+        {
+            Card theCard = child.GetComponent<Card>();
+
+            if (theCard is not null)
+            {
+                if (theCard.CardIsSelected)
+                {
+                    theCard.DeselectCard();
+                    break;
+                }
+            }
+        }
+    }
+
 }
