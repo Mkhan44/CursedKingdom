@@ -152,6 +152,7 @@ public class Space : MonoBehaviour
         SetSpaceMat();
         SetSpaceSprite();
         SetSpaceTitle();
+        SetSpaceIcons();
     }
 
     public void SpaceTravelSetup()
@@ -170,6 +171,7 @@ public class Space : MonoBehaviour
             Debug.LogWarning("Hey, no space effects on this space currently!");
         }
 
+        StartCoroutine(PlaySpaceInfoDisplayAnimationUI(player));
 
         if (spaceData.IsNegative)
         {
@@ -189,9 +191,6 @@ public class Space : MonoBehaviour
         }
 
         StartCoroutine(WaitASec(player));
-
-
-    
     }
 
     private IEnumerator WaitASec(Player player)
@@ -208,6 +207,16 @@ public class Space : MonoBehaviour
         }
 
         player.ShowHand();
+    }
+
+    private IEnumerator PlaySpaceInfoDisplayAnimationUI(Player player)
+    {
+        //Space info display panel set active. Populate information for the space.
+        //Get animation clip length, Yield for that long.
+
+
+        yield return new WaitForSeconds(0.0f);
+
     }
 
 
@@ -242,6 +251,21 @@ public class Space : MonoBehaviour
     private void SetSpaceTitle()
     {
         spaceTitleTextMesh.text = spaceData.spaceName;
+    }
+
+    private void SetSpaceIcons()
+    {
+        foreach(SpaceData.SpaceEffect spaceEffect in spaceData.spaceEffects) 
+        {
+            switch(spaceEffect.spaceEffectData)
+            {
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
+       
     }
 
     private void GetSpaceNeighbors()

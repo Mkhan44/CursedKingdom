@@ -738,6 +738,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4846538225668286180, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5034642293403635656, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1180,6 +1184,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+--- !u!114 &481225216 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9020322708128127192, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c785582d80e0374fb24bbf47a3d9fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &616703817 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4934788752862642625, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
@@ -1642,6 +1657,10 @@ PrefabInstance:
       propertyPath: handDisplayPanel
       value: 
       objectReference: {fileID: 1148271992}
+    - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: topDownMapDisplay
+      value: 
+      objectReference: {fileID: 481225216}
     - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: currentActiveCamera
       value: 

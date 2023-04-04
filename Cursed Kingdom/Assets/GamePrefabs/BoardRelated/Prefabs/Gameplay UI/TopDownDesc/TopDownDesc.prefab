@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4019996276340139464}
   - component: {fileID: 4019996276340139465}
   - component: {fileID: 4019996276340139467}
+  - component: {fileID: 695003705295444979}
   m_Layer: 5
   m_Name: TopDownDesc
   m_TagString: Untagged
@@ -92,6 +93,23 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &695003705295444979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4019996276340139471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c785582d80e0374fb24bbf47a3d9fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topDownSpaceInfoPanel: {fileID: 4019996276340139471}
+  titleText: {fileID: 4019996278276846530}
+  descriptionText: {fileID: 4019996276396939622}
+  iconsLayoutObj: {fileID: 4922696283264402681}
+  iconDescriptionPrefab: {fileID: 7661670628797618767, guid: ee972d6a0f719584e89c5b078b5d6999, type: 3}
 --- !u!1 &4019996276396939620
 GameObject:
   m_ObjectHideFlags: 0

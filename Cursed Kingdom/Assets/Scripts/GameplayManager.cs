@@ -43,9 +43,14 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private GameObject movementCardDiscardPileHolder;
     [SerializeField] private GameObject supportCardDiscardPileHolder;
 
+    //Gameboard Data
+    [SerializeField] private TopDownMapDisplay topDownMapDisplay;
+
     //Player UI related
     [SerializeField] private PlayerHandDisplayUI handDisplayPanel;
 
+    //Scriptables for UI packs.
+    SpaceIconPreset iconPresets;
 
 
     [SerializeField] private List<Player> players;
@@ -53,7 +58,7 @@ public class GameplayManager : MonoBehaviour
 
     public List<ClassData> classdatas;
     public List<SpaceData> spaceDatasTest;
-    public TestMapManager testMapManager;
+    public MapManager mapManager;
     public BoardManager boardManager;
 
     int currentListIndex;
@@ -85,12 +90,13 @@ public class GameplayManager : MonoBehaviour
     public GameObject SupportCardDiscardPileHolder { get => supportCardDiscardPileHolder; set => supportCardDiscardPileHolder = value; }
     public List<PlayerInfoDisplay> PlayerInfoDisplays { get => playerInfoDisplays; set => playerInfoDisplays = value; }
     public PlayerHandDisplayUI HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
+    public TopDownMapDisplay TopDownMapDisplay { get => topDownMapDisplay; set => topDownMapDisplay = value; }
 
     private void Start()
     {
         FPSCounter();
 
-        testMapManager = GetComponent<TestMapManager>();
+        mapManager = GetComponent<MapManager>();
         playerMovementManager = GetComponent<PlayerMovementManager>();
 
 
@@ -242,10 +248,45 @@ public class GameplayManager : MonoBehaviour
             fpsText.text = "FPS: " + Mathf.RoundToInt(CalculateFPS()).ToString();
         }
         
-
+        //Map controls.
         if (Input.GetKeyDown(KeyCode.Y))
         {
             SwitchCamera();
+        }
+
+        if(mapManager.IsViewingMap)
+        {
+            if(Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                if(mapManager.currentHighlightedSpace.NorthNeighbor != null)
+                {
+                    mapManager.ChangeCurrentHighlightedSpace(mapManager.currentHighlightedSpace.NorthNeighbor);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                if (mapManager.currentHighlightedSpace.SouthNeighbor != null)
+                {
+                    mapManager.ChangeCurrentHighlightedSpace(mapManager.currentHighlightedSpace.SouthNeighbor);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                if (mapManager.currentHighlightedSpace.WestNeighbor != null)
+                {
+                    mapManager.ChangeCurrentHighlightedSpace(mapManager.currentHighlightedSpace.WestNeighbor);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                if (mapManager.currentHighlightedSpace.EastNeighbor != null)
+                {
+                    mapManager.ChangeCurrentHighlightedSpace(mapManager.currentHighlightedSpace.EastNeighbor);
+                }
+            }
         }
 
         if(Input.GetKeyDown(KeyCode.R))
@@ -293,12 +334,13 @@ public class GameplayManager : MonoBehaviour
         {
             currentActiveCameraIndex = 0;
             currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-            
+            mapManager.DisableCurrentHighlightedSpace(players[0].CurrentSpacePlayerIsOn);
         }
 
         else
         {
-            testMapManager.ActivateHighlight();
+            //NEED TO CHANGE THIS WHEN WE HAVE MULTIPLE CHARACTERS.
+            mapManager.ActivateHighlight(Players[0].CurrentSpacePlayerIsOn);
             currentActiveCameraIndex++;
         }
 

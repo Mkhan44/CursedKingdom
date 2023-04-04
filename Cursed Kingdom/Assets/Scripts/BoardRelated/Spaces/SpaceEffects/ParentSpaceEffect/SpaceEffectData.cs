@@ -29,7 +29,7 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
 
     public virtual void LandedOnEffect(Player playerReference)
     {
-   
+        
     }
 
     public virtual void StartOfTurnEffect(Player playerReference)
