@@ -32,4 +32,17 @@ public class ExcaliburTheGreatSword : SpecialAttackSpace, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            EffectDescription = $"Discard {NumCardsToDiscard} {CardTypeToDiscard}(s) to deal {DamageToDeal} damage to an opponent of your choice. Only the 'Warrior' class may activate this effect.";
+        }
+    }
+
+    private void OnEnable()
+    {
+        UpdateEffectDescription();
+    }
 }

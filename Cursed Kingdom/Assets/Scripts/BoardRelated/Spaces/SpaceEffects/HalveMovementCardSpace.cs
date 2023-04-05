@@ -25,4 +25,16 @@ public class HalveMovementCardSpace : SpaceEffectData, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            EffectDescription = $"All movement cards in your hand have their values halved this turn if your turn starts on this space.";
+        }
+    }
+
+    private void OnEnable()
+    {
+        UpdateEffectDescription();
+    }
 }

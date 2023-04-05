@@ -28,4 +28,16 @@ public class RecoverHealthSpace : SpaceEffectData, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            EffectDescription = $"recover: {HealthToRecover} health.";
+        }
+    }
+
+    private void OnEnable()
+    {
+        UpdateEffectDescription();
+    }
 }

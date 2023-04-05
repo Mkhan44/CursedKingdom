@@ -27,4 +27,16 @@ public class LoseHealthSpace : SpaceEffectData, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            EffectDescription = $"Lose {HealthToLose} health.";
+        }
+    }
+
+    private void OnEnable()
+    {
+        UpdateEffectDescription();
+    }
 }

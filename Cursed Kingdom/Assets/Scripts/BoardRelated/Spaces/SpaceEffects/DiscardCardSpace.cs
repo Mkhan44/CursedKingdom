@@ -33,4 +33,17 @@ public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            EffectDescription = $"Discard: {NumToDiscard} {CardTypeToDiscard} card(s).";
+        }
+    }
+
+    private void OnEnable()
+    {
+        UpdateEffectDescription();
+    }
 }

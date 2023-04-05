@@ -29,4 +29,17 @@ public class ArrowSpace : SpaceEffectData, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            EffectDescription = $"Move in the corresponding direction. Does not decrease spaces left to move.";
+        }
+    }
+
+    private void OnEnable()
+    {
+        UpdateEffectDescription();
+    }
 }

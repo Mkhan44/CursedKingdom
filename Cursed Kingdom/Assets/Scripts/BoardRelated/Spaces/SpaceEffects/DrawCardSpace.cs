@@ -52,6 +52,27 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
         base.EndOfTurnEffect(playerReference);
     }
 
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            if(!CanBeEitherCard)
+            {
+                EffectDescription = $"Draw: {NumToDraw} {CardTypeToDraw} card(s)";
+            }
+            else
+            {
+                EffectDescription = $"Draw: {NumToDraw} Movement or Support card(s)";
+            }
+            
+        }
+    }
+
+    private void OnEnable()
+    {
+        UpdateEffectDescription();
+    }
+
     private void ChooseCardToDraw(Player playerReference)
     {
         

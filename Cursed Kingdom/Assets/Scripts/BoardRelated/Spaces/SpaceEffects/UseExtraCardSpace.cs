@@ -32,4 +32,16 @@ public class UseExtraCardSpace : SpaceEffectData, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            EffectDescription = $"can use {NumToDiscard} extra {CardTypeToDiscard} card(s) this turn if you start your turn on this space.";
+        }
+    }
+
+    private void OnEnable()
+    {
+        UpdateEffectDescription();
+    }
 }

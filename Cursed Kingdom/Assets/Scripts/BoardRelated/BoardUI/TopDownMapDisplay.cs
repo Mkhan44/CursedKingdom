@@ -55,7 +55,7 @@ public class TopDownMapDisplay : MonoBehaviour
             Image iconImage = newIcon.transform.GetChild(0).GetComponent<Image>();
             TextMeshProUGUI iconDescription = newIcon.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             //iconImage = the space Icon.
-            iconDescription.text = "Test";
+            iconDescription.text = spaceEffect.spaceEffectData.EffectDescription;
         }
     }
 

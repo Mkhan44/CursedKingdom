@@ -30,4 +30,16 @@ public class SwiftSwipe : SpecialAttackSpace, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            EffectDescription = $"Discard {NumCardsToDiscard} {CardTypeToDiscard}(s) to look at opponent's hand and discard 1 card then take 1 card. Only the 'Thief' class may activate this effect.";
+        }
+    }
+
+    private void OnEnable()
+    {
+        UpdateEffectDescription();
+    }
 }

@@ -9,8 +9,14 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     [SerializeField] private const string NEGATIVEEFFECT = "NegativeEffect";
     [SerializeField] private const string POSITIVEEFFECT = "PositiveEffect";
 
+    [SerializeField] [TextArea(3,10)] private string effectDescription;
+    [Tooltip("Check this box if you want to override the auto-description setup by the code.")]
+    [SerializeField] private bool overrideAutoDescription;
+
     public bool IsACost { get => isACost; set => isACost = value; }
     public bool IsPositiveEffect { get => isPositiveEffect; set => isPositiveEffect = value; }
+    public string EffectDescription { get => effectDescription; set => effectDescription = value; }
+    public bool OverrideAutoDescription { get => overrideAutoDescription; set => overrideAutoDescription = value; }
 
     public enum CardType
     {
@@ -40,6 +46,11 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     public virtual void EndOfTurnEffect(Player playerReference)
     {
         
+    }
+
+    protected virtual void UpdateEffectDescription()
+    {
+
     }
 
 

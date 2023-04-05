@@ -32,4 +32,16 @@ public class LevelUpSpace : SpaceEffectData, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            EffectDescription = $"Level increased by: {LevelsToIncrease} and health recovered by: {NumHealthToRecover} if you land on/pass this space when being the correct class.";
+        }
+    }
+
+    private void OnEnable()
+    {
+        UpdateEffectDescription();
+    }
 }
