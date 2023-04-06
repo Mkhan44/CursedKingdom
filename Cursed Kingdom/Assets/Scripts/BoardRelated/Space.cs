@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Space : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class Space : MonoBehaviour
     public MeshRenderer meshRenderer;
     public SpriteRenderer spriteRenderer;
     public TextMeshPro spaceTitleTextMesh;
+    public GameObject iconHolderPrefab;
+    public GameObject iconHolderParent;
 
     [Header("Space Icons")]
     public Sprite drawMovementCardIcon;
@@ -59,9 +62,6 @@ public class Space : MonoBehaviour
     {
         ValidDirectionsFromThisSpace = new();
         DirectionsHashsetVisual = new();
-    }
-    private void Start()
-    {
         gameplayManagerRef = GameObject.Find("Game Manager").GetComponent<GameplayManager>();
     }
 
@@ -257,13 +257,118 @@ public class Space : MonoBehaviour
     {
         foreach(SpaceData.SpaceEffect spaceEffect in spaceData.spaceEffects) 
         {
-            switch(spaceEffect.spaceEffectData)
+            GameObject tempIcon = Instantiate(iconHolderPrefab, iconHolderParent.transform);
+            Image iconImage = tempIcon.transform.GetChild(0).GetComponentInChildren<Image>();
+            Sprite iconSprite = null;
+            switch(spaceEffect.spaceEffectData.GetType().Name)
             {
+                case nameof(ArrowSpace):
+                    {
+                        Debug.Log("Arrow space has no sprite. Keeping it as default");
+                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        break;
+                    }
+                case nameof(AttackSpace):
+                    {
+                        Debug.Log("Arrow space has no sprite. Keeping it as default");
+                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        break;
+                    }
+                case nameof(BarricadeSpace):
+                    {
+                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        break;
+                    }
+                case nameof(ConferenceRoomSpace):
+                    {
+                        Debug.Log("ConferenceRoom space has no sprite. Keeping it as default");
+                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        break;
+                    }
+                case nameof(CurseSpace):
+                    {
+                        iconSprite = gameplayManagerRef.IconPresets.CurseSprite;
+                        break;
+                    }
+                case nameof(DiscardCardSpace):
+                    {
+                        Debug.Log("Discard Card space has no sprite. Keeping it as default");
+                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        break;
+                    }
+                case nameof(HalveMovementCardSpace):
+                    {
+                        Debug.Log("Halve movement card space has no sprite. Keeping it as default");
+                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        break;
+                    }
+                case nameof(LevelUpSpace):
+                    {
+                        Debug.Log("Level up space has no sprite. Keeping it as default");
+                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        break;
+                    }
+                case nameof(LoseHealthSpace):
+                    {
+                        iconSprite = gameplayManagerRef.IconPresets.LoseHealthSprite;
+                        break;
+                    }
+                case nameof(PoisonSpace):
+                    {
+                        iconSprite = gameplayManagerRef.IconPresets.PoisonSprite;
+                        break;
+                    }
+                case nameof(RecoverHealthSpace):
+                    {
+                        iconSprite = gameplayManagerRef.IconPresets.RecoverHealthSprite;
+                        break;
+                    }
+                case nameof(UseExtraCardSpace):
+                    {
+                        Debug.Log("Use extra card space has no sprite. Keeping it as default");
+                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        break;
+                    }
+                case nameof(DrawCardSpace):
+                    {
+                        DrawCardSpace drawCardSpace = spaceEffect.spaceEffectData as DrawCardSpace;
+                        if (drawCardSpace.CardTypeToDraw == SpaceEffectData.CardType.MovementCard)
+                        {
+                            iconSprite = gameplayManagerRef.IconPresets.DrawMovementCardSprite;
+                        }
+                        else if(drawCardSpace.CardTypeToDraw == SpaceEffectData.CardType.SupportCard)
+                        {
+                            iconSprite = gameplayManagerRef.IconPresets.DrawSupportCardSprite;
+                        }
+                        else
+                        {
+                            iconSprite = gameplayManagerRef.IconPresets.DrawMovementCardSprite;
+                        }
+                        break;
+                    }
+                case nameof(ExcaliburTheGreatSword):
+                    {
+                        iconSprite = gameplayManagerRef.IconPresets.SpecialAttackSprite;
+                        break;
+                    }
+                case nameof(SwiftSwipe):
+                    {
+                        iconSprite = gameplayManagerRef.IconPresets.SpecialAttackSprite;
+                        break;
+                    }
+                case nameof(SpecialAttackSpace):
+                    {
+                        iconSprite = gameplayManagerRef.IconPresets.SpecialAttackSprite;
+                        break;
+                    }
+
                 default:
                     {
+                        Debug.LogWarning("Couldn't find space type!");
                         break;
                     }
             }
+            iconImage.sprite = iconSprite;
         }
        
     }

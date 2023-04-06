@@ -48,13 +48,14 @@ public class TopDownMapDisplay : MonoBehaviour
     private void PopulateIconLayoutChildren(Space space)
     {
         ClearIconLayoutChildren();
-
+        int count = 0;
         foreach(SpaceData.SpaceEffect spaceEffect in space.spaceData.spaceEffects)
         {
             GameObject newIcon = Instantiate(IconDescriptionPrefab, IconsLayoutObj.transform);
             Image iconImage = newIcon.transform.GetChild(0).GetComponent<Image>();
             TextMeshProUGUI iconDescription = newIcon.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-            //iconImage = the space Icon.
+            iconImage.sprite = space.iconHolderParent.transform.GetChild(count).GetChild(0).GetComponent<Image>().sprite;
+            count += 1;
             iconDescription.text = spaceEffect.spaceEffectData.EffectDescription;
         }
     }
