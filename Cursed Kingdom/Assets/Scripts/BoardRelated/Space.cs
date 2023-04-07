@@ -98,6 +98,7 @@ public class Space : MonoBehaviour
                 Debug.Log($"Player landed on space: {spaceData.spaceName}");
                 ApplySpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
+                gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this);
                 //playerReference.DebugTheSpace();
             }
         }
@@ -137,6 +138,7 @@ public class Space : MonoBehaviour
                 Debug.Log($"Player landed on space: {spaceData.spaceName}");
                 ApplySpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
+                gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this);
                 //playerReference.DebugTheSpace();
             }
         }

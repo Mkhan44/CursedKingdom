@@ -45,6 +45,7 @@ public class GameplayManager : MonoBehaviour
 
     //Gameboard Data
     [SerializeField] private TopDownMapDisplay topDownMapDisplay;
+    [SerializeField] private SpaceArtworkPopupDisplay spaceArtworkPopupDisplay;
 
     //Player UI related
     [SerializeField] private PlayerHandDisplayUI handDisplayPanel;
@@ -91,6 +92,7 @@ public class GameplayManager : MonoBehaviour
     public List<PlayerInfoDisplay> PlayerInfoDisplays { get => playerInfoDisplays; set => playerInfoDisplays = value; }
     public PlayerHandDisplayUI HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
     public TopDownMapDisplay TopDownMapDisplay { get => topDownMapDisplay; set => topDownMapDisplay = value; }
+    public SpaceArtworkPopupDisplay SpaceArtworkPopupDisplay { get => spaceArtworkPopupDisplay; set => spaceArtworkPopupDisplay = value; }
     public SpaceIconPreset IconPresets { get => iconPresets; set => iconPresets = value; }
 
     private void Start()

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1793313390714233067}
   - component: {fileID: 1793313390714233066}
   - component: {fileID: 1793313390714233064}
+  - component: {fileID: 2315304592733573299}
   m_Layer: 5
   m_Name: ArtworkPopup
   m_TagString: Untagged
@@ -89,10 +90,29 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1793313390714233068}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &2315304592733573299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793313390714233068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41fdbadc65863654497d6613b665a167, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iconPrefab: {fileID: 4529224338336056972, guid: efa6be5023550b345bea49c529c99d51, type: 3}
+  spaceTitle: {fileID: 1793313392665687777}
+  spaceDescription: {fileID: 1793313390787353669}
+  spaceArtwork: {fileID: 1793313391815257573}
+  iconParent: {fileID: 6537000406540906753}
+  canvasGroup: {fileID: 1793313390714233064}
+  timeToKeepPanelActive: 5
 --- !u!1 &1793313390787353671
 GameObject:
   m_ObjectHideFlags: 0

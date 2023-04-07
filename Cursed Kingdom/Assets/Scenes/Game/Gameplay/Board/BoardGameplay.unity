@@ -298,10 +298,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 70923562604887435, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 391533930636038558, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -741,14 +737,6 @@ PrefabInstance:
     - target: {fileID: 4729949653794951422, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4846538225668286180, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4846538225668286181, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -16.513916
       objectReference: {fileID: 0}
     - target: {fileID: 5034642293403635656, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_Pivot.x
@@ -1201,6 +1189,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c785582d80e0374fb24bbf47a3d9fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &481225217 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2676591930987692012, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41fdbadc65863654497d6613b665a167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &616703817 stripped
@@ -1689,6 +1688,10 @@ PrefabInstance:
       propertyPath: movementDeckCardHolder
       value: 
       objectReference: {fileID: 1453183465}
+    - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: spaceArtworkPopupDisplay
+      value: 
+      objectReference: {fileID: 481225217}
     - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: directionChoiceButtonHolder
       value: 
