@@ -125,6 +125,18 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -300,8 +312,8 @@ TextureImporter:
       name: thief_8
       rect:
         serializedVersion: 2
-        x: 0
-        y: 192
+        x: 256
+        y: 240
         width: 32
         height: 48
       alignment: 0
@@ -321,8 +333,8 @@ TextureImporter:
       name: thief_9
       rect:
         serializedVersion: 2
-        x: 32
-        y: 192
+        x: 288
+        y: 240
         width: 32
         height: 48
       alignment: 0
@@ -342,7 +354,7 @@ TextureImporter:
       name: thief_10
       rect:
         serializedVersion: 2
-        x: 64
+        x: 0
         y: 192
         width: 32
         height: 48
@@ -363,7 +375,7 @@ TextureImporter:
       name: thief_11
       rect:
         serializedVersion: 2
-        x: 96
+        x: 32
         y: 192
         width: 32
         height: 48
@@ -384,7 +396,7 @@ TextureImporter:
       name: thief_12
       rect:
         serializedVersion: 2
-        x: 128
+        x: 64
         y: 192
         width: 32
         height: 48
@@ -405,7 +417,7 @@ TextureImporter:
       name: thief_13
       rect:
         serializedVersion: 2
-        x: 160
+        x: 96
         y: 192
         width: 32
         height: 48
@@ -426,7 +438,7 @@ TextureImporter:
       name: thief_14
       rect:
         serializedVersion: 2
-        x: 192
+        x: 128
         y: 192
         width: 32
         height: 48
@@ -447,7 +459,7 @@ TextureImporter:
       name: thief_15
       rect:
         serializedVersion: 2
-        x: 224
+        x: 160
         y: 192
         width: 32
         height: 48
@@ -468,8 +480,8 @@ TextureImporter:
       name: thief_16
       rect:
         serializedVersion: 2
-        x: 0
-        y: 144
+        x: 192
+        y: 192
         width: 32
         height: 48
       alignment: 0
@@ -489,8 +501,8 @@ TextureImporter:
       name: thief_17
       rect:
         serializedVersion: 2
-        x: 32
-        y: 144
+        x: 224
+        y: 192
         width: 32
         height: 48
       alignment: 0
@@ -510,8 +522,8 @@ TextureImporter:
       name: thief_18
       rect:
         serializedVersion: 2
-        x: 64
-        y: 144
+        x: 256
+        y: 192
         width: 32
         height: 48
       alignment: 0
@@ -531,8 +543,8 @@ TextureImporter:
       name: thief_19
       rect:
         serializedVersion: 2
-        x: 96
-        y: 144
+        x: 288
+        y: 192
         width: 32
         height: 48
       alignment: 0
@@ -552,7 +564,7 @@ TextureImporter:
       name: thief_20
       rect:
         serializedVersion: 2
-        x: 128
+        x: 0
         y: 144
         width: 32
         height: 48
@@ -573,7 +585,7 @@ TextureImporter:
       name: thief_21
       rect:
         serializedVersion: 2
-        x: 160
+        x: 32
         y: 144
         width: 32
         height: 48
@@ -594,7 +606,7 @@ TextureImporter:
       name: thief_22
       rect:
         serializedVersion: 2
-        x: 192
+        x: 64
         y: 144
         width: 32
         height: 48
@@ -615,7 +627,7 @@ TextureImporter:
       name: thief_23
       rect:
         serializedVersion: 2
-        x: 224
+        x: 96
         y: 144
         width: 32
         height: 48
@@ -636,8 +648,8 @@ TextureImporter:
       name: thief_24
       rect:
         serializedVersion: 2
-        x: 0
-        y: 96
+        x: 128
+        y: 144
         width: 32
         height: 48
       alignment: 0
@@ -657,8 +669,8 @@ TextureImporter:
       name: thief_25
       rect:
         serializedVersion: 2
-        x: 32
-        y: 96
+        x: 160
+        y: 144
         width: 32
         height: 48
       alignment: 0
@@ -678,8 +690,8 @@ TextureImporter:
       name: thief_26
       rect:
         serializedVersion: 2
-        x: 64
-        y: 96
+        x: 192
+        y: 144
         width: 32
         height: 48
       alignment: 0
@@ -699,8 +711,8 @@ TextureImporter:
       name: thief_27
       rect:
         serializedVersion: 2
-        x: 96
-        y: 96
+        x: 224
+        y: 144
         width: 32
         height: 48
       alignment: 0
@@ -720,8 +732,8 @@ TextureImporter:
       name: thief_28
       rect:
         serializedVersion: 2
-        x: 128
-        y: 96
+        x: 256
+        y: 144
         width: 32
         height: 48
       alignment: 0
@@ -741,8 +753,8 @@ TextureImporter:
       name: thief_29
       rect:
         serializedVersion: 2
-        x: 160
-        y: 96
+        x: 288
+        y: 144
         width: 32
         height: 48
       alignment: 0
@@ -762,7 +774,7 @@ TextureImporter:
       name: thief_30
       rect:
         serializedVersion: 2
-        x: 192
+        x: 0
         y: 96
         width: 32
         height: 48
@@ -783,7 +795,7 @@ TextureImporter:
       name: thief_31
       rect:
         serializedVersion: 2
-        x: 224
+        x: 32
         y: 96
         width: 32
         height: 48
@@ -804,8 +816,8 @@ TextureImporter:
       name: thief_32
       rect:
         serializedVersion: 2
-        x: 0
-        y: 48
+        x: 64
+        y: 96
         width: 32
         height: 48
       alignment: 0
@@ -825,8 +837,8 @@ TextureImporter:
       name: thief_33
       rect:
         serializedVersion: 2
-        x: 32
-        y: 48
+        x: 96
+        y: 96
         width: 32
         height: 48
       alignment: 0
@@ -846,8 +858,8 @@ TextureImporter:
       name: thief_34
       rect:
         serializedVersion: 2
-        x: 64
-        y: 48
+        x: 128
+        y: 96
         width: 32
         height: 48
       alignment: 0
@@ -867,8 +879,8 @@ TextureImporter:
       name: thief_35
       rect:
         serializedVersion: 2
-        x: 96
-        y: 48
+        x: 160
+        y: 96
         width: 32
         height: 48
       alignment: 0
@@ -888,8 +900,8 @@ TextureImporter:
       name: thief_36
       rect:
         serializedVersion: 2
-        x: 128
-        y: 48
+        x: 192
+        y: 96
         width: 32
         height: 48
       alignment: 0
@@ -909,8 +921,8 @@ TextureImporter:
       name: thief_37
       rect:
         serializedVersion: 2
-        x: 160
-        y: 48
+        x: 224
+        y: 96
         width: 32
         height: 48
       alignment: 0
@@ -930,8 +942,8 @@ TextureImporter:
       name: thief_38
       rect:
         serializedVersion: 2
-        x: 192
-        y: 48
+        x: 256
+        y: 96
         width: 32
         height: 48
       alignment: 0
@@ -951,8 +963,8 @@ TextureImporter:
       name: thief_39
       rect:
         serializedVersion: 2
-        x: 224
-        y: 48
+        x: 288
+        y: 96
         width: 32
         height: 48
       alignment: 0
@@ -973,7 +985,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 48
         width: 32
         height: 48
       alignment: 0
@@ -994,7 +1006,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 0
+        y: 48
         width: 32
         height: 48
       alignment: 0
@@ -1015,7 +1027,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 0
+        y: 48
         width: 32
         height: 48
       alignment: 0
@@ -1036,7 +1048,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 0
+        y: 48
         width: 32
         height: 48
       alignment: 0
@@ -1057,7 +1069,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 128
-        y: 0
+        y: 48
         width: 32
         height: 48
       alignment: 0
@@ -1078,7 +1090,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 160
-        y: 0
+        y: 48
         width: 32
         height: 48
       alignment: 0
@@ -1099,7 +1111,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 0
+        y: 48
         width: 32
         height: 48
       alignment: 0
@@ -1120,7 +1132,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 224
-        y: 0
+        y: 48
         width: 32
         height: 48
       alignment: 0
@@ -1132,6 +1144,216 @@ TextureImporter:
       bones: []
       spriteID: 1ab7cb56f29d035488f8f0ac4ae37445
       internalID: 677592654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thief_48
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 48
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c6096bf34a49844099eff021a6423f8
+      internalID: 566558903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thief_49
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 48
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab28f58dba52c17468bb2f1f47d2ac24
+      internalID: 357323219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thief_50
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37b5b3025d5b11046883bd42161ca5e0
+      internalID: -88306419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thief_51
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2c6749acfa642d48b82713ac061bdab
+      internalID: 1057484522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thief_52
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f95fca9667ea61040ae56ac76f3d1b54
+      internalID: -696777221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thief_53
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4ea530cc441bdd4586e91f87b0c3c7d
+      internalID: -790062813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thief_54
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 424d61e6b4cfd05468d48a9cb95db899
+      internalID: 1100470538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thief_55
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc24445f2d0b70b41b3fa6422d82eaa6
+      internalID: -668197239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thief_56
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2993e748cc7e6c44a1a19c98c93c76d
+      internalID: -1860964665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: thief_57
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b63a9d1be8207a7438dda4c3faf70351
+      internalID: 1882542521
       vertices: []
       indices: 
       edges: []
@@ -1161,6 +1383,7 @@ TextureImporter:
       thief_21: 1572011936
       thief_6: 1739534998
       thief_5: 2086298576
+      thief_53: -790062813
       thief_33: 283526778
       thief_10: 142573553
       thief_31: -1096731693
@@ -1171,7 +1394,9 @@ TextureImporter:
       thief_22: 900474862
       thief_36: -2139167299
       thief_16: 1513352161
+      thief_50: -88306419
       thief_30: 1609967733
+      thief_55: -668197239
       thief_23: 2093954790
       thief_35: 400991308
       thief_42: 565608837
@@ -1183,6 +1408,7 @@ TextureImporter:
       thief_24: 1879508311
       thief_4: -417391578
       thief_45: -315418471
+      thief_48: 566558903
       thief_40: 294204792
       thief_1: -1715536708
       thief_15: -1139956669
@@ -1190,13 +1416,19 @@ TextureImporter:
       thief_26: -489691373
       thief_29: -603856840
       thief_34: -614201297
+      thief_51: 1057484522
       thief_27: 913014235
       thief_25: 1606907653
+      thief_54: 1100470538
       thief_2: 166451810
       thief_38: -1856595154
+      thief_49: 357323219
       thief_0: -1096353015
+      thief_57: 1882542521
       thief_14: 459992436
       thief_8: -696428354
+      thief_52: -696777221
+      thief_56: -1860964665
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
