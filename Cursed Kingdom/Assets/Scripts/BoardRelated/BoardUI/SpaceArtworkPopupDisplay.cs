@@ -12,39 +12,44 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
     public GameObject iconPrefab;
     [SerializeField] private TextMeshProUGUI spaceTitle;
     [SerializeField] private TextMeshProUGUI spaceDescription;
+    [SerializeField] private Space currentSpacePlayerIsOn;
     [SerializeField] private Image spaceArtwork;
     [SerializeField] private GameObject iconParent;
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private Coroutine currentCoroutine;
     [SerializeField] [Range(0,30)] private float timeToKeepPanelActive = 5f;
 
     public TextMeshProUGUI SpaceTitle { get => spaceTitle; set => spaceTitle = value; }
     public TextMeshProUGUI SpaceDescription { get => spaceDescription; set => spaceDescription = value; }
+    public Space CurrentSpacePlayerIsOn { get => currentSpacePlayerIsOn; set => currentSpacePlayerIsOn = value; }
     public Image SpaceArtwork { get => spaceArtwork; set => spaceArtwork = value; }
     public GameObject IconParent { get => iconParent; set => iconParent = value; }
     public CanvasGroup CanvasGroup { get => canvasGroup; set => canvasGroup = value; }
+    public Coroutine CurrentCoroutine { get => currentCoroutine; set => currentCoroutine = value; }
     public float TimeToKeepPanelActive { get => timeToKeepPanelActive; set => timeToKeepPanelActive = value; }
 
     public void TurnOnDisplay(Space spaceInfo)
     {
+        CurrentSpacePlayerIsOn = spaceInfo;
         CanvasGroup.blocksRaycasts = true;
         CanvasGroup.alpha = 1f;
-        SpaceTitle.text = spaceInfo.spaceData.spaceName;
-        SpaceDescription.text = spaceInfo.spaceData.spaceDescription;
-        SpaceArtwork.sprite = spaceInfo.spaceData.spaceSprite;
+        SpaceTitle.text = CurrentSpacePlayerIsOn.spaceData.spaceName;
+        SpaceDescription.text = CurrentSpacePlayerIsOn.spaceData.spaceDescription;
+        SpaceArtwork.sprite = CurrentSpacePlayerIsOn.spaceData.spaceSprite;
 
         int count = 0;
-        foreach(SpaceData.SpaceEffect spaceEffect in spaceInfo.spaceData.spaceEffects)
+        foreach(SpaceData.SpaceEffect spaceEffect in CurrentSpacePlayerIsOn.spaceData.spaceEffects)
         {
             GameObject newIcon = Instantiate(iconPrefab, IconParent.transform);
             Image iconImage = newIcon.transform.GetChild(0).GetComponent<Image>();
             TextMeshProUGUI iconText = newIcon.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-            iconImage.sprite = spaceInfo.iconHolderParent.transform.GetChild(count).GetChild(0).GetComponent<Image>().sprite;
-            iconText.text = spaceInfo.spaceData.spaceEffects[count].spaceEffectData.EffectDescription;
+            iconImage.sprite = CurrentSpacePlayerIsOn.iconHolderParent.transform.GetChild(count).GetChild(0).GetComponent<Image>().sprite;
+            iconText.text = CurrentSpacePlayerIsOn.spaceData.spaceEffects[count].spaceEffectData.EffectDescription;
             count++;
         }
-        spaceInfo.gameplayManagerRef.Players[0].HideHand();
+        CurrentSpacePlayerIsOn.gameplayManagerRef.Players[0].HideHand();
 
-        StartCoroutine(WaitTillTurnOff(spaceInfo));
+        CurrentCoroutine = StartCoroutine(WaitTillTurnOff(CurrentSpacePlayerIsOn));
     }
 
     public void TurnOffDisplay(Space spaceInfo)
@@ -56,6 +61,16 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
         CanvasGroup.blocksRaycasts = false;
         CanvasGroup.alpha = 0f;
         spaceInfo.gameplayManagerRef.Players[0].ShowHand();
+    }
+
+    public void ExitCoroutineEarly()
+    {
+        
+        if(CurrentCoroutine != null && CurrentSpacePlayerIsOn != null)
+        {
+            StopCoroutine(CurrentCoroutine);
+            TurnOffDisplay(CurrentSpacePlayerIsOn);
+        }
     }
 
     public IEnumerator WaitTillTurnOff(Space spaceInfo)

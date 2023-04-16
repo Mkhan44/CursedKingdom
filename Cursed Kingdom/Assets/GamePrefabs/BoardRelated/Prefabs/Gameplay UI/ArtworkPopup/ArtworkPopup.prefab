@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1793313390714233066}
   - component: {fileID: 1793313390714233064}
   - component: {fileID: 2315304592733573299}
+  - component: {fileID: 4082030201043658060}
   m_Layer: 5
   m_Name: ArtworkPopup
   m_TagString: Untagged
@@ -109,10 +110,40 @@ MonoBehaviour:
   iconPrefab: {fileID: 4529224338336056972, guid: efa6be5023550b345bea49c529c99d51, type: 3}
   spaceTitle: {fileID: 1793313392665687777}
   spaceDescription: {fileID: 1793313390787353669}
+  currentSpacePlayerIsOn: {fileID: 0}
   spaceArtwork: {fileID: 1793313391815257573}
   iconParent: {fileID: 6537000406540906753}
   canvasGroup: {fileID: 1793313390714233064}
   timeToKeepPanelActive: 5
+--- !u!114 &4082030201043658060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793313390714233068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2315304592733573299}
+          m_TargetAssemblyTypeName: SpaceArtworkPopupDisplay, Assembly-CSharp
+          m_MethodName: ExitCoroutineEarly
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1793313390787353671
 GameObject:
   m_ObjectHideFlags: 0
