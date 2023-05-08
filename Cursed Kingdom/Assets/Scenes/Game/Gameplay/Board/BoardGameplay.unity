@@ -901,6 +901,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1148271992}
     - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: spacesToMoveText
+      value: 
+      objectReference: {fileID: 1177180240}
+    - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: topDownMapDisplay
       value: 
       objectReference: {fileID: 481225216}
@@ -1202,6 +1206,17 @@ Transform:
   m_Father: {fileID: 1857363069}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1177180240 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 557045934623564800, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1333587640
 GameObject:
   m_ObjectHideFlags: 0

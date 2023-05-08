@@ -157,7 +157,7 @@ public class DeckManager : MonoBehaviour
             SupportDeckList.Remove(SupportDeckList[0]);
         }
 
-        gameplayManager.UpdatePlayerInfoUI(playerDrawingCard);
+        gameplayManager.UpdatePlayerInfoUICardCount(playerDrawingCard);
     }
 
     public void DrawCards(Card.CardType deckTypeToDrawFrom, Player playerDrawingCard, int numCardsToDraw)
@@ -194,7 +194,7 @@ public class DeckManager : MonoBehaviour
             }
         }
 
-        gameplayManager.UpdatePlayerInfoUI(playerDrawingCard);
+        gameplayManager.UpdatePlayerInfoUICardCount(playerDrawingCard);
 
     }
 

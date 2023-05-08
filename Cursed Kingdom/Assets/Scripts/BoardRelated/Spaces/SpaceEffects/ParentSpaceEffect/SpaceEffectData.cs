@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class SpaceEffectData : ScriptableObject , ISpaceEffect
 {
-    [SerializeField] private bool isACost;
-    [SerializeField] private bool isPositiveEffect;
     [SerializeField] private const string NEGATIVEEFFECT = "NegativeEffect";
     [SerializeField] private const string POSITIVEEFFECT = "PositiveEffect";
+    [SerializeField] private bool isACost;
+    [SerializeField] private bool isPositiveEffect;
 
     [SerializeField] [TextArea(3,10)] private string effectDescription;
     [Tooltip("Check this box if you want to override the auto-description setup by the code.")]

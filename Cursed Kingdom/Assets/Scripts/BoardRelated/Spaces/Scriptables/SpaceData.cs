@@ -30,6 +30,8 @@ public class SpaceData : ScriptableObject
     [SerializeField] private bool passingOverSpaceEffect;
     [Tooltip("If the space effect is mandatory -- the game will try and activate it. Otherwise popup will ask the player if they want to. Default = true.")]
     [SerializeField] private bool isMandatory = true;
+    [Tooltip("When passing over this space: Does the amount of moves a player has left decrease?")]
+    [SerializeField] private bool decreasesSpacesToMove = true;
     [Space(10f)]
 
     //might need another bool for barricade???
@@ -46,6 +48,7 @@ public class SpaceData : ScriptableObject
     public bool PassingOverSpaceEffect { get => passingOverSpaceEffect; set => passingOverSpaceEffect = value; }
     public bool IsMandatory { get => isMandatory; set => isMandatory = value; }
     public bool IsNegative { get => isNegative; set => isNegative = value; }
+    public bool DecreasesSpacesToMove { get => decreasesSpacesToMove; set => decreasesSpacesToMove = value; }
 
     //Determines icon to be used. Should be moved to whatever script we'll have on the space prefabs.
     public enum SpaceType

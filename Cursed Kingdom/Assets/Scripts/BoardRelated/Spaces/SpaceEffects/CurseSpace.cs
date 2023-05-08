@@ -15,18 +15,20 @@ public class CurseSpace : SpaceEffectData, ISpaceEffect
     public override void LandedOnEffect(Player playerReference)
     {
         base.LandedOnEffect(playerReference);
+        playerReference.CursePlayer(numTurnsToBeCursed);
         Debug.Log($"Landed on: {this.name} space and should be cursed for: {NumTurnsToBeCursed} turn(s).");
-        //playerReference.IsPoisoned = true;
     }
 
     public override void StartOfTurnEffect(Player playerReference)
     {
         base.StartOfTurnEffect(playerReference);
+        playerReference.CursePlayer(numTurnsToBeCursed);
     }
 
     public override void EndOfTurnEffect(Player playerReference)
     {
         base.EndOfTurnEffect(playerReference);
+        playerReference.CursePlayer(numTurnsToBeCursed);
     }
     protected override void UpdateEffectDescription()
     {

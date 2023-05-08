@@ -21,6 +21,12 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
     [SerializeField] private Vector2 supportCardAnchorMinInitial;
     [SerializeField] private Vector2 smallCardHolderPanelAnchorMaxInitial;
     [SerializeField] private Vector2 smallCardHolderPanelAnchorMinInitial;
+    [SerializeField] private float smallPaddingSizeInitial;
+    [SerializeField] private float expandedPaddingSizeInitial;
+    [SerializeField] private HorizontalLayoutGroup movementLayoutGroup;
+    [SerializeField] private float movementLayoutGroupInitialSpacing;
+    [SerializeField] private HorizontalLayoutGroup supportLayoutGroup;
+    [SerializeField] private float supportLayoutGroupInitialSpacing;
 
     [SerializeField] private bool isExpanded;
 
@@ -29,6 +35,10 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
     public RectTransform MovementCardsHolder { get => movementCardsHolder; set => movementCardsHolder = value; }
     public RectTransform SupportCardsHolder { get => supportCardsHolder; set => supportCardsHolder = value; }
     public bool IsExpanded { get => isExpanded; set => isExpanded = value; }
+    public HorizontalLayoutGroup MovementLayoutGroup { get => movementLayoutGroup; set => movementLayoutGroup = value; }
+    public float MovementLayoutGroupInitialSpacing { get => movementLayoutGroupInitialSpacing; set => movementLayoutGroupInitialSpacing = value; }
+    public HorizontalLayoutGroup SupportLayoutGroup { get => supportLayoutGroup; set => supportLayoutGroup = value; }
+    public float SupportLayoutGroupInitialSpacing { get => supportLayoutGroupInitialSpacing; set => supportLayoutGroupInitialSpacing = value; }
 
     private void Start()
     {
@@ -39,6 +49,8 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         supportCardAnchorMinInitial = SupportCardsHolder.anchorMin;
         smallCardHolderPanelAnchorMaxInitial = SmallCardHolderPanelTransform.anchorMax;
         smallCardHolderPanelAnchorMinInitial = SmallCardHolderPanelTransform.anchorMin;
+        MovementLayoutGroupInitialSpacing = MovementLayoutGroup.spacing;
+        SupportLayoutGroupInitialSpacing = SupportLayoutGroup.spacing;
     }
 
     public void ExpandHand(Card.CardType cardTypeToExpand)
@@ -51,12 +63,14 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         {
             MovementCardsHolder.anchorMin = new Vector2(0, 0);
             MovementCardsHolder.anchorMax = new Vector2(1, 1);
+            MovementLayoutGroup.spacing = -100f;
             SupportCardsHolder.gameObject.SetActive(false);
         }
         else
         {
             SupportCardsHolder.anchorMin = new Vector2(0, 0);
             SupportCardsHolder.anchorMax = new Vector2(1, 1);
+            SupportLayoutGroup.spacing = -100f;
             MovementCardsHolder.gameObject.SetActive(false);
         }
 
@@ -70,9 +84,11 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         SmallCardHolderPanelTransform.anchorMax = smallCardHolderAnchorMaxTemp;
         MovementCardsHolder.anchorMin = movementCardAnchorMinInitial;
         MovementCardsHolder.anchorMax = movementCardAnchorMaxInitial;
+        MovementLayoutGroup.spacing = MovementLayoutGroupInitialSpacing;
         MovementCardsHolder.gameObject.SetActive(true);
         SupportCardsHolder.anchorMin = supportCardAnchorMinInitial;
         SupportCardsHolder.anchorMax = supportCardAnchorMaxInitial;
+        SupportLayoutGroup.spacing = SupportLayoutGroupInitialSpacing;
         SupportCardsHolder.gameObject.SetActive(true);
         DeselectedSelectedCards();
 

@@ -77,6 +77,7 @@ public class GameplayManager : MonoBehaviour
     [Range(10, 200)] public int fpsCap = 60;
     private int lastFrameIndex;
     private float[] frameDeltaTimeArray;
+    public TextMeshProUGUI spacesToMoveText;
 
     //Properties
     public List<Player> Players { get => players; set => players = value; }
@@ -164,6 +165,7 @@ public class GameplayManager : MonoBehaviour
         playerTempReferencePlayer.ShowHand();
         //debug
         playerTempReferencePlayer.InitializePlayer();
+        spacesToMoveText.text = "Spaces left: 0";
 
         playerMovementManager.Animator = playerTempReference.GetComponent<Animator>();
 
@@ -314,18 +316,54 @@ public class GameplayManager : MonoBehaviour
         playerMovementManager.SetupMove(playerReference);
     }
 
-
-    public void UpdatePlayerInfoUI(Player playerRef)
+    private int GetCurrentPlayer(Player playerRef)
     {
         int playerNum = Players.IndexOf(playerRef);
 
         if (playerNum is not -1)
         {
+            return playerNum;
+        }
+        else
+        {
+            return -1;
+        }
+
+    }
+
+    #region PlayerInfoUI Functions
+
+    public void UpdatePlayerInfoUICardCount(Player playerRef)
+    {
+        int playerNum = GetCurrentPlayer(playerRef);
+
+        if(playerNum is not -1)
+        {
             PlayerInfoDisplays[playerNum].UpdateCardTotals();
         }
     }
 
+    public void UpdatePlayerInfoUIStatusEffect(Player playerRef)
+    {
+        int playerNum = GetCurrentPlayer(playerRef);
 
+        if (playerNum is not -1)
+        {
+            PlayerInfoDisplays[playerNum].UpdateStatusEffect();
+        }
+    }
+
+    public void UpdatePlayerLevel(Player playerRef)
+    {
+        int playerNum = GetCurrentPlayer(playerRef);
+
+        if (playerNum is not -1)
+        {
+            PlayerInfoDisplays[playerNum].UpdateLevel();
+        }
+    }
+
+    #endregion
 
 
     //Right now this only works for 2 cameras. Anymore we'll have to specify the target based on what's clicked.
@@ -351,10 +389,11 @@ public class GameplayManager : MonoBehaviour
         currentActiveCamera.enabled = true;
     }
 
-    private void EndOfTurn()
+    public void EndOfTurn(Player playersTurnToEnd)
     {
         //Player's turn ends: They draw a card.
-        ThisDeckManager.DrawCard(Card.CardType.Movement, playerCharacter.GetComponent<Player>());
+        ThisDeckManager.DrawCard(Card.CardType.Movement, playersTurnToEnd);
+        playersTurnToEnd.UpdateStatusEffectCount();
     }
     
 
