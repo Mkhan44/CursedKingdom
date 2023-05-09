@@ -28,6 +28,7 @@ public class PlayerMovementManager : MonoBehaviour
     public void SetupMove(Player playerToMove)
     {
         Space currentSpacePlayerIsOn = playerToMove.CurrentSpacePlayerIsOn;
+        gameplayManagerRef.spacesToMoveText.text = $"Spaces left: {playerToMove.SpacesLeftToMove}";
 
         //Figure out how to know which spaces are valid for the Player to travel to. If there is more than 1, give them an option...Otherwise just move the Player.
 
@@ -44,7 +45,7 @@ public class PlayerMovementManager : MonoBehaviour
         //}
 
         //Multiple valid spaces you can go from this space.
-        if(currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.Count > 1)
+        if (currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.Count > 1)
         {
             List<Space> spaceChoicesToGive = new();
             foreach(Space.Direction direction in currentSpacePlayerIsOn.ValidDirectionsFromThisSpace)
@@ -91,7 +92,7 @@ public class PlayerMovementManager : MonoBehaviour
             }
             else
             {
-                StartCoroutine(MoveTowards(spaceChoicesToGive[0].spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+                StartCoroutine(MoveTowards(spaceChoicesToGive[0], playerToMove, playerToMove.SpacesLeftToMove));
             }
         }
         //Only 1 valid way to go from this space.
@@ -112,22 +113,22 @@ public class PlayerMovementManager : MonoBehaviour
 
             if(validDirection == Space.Direction.North)
             {
-                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.NorthNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.NorthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
 
             if (validDirection == Space.Direction.South)
             {
-                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.SouthNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.SouthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
 
             if (validDirection == Space.Direction.East)
             {
-                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.EastNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.EastNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
 
             if (validDirection == Space.Direction.West)
             {
-                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
         }
 
@@ -151,6 +152,18 @@ public class PlayerMovementManager : MonoBehaviour
             isValid = false;
         }
 
+        foreach(SpaceData.SpaceEffect spaceEffect in spaceToTryMovingTo.spaceData.spaceEffects)
+        {
+            BarricadeSpace barricadeSpace = spaceEffect.spaceEffectData as BarricadeSpace;
+            if(barricadeSpace is not null)
+            {
+                if(player.CurrentLevel < barricadeSpace.LevelNeededToPass) 
+                {
+                    isValid = false;
+                    break;
+                }
+            }
+        }
         return isValid;
     }
 
@@ -171,7 +184,7 @@ public class PlayerMovementManager : MonoBehaviour
     //Used when a direction is chosen. This function should be called by clicking a button.
     public void ChooseDirection(Space targetSpace, Player playerReference, int spacesLeftToMove)
     {
-        StartCoroutine(MoveTowards(targetSpace.spawnPoint.position, playerReference, spacesLeftToMove));
+        StartCoroutine(MoveTowards(targetSpace, playerReference, spacesLeftToMove));
 
         //Cleanup button holder.
         foreach (Transform child in gameplayManagerRef.directionChoiceButtonHolder.transform)
@@ -180,10 +193,18 @@ public class PlayerMovementManager : MonoBehaviour
         }
     }
 
-    public IEnumerator MoveTowards(Vector3 targetPosition, Player playerReference, int spacesToMove = 1)
+    public IEnumerator MoveTowards(Space spaceToMoveTo, Player playerReference, int spacesToMove = 1)
     {
         Transform playerCharacter = playerReference.gameObject.transform;
         Rigidbody playerRigidBody = playerReference.gameObject.GetComponent<Rigidbody>();
+        bool decreaseSpacesToMove = true;
+
+        if(!spaceToMoveTo.spaceData.DecreasesSpacesToMove)
+        {
+            decreaseSpacesToMove = false;
+        }
+
+        Vector3 targetPosition = spaceToMoveTo.spawnPoint.position;
 
         playerReference.PreviousSpacePlayerWasOn = playerReference.CurrentSpacePlayerIsOn;
         playerReference.SpacesLeftToMove = spacesToMove;
@@ -219,19 +240,25 @@ public class PlayerMovementManager : MonoBehaviour
 
         if (spacesToMove > 1)
         {
-            playerReference.SpacesLeftToMove -= 1;
+            if(decreaseSpacesToMove)
+            {
+                playerReference.SpacesLeftToMove -= 1;
+            }
+            
             SetupMove(playerReference);
         }
         else
         {
-           // gameplayManagerRef.playerMovementCardsDisplayPanel.SetActive(true);
-            playerReference.SpacesLeftToMove = 0;
-
-            //TEST
-            Debug.Log("TEST DRAW!");
-            gameplayManagerRef.ThisDeckManager.DrawCard(Card.CardType.Movement, playerReference);
-           // playerReference.ShowHand();
+            if (decreaseSpacesToMove)
+            {
+                playerReference.SpacesLeftToMove = 0;
+            }
+            else
+            {
+                SetupMove(playerReference);
+            }
         }
+        gameplayManagerRef.spacesToMoveText.text = $"Spaces left: {playerReference.SpacesLeftToMove}";
 
         yield return null;
     }

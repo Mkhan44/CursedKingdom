@@ -112,7 +112,7 @@ public class Space : MonoBehaviour
     {
         Player playerReference = collider.gameObject.GetComponent<Player>();
 
-        if (playerReference != null)
+        if (playerReference is not null)
         {
             if (playerReference.PreviousSpacePlayerWasOn is null)
             {
@@ -120,6 +120,10 @@ public class Space : MonoBehaviour
                 Debug.Log($"Previous space was null, assigning current space as previous space.");
             }
             playerReference.CurrentSpacePlayerIsOn = this;
+            if(this.spaceData.PassingOverSpaceEffect && playerReference.IsMoving)
+            {
+                ApplySpaceEffects(playerReference);
+            }
         }
         else
         {
@@ -175,16 +179,20 @@ public class Space : MonoBehaviour
 
         StartCoroutine(PlaySpaceInfoDisplayAnimationUI(player));
 
-        if (spaceData.IsNegative)
+        if(!player.IsMoving)
         {
-            player.Animator.SetBool(NEGATIVEEFFECT, true);
-            Debug.LogWarning("NEGATIVE SPACE EFFECT");
+            if (spaceData.IsNegative)
+            {
+                player.Animator.SetBool(NEGATIVEEFFECT, true);
+                Debug.LogWarning("NEGATIVE SPACE EFFECT");
+            }
+            else
+            {
+                player.Animator.SetBool(POSITIVEEFFECT, true);
+                Debug.LogWarning("POSITIVE SPACE EFFECT");
+            }
         }
-        else
-        {
-            player.Animator.SetBool(POSITIVEEFFECT, true);
-            Debug.LogWarning("POSITIVE SPACE EFFECT");
-        }
+       
 
         for (int i = 0; i < spaceData.spaceEffects.Count; i++)
         {
@@ -192,7 +200,11 @@ public class Space : MonoBehaviour
             spaceData.spaceEffects[i].spaceEffectData.LandedOnEffect(player);
         }
 
-        StartCoroutine(WaitASec(player));
+        if(!player.IsMoving)
+        {
+            StartCoroutine(WaitASec(player));
+        }
+        
     }
 
     private IEnumerator WaitASec(Player player)
@@ -209,6 +221,7 @@ public class Space : MonoBehaviour
         }
 
         player.ShowHand();
+        gameplayManagerRef.EndOfTurn(player);
     }
 
     private IEnumerator PlaySpaceInfoDisplayAnimationUI(Player player)
@@ -272,7 +285,7 @@ public class Space : MonoBehaviour
                     }
                 case nameof(AttackSpace):
                     {
-                        Debug.Log("Arrow space has no sprite. Keeping it as default");
+                        Debug.Log("Attack space has no sprite. Keeping it as default");
                         iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
                         break;
                     }

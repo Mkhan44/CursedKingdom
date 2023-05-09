@@ -2,6 +2,7 @@
 //All code is written by me (Above name) unless otherwise stated via comments below.
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,12 +27,14 @@ public class Player : MonoBehaviour
     [SerializeField] private bool isOnCooldown;
     [SerializeField] private bool isPoisoned;
     [SerializeField] private bool isCursed;
+    [SerializeField] private bool wasAfflictedWithStatusThisTurn;
     [SerializeField] private int poisonDuration;
     [SerializeField] private int curseDuration;
     [SerializeField] private bool ableToLevelUp;
     [SerializeField] private ClassData classData;
     [SerializeField] private Space currentSpacePlayerIsOn;
     [SerializeField] private Space previousSpacePlayerWasOn;
+    
 
     //References
     [SerializeField] private GameplayManager gameplayManagerRef;
@@ -55,6 +58,7 @@ public class Player : MonoBehaviour
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
     public bool IsCursed { get => isCursed; set => isCursed = value; }
+    public bool WasAfflictedWithStatusThisTurn { get => wasAfflictedWithStatusThisTurn; set => wasAfflictedWithStatusThisTurn = value; }
     public int PoisonDuration { get => poisonDuration; set => poisonDuration = value; }
     public int CurseDuration { get => curseDuration; set => curseDuration = value; }
     public bool AbleToLevelUp { get => ableToLevelUp; set => ableToLevelUp = value; }
@@ -135,8 +139,9 @@ public class Player : MonoBehaviour
         MaxHealth = ClassData.startingHealth;
         currentHealth = maxHealth;
         CurrentLevel = 1;
-        AbleToLevelUp = false;
+        AbleToLevelUp = true;
         SpacesLeftToMove = 0;
+        MaxHandSize = 6;
         // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
 
@@ -145,31 +150,24 @@ public class Player : MonoBehaviour
         Debug.Log(CurrentSpacePlayerIsOn);
     }
 
-    public void LevelUp()
+    public void LevelUp(int levelsToIncrease)
     {
-        CurrentLevel += 1;
-        AbleToLevelUp = false;
-
-        GameplayManagerRef.UpdatePlayerInfoUI(this);
-    }
-
-    public void HandleLevelUp(int level)
-    {
-        switch(level)
+        CurrentLevel += levelsToIncrease;
+        if(CurrentLevel > 5) 
         {
-            case 2:
-                {
-                    Debug.Log("lol");
-                    break;
-                }
-            default:
-                {
-                    Debug.Log("Def.");
-                    break;
-                }
+            CurrentLevel = 5;
         }
 
-        GameplayManagerRef.UpdatePlayerInfoUI(this);
+        HandleLevelUp();
+        AbleToLevelUp = false;
+
+        GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
+    }
+
+    public void HandleLevelUp()
+    {
+        GameplayManagerRef.UpdatePlayerLevel(this);
+        GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
     }
 
     public void DrawCard(Card card)
@@ -252,7 +250,7 @@ public class Player : MonoBehaviour
 
         if(GameplayManagerRef is not null)
         {
-            GameplayManagerRef.UpdatePlayerInfoUI(this);
+            GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
         }
         
     }
@@ -272,7 +270,107 @@ public class Player : MonoBehaviour
 
         if (GameplayManagerRef is not null)
         {
-            GameplayManagerRef.UpdatePlayerInfoUI(this);
+            GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
         }
     }
+
+    #region StatusEffects
+
+    public void CursePlayer(int numTurnsToCurse)
+    {
+        CursePlayerPriv(numTurnsToCurse);
+    }
+
+    public bool CanBeCursed()
+    {
+        bool canBeCursed = false;
+        if (IsPoisoned || IsCursed)
+        {
+            canBeCursed = false;
+        }
+        else
+        {
+            canBeCursed = true;
+        }
+
+        return canBeCursed;
+    }
+
+    public void PoisonPlayer(int numTurnsToPoison)
+    {
+        PoisonPlayerPriv(numTurnsToPoison);
+    }
+
+    public bool CanBePoisoned()
+    {
+        bool canBePoisoned = false;
+        if (IsPoisoned || IsCursed)
+        {
+            canBePoisoned = false;
+        }
+        else
+        {
+            canBePoisoned = true;
+        }
+
+        return canBePoisoned;
+    }
+
+    
+
+    public void UpdateStatusEffectCount()
+    {
+        //Were just afflicted with the status. Don't do anything.
+        if(WasAfflictedWithStatusThisTurn)
+        {
+            WasAfflictedWithStatusThisTurn = false;
+            return;
+        }
+
+        if (IsCursed) 
+        {
+            CurseDuration -= 1;
+            if(CurseDuration == 0)
+            {
+                GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+                IsCursed = false;
+            }
+        }
+
+        if (IsPoisoned)
+        {
+            PoisonDuration -= 1;
+            if (PoisonDuration == 0)
+            {
+                GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+                IsPoisoned = false;
+            }
+        }
+    }
+
+    private void CursePlayerPriv(int numTurnsToCurse)
+    {
+        if (CanBeCursed())
+        {
+            IsCursed = true;
+            CurseDuration = numTurnsToCurse;
+            WasAfflictedWithStatusThisTurn = true;
+            GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+            //play animation of some sort...
+        }
+    }
+
+    private void PoisonPlayerPriv(int numTurnsToPoison)
+    {
+        if (CanBePoisoned())
+        {
+            IsPoisoned = true;
+            PoisonDuration = numTurnsToPoison;
+            WasAfflictedWithStatusThisTurn = true;
+            GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+            //play animation of some sort...
+        }
+    }
+
+    #endregion
 }

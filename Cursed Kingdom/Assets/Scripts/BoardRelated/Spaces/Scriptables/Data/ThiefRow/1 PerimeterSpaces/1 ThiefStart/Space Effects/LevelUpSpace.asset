@@ -12,5 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc23b55435426f74e993c9d62a188103, type: 3}
   m_Name: LevelUpSpace
   m_EditorClassIdentifier: 
+  isACost: 0
+  isPositiveEffect: 0
+  effectDescription: 'Level increased by: 1 and health recovered by: 1 if you land
+    on/pass this space when being the correct class.'
+  overrideAutoDescription: 0
   levelsToIncrease: 1
   numHealthToRecover: 1
+  classTypeNeeded: 1

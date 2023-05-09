@@ -78,4 +78,41 @@ public class PlayerInfoDisplay : MonoBehaviour
     {
         PlayerLevelText.text = "Level: " + PlayerReference.CurrentLevel.ToString();
     }
+
+    public void UpdateStatusEffect()
+    {
+        if(PlayerReference.IsCursed)
+        {
+            if(PlayerReference.CurseDuration > 0) 
+            {
+                CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 100f);
+                PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
+            }
+            else
+            {
+                CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
+                PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
+            }
+            
+            return;
+        }
+        
+        if(PlayerReference.IsPoisoned)
+        {
+            if(PlayerReference.PoisonDuration > 0)
+            {
+                PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 100f);
+                CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
+            }
+            else
+            {
+                PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
+                CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
+            }
+          
+            return;
+        }
+
+        Debug.LogWarning("Couldn't update status effect!");
+    }
 }
