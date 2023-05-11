@@ -174,6 +174,11 @@ public class Player : MonoBehaviour
     {
         CardsInhand.Add(card);
 
+        if (MaxHandSizeExceeded())
+        {
+            GameplayManagerRef.ThisDeckManager.IsDiscarding = true;
+        }
+
         SetMovementCardsInHand();
         SetSupportCardsInHand();
     }
@@ -185,8 +190,14 @@ public class Player : MonoBehaviour
             CardsInhand.Add(card);
         }
 
+        if(MaxHandSizeExceeded())
+        {
+            GameplayManagerRef.ThisDeckManager.IsDiscarding = true;
+        }
+
         SetMovementCardsInHand();
         SetSupportCardsInHand();
+        
     }
 
     //Shows this player's hand on screen.
@@ -233,6 +244,78 @@ public class Player : MonoBehaviour
         {
             SetSupportCardsInHand();
         }
+    }
+
+    public bool MaxHandSizeExceeded()
+    {
+        bool result = false;
+
+        if(CardsInhand.Count > MaxHandSize)
+        {
+            Debug.LogWarning($"Cards in hand is: {CardsInhand.Count} and maxHandSize is {MaxHandSize}");
+            GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
+            result = true;
+        }
+        else
+        {
+            result = false;
+        }
+
+        return result;
+    }
+
+    public void DiscardCardToGetToMaxHandSize(Card.CardType cardType, Card cardToDiscard)
+    {
+        int numNeededToDiscard = CardsInhand.Count - MaxHandSize;
+
+        if (numNeededToDiscard > 0)
+        {
+            DiscardAfterUse(cardType, cardToDiscard);
+            numNeededToDiscard -= 1;
+            if(numNeededToDiscard <= 0)
+            {
+                GameplayManagerRef.CloseDebugMessengerPanel();
+            }
+            else
+            {
+                GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} cards.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Trying to discard but handsize isn't above max amount!");
+        }
+
+        GameplayManagerRef.ThisDeckManager.IsDiscarding = false;
+    }
+
+    public void DiscardCardsToGetToMaxHandSize(Card.CardType cardType, List<Card> cardsToDiscard)
+    {
+        int numNeededToDiscard = CardsInhand.Count - MaxHandSize;
+
+        if(numNeededToDiscard > 0)
+        {
+            foreach(Card card in cardsToDiscard) 
+            {
+                DiscardAfterUse(cardType, card);
+            }
+
+            numNeededToDiscard -= cardsToDiscard.Count;
+            if (numNeededToDiscard <= 0)
+            {
+                GameplayManagerRef.CloseDebugMessengerPanel();
+            }
+            else
+            {
+                GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} cards.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Trying to discard but handsize isn't above max amount!");
+        }
+
+        GameplayManagerRef.ThisDeckManager.IsDiscarding = false;
     }
 
     public void SetMovementCardsInHand()

@@ -78,6 +78,7 @@ public class GameplayManager : MonoBehaviour
     private int lastFrameIndex;
     private float[] frameDeltaTimeArray;
     public TextMeshProUGUI spacesToMoveText;
+    public GameObject debugMessagePanel;
 
     //Properties
     public List<Player> Players { get => players; set => players = value; }
@@ -155,16 +156,16 @@ public class GameplayManager : MonoBehaviour
         playerTempReferencePlayer.SupportCardsInHandHolderPanel = playerSupportCardsDisplayPanel;
         playerTempReferencePlayer.HandDisplayPanel = HandDisplayPanel.gameObject;
         //1st 5 cards in player's hand.
+        playerTempReferencePlayer.GameplayManagerRef = this;
+        playerTempReferencePlayer.InitializePlayer();
         ThisDeckManager.ShuffleDeck(Card.CardType.Movement);
         ThisDeckManager.ShuffleDeck(Card.CardType.Support);
         ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReferencePlayer, 3);
         ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReferencePlayer, 2);
-        playerTempReferencePlayer.GameplayManagerRef = this;
         playerTempReferencePlayer.SetSupportCardsInHand();
         playerTempReferencePlayer.SetMovementCardsInHand();
         playerTempReferencePlayer.ShowHand();
-        //debug
-        playerTempReferencePlayer.InitializePlayer();
+        
         spacesToMoveText.text = "Spaces left: 0";
 
         playerMovementManager.Animator = playerTempReference.GetComponent<Animator>();
@@ -419,6 +420,17 @@ public class GameplayManager : MonoBehaviour
         return frameDeltaTimeArray.Length / total;
     }
     //Debug function!
+
+    public void OpenDebugMessenger(string message)
+    {
+        debugMessagePanel.SetActive(true);
+        debugMessagePanel.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = message;
+    }
+
+    public void CloseDebugMessengerPanel()
+    {
+        debugMessagePanel.SetActive(false);
+    }
 
     void TestFunc()
     {

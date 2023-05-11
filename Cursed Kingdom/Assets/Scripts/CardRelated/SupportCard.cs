@@ -74,7 +74,15 @@ public class SupportCard : Card
                 }
                 else
                 {
-                    GameplayManager.Players[0].DiscardAfterUse(ThisCardType, this);
+                    if (GameplayManager.ThisDeckManager.IsDiscarding)
+                    {
+                        GameplayManager.Players[0].DiscardCardToGetToMaxHandSize(ThisCardType, this);
+                    }
+                    else
+                    {
+                        GameplayManager.Players[0].DiscardAfterUse(ThisCardType, this);
+                    }
+                    
                     GameplayManager.HandDisplayPanel.ShrinkHand();
                     transform.localScale = OriginalSize;
                     CardIsSelected = false;

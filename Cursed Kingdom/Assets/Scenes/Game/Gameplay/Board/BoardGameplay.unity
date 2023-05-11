@@ -905,6 +905,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1177180240}
     - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: debugMessagePanel
+      value: 
+      objectReference: {fileID: 1396835915}
+    - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: topDownMapDisplay
       value: 
       objectReference: {fileID: 481225216}
@@ -1317,6 +1321,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1396835915 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7167524070340305067, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1453183465
 GameObject:
   m_ObjectHideFlags: 0

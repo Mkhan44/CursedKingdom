@@ -19,6 +19,8 @@ public class DeckManager : MonoBehaviour
     [SerializeField] private List<MovementCard> movementDiscardPileList;
     [SerializeField] private List<SupportCard> supportDiscardPileList;
 
+    [SerializeField] private bool isDiscarding;
+
     //References
     [SerializeField] private GameplayManager gameplayManager;
 
@@ -28,6 +30,7 @@ public class DeckManager : MonoBehaviour
     public List<SupportCard> SupportDeckList { get => supportDeckList; set => supportDeckList = value; }
     public List<MovementCard> MovementDiscardPileList { get => movementDiscardPileList; set => movementDiscardPileList = value; }
     public List<SupportCard> SupportDiscardPileList { get => supportDiscardPileList; set => supportDiscardPileList = value; }
+    public bool IsDiscarding { get => isDiscarding; set => isDiscarding = value; }
 
     //References
     public GameplayManager GameplayManager { get => gameplayManager; set => gameplayManager = value; }
@@ -35,6 +38,7 @@ public class DeckManager : MonoBehaviour
     private void Awake()
     {
         GameplayManager = this.GetComponent<GameplayManager>();
+        IsDiscarding = false;
     }
 
     /// <summary>

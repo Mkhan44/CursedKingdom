@@ -75,8 +75,16 @@ public class MovementCard : Card
                 }
                 else
                 {
-                    GameplayManager.StartMove(MovementCardValue);
-                    GameplayManager.Players[0].DiscardAfterUse(ThisCardType, this);
+                    if(GameplayManager.ThisDeckManager.IsDiscarding)
+                    {
+                        GameplayManager.Players[0].DiscardCardToGetToMaxHandSize(ThisCardType, this);
+                    }
+                    else
+                    {
+                        GameplayManager.StartMove(MovementCardValue);
+                        GameplayManager.Players[0].DiscardAfterUse(ThisCardType, this);
+                    }
+                    
                     GameplayManager.HandDisplayPanel.ShrinkHand();
                     transform.localScale = OriginalSize;
                     CardIsSelected = false;
