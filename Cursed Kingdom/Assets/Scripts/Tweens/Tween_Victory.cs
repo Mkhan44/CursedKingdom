@@ -4,26 +4,44 @@ using UnityEngine;
 
 public class Tween_Victory : MonoBehaviour
 {
-    [SerializeField] GameObject panel, victory;
+    public GameObject panel;
+    public GameObject victory;
 
+    public float startX = -2500f;
+    public float endX = -1000f;
+    public Vector3 startScale = new Vector3(100f, 100f, 100f);
+    public float moveDuration = 0.5f;
+    private float scaleDuration = 1f;
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-  
-    }
-    void OnEnable()
-    {
+        // Cancel any ongoing animation
         LeanTween.cancel(panel);
         LeanTween.cancel(victory);
 
-        LeanTween.moveLocal(panel, new Vector3(-1000f, 248f, 0f), 1f).setEase(LeanTweenType.easeOutQuad);
-        LeanTween.scale(victory, new Vector3(1f, 1f, 1f), 2f).setDelay(1f).setEase(LeanTweenType.easeOutQuad);
+
+        // Calculate the target position based on startX and endX values
+        Vector3 targetPosition = panel.transform.localPosition;
+        targetPosition.x = endX;
+
+        // Set the starting position
+        Vector3 startPosition = panel.transform.localPosition;
+        startPosition.x = startX;
+        panel.transform.localPosition = startPosition;
+
+        // Move the artwork from the starting position to the target position
+        LeanTween.moveLocal(panel, targetPosition, moveDuration).setEase(LeanTweenType.easeOutQuad).setOnComplete(ScaleVictory);
+
+        victory.transform.localScale = startScale;
     }
 
-     void OnDisable()
+    private void ScaleVictory()
     {
-        LeanTween.moveLocal(panel, new Vector3(-2500f, 248f, 0f), .1f);
-        LeanTween.scale(victory, new Vector3(100f, 100f, 100f), .1f);
+        
+        Vector3 targetScale = new Vector3(1f, 1f, 1f);
+
+        LeanTween.scale(victory, targetScale, scaleDuration)
+            .setEase(LeanTweenType.easeOutExpo)
+            .setFrom(startScale);
     }
 }
