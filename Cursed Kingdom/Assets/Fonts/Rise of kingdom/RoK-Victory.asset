@@ -57,16 +57,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: RiseOfKingdom SDF
+  m_Name: RoK-Victory
   m_EditorClassIdentifier: 
-  hashCode: -1015150312
-  material: {fileID: 2771012035242131098}
-  materialHashCode: -1824710216
   m_Version: 1.1.0
-  m_SourceFontFileGUID: cbf7bc60e1ca5e94294f6d1db87aa3ed
-  m_SourceFontFile_EditorRef: {fileID: 12800000, guid: cbf7bc60e1ca5e94294f6d1db87aa3ed, type: 3}
-  m_SourceFontFile: {fileID: 0}
-  m_AtlasPopulationMode: 0
   m_FaceInfo:
     m_FaceIndex: 0
     m_FamilyName: Rise of Kingdom
@@ -88,6 +81,12 @@ MonoBehaviour:
     m_StrikethroughOffset: 19.6
     m_StrikethroughThickness: 4
     m_TabWidth: 31
+  m_Material: {fileID: 2771012035242131098}
+  m_SourceFontFileGUID: cbf7bc60e1ca5e94294f6d1db87aa3ed
+  m_SourceFontFile: {fileID: 0}
+  m_SourceFontFilePath: 
+  m_AtlasPopulationMode: 0
+  InternalDynamicOS: 0
   m_GlyphTable:
   - m_Index: 3
     m_Metrics:
@@ -1480,7 +1479,12 @@ MonoBehaviour:
   - {fileID: -1871285959604377974}
   m_AtlasTextureIndex: 0
   m_IsMultiAtlasTexturesEnabled: 0
+  m_GetFontFeatures: 1
   m_ClearDynamicDataOnBuild: 0
+  m_AtlasWidth: 512
+  m_AtlasHeight: 512
+  m_AtlasPadding: 5
+  m_AtlasRenderMode: 4165
   m_UsedGlyphRects:
   - m_X: 0
     m_Y: 0
@@ -2003,46 +2007,22 @@ MonoBehaviour:
     m_Y: 321
     m_Width: 6
     m_Height: 59
-  m_fontInfo:
-    Name: 
-    PointSize: 0
-    Scale: 0
-    CharacterCount: 0
-    LineHeight: 0
-    Baseline: 0
-    Ascender: 0
-    CapHeight: 0
-    Descender: 0
-    CenterLine: 0
-    SuperscriptOffset: 0
-    SubscriptOffset: 0
-    SubSize: 0
-    Underline: 0
-    UnderlineThickness: 0
-    strikethrough: 0
-    strikethroughThickness: 0
-    TabWidth: 0
-    Padding: 0
-    AtlasWidth: 0
-    AtlasHeight: 0
-  atlas: {fileID: 0}
-  m_AtlasWidth: 512
-  m_AtlasHeight: 512
-  m_AtlasPadding: 5
-  m_AtlasRenderMode: 4165
-  m_glyphInfoList: []
-  m_KerningTable:
-    kerningPairs: []
   m_FontFeatureTable:
+    m_MultipleSubstitutionRecords: []
+    m_LigatureSubstitutionRecords: []
     m_GlyphPairAdjustmentRecords: []
-  fallbackFontAssets: []
+    m_MarkToBaseAdjustmentRecords: []
+    m_MarkToMarkAdjustmentRecords: []
+  m_ShouldReimportFontFeatures: 0
   m_FallbackFontAssetTable: []
   m_CreationSettings:
     sourceFontFileName: 
     sourceFontFileGUID: cbf7bc60e1ca5e94294f6d1db87aa3ed
+    faceIndex: 0
     pointSizeSamplingMode: 0
     pointSize: 80
     padding: 5
+    paddingMode: 0
     packingMode: 0
     atlasWidth: 512
     atlasHeight: 512
@@ -2082,6 +2062,33 @@ MonoBehaviour:
   boldSpacing: 7
   italicStyle: 35
   tabSize: 10
+  m_fontInfo:
+    Name: 
+    PointSize: 0
+    Scale: 0
+    CharacterCount: 0
+    LineHeight: 0
+    Baseline: 0
+    Ascender: 0
+    CapHeight: 0
+    Descender: 0
+    CenterLine: 0
+    SuperscriptOffset: 0
+    SubscriptOffset: 0
+    SubSize: 0
+    Underline: 0
+    UnderlineThickness: 0
+    strikethrough: 0
+    strikethroughThickness: 0
+    TabWidth: 0
+    Padding: 0
+    AtlasWidth: 0
+    AtlasHeight: 0
+  m_glyphInfoList: []
+  m_KerningTable:
+    kerningPairs: []
+  fallbackFontAssets: []
+  atlas: {fileID: 0}
 --- !u!21 &2771012035242131098
 Material:
   serializedVersion: 8
@@ -2091,7 +2098,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: RiseOfKingdom SDF Material
   m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - BEVEL_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -2124,34 +2132,34 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Ambient: 0.5
-    - _Bevel: 0.5
-    - _BevelClamp: 0
-    - _BevelOffset: 0
-    - _BevelRoundness: 0
-    - _BevelWidth: 0
+    - _Ambient: 0
+    - _Bevel: 0.282
+    - _BevelClamp: 0.672
+    - _BevelOffset: -0.345
+    - _BevelRoundness: 1
+    - _BevelWidth: 0.5
     - _BumpFace: 0
     - _BumpOutline: 0
     - _ColorMask: 15
     - _CullMode: 0
-    - _Diffuse: 0.5
+    - _Diffuse: 0
     - _FaceDilate: 0
     - _FaceUVSpeedX: 0
     - _FaceUVSpeedY: 0
-    - _GlowInner: 0.05
-    - _GlowOffset: 0
-    - _GlowOuter: 0.05
-    - _GlowPower: 0.75
+    - _GlowInner: 0.594
+    - _GlowOffset: -0.37
+    - _GlowOuter: 0.989
+    - _GlowPower: 0
     - _GradientScale: 6
-    - _LightAngle: 3.1416
+    - _LightAngle: 2.06
     - _MaskSoftnessX: 0
     - _MaskSoftnessY: 0
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0.2
+    - _OutlineWidth: 0
     - _PerspectiveFilter: 0.875
-    - _Reflectivity: 10
+    - _Reflectivity: 11.78
     - _ScaleRatioA: 0.8333333
     - _ScaleRatioB: 0.6770833
     - _ScaleRatioC: 0.6770833
@@ -2159,7 +2167,7 @@ Material:
     - _ScaleY: 1
     - _ShaderFlags: 0
     - _Sharpness: 0
-    - _SpecularPower: 2
+    - _SpecularPower: 4
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -2167,9 +2175,9 @@ Material:
     - _StencilWriteMask: 255
     - _TextureHeight: 512
     - _TextureWidth: 512
-    - _UnderlayDilate: 0
-    - _UnderlayOffsetX: 0
-    - _UnderlayOffsetY: 0
+    - _UnderlayDilate: 0.24
+    - _UnderlayOffsetX: 0.34
+    - _UnderlayOffsetY: -0.26
     - _UnderlaySoftness: 0
     - _VertexOffsetX: 0
     - _VertexOffsetY: 0
@@ -2179,11 +2187,11 @@ Material:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
     - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
-    - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
+    - _GlowColor: {r: 1, g: 1, b: 1, a: 0.5}
     - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
-    - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+    - _SpecularColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 1}
+    - _UnderlayColor: {r: 0.5, g: 0.3176263, b: 0.13915095, a: 1}
   m_BuildTextureStacks: []
