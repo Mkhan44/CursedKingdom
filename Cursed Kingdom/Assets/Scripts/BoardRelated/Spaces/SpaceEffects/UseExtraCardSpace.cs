@@ -9,11 +9,11 @@ using UnityEngine;
 public class UseExtraCardSpace : SpaceEffectData, ISpaceEffect
 {
 
-    [SerializeField] private CardType cardTypeToUse;
+    [SerializeField] private Card.CardType cardTypeToUse;
     [Tooltip("This is number of extra cards the player can use. 1 in this value would = 2 max cards.")]
     [SerializeField] [Range(1, 10)] private int numExtraToUse = 1;
 
-    public CardType CardTypeToDiscard { get => cardTypeToUse; set => cardTypeToUse = value; }
+    public Card.CardType CardTypeToDiscard { get => cardTypeToUse; set => cardTypeToUse = value; }
     public int NumToDiscard { get => numExtraToUse; set => numExtraToUse = value; }
 
     //Should be something on the Player script we can increase for the turn to have max amount of cards able to be used.

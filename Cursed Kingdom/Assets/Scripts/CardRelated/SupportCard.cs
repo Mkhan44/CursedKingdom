@@ -59,9 +59,9 @@ public class SupportCard : Card
 
         if (handExpandUI is not null)
         {
-            if (!handExpandUI.IsExpanded)
+            if (!handExpandUI.CurrentActiveTransform.IsExpanded)
             {
-                handExpandUI.ExpandHand(ThisCardType);
+                handExpandUI.ExpandHand(ThisCardType, GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>()));
             }
             else
             {
@@ -74,13 +74,14 @@ public class SupportCard : Card
                 }
                 else
                 {
+                    int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
                     if (GameplayManager.ThisDeckManager.IsDiscarding)
                     {
-                        GameplayManager.Players[0].DiscardCardToGetToMaxHandSize(ThisCardType, this);
+                        GameplayManager.Players[indexOfCurrentPlayer].DiscardCardToGetToMaxHandSize(ThisCardType, this);
                     }
                     else
                     {
-                        GameplayManager.Players[0].DiscardAfterUse(ThisCardType, this);
+                        GameplayManager.Players[indexOfCurrentPlayer].DiscardCard(ThisCardType, this);
                     }
                     
                     GameplayManager.HandDisplayPanel.ShrinkHand();

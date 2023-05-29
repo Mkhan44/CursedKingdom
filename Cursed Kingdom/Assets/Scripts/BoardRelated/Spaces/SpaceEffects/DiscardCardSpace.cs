@@ -9,18 +9,21 @@ using UnityEngine;
 public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
 {
 
-    [SerializeField] private CardType cardTypeToDiscard;
+    [SerializeField] private Card.CardType cardTypeToDiscard;
     [SerializeField] [Range(1, 10)] private int numToDiscard = 1;
 
-    public CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
+    public Card.CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
     public int NumToDiscard { get => numToDiscard; set => numToDiscard = value; }
 
     //Check if the player can discard before activating any other space effects. This will have to be determined by whatever is queueing up the space effects to trigger.
     public override void LandedOnEffect(Player playerReference)
     {
         base.LandedOnEffect(playerReference);
-        //CAN PLAYER DISCARD? IF NO -- SKIP THIS EFFECT AND ANYTHING RELYING ON THE DISCARD.
 
+        if (playerReference.CanDiscard(CardTypeToDiscard, NumToDiscard))
+        {
+            playerReference.ChooseCardsToDiscard(CardTypeToDiscard, NumToDiscard);
+        }
         Debug.Log($"Landed on: {this.name} space and should discard: {NumToDiscard} {CardTypeToDiscard} card(s)");
     }
 
@@ -32,6 +35,19 @@ public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
     public override void EndOfTurnEffect(Player playerReference)
     {
         base.EndOfTurnEffect(playerReference);
+    }
+
+    public override bool CanCostBePaid(Player playerReference)
+    {
+        //test.
+        if (playerReference.CanDiscard(CardTypeToDiscard, NumToDiscard))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     protected override void UpdateEffectDescription()

@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class MapManager : MonoBehaviour
 {
@@ -25,9 +26,11 @@ public class MapManager : MonoBehaviour
 
     public void ActivateHighlight(Space spaceToHighlight)
     {
+        int indexOfCurrentPlayer = gameplayManager.Players.IndexOf(gameplayManager.playerCharacter.GetComponent<Player>());
+
         currentHighlightedSpace = spaceToHighlight;
         currentHighlightedSpace.EnableHighlight();
-        gameplayManager.Players[0].HideHand();
+        gameplayManager.Players[indexOfCurrentPlayer].HideHand();
         //Turn on Timour's panel and populate information in it with current space's info.
         gameplayManager.TopDownMapDisplay.UpdateInformation(spaceToHighlight);
         SpaceIsHighlighted = true;
@@ -46,9 +49,11 @@ public class MapManager : MonoBehaviour
 
     public void DisableCurrentHighlightedSpace(Space spaceToHighlight)
     {
+        int indexOfCurrentPlayer = gameplayManager.Players.IndexOf(gameplayManager.playerCharacter.GetComponent<Player>());
+
         currentHighlightedSpace.DisableHighlight();
         SpaceIsHighlighted = false;
-        gameplayManager.Players[0].ShowHand();
+        gameplayManager.Players[indexOfCurrentPlayer].ShowHand();
         IsViewingMap = false;
         gameplayManager.TopDownMapDisplay.CloseMapDisplayPanel();
     }

@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int movementCardsInHand;
     [SerializeField] private int supportCardsInHand;
     [SerializeField] private int maxHandSize;
+    [SerializeField] private int cardsLeftToDiscard;
     [SerializeField] private List<Card> cardsInhand;
     [SerializeField] private GameObject movementCardsInHandHolderPanel;
     [SerializeField] private GameObject supportCardsInHandHolderPanel;
@@ -50,6 +51,7 @@ public class Player : MonoBehaviour
     public int MovementCardsInHand { get => movementCardsInHand; set => movementCardsInHand = value; }
     public int SupportCardsInHand { get => supportCardsInHand; set => supportCardsInHand = value; }
     public int MaxHandSize { get => maxHandSize; set => maxHandSize = value; }
+    public int CardsLeftToDiscard { get => cardsLeftToDiscard; set => cardsLeftToDiscard = value; }
     public List<Card> CardsInhand { get => cardsInhand; set => cardsInhand = value; }
     public GameObject MovementCardsInHandHolderPanel { get => movementCardsInHandHolderPanel; set => movementCardsInHandHolderPanel = value; }
     public GameObject SupportCardsInHandHolderPanel { get => supportCardsInHandHolderPanel; set => supportCardsInHandHolderPanel = value; }
@@ -130,6 +132,7 @@ public class Player : MonoBehaviour
         CurrentLevel = 1;
         AbleToLevelUp = false;
         SpacesLeftToMove = 0;
+        CardsLeftToDiscard = 0;
        // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
 
@@ -223,17 +226,64 @@ public class Player : MonoBehaviour
 
         MovementCardsInHandHolderPanel.SetActive(true);
         SupportCardsInHandHolderPanel.SetActive(true);
-        HandDisplayPanel.SetActive(true);
+       // HandDisplayPanel.SetActive(true);
     }
 
     public void HideHand()
     {
         MovementCardsInHandHolderPanel.SetActive(false);
         SupportCardsInHandHolderPanel.SetActive(false);
-        HandDisplayPanel.SetActive(false);
+        //HandDisplayPanel.SetActive(false);
     }
 
-    public void DiscardAfterUse(Card.CardType cardType , Card cardToDiscard)
+    public bool CanDiscard(Card.CardType cardTypeToDiscard, int numToDiscard)
+    {
+        bool canDiscard = false;
+        if(cardTypeToDiscard == Card.CardType.Movement)
+        {
+            if(MovementCardsInHand >= numToDiscard)
+            {
+                canDiscard = false;
+            }
+        }
+        else
+        {
+            if (SupportCardsInHand >= numToDiscard)
+            {
+                canDiscard = false;
+            }
+        }
+
+        return canDiscard;
+    }
+
+
+    public bool MaxHandSizeExceeded()
+    {
+        bool result = false;
+
+        if(CardsInhand.Count > MaxHandSize)
+        {
+            GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
+            CardsLeftToDiscard = CardsInhand.Count - MaxHandSize;
+            result = true;
+        }
+        else
+        {
+            result = false;
+        }
+
+        return result;
+    }
+
+    public void ChooseCardsToDiscard(Card.CardType cardType, int numToDiscard)
+    {
+        GameplayManagerRef.ThisDeckManager.IsDiscarding = true;
+
+        //Force player to discard that type of card x amount of times equal to numToDiscard.
+    }
+
+    public void DiscardCard(Card.CardType cardType , Card cardToDiscard)
     {
         GameplayManagerRef.ThisDeckManager.AddCardToDiscardPile(cardType, cardToDiscard, CardsInhand);
         if(cardType == Card.CardType.Movement)
@@ -246,33 +296,14 @@ public class Player : MonoBehaviour
         }
     }
 
-    public bool MaxHandSizeExceeded()
-    {
-        bool result = false;
-
-        if(CardsInhand.Count > MaxHandSize)
-        {
-            Debug.LogWarning($"Cards in hand is: {CardsInhand.Count} and maxHandSize is {MaxHandSize}");
-            GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
-            result = true;
-        }
-        else
-        {
-            result = false;
-        }
-
-        return result;
-    }
-
     public void DiscardCardToGetToMaxHandSize(Card.CardType cardType, Card cardToDiscard)
     {
-        int numNeededToDiscard = CardsInhand.Count - MaxHandSize;
 
-        if (numNeededToDiscard > 0)
+        if (CardsLeftToDiscard > 0)
         {
-            DiscardAfterUse(cardType, cardToDiscard);
-            numNeededToDiscard -= 1;
-            if(numNeededToDiscard <= 0)
+            DiscardCard(cardType, cardToDiscard);
+            CardsLeftToDiscard -= 1;
+            if(CardsLeftToDiscard <= 0)
             {
                 GameplayManagerRef.CloseDebugMessengerPanel();
             }
@@ -291,17 +322,15 @@ public class Player : MonoBehaviour
 
     public void DiscardCardsToGetToMaxHandSize(Card.CardType cardType, List<Card> cardsToDiscard)
     {
-        int numNeededToDiscard = CardsInhand.Count - MaxHandSize;
-
-        if(numNeededToDiscard > 0)
+        if(CardsLeftToDiscard > 0)
         {
             foreach(Card card in cardsToDiscard) 
             {
-                DiscardAfterUse(cardType, card);
+                DiscardCard(cardType, card);
             }
 
-            numNeededToDiscard -= cardsToDiscard.Count;
-            if (numNeededToDiscard <= 0)
+            CardsLeftToDiscard -= cardsToDiscard.Count;
+            if (CardsLeftToDiscard <= 0)
             {
                 GameplayManagerRef.CloseDebugMessengerPanel();
             }
@@ -323,8 +352,6 @@ public class Player : MonoBehaviour
         MovementCardsInHand = 0;
         foreach (Card card in CardsInhand)
         {
-            MovementCard movementCard = card as MovementCard;
-            
             if(card is MovementCard)
             {
                 MovementCardsInHand++;
@@ -343,8 +370,6 @@ public class Player : MonoBehaviour
         SupportCardsInHand = 0;
         foreach (Card card in CardsInhand)
         {
-            SupportCard movementCard = card as SupportCard;
-
             if (card is SupportCard)
             {
                 SupportCardsInHand++;

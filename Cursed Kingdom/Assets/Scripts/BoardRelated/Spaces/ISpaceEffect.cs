@@ -25,4 +25,11 @@ public interface ISpaceEffect
     /// </summary>
     /// <param name="playerReference">The player who is on the space.</param>
     public abstract void EndOfTurnEffect(Player playerReference);
+
+    /// <summary>
+    /// If the space is a cost: Determines if the cost can be paid. If a cost can't be paid -- don't execute any space effects.
+    /// </summary>
+    /// <param name="playerReference"></param>
+    /// <returns></returns>
+    public abstract bool CanCostBePaid(Player playerReference);
 }

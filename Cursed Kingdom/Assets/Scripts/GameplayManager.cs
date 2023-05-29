@@ -22,14 +22,15 @@ public class GameplayManager : MonoBehaviour
     public GameObject playerPrefab;
     public GameObject boardParent;
     public GameObject boardPrefab;
+    public GameObject movementCardHolderPrefab;
+    public GameObject supportCardHolderPrefab;
     public GameObject PlayerInfoCanvas;
     public Transform playerCharacter;
     public bool isPlayerMoving = false;
 
     //Movement code for character -- Need to extract this out of here.
     public PlayerMovementManager playerMovementManager;
-    public GameObject playerMovementCardsDisplayPanel;
-    public GameObject playerSupportCardsDisplayPanel;
+    public GameObject cardDisplayPanelParent;
     public GameObject directionChoiceButtonHolder;
     public GameObject moveButtonPrefab;
     public float raycastLength = 2f;
@@ -79,6 +80,7 @@ public class GameplayManager : MonoBehaviour
     private float[] frameDeltaTimeArray;
     public TextMeshProUGUI spacesToMoveText;
     public GameObject debugMessagePanel;
+    [Range(1,4)] public int numPlayersToStartWith = 1;
 
     //Properties
     public List<Player> Players { get => players; set => players = value; }
@@ -142,36 +144,16 @@ public class GameplayManager : MonoBehaviour
             }
         }
 
-        //Spawn player.
-        int randomSpawnSpace = Random.Range(0, spaces.Count - 1);
-        currentListIndex = randomSpawnSpace;
-        GameObject playerTempReference = Instantiate(playerPrefab, spaces[randomSpawnSpace].spawnPoint);
-
-        playerTempReference.transform.parent = null;
-        playerTempReference.transform.localScale = playerPrefab.transform.localScale;
-        playerTempReference.transform.position = spaces[randomSpawnSpace].spawnPoint.position;
-        //TODO: CHANGE THIS TO BE MORE DYNAMIC.
-        Player playerTempReferencePlayer = playerTempReference.GetComponent<Player>();
-        playerTempReferencePlayer.MovementCardsInHandHolderPanel = playerMovementCardsDisplayPanel;
-        playerTempReferencePlayer.SupportCardsInHandHolderPanel = playerSupportCardsDisplayPanel;
-        playerTempReferencePlayer.HandDisplayPanel = HandDisplayPanel.gameObject;
-        //1st 5 cards in player's hand.
-        playerTempReferencePlayer.GameplayManagerRef = this;
-        playerTempReferencePlayer.InitializePlayer();
+        List<GameObject> tempPlayerReferences = new();
         ThisDeckManager.ShuffleDeck(Card.CardType.Movement);
         ThisDeckManager.ShuffleDeck(Card.CardType.Support);
-        ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReferencePlayer, 3);
-        ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReferencePlayer, 2);
-        playerTempReferencePlayer.SetSupportCardsInHand();
-        playerTempReferencePlayer.SetMovementCardsInHand();
-        playerTempReferencePlayer.ShowHand();
-        
-        spacesToMoveText.text = "Spaces left: 0";
 
-        playerMovementManager.Animator = playerTempReference.GetComponent<Animator>();
 
-        Players.Add(playerTempReferencePlayer);
-
+        //Spawn in the players.
+        for (int i = 0; i <numPlayersToStartWith; i++)
+        {
+            tempPlayerReferences.Add(SpawnPlayersStart());
+        }
 
 
         if (Players.Count > 1)
@@ -180,8 +162,12 @@ public class GameplayManager : MonoBehaviour
             int childNum = 0;
             foreach (Transform child in PlayerInfoCanvas.transform)
             {
+                if(childNum + 1 > Players.Count)
+                {
+                    break;
+                }
                 PlayerInfoDisplay tempPlayerInfoDisp = child.GetComponent<PlayerInfoDisplay>();
-                if(tempPlayerInfoDisp is not null)
+                if (tempPlayerInfoDisp is not null)
                 {
                     PlayerInfoDisplays.Add(tempPlayerInfoDisp);
                     tempPlayerInfoDisp.SetupPlayerInfo(Players[childNum]);
@@ -199,7 +185,12 @@ public class GameplayManager : MonoBehaviour
 
 
 
-        playerCharacter = playerTempReference.transform;
+        playerCharacter = tempPlayerReferences[0].transform;
+
+        //DEBUG.
+        Players[0].ShowHand();
+        HandDisplayPanel.SetCurrentActiveHandUI(0);
+        //DEBUG.
 
         cinemachineVirtualCameras[0].LookAt = playerCharacter;
         cinemachineVirtualCameras[0].Follow = playerCharacter;
@@ -213,8 +204,7 @@ public class GameplayManager : MonoBehaviour
             camera.enabled = false;
         }
 
-        playerMovementCardsDisplayPanel.SetActive(true);
-        playerSupportCardsDisplayPanel.SetActive(true);
+
         HandDisplayPanel.gameObject.SetActive(true);
 
         currentActiveCamera.enabled = true;
@@ -228,6 +218,8 @@ public class GameplayManager : MonoBehaviour
         }
 
 
+        //DialogueBoxPopup.instance.ActivatePopup("This is a test option.", 4);
+
         //TEST
 
         //int randomNum = Random.Range(0, classdatas.Count);
@@ -236,7 +228,47 @@ public class GameplayManager : MonoBehaviour
         //CardTest();
     }
 
-   
+    private GameObject SpawnPlayersStart()
+    {
+        //Spawn player.
+        int randomSpawnSpace = Random.Range(0, spaces.Count - 1);
+        currentListIndex = randomSpawnSpace;
+        GameObject playerTempReference = Instantiate(playerPrefab, spaces[randomSpawnSpace].spawnPoint);
+
+        playerTempReference.transform.parent = null;
+        playerTempReference.transform.localScale = playerPrefab.transform.localScale;
+        playerTempReference.transform.position = spaces[randomSpawnSpace].spawnPoint.position;
+        //TODO: CHANGE THIS TO BE MORE DYNAMIC.
+        Player playerTempReferencePlayer = playerTempReference.GetComponent<Player>();
+        GameObject newMovementCardPanel = Instantiate(movementCardHolderPrefab, cardDisplayPanelParent.transform);
+        GameObject newSupportCardPanel = Instantiate(supportCardHolderPrefab, cardDisplayPanelParent.transform);
+        
+        GameObject playerMovementCardPanel = newMovementCardPanel.transform.GetChild(0).GetChild(0).GetChild(0).gameObject;
+        GameObject playerSupportCardPanel = newSupportCardPanel.transform.GetChild(0).GetChild(0).GetChild(0).gameObject;
+        HandDisplayPanel.AddNewHandUI(playerMovementCardPanel.GetComponent<RectTransform>(), playerSupportCardPanel.GetComponent<RectTransform>());
+
+        playerTempReferencePlayer.MovementCardsInHandHolderPanel = playerMovementCardPanel;
+        playerTempReferencePlayer.SupportCardsInHandHolderPanel = playerSupportCardPanel;
+        playerTempReferencePlayer.HandDisplayPanel = HandDisplayPanel.gameObject;
+        //1st 5 cards in player's hand.
+        playerTempReferencePlayer.GameplayManagerRef = this;
+        playerTempReferencePlayer.InitializePlayer();
+        ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReferencePlayer, 3);
+        ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReferencePlayer, 2);
+        playerTempReferencePlayer.SetSupportCardsInHand();
+        playerTempReferencePlayer.SetMovementCardsInHand();
+        playerTempReferencePlayer.HideHand();
+        playerTempReferencePlayer.MovementCardsInHandHolderPanel.SetActive(false);
+        playerTempReferencePlayer.SupportCardsInHandHolderPanel.SetActive(false);
+
+        spacesToMoveText.text = "Spaces left: 0";
+
+        playerMovementManager.Animator = playerTempReference.GetComponent<Animator>();
+
+        Players.Add(playerTempReferencePlayer);
+        return playerTempReference;
+    }
+
 
     private void Update()
     {
@@ -368,21 +400,24 @@ public class GameplayManager : MonoBehaviour
 
 
     //Right now this only works for 2 cameras. Anymore we'll have to specify the target based on what's clicked.
-    private void SwitchCamera(int index = 0)
+    public void SwitchCamera(int index = 0)
     {
         index = currentActiveCameraIndex;
         currentActiveCamera.enabled = false;
-        if(currentActiveCameraIndex == cinemachineVirtualCameras.Count - 1)
+        int indexOfPlayer = Players.IndexOf(playerCharacter.GetComponent<Player>());
+
+        if (currentActiveCameraIndex == cinemachineVirtualCameras.Count - 1)
         {
             currentActiveCameraIndex = 0;
             currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-            mapManager.DisableCurrentHighlightedSpace(players[0].CurrentSpacePlayerIsOn);
+            mapManager.DisableCurrentHighlightedSpace(players[indexOfPlayer].CurrentSpacePlayerIsOn);
         }
 
         else
         {
             //NEED TO CHANGE THIS WHEN WE HAVE MULTIPLE CHARACTERS.
-            mapManager.ActivateHighlight(Players[0].CurrentSpacePlayerIsOn);
+           
+            mapManager.ActivateHighlight(Players[indexOfPlayer].CurrentSpacePlayerIsOn);
             currentActiveCameraIndex++;
         }
 
@@ -395,6 +430,34 @@ public class GameplayManager : MonoBehaviour
         //Player's turn ends: They draw a card.
         ThisDeckManager.DrawCard(Card.CardType.Movement, playersTurnToEnd);
         playersTurnToEnd.UpdateStatusEffectCount();
+
+        Player currentPlayer = playerCharacter.GetComponent<Player>();
+        
+        foreach(Player player in Players)
+        {
+            if(player == currentPlayer)
+            {
+                int indexOfCurrentPlayer = Players.IndexOf(player);
+                if(indexOfCurrentPlayer == Players.Count - 1)
+                {
+                    playerCharacter = Players[0].GetComponent<Transform>();
+                }
+                else
+                {
+                    playerCharacter = Players[indexOfCurrentPlayer + 1].GetComponent<Transform>();
+                }
+                cinemachineVirtualCameras[0].LookAt = playerCharacter;
+                cinemachineVirtualCameras[0].Follow = playerCharacter;
+                Player nextPlayer = playerCharacter.GetComponent<Player>();
+                HandDisplayPanel.SetCurrentActiveHandUI(Players.IndexOf(nextPlayer));
+                currentPlayer.HideHand();
+                nextPlayer.ShowHand();
+                DialogueBoxPopup.instance.ActivatePopup($"Player {Players.IndexOf(nextPlayer) + 1}'s turn!", 0);
+                break;
+            }
+        }
+
+
     }
     
 

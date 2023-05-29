@@ -9,11 +9,11 @@ using UnityEngine;
 public class ExcaliburTheGreatSword : SpecialAttackSpace, ISpaceEffect
 {
     [Range(1, 10)] [SerializeField] private int numCardsToDiscard;
-    [SerializeField] private CardType cardTypeToDiscard;
+    [SerializeField] private Card.CardType cardTypeToDiscard;
     [Range(1, 10)] [SerializeField] private int damageToDeal;
 
     public int NumCardsToDiscard { get => numCardsToDiscard; set => numCardsToDiscard = value; }
-    public CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
+    public Card.CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
     public int DamageToDeal { get => damageToDeal; set => damageToDeal = value; }
 
     public override void LandedOnEffect(Player playerReference)

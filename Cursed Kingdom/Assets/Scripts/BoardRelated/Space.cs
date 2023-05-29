@@ -192,12 +192,32 @@ public class Space : MonoBehaviour
                 Debug.LogWarning("POSITIVE SPACE EFFECT");
             }
         }
-       
 
+        bool canAllCostsBePaid = false;
         for (int i = 0; i < spaceData.spaceEffects.Count; i++)
         {
-            //Do the space effect in sequence. We'll check for any external triggers here as well.
-            spaceData.spaceEffects[i].spaceEffectData.LandedOnEffect(player);
+            if (spaceData.spaceEffects[i].spaceEffectData.IsACost)
+            {
+                if (!spaceData.spaceEffects[i].spaceEffectData.CanCostBePaid(player))
+                {
+                    Debug.LogWarning($"Cost of {spaceData.spaceEffects[i].spaceEffectData.name} can't be paid. Can't execute space effects.");
+                    canAllCostsBePaid = false;
+                    break;
+                }
+                else
+                {
+                    canAllCostsBePaid = true;
+                }
+            }
+        }
+
+        if(canAllCostsBePaid)
+        {
+            for (int j = 0; j < spaceData.spaceEffects.Count; j++)
+            {
+                //Do the space effect in sequence. We'll check for any external triggers here as well.
+                spaceData.spaceEffects[j].spaceEffectData.LandedOnEffect(player);
+            }
         }
 
         if(!player.IsMoving)
@@ -347,11 +367,11 @@ public class Space : MonoBehaviour
                 case nameof(DrawCardSpace):
                     {
                         DrawCardSpace drawCardSpace = spaceEffect.spaceEffectData as DrawCardSpace;
-                        if (drawCardSpace.CardTypeToDraw == SpaceEffectData.CardType.MovementCard)
+                        if (drawCardSpace.CardTypeToDraw == Card.CardType.Movement)
                         {
                             iconSprite = gameplayManagerRef.IconPresets.DrawMovementCardSprite;
                         }
-                        else if(drawCardSpace.CardTypeToDraw == SpaceEffectData.CardType.SupportCard)
+                        else if(drawCardSpace.CardTypeToDraw == Card.CardType.Support)
                         {
                             iconSprite = gameplayManagerRef.IconPresets.DrawSupportCardSprite;
                         }
