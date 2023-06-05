@@ -209,6 +209,10 @@ public class Space : MonoBehaviour
                     canAllCostsBePaid = true;
                 }
             }
+            else
+            {
+                canAllCostsBePaid = true;
+            }
         }
 
         if(canAllCostsBePaid)
@@ -216,13 +220,21 @@ public class Space : MonoBehaviour
             for (int j = 0; j < spaceData.spaceEffects.Count; j++)
             {
                 //Do the space effect in sequence. We'll check for any external triggers here as well.
+                if(player.IsDefeated)
+                {
+                    break;
+                }
                 spaceData.spaceEffects[j].spaceEffectData.LandedOnEffect(player);
             }
         }
 
-        if(!player.IsMoving)
+        if(!player.IsMoving && !player.IsDefeated)
         {
             StartCoroutine(WaitASec(player));
+        }
+        else if(!player.IsMoving && player.IsDefeated) 
+        {
+            gameplayManagerRef.EndOfTurn(player);
         }
         
     }

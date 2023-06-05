@@ -63,8 +63,6 @@ public class GameplayManager : MonoBehaviour
     public MapManager mapManager;
     public BoardManager boardManager;
 
-    int currentListIndex;
-
     CinemachineVirtualCamera cinemachineVirtualCamera;
 
     public CinemachineVirtualCamera currentActiveCamera;
@@ -115,6 +113,7 @@ public class GameplayManager : MonoBehaviour
 
 
         //Deck related
+
 
         GameObject boardHolder;
         if (boardPrefab == null)
@@ -232,7 +231,6 @@ public class GameplayManager : MonoBehaviour
     {
         //Spawn player.
         int randomSpawnSpace = Random.Range(0, spaces.Count - 1);
-        currentListIndex = randomSpawnSpace;
         GameObject playerTempReference = Instantiate(playerPrefab, spaces[randomSpawnSpace].spawnPoint);
 
         playerTempReference.transform.parent = null;
@@ -266,6 +264,9 @@ public class GameplayManager : MonoBehaviour
         playerMovementManager.Animator = playerTempReference.GetComponent<Animator>();
 
         Players.Add(playerTempReferencePlayer);
+
+        //Need to change this to be based on turn order.
+        playerTempReferencePlayer.playerIDIntVal = Players.Count;
         return playerTempReference;
     }
 
@@ -396,6 +397,16 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    public void UpdatePlayerHealth(Player playerRef)
+    {
+        int playerNum = GetCurrentPlayer(playerRef);
+
+        if (playerNum is not -1)
+        {
+            PlayerInfoDisplays[playerNum].UpdatePlayerHealth();
+        }
+    }
+
     #endregion
 
 
@@ -427,24 +438,76 @@ public class GameplayManager : MonoBehaviour
 
     public void EndOfTurn(Player playersTurnToEnd)
     {
+        Player currentPlayer = playersTurnToEnd;
+        int numPlayersDefeated = 0;
+        Player currentNonDefeatedPlayer = currentPlayer;
+
         //Player's turn ends: They draw a card.
-        ThisDeckManager.DrawCard(Card.CardType.Movement, playersTurnToEnd);
+        if (!playersTurnToEnd.IsDefeated)
+        {
+            ThisDeckManager.DrawCard(Card.CardType.Movement, playersTurnToEnd);   
+        }
+
+        
+        foreach(Player checkIfDefeatedPlayer in Players)
+        {
+            if(checkIfDefeatedPlayer.IsDefeated)
+            {
+                numPlayersDefeated++;
+            }
+            else
+            {
+                currentNonDefeatedPlayer = checkIfDefeatedPlayer;
+            }
+        }
+
+        if(numPlayersDefeated == Players.Count-1)
+        {
+            Victory(currentNonDefeatedPlayer);
+            return;
+        }    
+
         playersTurnToEnd.UpdateStatusEffectCount();
 
-        Player currentPlayer = playerCharacter.GetComponent<Player>();
-        
-        foreach(Player player in Players)
+
+        foreach (Player player in Players)
         {
             if(player == currentPlayer)
             {
                 int indexOfCurrentPlayer = Players.IndexOf(player);
                 if(indexOfCurrentPlayer == Players.Count - 1)
                 {
-                    playerCharacter = Players[0].GetComponent<Transform>();
+                    foreach (Player thePlayer in Players)
+                    {
+                        if (!IsPlayerDefeated(thePlayer))
+                        {
+                            playerCharacter = Players[Players.IndexOf(thePlayer)].GetComponent<Transform>();
+                            break;
+                        }
+                    }
                 }
                 else
                 {
-                    playerCharacter = Players[indexOfCurrentPlayer + 1].GetComponent<Transform>();
+                    int numPlayersAfterToCheck = 0;
+                    bool startingOver = false;
+                    numPlayersAfterToCheck = indexOfCurrentPlayer + 1;
+
+                    for(int i = numPlayersAfterToCheck; i < Players.Count; i++)
+                    {
+                        if (!Players[i].IsDefeated)
+                        {
+                            playerCharacter = Players[i].GetComponent<Transform>();
+                            break;
+                        }
+
+                        if (i == players.Count && !startingOver)
+                        {
+                            startingOver = true;
+                            i = 0;
+                        }
+                    }
+
+                   // playerCharacter = Players[indexOfCurrentPlayer + 1].GetComponent<Transform>();
                 }
                 cinemachineVirtualCameras[0].LookAt = playerCharacter;
                 cinemachineVirtualCameras[0].Follow = playerCharacter;
@@ -452,12 +515,36 @@ public class GameplayManager : MonoBehaviour
                 HandDisplayPanel.SetCurrentActiveHandUI(Players.IndexOf(nextPlayer));
                 currentPlayer.HideHand();
                 nextPlayer.ShowHand();
-                DialogueBoxPopup.instance.ActivatePopup($"Player {Players.IndexOf(nextPlayer) + 1}'s turn!", 0);
+                DialogueBoxPopup.instance.ActivatePopup($"Player {nextPlayer.playerIDIntVal}'s turn!", 0);
                 break;
             }
         }
 
 
+    }
+
+    public bool IsPlayerDefeated(Player playerToCheck)
+    {
+        bool isDefeated = false;
+
+        if(playerToCheck.IsDefeated)
+        {
+            isDefeated = true;
+        }
+        else
+        {
+            isDefeated = false;
+        }
+
+        return isDefeated;
+    }
+
+    public void Victory(Player playerWhoWins)
+    {
+        playerCharacter = Players[Players.IndexOf(playerWhoWins)].GetComponent<Transform>();
+        cinemachineVirtualCameras[0].LookAt = playerCharacter;
+        cinemachineVirtualCameras[0].Follow = playerCharacter;
+        DialogueBoxPopup.instance.ActivatePopup($"Congratulations, player: {playerWhoWins.playerIDIntVal} wins!", 0);
     }
     
 

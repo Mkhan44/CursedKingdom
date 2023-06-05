@@ -15,6 +15,7 @@ public class LoseHealthSpace : SpaceEffectData, ISpaceEffect
     public override void LandedOnEffect(Player playerReference)
     {
         base.LandedOnEffect(playerReference);
+        playerReference.TakeDamage(HealthToLose);
         Debug.Log($"Landed on: {this.name} space and should lose: {HealthToLose} health.");
     }
 
