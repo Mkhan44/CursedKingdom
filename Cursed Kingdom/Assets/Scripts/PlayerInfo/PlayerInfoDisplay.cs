@@ -21,10 +21,12 @@ public class PlayerInfoDisplay : MonoBehaviour
     [SerializeField] private Image curseImage;
     [SerializeField] private Image poisonImage;
     [SerializeField] private TextMeshProUGUI cooldownText;
+    [SerializeField] private GameObject heartPrefab;
 
 
     //TEST
     public Sprite filledHeartSpriteTest;
+    public Sprite brokenHeartSpriteTest;
 
     private Player playerReference;
 
@@ -40,6 +42,7 @@ public class PlayerInfoDisplay : MonoBehaviour
     public Image CurseImage { get => curseImage; set => curseImage = value; }
     public Image PoisonImage { get => poisonImage; set => poisonImage = value; }
     public TextMeshProUGUI CooldownText { get => cooldownText; set => cooldownText = value; }
+    public GameObject HeartPrefab { get => heartPrefab; set => heartPrefab = value; }
 
     public void SetupPlayerInfo(Player playerRef)
     {
@@ -54,18 +57,21 @@ public class PlayerInfoDisplay : MonoBehaviour
         CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
         PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
 
-        foreach (Transform child in HeartsHolder.transform)
+        if(HeartsHolder.transform.childCount < playerRef.MaxHealth)
         {
-            hearts.Add(child.GetComponent<Image>());
-        }
-
-        if(playerRef.CurrentHealth <= hearts.Count)
-        {
-            for (int i = 0; i < playerRef.CurrentHealth; i++)
+            for(int i = 0; i < playerRef.MaxHealth; i++)
             {
-                hearts[i].sprite = filledHeartSpriteTest;
+                Instantiate(HeartPrefab, HeartsHolder.transform);
             }
         }
+
+        foreach (Transform child in HeartsHolder.transform)
+        {
+            Hearts.Add(child.GetComponent<Image>());
+        }
+
+        UpdatePlayerHealth();
+        
     }
 
     public void UpdateCardTotals()
@@ -114,5 +120,26 @@ public class PlayerInfoDisplay : MonoBehaviour
         }
 
         Debug.LogWarning("Couldn't update status effect!");
+    }
+
+    public void UpdatePlayerHealth()
+    {
+        int numActiveHearts = 0;
+        Color32 activeHeartColor = new Color(255f, 0f, 0f, 100f);
+        Color32 inactiveHeartColor = new Color(255f, 255f, 255f, 0.28f);
+        foreach(Image image in Hearts)
+        {
+            numActiveHearts++;
+            if (numActiveHearts <= PlayerReference.CurrentHealth)
+            {
+                image.color = activeHeartColor;
+                Debug.Log($"Player health is: {PlayerReference.CurrentHealth} and numActive hearts is: {numActiveHearts}");
+            }
+            else
+            {
+                image.color = inactiveHeartColor;
+            }
+            
+        }
     }
 }

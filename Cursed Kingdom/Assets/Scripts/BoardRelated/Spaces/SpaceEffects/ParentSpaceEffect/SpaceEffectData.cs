@@ -18,12 +18,6 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     public string EffectDescription { get => effectDescription; set => effectDescription = value; }
     public bool OverrideAutoDescription { get => overrideAutoDescription; set => overrideAutoDescription = value; }
 
-    public enum CardType
-    {
-        MovementCard,
-        SupportCard,
-        Both,
-    }
 
     public enum DirectionToTravel
     {
@@ -47,11 +41,17 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     {
         
     }
+    public virtual bool CanCostBePaid(Player playerReference)
+    {
+        return true;
+    }
 
     protected virtual void UpdateEffectDescription()
     {
 
     }
+
+    
 
 
     //public enum SpaceType

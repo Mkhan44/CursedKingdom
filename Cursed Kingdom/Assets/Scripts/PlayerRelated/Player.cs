@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Card;
 
 public class Player : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int movementCardsInHand;
     [SerializeField] private int supportCardsInHand;
     [SerializeField] private int maxHandSize;
+    [SerializeField] private int cardsLeftToDiscard;
     [SerializeField] private List<Card> cardsInhand;
     [SerializeField] private GameObject movementCardsInHandHolderPanel;
     [SerializeField] private GameObject supportCardsInHandHolderPanel;
@@ -27,6 +29,7 @@ public class Player : MonoBehaviour
     [SerializeField] private bool isOnCooldown;
     [SerializeField] private bool isPoisoned;
     [SerializeField] private bool isCursed;
+    [SerializeField] private bool isDefeated;
     [SerializeField] private bool wasAfflictedWithStatusThisTurn;
     [SerializeField] private int poisonDuration;
     [SerializeField] private int curseDuration;
@@ -43,13 +46,15 @@ public class Player : MonoBehaviour
 
    
     public int MaxHealth { get => maxHealth; set => maxHealth = value; }
+    public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
     //Clean this up vvvvv
-    public int CurrentHealth { get => currentHealth; set { if ((currentHealth + value) > MaxHealth) currentHealth = maxHealth; else { currentHealth = value; } }  }
+    
     public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
     public int SpacesLeftToMove { get => spacesLeftToMove; set => spacesLeftToMove = value; }
     public int MovementCardsInHand { get => movementCardsInHand; set => movementCardsInHand = value; }
     public int SupportCardsInHand { get => supportCardsInHand; set => supportCardsInHand = value; }
     public int MaxHandSize { get => maxHandSize; set => maxHandSize = value; }
+    public int CardsLeftToDiscard { get => cardsLeftToDiscard; set => cardsLeftToDiscard = value; }
     public List<Card> CardsInhand { get => cardsInhand; set => cardsInhand = value; }
     public GameObject MovementCardsInHandHolderPanel { get => movementCardsInHandHolderPanel; set => movementCardsInHandHolderPanel = value; }
     public GameObject SupportCardsInHandHolderPanel { get => supportCardsInHandHolderPanel; set => supportCardsInHandHolderPanel = value; }
@@ -58,6 +63,7 @@ public class Player : MonoBehaviour
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
     public bool IsCursed { get => isCursed; set => isCursed = value; }
+    public bool IsDefeated { get => isDefeated; set => isDefeated = value; }
     public bool WasAfflictedWithStatusThisTurn { get => wasAfflictedWithStatusThisTurn; set => wasAfflictedWithStatusThisTurn = value; }
     public int PoisonDuration { get => poisonDuration; set => poisonDuration = value; }
     public int CurseDuration { get => curseDuration; set => curseDuration = value; }
@@ -126,10 +132,11 @@ public class Player : MonoBehaviour
         ClassData = data;
 
         MaxHealth = data.startingHealth;
-        currentHealth = maxHealth;
+        CurrentHealth = maxHealth;
         CurrentLevel = 1;
         AbleToLevelUp = false;
         SpacesLeftToMove = 0;
+        CardsLeftToDiscard = 0;
        // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
 
@@ -137,11 +144,12 @@ public class Player : MonoBehaviour
     public void InitializePlayer()
     {
         MaxHealth = ClassData.startingHealth;
-        currentHealth = maxHealth;
+        CurrentHealth = maxHealth;
         CurrentLevel = 1;
         AbleToLevelUp = true;
         SpacesLeftToMove = 0;
         MaxHandSize = 6;
+        IsDefeated = false;
         // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
 
@@ -223,17 +231,64 @@ public class Player : MonoBehaviour
 
         MovementCardsInHandHolderPanel.SetActive(true);
         SupportCardsInHandHolderPanel.SetActive(true);
-        HandDisplayPanel.SetActive(true);
+       // HandDisplayPanel.SetActive(true);
     }
 
     public void HideHand()
     {
         MovementCardsInHandHolderPanel.SetActive(false);
         SupportCardsInHandHolderPanel.SetActive(false);
-        HandDisplayPanel.SetActive(false);
+        //HandDisplayPanel.SetActive(false);
     }
 
-    public void DiscardAfterUse(Card.CardType cardType , Card cardToDiscard)
+    public bool CanDiscard(Card.CardType cardTypeToDiscard, int numToDiscard)
+    {
+        bool canDiscard = false;
+        if(cardTypeToDiscard == Card.CardType.Movement)
+        {
+            if(MovementCardsInHand >= numToDiscard)
+            {
+                canDiscard = false;
+            }
+        }
+        else
+        {
+            if (SupportCardsInHand >= numToDiscard)
+            {
+                canDiscard = false;
+            }
+        }
+
+        return canDiscard;
+    }
+
+
+    public bool MaxHandSizeExceeded()
+    {
+        bool result = false;
+
+        if(CardsInhand.Count > MaxHandSize)
+        {
+            GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
+            CardsLeftToDiscard = CardsInhand.Count - MaxHandSize;
+            result = true;
+        }
+        else
+        {
+            result = false;
+        }
+
+        return result;
+    }
+
+    public void ChooseCardsToDiscard(Card.CardType cardType, int numToDiscard)
+    {
+        GameplayManagerRef.ThisDeckManager.IsDiscarding = true;
+
+        //Force player to discard that type of card x amount of times equal to numToDiscard.
+    }
+
+    public void DiscardCard(Card.CardType cardType , Card cardToDiscard)
     {
         GameplayManagerRef.ThisDeckManager.AddCardToDiscardPile(cardType, cardToDiscard, CardsInhand);
         if(cardType == Card.CardType.Movement)
@@ -246,33 +301,25 @@ public class Player : MonoBehaviour
         }
     }
 
-    public bool MaxHandSizeExceeded()
+    public void DiscardAllCardsInHand()
     {
-        bool result = false;
-
-        if(CardsInhand.Count > MaxHandSize)
+        while (CardsInhand.Count > 0)
         {
-            Debug.LogWarning($"Cards in hand is: {CardsInhand.Count} and maxHandSize is {MaxHandSize}");
-            GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
-            result = true;
-        }
-        else
-        {
-            result = false;
+            GameplayManagerRef.ThisDeckManager.AddCardToDiscardPile(CardsInhand[0].ThisCardType, CardsInhand[0], CardsInhand);
         }
 
-        return result;
+        SetMovementCardsInHand();
+        SetSupportCardsInHand();
     }
 
     public void DiscardCardToGetToMaxHandSize(Card.CardType cardType, Card cardToDiscard)
     {
-        int numNeededToDiscard = CardsInhand.Count - MaxHandSize;
 
-        if (numNeededToDiscard > 0)
+        if (CardsLeftToDiscard > 0)
         {
-            DiscardAfterUse(cardType, cardToDiscard);
-            numNeededToDiscard -= 1;
-            if(numNeededToDiscard <= 0)
+            DiscardCard(cardType, cardToDiscard);
+            CardsLeftToDiscard -= 1;
+            if(CardsLeftToDiscard <= 0)
             {
                 GameplayManagerRef.CloseDebugMessengerPanel();
             }
@@ -291,17 +338,15 @@ public class Player : MonoBehaviour
 
     public void DiscardCardsToGetToMaxHandSize(Card.CardType cardType, List<Card> cardsToDiscard)
     {
-        int numNeededToDiscard = CardsInhand.Count - MaxHandSize;
-
-        if(numNeededToDiscard > 0)
+        if(CardsLeftToDiscard > 0)
         {
             foreach(Card card in cardsToDiscard) 
             {
-                DiscardAfterUse(cardType, card);
+                DiscardCard(cardType, card);
             }
 
-            numNeededToDiscard -= cardsToDiscard.Count;
-            if (numNeededToDiscard <= 0)
+            CardsLeftToDiscard -= cardsToDiscard.Count;
+            if (CardsLeftToDiscard <= 0)
             {
                 GameplayManagerRef.CloseDebugMessengerPanel();
             }
@@ -323,8 +368,6 @@ public class Player : MonoBehaviour
         MovementCardsInHand = 0;
         foreach (Card card in CardsInhand)
         {
-            MovementCard movementCard = card as MovementCard;
-            
             if(card is MovementCard)
             {
                 MovementCardsInHand++;
@@ -343,8 +386,6 @@ public class Player : MonoBehaviour
         SupportCardsInHand = 0;
         foreach (Card card in CardsInhand)
         {
-            SupportCard movementCard = card as SupportCard;
-
             if (card is SupportCard)
             {
                 SupportCardsInHand++;
@@ -359,12 +400,12 @@ public class Player : MonoBehaviour
 
     #region StatusEffects
 
-    public void CursePlayer(int numTurnsToCurse)
+    public virtual void CursePlayer(int numTurnsToCurse)
     {
         CursePlayerPriv(numTurnsToCurse);
     }
 
-    public bool CanBeCursed()
+    public virtual bool CanBeCursed()
     {
         bool canBeCursed = false;
         if (IsPoisoned || IsCursed)
@@ -379,12 +420,12 @@ public class Player : MonoBehaviour
         return canBeCursed;
     }
 
-    public void PoisonPlayer(int numTurnsToPoison)
+    public virtual void PoisonPlayer(int numTurnsToPoison)
     {
         PoisonPlayerPriv(numTurnsToPoison);
     }
 
-    public bool CanBePoisoned()
+    public virtual bool CanBePoisoned()
     {
         bool canBePoisoned = false;
         if (IsPoisoned || IsCursed)
@@ -401,7 +442,7 @@ public class Player : MonoBehaviour
 
     
 
-    public void UpdateStatusEffectCount()
+    public virtual void UpdateStatusEffectCount()
     {
         //Were just afflicted with the status. Don't do anything.
         if(WasAfflictedWithStatusThisTurn)
@@ -453,6 +494,52 @@ public class Player : MonoBehaviour
             GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
             //play animation of some sort...
         }
+    }
+
+    #endregion
+
+    #region HealthRelated
+
+    public virtual void TakeDamage(int incomingDamage)
+    {
+        TakeDamagePriv(incomingDamage);
+    }
+
+    private void TakeDamagePriv(int incomingDamage)
+    {
+        if (CurrentHealth - incomingDamage <= 0)
+        {
+            CurrentHealth = 0;
+            GameplayManagerRef.UpdatePlayerHealth(this);
+            Defeated();
+            //Play death animation.
+
+        }
+        else
+        {
+            CurrentHealth -= incomingDamage;
+            GameplayManagerRef.UpdatePlayerHealth(this);
+            //Play hurt animation.
+        }
+    }
+
+    public virtual void Defeated()
+    {
+        DefeatedPriv();
+    }
+
+    private void DefeatedPriv()
+    {
+        //Discard all Player's cards since they are no longer in the game.
+        DiscardAllCardsInHand();
+
+        IsDefeated = true;
+        //int indexOfCurrentPlayer = GameplayManagerRef.Players.IndexOf(GameplayManagerRef.playerCharacter.GetComponent<Player>());
+        
+        //if (GameplayManagerRef.Players[indexOfCurrentPlayer] == this)
+        //{
+        //    GameplayManagerRef.EndOfTurn(this);
+        //}
     }
 
     #endregion

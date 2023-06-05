@@ -14,6 +14,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
     {
         Movement,
         Support,
+        Both,
     }
 
     [SerializeField] private TextMeshProUGUI titleText;

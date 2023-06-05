@@ -179,6 +179,8 @@ public class PlayerMovementManager : MonoBehaviour
             directionButton.moveText.text = $"Move to: {targetSpacesToMoveTo[currentIndex].spaceData.spaceName}";
             directionButtonButton.onClick.AddListener(() => ChooseDirection(targetSpacesToMoveTo[currentIndex], playerToMove, playerToMove.SpacesLeftToMove));
         }
+
+        GameplayManagerRef.HandDisplayPanel.gameObject.SetActive(false);
     }
 
     //Used when a direction is chosen. This function should be called by clicking a button.
@@ -191,12 +193,15 @@ public class PlayerMovementManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
+        GameplayManagerRef.HandDisplayPanel.gameObject.SetActive(true);
     }
 
     public IEnumerator MoveTowards(Space spaceToMoveTo, Player playerReference, int spacesToMove = 1)
     {
         Transform playerCharacter = playerReference.gameObject.transform;
         Rigidbody playerRigidBody = playerReference.gameObject.GetComponent<Rigidbody>();
+        Animator = playerCharacter.GetComponent<Animator>();
         bool decreaseSpacesToMove = true;
 
         if(!spaceToMoveTo.spaceData.DecreasesSpacesToMove)
@@ -212,7 +217,7 @@ public class PlayerMovementManager : MonoBehaviour
 
         playerReference.IsMoving = true;
         gameplayManagerRef.isPlayerMoving = true;
-        animator.SetBool(ISMOVINGPARAMETER, true);
+        Animator.SetBool(ISMOVINGPARAMETER, true);
         playerReference.HideHand();
 
         float rate = 3.0f;
@@ -236,7 +241,7 @@ public class PlayerMovementManager : MonoBehaviour
         // Debug.Log("Done moving");
 
         gameplayManagerRef.isPlayerMoving = false;
-        animator.SetBool(ISMOVINGPARAMETER, false);
+        Animator.SetBool(ISMOVINGPARAMETER, false);
 
         if (spacesToMove > 1)
         {

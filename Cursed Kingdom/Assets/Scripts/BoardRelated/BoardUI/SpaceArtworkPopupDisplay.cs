@@ -47,20 +47,24 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
             iconText.text = CurrentSpacePlayerIsOn.spaceData.spaceEffects[count].spaceEffectData.EffectDescription;
             count++;
         }
-        CurrentSpacePlayerIsOn.gameplayManagerRef.Players[0].HideHand();
+
+        int indexOfCurrentPlayer = CurrentSpacePlayerIsOn.gameplayManagerRef.Players.IndexOf(CurrentSpacePlayerIsOn.gameplayManagerRef.playerCharacter.GetComponent<Player>());
+        CurrentSpacePlayerIsOn.gameplayManagerRef.Players[indexOfCurrentPlayer].HideHand();
 
         CurrentCoroutine = StartCoroutine(WaitTillTurnOff(CurrentSpacePlayerIsOn));
     }
 
     public void TurnOffDisplay(Space spaceInfo)
     {
-        foreach(Transform child in IconParent.transform)
+        int indexOfCurrentPlayer = CurrentSpacePlayerIsOn.gameplayManagerRef.Players.IndexOf(CurrentSpacePlayerIsOn.gameplayManagerRef.playerCharacter.GetComponent<Player>());
+
+        foreach (Transform child in IconParent.transform)
         {
             Destroy(child.gameObject);
         }
         CanvasGroup.blocksRaycasts = false;
         CanvasGroup.alpha = 0f;
-        spaceInfo.gameplayManagerRef.Players[0].ShowHand();
+        spaceInfo.gameplayManagerRef.Players[indexOfCurrentPlayer].ShowHand();
     }
 
     public void ExitCoroutineEarly()

@@ -56,10 +56,16 @@ MonoBehaviour:
   playerPrefab: {fileID: 6264876491439458418, guid: e2bf29a1bac8d9645b1d7cac5469e44f, type: 3}
   boardParent: {fileID: 0}
   boardPrefab: {fileID: 6953770271459722323, guid: 49b3a25a452187b4582aa06b3eb51613, type: 3}
+  movementCardHolderPrefab: {fileID: 300004012178065435, guid: e897adc4272d18341b60ee716d094013, type: 3}
+  supportCardHolderPrefab: {fileID: 4280961188737020259, guid: 0b4c17f7933a29b4cb4a71361ffeee33, type: 3}
+  PlayerInfoCanvas: {fileID: 0}
   playerCharacter: {fileID: 0}
   isPlayerMoving: 0
   playerMovementManager: {fileID: 0}
+  movementCardDisplayPanelParent: {fileID: 0}
+  supportCardDisplayPanelParent: {fileID: 0}
   playerMovementCardsDisplayPanel: {fileID: 0}
+  playerSupportCardsDisplayPanel: {fileID: 0}
   directionChoiceButtonHolder: {fileID: 0}
   moveButtonPrefab: {fileID: 3210510977898461855, guid: ffa6bcaf5d39d8a4fa397c3ebcf2537f, type: 3}
   raycastLength: 2
@@ -70,7 +76,12 @@ MonoBehaviour:
   supportDeckCardHolder: {fileID: 0}
   movementCardDiscardPileHolder: {fileID: 0}
   supportCardDiscardPileHolder: {fileID: 0}
+  topDownMapDisplay: {fileID: 0}
+  spaceArtworkPopupDisplay: {fileID: 0}
+  handDisplayPanel: {fileID: 0}
+  iconPresets: {fileID: 11400000, guid: 704cadbfcf164054d845afb6831847f7, type: 2}
   players: []
+  playerInfoDisplays: []
   classdatas:
   - {fileID: 11400000, guid: 2201c247b05ec524598b195c9934e69f, type: 2}
   - {fileID: 11400000, guid: 2081031c2ab5d734784cfeaa196551f4, type: 2}
@@ -79,12 +90,18 @@ MonoBehaviour:
   spaceDatasTest:
   - {fileID: 11400000, guid: 2e324dd6a150bcc4abb4704354556dfa, type: 2}
   - {fileID: 11400000, guid: 13de77643623dbe4c937fbda1ac9bf47, type: 2}
-  testMapManager: {fileID: 0}
+  mapManager: {fileID: 0}
   boardManager: {fileID: 0}
   currentActiveCamera: {fileID: 0}
   cinemachineVirtualCameras:
   - {fileID: 0}
   - {fileID: 0}
+  fpsText: {fileID: 0}
+  lockFPS: 1
+  fpsCap: 60
+  spacesToMoveText: {fileID: 0}
+  debugMessagePanel: {fileID: 0}
+  numPlayersToStartWith: 4
 --- !u!114 &711935881092096548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,9 +114,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a01e0f8c17dbb5c4c8759cb52d84259e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameplayManager: {fileID: 0}
   currentHighlightedSpace: {fileID: 0}
-  testManager: {fileID: 0}
-  currentSpaceInfo: {fileID: 0}
+  isViewingMap: 0
+  spaceIsHighlighted: 0
 --- !u!114 &711935881092096551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameplayManagerRef: {fileID: 0}
   rayCastLength: 0
+  animator: {fileID: 0}
 --- !u!114 &7166908049358683936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,6 +169,7 @@ MonoBehaviour:
   supportDeckList: []
   movementDiscardPileList: []
   supportDiscardPileList: []
+  isDiscarding: 0
   gameplayManager: {fileID: 0}
 --- !u!1 &711935881242953987
 GameObject:

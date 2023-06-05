@@ -9,10 +9,10 @@ using UnityEngine;
 public class SwiftSwipe : SpecialAttackSpace, ISpaceEffect
 {
     [Range(1, 10)] [SerializeField] private int numCardsToDiscard = 1;
-    [SerializeField] private CardType cardTypeToDiscard;
+    [SerializeField] private Card.CardType cardTypeToDiscard;
 
     public int NumCardsToDiscard { get => numCardsToDiscard; set => numCardsToDiscard = value; }
-    public CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
+    public Card.CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
 
     public override void LandedOnEffect(Player playerReference)
     {

@@ -8,14 +8,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DrawCardSpaceEffect", menuName = "Space Effect Data/Draw Card Space", order = 0)]
 public class DrawCardSpace : SpaceEffectData, ISpaceEffect
 {
-    [SerializeField] private CardType cardTypeToDraw;
+    [SerializeField] private Card.CardType cardTypeToDraw;
     [SerializeField] [Range(1,10)] private int numToDraw = 1;
     [Tooltip("If the user can pick any card type, this should be true. This overrides the cardTypeToDraw field.")]
     [SerializeField] private bool canBeEitherCard;
     [Tooltip("If the user needs to draw from the discard pile instead of the respective deck, this should be true.")]
     [SerializeField] private bool drawFromDiscardPile;
 
-    public CardType CardTypeToDraw { get => cardTypeToDraw; set => cardTypeToDraw = value; }
+    public Card.CardType CardTypeToDraw { get => cardTypeToDraw; set => cardTypeToDraw = value; }
     public int NumToDraw { get => numToDraw; set => numToDraw = value; }
     public bool CanBeEitherCard { get => canBeEitherCard; set => canBeEitherCard = value; }
     public bool DrawFromDiscardPile { get => drawFromDiscardPile; set => drawFromDiscardPile = value; }
@@ -24,11 +24,11 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
     {
         base.LandedOnEffect(playerReference);
 
-        if(CardTypeToDraw == CardType.MovementCard)
+        if(CardTypeToDraw == Card.CardType.Movement)
         {
             playerReference.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Movement, playerReference, NumToDraw);
         }
-        else if(CardTypeToDraw == CardType.SupportCard)
+        else if(CardTypeToDraw == Card.CardType.Movement)
         {
             playerReference.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Support, playerReference, NumToDraw);
         }

@@ -8,14 +8,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ConferenceRoomSpaceEffect", menuName = "Space Effect Data/ConferenceRoom Space", order = 0)]
 public class ConferenceRoomSpace : SpaceEffectData, ISpaceEffect
 {
-    [SerializeField] private List<CardType> cardTypeToDraw;
+    [SerializeField] private List<Card.CardType> cardTypeToDraw;
     [SerializeField] [Range(1, 10)] private int numToDraw = 1;
     [SerializeField] [Range(1, 10)] private int healthToRecover = 1;
 
     //This needs to be AFTER duel.
     [SerializeField] [Range(1, 10)] private int damageToDeal = 1;
 
-    public List<CardType> CardTypeToDraw1 { get => cardTypeToDraw; set => cardTypeToDraw = value; }
+    public List<Card.CardType> CardTypeToDraw1 { get => cardTypeToDraw; set => cardTypeToDraw = value; }
     public int NumToDraw { get => numToDraw; set => numToDraw = value; }
     public int HealthToRecover { get => healthToRecover; set => healthToRecover = value; }
     public int DamageToDeal { get => damageToDeal; set => damageToDeal = value; }
