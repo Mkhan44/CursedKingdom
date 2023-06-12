@@ -15,13 +15,13 @@ using Unity.VisualScripting;
 public class GameplayManager : MonoBehaviour
 {
     public GameObject cardToSpawn;
-    public Transform cardParentCanvas;
     public List<Space> spaces;
     public GameObject spaceHolderParent;
     public GameObject spacePrefab;
     public GameObject playerPrefab;
     public GameObject boardParent;
     public GameObject boardPrefab;
+    public GameObject decksHolderPrefab;
     public GameObject movementCardHolderPrefab;
     public GameObject supportCardHolderPrefab;
     public GameObject PlayerInfoCanvas;
@@ -238,11 +238,9 @@ public class GameplayManager : MonoBehaviour
         playerTempReference.transform.position = spaces[randomSpawnSpace].spawnPoint.position;
         //TODO: CHANGE THIS TO BE MORE DYNAMIC.
         Player playerTempReferencePlayer = playerTempReference.GetComponent<Player>();
-        GameObject newMovementCardPanel = Instantiate(movementCardHolderPrefab, cardDisplayPanelParent.transform);
-        GameObject newSupportCardPanel = Instantiate(supportCardHolderPrefab, cardDisplayPanelParent.transform);
-        
-        GameObject playerMovementCardPanel = newMovementCardPanel.transform.GetChild(0).GetChild(0).GetChild(0).gameObject;
-        GameObject playerSupportCardPanel = newSupportCardPanel.transform.GetChild(0).GetChild(0).GetChild(0).gameObject;
+        GameObject decksHolder = Instantiate(decksHolderPrefab, cardDisplayPanelParent.transform);
+        GameObject playerMovementCardPanel = decksHolder.transform.GetChild(0).gameObject;
+        GameObject playerSupportCardPanel = decksHolder.transform.GetChild(1).gameObject;
         HandDisplayPanel.AddNewHandUI(playerMovementCardPanel.GetComponent<RectTransform>(), playerSupportCardPanel.GetComponent<RectTransform>());
 
         playerTempReferencePlayer.MovementCardsInHandHolderPanel = playerMovementCardPanel;
@@ -587,14 +585,6 @@ public class GameplayManager : MonoBehaviour
         cinemachineVirtualCamera = GameObject.Find("Player Cam").GetComponent<CinemachineVirtualCamera>();
 
         cinemachineVirtualCamera.m_Lens.Dutch = 55;
-    }
-
-    void CardTest()
-    {
-        if (cardParentCanvas != null)
-        {
-            Instantiate(cardToSpawn, cardParentCanvas);
-        }
     }
     #endregion
 

@@ -12,14 +12,11 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 {
     [SerializeField] private List<HandUITransform> handUITransforms = new();
     [SerializeField] private RectTransform smallCardHolderPanelTransform;
-    [SerializeField] private RectTransform expandedCardHolderPanelTransform;
     [SerializeField] private HandUITransform currentActiveTransform;
 
     public List<HandUITransform> HandUITransforms { get => handUITransforms; set => handUITransforms = value; }
     public RectTransform SmallCardHolderPanelTransform { get => smallCardHolderPanelTransform; set => smallCardHolderPanelTransform = value; }
-    public RectTransform ExpandedCardHolderPanelTransform { get => expandedCardHolderPanelTransform; set => expandedCardHolderPanelTransform = value; }
     public HandUITransform CurrentActiveTransform { get => currentActiveTransform; set => currentActiveTransform = value; }
-
 
     public void AddNewHandUI(RectTransform movementCardHolder, RectTransform supportCardHolder)
     {
@@ -174,6 +171,7 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 
 public class HandUITransform
 {
+    [SerializeField] private RectTransform parentCardHolder;
     [SerializeField] private RectTransform movementCardsHolder;
     [SerializeField] private RectTransform supportCardsHolder;
 
@@ -193,6 +191,7 @@ public class HandUITransform
     [SerializeField] private bool isExpanded;
 
    
+    public RectTransform ParentCardHolder { get => parentCardHolder; set => parentCardHolder = value; }
     public RectTransform MovementCardsHolder { get => movementCardsHolder; set => movementCardsHolder = value; }
     public RectTransform SupportCardsHolder { get => supportCardsHolder; set => supportCardsHolder = value; }
     public Vector2 MovementCardAnchorMaxInitial { get => movementCardAnchorMaxInitial; set => movementCardAnchorMaxInitial = value; }
