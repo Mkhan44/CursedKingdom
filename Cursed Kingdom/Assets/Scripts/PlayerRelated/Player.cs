@@ -219,6 +219,7 @@ public class Player : MonoBehaviour
                 currentMovementCard.RemoveListeners();
                 currentMovementCard.AddCardUseListener(GameplayManagerRef);
                 card.gameObject.transform.SetParent(MovementCardsInHandHolderPanel.transform);
+                card.transform.localScale = Vector3.one;
             }
             else
             {
@@ -226,6 +227,7 @@ public class Player : MonoBehaviour
                 currentSupportCard.RemoveListeners();
                 currentSupportCard.AddCardUseListener(GameplayManagerRef);
                 card.gameObject.transform.SetParent(SupportCardsInHandHolderPanel.transform);
+                card.transform.localScale = Vector3.one;
             }
         }
 

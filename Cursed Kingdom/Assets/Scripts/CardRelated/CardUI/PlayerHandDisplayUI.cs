@@ -70,14 +70,14 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         {
             CurrentActiveTransform.MovementCardsHolder.anchorMin = new Vector2(0, 0);
             CurrentActiveTransform.MovementCardsHolder.anchorMax = new Vector2(1, 1);
-            CurrentActiveTransform.MovementLayoutGroup.spacing = -100f;
+            //CurrentActiveTransform.MovementLayoutGroup.spacing = -100f;
             CurrentActiveTransform.SupportCardsHolder.gameObject.SetActive(false);
         }
         else
         {
             CurrentActiveTransform.SupportCardsHolder.anchorMin = new Vector2(0, 0);
             CurrentActiveTransform.SupportCardsHolder.anchorMax = new Vector2(1, 1);
-            CurrentActiveTransform.SupportLayoutGroup.spacing = -100f;
+            //CurrentActiveTransform.SupportLayoutGroup.spacing = -100f;
             CurrentActiveTransform.MovementCardsHolder.gameObject.SetActive(false);
         }
 
@@ -91,11 +91,11 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         SmallCardHolderPanelTransform.anchorMax = smallCardHolderAnchorMaxTemp;
         CurrentActiveTransform.MovementCardsHolder.anchorMin = CurrentActiveTransform.MovementCardAnchorMinInitial;
         CurrentActiveTransform.MovementCardsHolder.anchorMax = CurrentActiveTransform.MovementCardAnchorMaxInitial;
-        CurrentActiveTransform.MovementLayoutGroup.spacing = CurrentActiveTransform.MovementLayoutGroupInitialSpacing;
+       // CurrentActiveTransform.MovementLayoutGroup.spacing = CurrentActiveTransform.MovementLayoutGroupInitialSpacing;
         CurrentActiveTransform.MovementCardsHolder.gameObject.SetActive(true);
         CurrentActiveTransform.SupportCardsHolder.anchorMin = CurrentActiveTransform.SupportCardAnchorMinInitial;
         CurrentActiveTransform.SupportCardsHolder.anchorMax = CurrentActiveTransform.SupportCardAnchorMaxInitial;
-        CurrentActiveTransform.SupportLayoutGroup.spacing = CurrentActiveTransform.SupportLayoutGroupInitialSpacing;
+      //  CurrentActiveTransform.SupportLayoutGroup.spacing = CurrentActiveTransform.SupportLayoutGroupInitialSpacing;
         CurrentActiveTransform.SupportCardsHolder.gameObject.SetActive(true);
         DeselectedSelectedCards();
 
