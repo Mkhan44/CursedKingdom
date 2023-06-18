@@ -502,6 +502,27 @@ public class Player : MonoBehaviour
 
     #region HealthRelated
 
+    public virtual void RecoverHealth(int incomingHeal)
+    {
+        RecoverHealthPriv(incomingHeal);
+    }
+
+    private void RecoverHealthPriv(int incomingHeal)
+    {
+        if (CurrentHealth + incomingHeal >= MaxHealth)
+        {
+            CurrentHealth = MaxHealth;
+            GameplayManagerRef.UpdatePlayerHealth(this);
+            //Play heal animation.
+        }
+        else
+        {
+            CurrentHealth += incomingHeal;
+            GameplayManagerRef.UpdatePlayerHealth(this);
+            //Play heal animation.
+        }
+    }
+
     public virtual void TakeDamage(int incomingDamage)
     {
         TakeDamagePriv(incomingDamage);
