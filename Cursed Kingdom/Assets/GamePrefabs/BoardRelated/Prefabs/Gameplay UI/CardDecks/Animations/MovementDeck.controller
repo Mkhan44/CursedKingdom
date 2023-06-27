@@ -35,7 +35,7 @@ AnimatorController:
   m_Name: MovementDeck
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Animate
+  - m_Name: New Bool
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -117,7 +117,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 5453742824534004542}
-    m_Position: {x: 280, y: 20, z: 0}
+    m_Position: {x: 260, y: -220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2680831554135880853}
     m_Position: {x: 270, y: 80, z: 0}
@@ -126,7 +126,7 @@ AnimatorStateMachine:
     m_Position: {x: 160, y: -110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1274448317934217610}
-    m_Position: {x: 370, y: -30, z: 0}
+    m_Position: {x: 310, y: -40, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
