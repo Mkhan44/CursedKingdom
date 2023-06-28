@@ -132,7 +132,7 @@ public class PlayerMovementManager : MonoBehaviour
             }
         }
 
-        playerToMove.HideHand();
+      //  playerToMove.HideHand();
 
     }
 
@@ -218,7 +218,7 @@ public class PlayerMovementManager : MonoBehaviour
         playerReference.IsMoving = true;
         gameplayManagerRef.isPlayerMoving = true;
         Animator.SetBool(ISMOVINGPARAMETER, true);
-        playerReference.HideHand();
+       // playerReference.HideHand();
 
         float rate = 3.0f;
 

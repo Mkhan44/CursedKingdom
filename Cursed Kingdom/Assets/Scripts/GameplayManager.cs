@@ -246,6 +246,7 @@ public class GameplayManager : MonoBehaviour
         playerTempReferencePlayer.MovementCardsInHandHolderPanel = playerMovementCardPanel;
         playerTempReferencePlayer.SupportCardsInHandHolderPanel = playerSupportCardPanel;
         playerTempReferencePlayer.HandDisplayPanel = HandDisplayPanel.gameObject;
+        
         //1st 5 cards in player's hand.
         playerTempReferencePlayer.GameplayManagerRef = this;
         playerTempReferencePlayer.InitializePlayer();
@@ -346,6 +347,7 @@ public class GameplayManager : MonoBehaviour
         Player playerReference = playerCharacter.GetComponent<Player>();
         playerReference.SpacesLeftToMove = spacesToMove;
         playerMovementManager.SetupMove(playerReference);
+        playerReference.HideHand();
     }
 
     private int GetCurrentPlayer(Player playerRef)

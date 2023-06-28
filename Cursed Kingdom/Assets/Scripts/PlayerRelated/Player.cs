@@ -233,14 +233,13 @@ public class Player : MonoBehaviour
 
         MovementCardsInHandHolderPanel.SetActive(true);
         SupportCardsInHandHolderPanel.SetActive(true);
-       // HandDisplayPanel.SetActive(true);
     }
 
     public void HideHand()
     {
+        //GameplayManagerRef.HandDisplayPanel.ShrinkHand(true);
         MovementCardsInHandHolderPanel.SetActive(false);
         SupportCardsInHandHolderPanel.SetActive(false);
-        //HandDisplayPanel.SetActive(false);
     }
 
     public bool CanDiscard(Card.CardType cardTypeToDiscard, int numToDiscard)

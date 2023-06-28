@@ -133,7 +133,7 @@ public class PlayerInfoDisplay : MonoBehaviour
             if (numActiveHearts <= PlayerReference.CurrentHealth)
             {
                 image.color = activeHeartColor;
-                Debug.Log($"Player health is: {PlayerReference.CurrentHealth} and numActive hearts is: {numActiveHearts}");
+             //   Debug.Log($"Player health is: {PlayerReference.CurrentHealth} and numActive hearts is: {numActiveHearts}");
             }
             else
             {

@@ -10,6 +10,10 @@ using UnityEngine.UI;
 
 public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 {
+    public const string active = "IsActive";
+    public const string hidden = "IsHidden";
+    public const string isHovered = "IsHovered";
+
     [SerializeField] private List<HandUITransform> handUITransforms = new();
     [SerializeField] private RectTransform smallCardHolderPanelTransform;
     [SerializeField] private HandUITransform currentActiveTransform;
@@ -27,7 +31,8 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         handUITransform.SupportCardsHolder = supportCardHolder;
         handUITransform.MovementLayoutGroup = movementCardHolder.GetComponent<HorizontalLayoutGroup>();
         handUITransform.SupportLayoutGroup = supportCardHolder.GetComponent<HorizontalLayoutGroup>();
-
+        handUITransform.MovementAnimator = movementCardHolder.GetComponent<Animator>();
+        handUITransform.SupportAnimator = supportCardHolder.GetComponent<Animator>();
 
         handUITransform.IsExpanded = false;
         handUITransform.MovementCardAnchorMaxInitial = handUITransform.MovementCardsHolder.anchorMax;
@@ -62,67 +67,112 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 
     public void ExpandHand(Card.CardType cardTypeToExpand, int playerIndex)
     {
+
         Vector2 smallCardHolderAnchorMaxTemp = SmallCardHolderPanelTransform.anchorMax;
         smallCardHolderAnchorMaxTemp.y = 1;
         SmallCardHolderPanelTransform.anchorMax = smallCardHolderAnchorMaxTemp;
 
         if (cardTypeToExpand == Card.CardType.Movement)
         {
-            CurrentActiveTransform.MovementCardsHolder.anchorMin = new Vector2(0, 0);
-            CurrentActiveTransform.MovementCardsHolder.anchorMax = new Vector2(1, 1);
-            //CurrentActiveTransform.MovementLayoutGroup.spacing = -100f;
-            CurrentActiveTransform.SupportCardsHolder.gameObject.SetActive(false);
+            if(CurrentActiveTransform.MovementAnimator is not null)
+            {
+                CurrentActiveTransform.MovementAnimator.SetBool(active, true);
+            }
+
+            if (CurrentActiveTransform.SupportAnimator is not null)
+            {
+                CurrentActiveTransform.SupportAnimator.SetBool(hidden, true);
+            }
+                
+            //CurrentActiveTransform.MovementCardsHolder.anchorMin = new Vector2(0, 0);
+            //CurrentActiveTransform.MovementCardsHolder.anchorMax = new Vector2(1, 1);
+            //CurrentActiveTransform.SupportCardsHolder.gameObject.SetActive(false);
         }
         else
         {
-            CurrentActiveTransform.SupportCardsHolder.anchorMin = new Vector2(0, 0);
-            CurrentActiveTransform.SupportCardsHolder.anchorMax = new Vector2(1, 1);
-            //CurrentActiveTransform.SupportLayoutGroup.spacing = -100f;
-            CurrentActiveTransform.MovementCardsHolder.gameObject.SetActive(false);
+
+            if (CurrentActiveTransform.MovementAnimator is not null)
+            {
+                CurrentActiveTransform.MovementAnimator.SetBool(hidden, true);
+            }
+
+            if (CurrentActiveTransform.SupportAnimator is not null)
+            {
+                CurrentActiveTransform.SupportAnimator.SetBool(active, true);
+            }
+            
+            //CurrentActiveTransform.SupportCardsHolder.anchorMin = new Vector2(0, 0);
+            //CurrentActiveTransform.SupportCardsHolder.anchorMax = new Vector2(1, 1);
+            //CurrentActiveTransform.MovementCardsHolder.gameObject.SetActive(false);
         }
 
         CurrentActiveTransform.IsExpanded = true;
     }
 
-    public void ShrinkHand()
+    public void ShrinkHand(bool waitForAnim = false)
     {
-        Vector2 smallCardHolderAnchorMaxTemp = SmallCardHolderPanelTransform.anchorMax;
-        smallCardHolderAnchorMaxTemp.y = 0.4f;
-        SmallCardHolderPanelTransform.anchorMax = smallCardHolderAnchorMaxTemp;
-        CurrentActiveTransform.MovementCardsHolder.anchorMin = CurrentActiveTransform.MovementCardAnchorMinInitial;
-        CurrentActiveTransform.MovementCardsHolder.anchorMax = CurrentActiveTransform.MovementCardAnchorMaxInitial;
-       // CurrentActiveTransform.MovementLayoutGroup.spacing = CurrentActiveTransform.MovementLayoutGroupInitialSpacing;
-        CurrentActiveTransform.MovementCardsHolder.gameObject.SetActive(true);
-        CurrentActiveTransform.SupportCardsHolder.anchorMin = CurrentActiveTransform.SupportCardAnchorMinInitial;
-        CurrentActiveTransform.SupportCardsHolder.anchorMax = CurrentActiveTransform.SupportCardAnchorMaxInitial;
-      //  CurrentActiveTransform.SupportLayoutGroup.spacing = CurrentActiveTransform.SupportLayoutGroupInitialSpacing;
-        CurrentActiveTransform.SupportCardsHolder.gameObject.SetActive(true);
-        DeselectedSelectedCards();
+        if(CurrentActiveTransform is null)
+        {
+            return;
+        }
+        float animTime = 0f;
+        if (CurrentActiveTransform.MovementAnimator is not null)
+        {
+            //Debug.LogWarning("WE'RE TESTING AN ANIMATION NAME:  Animation 0 in layer 0's name is: " + CurrentActiveTransform.MovementAnimator.runtimeAnimatorController.animationClips[0].name + " And it's length is: " + CurrentActiveTransform.MovementAnimator.runtimeAnimatorController.animationClips[0].length);
+            animTime = CurrentActiveTransform.MovementAnimator.runtimeAnimatorController.animationClips[0].length;
+            CurrentActiveTransform.MovementAnimator.SetBool(hidden, false);
+            CurrentActiveTransform.MovementAnimator.SetBool(active, false);
+        }
 
-        CurrentActiveTransform.IsExpanded = false;
+        if (CurrentActiveTransform.SupportAnimator is not null)
+        {
+            CurrentActiveTransform.SupportAnimator.SetBool(hidden, false);
+            CurrentActiveTransform.SupportAnimator.SetBool(active, false);
+        }
+
+
+        if(waitForAnim)
+        {
+            StartCoroutine(WaitForAnimation(animTime));
+        }
+        else
+        {
+            StartCoroutine(WaitForAnimation());
+        }
+        //Vector2 smallCardHolderAnchorMaxTemp = SmallCardHolderPanelTransform.anchorMax;
+        //smallCardHolderAnchorMaxTemp.y = 0.4f;
+        //SmallCardHolderPanelTransform.anchorMax = smallCardHolderAnchorMaxTemp;
+        //CurrentActiveTransform.MovementCardsHolder.anchorMin = CurrentActiveTransform.MovementCardAnchorMinInitial;
+        //CurrentActiveTransform.MovementCardsHolder.anchorMax = CurrentActiveTransform.MovementCardAnchorMaxInitial;
+
+        //CurrentActiveTransform.MovementCardsHolder.gameObject.SetActive(true);
+        //CurrentActiveTransform.SupportCardsHolder.anchorMin = CurrentActiveTransform.SupportCardAnchorMinInitial;
+        //CurrentActiveTransform.SupportCardsHolder.anchorMax = CurrentActiveTransform.SupportCardAnchorMaxInitial;
+
+        //CurrentActiveTransform.SupportCardsHolder.gameObject.SetActive(true);
+
+       
     }
 
-    //Debug tests
-    public void SetLeft(RectTransform rt, float left)
+    public IEnumerator WaitForAnimation(float waitTime = 0f)
     {
-        rt.offsetMin = new Vector2(left, rt.offsetMin.y);
+        if(waitTime == 0f)
+        {
+            DeselectedSelectedCards();
+            CurrentActiveTransform.IsExpanded = false;
+            yield return null;
+        }
+        else
+        {
+            //CHANGE THIS, IT'S NOT BASED IN UNSCALED TIME!
+            yield return new WaitForSeconds(waitTime);
+            DeselectedSelectedCards();
+            CurrentActiveTransform.IsExpanded = false;
+            CurrentActiveTransform.MovementCardsHolder.gameObject.SetActive(false);
+            CurrentActiveTransform.SupportCardsHolder.gameObject.SetActive(false);
+        }
+        
     }
-
-    public void SetRight(RectTransform rt, float right)
-    {
-        rt.offsetMax = new Vector2(-right, rt.offsetMax.y);
-    }
-
-    public void SetTop(RectTransform rt, float top)
-    {
-        rt.offsetMax = new Vector2(rt.offsetMax.x, -top);
-    }
-
-    public void SetBottom(RectTransform rt, float bottom)
-    {
-        rt.offsetMin = new Vector2(rt.offsetMin.x, bottom);
-    }
-    //debug tests
 
 
     public void OnPointerClick(PointerEventData eventData)
@@ -168,12 +218,13 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
     }
 
 }
-
 public class HandUITransform
 {
     [SerializeField] private RectTransform parentCardHolder;
     [SerializeField] private RectTransform movementCardsHolder;
     [SerializeField] private RectTransform supportCardsHolder;
+    [SerializeField] private Animator movementAnimator;
+    [SerializeField] private Animator supportAnimator;
 
     [SerializeField] private Vector2 movementCardAnchorMaxInitial;
     [SerializeField] private Vector2 movementCardAnchorMinInitial;
@@ -194,6 +245,8 @@ public class HandUITransform
     public RectTransform ParentCardHolder { get => parentCardHolder; set => parentCardHolder = value; }
     public RectTransform MovementCardsHolder { get => movementCardsHolder; set => movementCardsHolder = value; }
     public RectTransform SupportCardsHolder { get => supportCardsHolder; set => supportCardsHolder = value; }
+    public Animator MovementAnimator { get => movementAnimator; set => movementAnimator = value; }
+    public Animator SupportAnimator { get => supportAnimator; set => supportAnimator = value; }
     public Vector2 MovementCardAnchorMaxInitial { get => movementCardAnchorMaxInitial; set => movementCardAnchorMaxInitial = value; }
     public Vector2 MovementCardAnchorMinInitial { get => movementCardAnchorMinInitial; set => movementCardAnchorMinInitial = value; }
     public Vector2 SupportCardAnchorMaxInitial { get => supportCardAnchorMaxInitial; set => supportCardAnchorMaxInitial = value; }

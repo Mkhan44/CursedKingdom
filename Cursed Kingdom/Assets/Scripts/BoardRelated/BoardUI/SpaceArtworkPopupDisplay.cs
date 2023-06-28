@@ -49,7 +49,7 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
         }
 
         int indexOfCurrentPlayer = CurrentSpacePlayerIsOn.gameplayManagerRef.Players.IndexOf(CurrentSpacePlayerIsOn.gameplayManagerRef.playerCharacter.GetComponent<Player>());
-        CurrentSpacePlayerIsOn.gameplayManagerRef.Players[indexOfCurrentPlayer].HideHand();
+      //  CurrentSpacePlayerIsOn.gameplayManagerRef.Players[indexOfCurrentPlayer].HideHand();
 
         CurrentCoroutine = StartCoroutine(WaitTillTurnOff(CurrentSpacePlayerIsOn));
     }
@@ -64,7 +64,7 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
         }
         CanvasGroup.blocksRaycasts = false;
         CanvasGroup.alpha = 0f;
-        spaceInfo.gameplayManagerRef.Players[indexOfCurrentPlayer].ShowHand();
+        //spaceInfo.gameplayManagerRef.Players[indexOfCurrentPlayer].ShowHand();
     }
 
     public void ExitCoroutineEarly()
