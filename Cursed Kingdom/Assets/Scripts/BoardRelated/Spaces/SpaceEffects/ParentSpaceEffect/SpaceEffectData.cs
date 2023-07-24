@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,9 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
 {
     [SerializeField] private const string NEGATIVEEFFECT = "NegativeEffect";
     [SerializeField] private const string POSITIVEEFFECT = "PositiveEffect";
+
+    public event Action SpaceEffectCompleted;
+
     [SerializeField] private bool isACost;
     [SerializeField] private bool isPositiveEffect;
 
@@ -29,7 +33,8 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
 
     public virtual void LandedOnEffect(Player playerReference)
     {
-        
+        //Usually called after the effect has been completed.
+        CompletedEffect();
     }
 
     public virtual void StartOfTurnEffect(Player playerReference)
@@ -44,6 +49,11 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     public virtual bool CanCostBePaid(Player playerReference)
     {
         return true;
+    }
+
+    public virtual void CompletedEffect()
+    {
+        SpaceEffectCompleted?.Invoke();
     }
 
     protected virtual void UpdateEffectDescription()

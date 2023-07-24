@@ -15,6 +15,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
         Movement,
         Support,
         Both,
+        None,
     }
 
     [SerializeField] private TextMeshProUGUI titleText;
@@ -23,20 +24,26 @@ public class Card : MonoBehaviour , IPointerClickHandler
     [SerializeField] private CardType thisCardType;
     [SerializeField] private Button clickableAreaButton;
     [SerializeField] private GameplayManager gameplayManager;
+    [SerializeField] private Image backgroundSelectedGlow;
 
     [SerializeField] private bool cardIsSelected;
+    [SerializeField] private bool selectedForDiscard;
     [SerializeField] private Vector3 originalSize;
     [SerializeField] private Vector3 hoveredSize;
+    [SerializeField] private Color originalBackgroundGlowColor;
 
     public TextMeshProUGUI TitleText { get => titleText; set => titleText = value; }
     public Image CardArtworkImage { get => cardArtworkImage; set => cardArtworkImage = value; }
     public Image CardBorderImage { get => cardBorderImage; set => cardBorderImage = value; }
     public CardType ThisCardType { get => thisCardType; }
     public Button ClickableAreaButton { get => clickableAreaButton; set => clickableAreaButton = value; }
+    public Image BackgroundSelectedGlow { get => backgroundSelectedGlow; set => backgroundSelectedGlow = value; }
     public bool CardIsSelected { get => cardIsSelected; set => cardIsSelected = value; }
+    public bool SelectedForDiscard { get => selectedForDiscard; set => selectedForDiscard = value; }
     public GameplayManager GameplayManager { get => gameplayManager; set => gameplayManager = value; }
     public Vector3 OriginalSize { get => originalSize; set => originalSize = value; }
     public Vector3 HoveredSize { get => hoveredSize; set => hoveredSize = value; }
+    public Color OriginalBackgroundGlowColor { get => originalBackgroundGlowColor; set => originalBackgroundGlowColor = value; }
 
     protected void SetCardType(CardType cardType)
     {
@@ -50,6 +57,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
         cardArtworkImage.sprite = cardData.CardArtwork;
         OriginalSize = new Vector3(this.transform.localScale.x, this.transform.localScale.y, this.transform.localScale.z);
         HoveredSize = new Vector3(OriginalSize.x + 0.2f, OriginalSize.y + 0.2f, OriginalSize.z + 0.2f);
+        OriginalBackgroundGlowColor = backgroundSelectedGlow.color;
     }
 
     public virtual void RemoveListeners()
@@ -62,9 +70,32 @@ public class Card : MonoBehaviour , IPointerClickHandler
         
     }
 
+    public virtual void SelectForDiscard()
+    {
+        selectedForDiscard = true;
+        Color selectedColor = OriginalBackgroundGlowColor;
+        selectedColor.a = 150;
+        BackgroundSelectedGlow.color = selectedColor;
+        int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
+        GameplayManager.Players[indexOfCurrentPlayer].SelectCardToDiscard();
+    }
+
+    public virtual void DeselectForDiscard()
+    {
+        int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
+        if (GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard > 0)
+        {
+            GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard += 1;
+        }
+        
+        selectedForDiscard = false;
+        BackgroundSelectedGlow.color = originalBackgroundGlowColor;
+    }
+
     public virtual void DeselectCard()
     {
         CardIsSelected = false;
+        DeselectForDiscard();
         StartCoroutine(LeaveCardEffect());
     }
 

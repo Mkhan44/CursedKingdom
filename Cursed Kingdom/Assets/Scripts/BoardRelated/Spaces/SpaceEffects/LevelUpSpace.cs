@@ -20,12 +20,13 @@ public class LevelUpSpace : SpaceEffectData, ISpaceEffect
     //NEED TO ENSURE THAT SPACES-TO-LEVELUP ARE RESET ONCE THIS EFFECT IS TRIGGERED.
     public override void LandedOnEffect(Player playerReference)
     {
-        base.LandedOnEffect(playerReference);
         if(playerReference.AbleToLevelUp && playerReference.ClassData.classType == ClassTypeNeeded)
         {
             playerReference.LevelUp(levelsToIncrease);
+            Debug.Log($"Landed on: {this.name} space and level should be increased by: {LevelsToIncrease} and health recovered by: {NumHealthToRecover}");
         }
-        Debug.Log($"Landed on: {this.name} space and level should be increased by: {LevelsToIncrease} and health recovered by: {NumHealthToRecover}");
+        base.LandedOnEffect(playerReference);
+
         //Reset player's spaces to the level up space so they can't get the effect again until they've traveled around the board.
     }
 

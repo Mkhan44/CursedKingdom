@@ -1,6 +1,7 @@
 //Code written by Mohamed Riaz Khan of BukuGames.
 //All code is written by me (Above name) unless otherwise stated via comments below.
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,13 +19,24 @@ public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
     //Check if the player can discard before activating any other space effects. This will have to be determined by whatever is queueing up the space effects to trigger.
     public override void LandedOnEffect(Player playerReference)
     {
-        base.LandedOnEffect(playerReference);
 
-        if (playerReference.CanDiscard(CardTypeToDiscard, NumToDiscard))
+        if(playerReference.CheckIfEnoughCardsToDiscard(CardTypeToDiscard, NumToDiscard))
         {
-            playerReference.ChooseCardsToDiscard(CardTypeToDiscard, NumToDiscard);
+            playerReference.DoneDiscardingForEffect += PlayerDoneDiscarding;
+            playerReference.SetCardsToDiscard(CardTypeToDiscard, NumToDiscard);
         }
+        else
+        {
+            Debug.LogWarning($"Player {playerReference.playerIDIntVal} can't discard {CardTypeToDiscard} type cards because they don't have at least {NumToDiscard} of them!");
+        }
+        
         Debug.Log($"Landed on: {this.name} space and should discard: {NumToDiscard} {CardTypeToDiscard} card(s)");
+    }
+
+    private void PlayerDoneDiscarding(Player player)
+    {
+        player.DoneDiscardingForEffect -= PlayerDoneDiscarding;
+        base.CompletedEffect();
     }
 
     public override void StartOfTurnEffect(Player playerReference)
@@ -39,15 +51,16 @@ public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
 
     public override bool CanCostBePaid(Player playerReference)
     {
-        //test.
-        if (playerReference.CanDiscard(CardTypeToDiscard, NumToDiscard))
+        if (playerReference.CheckIfEnoughCardsToDiscard(CardTypeToDiscard, NumToDiscard))
         {
             return true;
         }
         else
         {
+            Debug.LogWarning($"Player {playerReference.playerIDIntVal} can't discard {CardTypeToDiscard} type cards because they don't have at least {NumToDiscard} of them!");
             return false;
         }
+        
     }
 
     protected override void UpdateEffectDescription()

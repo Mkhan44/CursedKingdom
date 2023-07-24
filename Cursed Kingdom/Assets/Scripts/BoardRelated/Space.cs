@@ -76,7 +76,7 @@ public class Space : MonoBehaviour
             if (playerReference.PreviousSpacePlayerWasOn is null)
             {
                 playerReference.PreviousSpacePlayerWasOn = this;
-                Debug.Log($"Previous space was null, assigning current space as previous space.");
+               // Debug.Log($"Previous space was null, assigning current space as previous space.");
             }
             playerReference.CurrentSpacePlayerIsOn = this;
         }
@@ -95,7 +95,7 @@ public class Space : MonoBehaviour
             if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
             {
                 playerReference.IsMoving = false;
-                Debug.Log($"Player landed on space: {spaceData.spaceName}");
+               // Debug.Log($"Player landed on space: {spaceData.spaceName}");
                 ApplySpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
                 gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this);
@@ -117,7 +117,7 @@ public class Space : MonoBehaviour
             if (playerReference.PreviousSpacePlayerWasOn is null)
             {
                 playerReference.PreviousSpacePlayerWasOn = this;
-                Debug.Log($"Previous space was null, assigning current space as previous space.");
+              //  Debug.Log($"Previous space was null, assigning current space as previous space.");
             }
             playerReference.CurrentSpacePlayerIsOn = this;
             if(this.spaceData.PassingOverSpaceEffect && playerReference.IsMoving)
@@ -139,7 +139,7 @@ public class Space : MonoBehaviour
             if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
             {
                 playerReference.IsMoving = false;
-                Debug.Log($"Player landed on space: {spaceData.spaceName}");
+               // Debug.Log($"Player landed on space: {spaceData.spaceName}");
                 ApplySpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
                 gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this);
@@ -217,6 +217,8 @@ public class Space : MonoBehaviour
 
         if(canAllCostsBePaid)
         {
+            Queue<SpaceEffectData> spaceEffectsForPlayerToHandle = new();
+            int numSpaceEffectData;
             for (int j = 0; j < spaceData.spaceEffects.Count; j++)
             {
                 //Do the space effect in sequence. We'll check for any external triggers here as well.
@@ -224,14 +226,20 @@ public class Space : MonoBehaviour
                 {
                     break;
                 }
-                spaceData.spaceEffects[j].spaceEffectData.LandedOnEffect(player);
+                //This is too fast. Need a way to wait for each effect then go to the next.
+                numSpaceEffectData = j;
+                spaceEffectsForPlayerToHandle.Enqueue(spaceData.spaceEffects[numSpaceEffectData].spaceEffectData);
             }
+            //Whatever we already had from passing over effects + the new effects.
+            player.SpaceEffectsToHandle = spaceEffectsForPlayerToHandle;
         }
+        
 
         if(!player.IsMoving && !player.IsDefeated)
         {
             StartCoroutine(WaitASec(player));
         }
+        //Player is defeated so their turn ends immediately.
         else if(!player.IsMoving && player.IsDefeated) 
         {
             gameplayManagerRef.EndOfTurn(player);
@@ -253,7 +261,9 @@ public class Space : MonoBehaviour
         }
 
         player.ShowHand();
-        gameplayManagerRef.EndOfTurn(player);
+        player.StartHandlingSpaceEffects();
+
+        //gameplayManagerRef.EndOfTurn(player);
     }
 
     private IEnumerator PlaySpaceInfoDisplayAnimationUI(Player player)
@@ -311,13 +321,13 @@ public class Space : MonoBehaviour
             {
                 case nameof(ArrowSpace):
                     {
-                        Debug.Log("Arrow space has no sprite. Keeping it as default");
+                       // Debug.Log("Arrow space has no sprite. Keeping it as default");
                         iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
                         break;
                     }
                 case nameof(AttackSpace):
                     {
-                        Debug.Log("Attack space has no sprite. Keeping it as default");
+                      //  Debug.Log("Attack space has no sprite. Keeping it as default");
                         iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
                         break;
                     }
@@ -328,7 +338,7 @@ public class Space : MonoBehaviour
                     }
                 case nameof(ConferenceRoomSpace):
                     {
-                        Debug.Log("ConferenceRoom space has no sprite. Keeping it as default");
+                      //  Debug.Log("ConferenceRoom space has no sprite. Keeping it as default");
                         iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
                         break;
                     }
@@ -339,19 +349,19 @@ public class Space : MonoBehaviour
                     }
                 case nameof(DiscardCardSpace):
                     {
-                        Debug.Log("Discard Card space has no sprite. Keeping it as default");
+                      //  Debug.Log("Discard Card space has no sprite. Keeping it as default");
                         iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
                         break;
                     }
                 case nameof(HalveMovementCardSpace):
                     {
-                        Debug.Log("Halve movement card space has no sprite. Keeping it as default");
+                      //  Debug.Log("Halve movement card space has no sprite. Keeping it as default");
                         iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
                         break;
                     }
                 case nameof(LevelUpSpace):
                     {
-                        Debug.Log("Level up space has no sprite. Keeping it as default");
+                       // Debug.Log("Level up space has no sprite. Keeping it as default");
                         iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
                         break;
                     }
@@ -372,7 +382,7 @@ public class Space : MonoBehaviour
                     }
                 case nameof(UseExtraCardSpace):
                     {
-                        Debug.Log("Use extra card space has no sprite. Keeping it as default");
+                       // Debug.Log("Use extra card space has no sprite. Keeping it as default");
                         iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
                         break;
                     }

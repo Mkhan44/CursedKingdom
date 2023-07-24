@@ -22,13 +22,11 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
 
     public override void LandedOnEffect(Player playerReference)
     {
-        base.LandedOnEffect(playerReference);
-
         if(CardTypeToDraw == Card.CardType.Movement)
         {
             playerReference.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Movement, playerReference, NumToDraw);
         }
-        else if(CardTypeToDraw == Card.CardType.Movement)
+        else if(CardTypeToDraw == Card.CardType.Support)
         {
             playerReference.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Support, playerReference, NumToDraw);
         }
@@ -37,6 +35,8 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
             ChooseCardToDraw(playerReference);
             //Dialouge box to pick which card.
         }
+
+        base.LandedOnEffect(playerReference);
 
 
         Debug.Log($"Landed on: {this.name} space and should draw: {NumToDraw} {CardTypeToDraw} card(s)");

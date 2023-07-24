@@ -12,6 +12,15 @@ public class Player : MonoBehaviour
 {
     public int playerIDIntVal;
 
+    //Events
+
+    //Discard events
+    public event Action<Player> TurnHasEnded;
+    public event Action<Player> EffectCompleted;
+    public event Action<Player> DoneDiscardingForEffect;
+
+    //Events End
+
     //Properties
     [SerializeField] private int maxHealth;
     [SerializeField] private int currentHealth;
@@ -21,10 +30,13 @@ public class Player : MonoBehaviour
     [SerializeField] private int supportCardsInHand;
     [SerializeField] private int maxHandSize;
     [SerializeField] private int cardsLeftToDiscard;
+    [SerializeField] private CardType validCardTypesToDiscard;
     [SerializeField] private List<Card> cardsInhand;
     [SerializeField] private GameObject movementCardsInHandHolderPanel;
     [SerializeField] private GameObject supportCardsInHandHolderPanel;
     [SerializeField] private GameObject handDisplayPanel;
+    [SerializeField] private Queue<SpaceEffectData> spaceEffectsToHandle;
+    [SerializeField] private bool isHandlingSpaceEffects;
     [SerializeField] private bool isMoving;
     [SerializeField] private bool isOnCooldown;
     [SerializeField] private bool isPoisoned;
@@ -55,10 +67,13 @@ public class Player : MonoBehaviour
     public int SupportCardsInHand { get => supportCardsInHand; set => supportCardsInHand = value; }
     public int MaxHandSize { get => maxHandSize; set => maxHandSize = value; }
     public int CardsLeftToDiscard { get => cardsLeftToDiscard; set => cardsLeftToDiscard = value; }
+    public CardType ValidCardTypesToDiscard { get => validCardTypesToDiscard; set => validCardTypesToDiscard = value; }
     public List<Card> CardsInhand { get => cardsInhand; set => cardsInhand = value; }
     public GameObject MovementCardsInHandHolderPanel { get => movementCardsInHandHolderPanel; set => movementCardsInHandHolderPanel = value; }
     public GameObject SupportCardsInHandHolderPanel { get => supportCardsInHandHolderPanel; set => supportCardsInHandHolderPanel = value; }
     public GameObject HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
+    public Queue<SpaceEffectData> SpaceEffectsToHandle { get => spaceEffectsToHandle; set => spaceEffectsToHandle = value; }
+    public bool IsHandlingSpaceEffects { get => isHandlingSpaceEffects; set => isHandlingSpaceEffects = value; }
     public bool IsMoving { get => isMoving; set => isMoving = value; }
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
@@ -137,6 +152,9 @@ public class Player : MonoBehaviour
         AbleToLevelUp = false;
         SpacesLeftToMove = 0;
         CardsLeftToDiscard = 0;
+        ValidCardTypesToDiscard = CardType.None;
+        SpaceEffectsToHandle = new();
+        isHandlingSpaceEffects = false;
        // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
 
@@ -150,12 +168,16 @@ public class Player : MonoBehaviour
         SpacesLeftToMove = 0;
         MaxHandSize = 6;
         IsDefeated = false;
+        CardsLeftToDiscard = 0;
+        ValidCardTypesToDiscard = CardType.None;
+        SpaceEffectsToHandle = new();
+        isHandlingSpaceEffects = false;
         // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
 
     public void DebugTheSpace()
     {
-        Debug.Log(CurrentSpacePlayerIsOn);
+        //Debug.Log(CurrentSpacePlayerIsOn);
     }
 
     public void LevelUp(int levelsToIncrease)
@@ -170,6 +192,7 @@ public class Player : MonoBehaviour
         AbleToLevelUp = false;
 
         GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
+
     }
 
     public void HandleLevelUp()
@@ -205,7 +228,7 @@ public class Player : MonoBehaviour
 
         SetMovementCardsInHand();
         SetSupportCardsInHand();
-        
+
     }
 
     //Shows this player's hand on screen.
@@ -242,27 +265,6 @@ public class Player : MonoBehaviour
         SupportCardsInHandHolderPanel.SetActive(false);
     }
 
-    public bool CanDiscard(Card.CardType cardTypeToDiscard, int numToDiscard)
-    {
-        bool canDiscard = false;
-        if(cardTypeToDiscard == Card.CardType.Movement)
-        {
-            if(MovementCardsInHand >= numToDiscard)
-            {
-                canDiscard = false;
-            }
-        }
-        else
-        {
-            if (SupportCardsInHand >= numToDiscard)
-            {
-                canDiscard = false;
-            }
-        }
-
-        return canDiscard;
-    }
-
 
     public bool MaxHandSizeExceeded()
     {
@@ -282,14 +284,100 @@ public class Player : MonoBehaviour
         return result;
     }
 
-    public void ChooseCardsToDiscard(Card.CardType cardType, int numToDiscard)
+    /// <summary>
+    /// Check if the player has enough cards to discard for the cost or effect they are dealing with.
+    /// </summary>
+    /// <param name="cardType"></param>
+    /// <param name="numToDiscard"></param>
+    /// <returns></returns>
+    public bool CheckIfEnoughCardsToDiscard(CardType cardType, int numToDiscard)
     {
-        GameplayManagerRef.ThisDeckManager.IsDiscarding = true;
+        bool hasEnough = false;
 
-        //Force player to discard that type of card x amount of times equal to numToDiscard.
+        switch(cardType) 
+        {
+            case CardType.Movement:
+                {
+                    if(!(MovementCardsInHand < numToDiscard))
+                    {
+                        hasEnough = true;
+                    }
+                    break;
+                }
+            case CardType.Support:
+                {
+                    if (!(SupportCardsInHand < numToDiscard))
+                    {
+                        hasEnough = true;
+                    }
+                    break;
+                }
+            case CardType.Both:
+                {
+                    if (!(CardsInhand.Count < numToDiscard))
+                    {
+                        hasEnough = true;
+                    }
+                    break;
+                }
+            default:
+                {
+                    Debug.LogWarning("The type is not a valid card type! What was passed into the check function?");
+                    break;
+                }
+        }
+
+        return hasEnough;
     }
 
-    public void DiscardCard(Card.CardType cardType , Card cardToDiscard)
+    /// <summary>
+    /// Sets the type of card to discard as well as number needed to discard. This is usually used to pay a cost or after landing on a space.
+    /// </summary>
+    /// <param name="cardType"></param>
+    /// <param name="numToDiscard"></param>
+    public void SetCardsToDiscard(CardType cardType, int numToDiscard)
+    {
+        ValidCardTypesToDiscard = cardType;
+        CardsLeftToDiscard = numToDiscard;
+    }
+
+    public void SelectCardToDiscard()
+    {
+        CardsLeftToDiscard -= 1;
+
+        //Discard has been completed.
+        if( CardsLeftToDiscard == 0)
+        {
+           // DialogueBoxPopup.instance.DeactivatePopup();
+            DiscardTheSelectedCards();
+        }
+    }
+
+    public void DiscardTheSelectedCards()
+    {
+        List<Card> cardsToDiscard = new();
+
+        foreach(Card card in CardsInhand)
+        {
+            if(card.SelectedForDiscard)
+            {
+                cardsToDiscard.Add(card);
+            }
+        }
+
+
+        //Loop through all the cards to discard and remove them from the list one by one.
+        while(cardsToDiscard.Count > 0)
+        {
+            cardsToDiscard[0].DeselectForDiscard();
+            DiscardFromHand(cardsToDiscard[0].ThisCardType, cardsToDiscard[0]);
+            cardsToDiscard.RemoveAt(0);
+        }
+
+        CompletedDiscardingForEffect();
+    }
+
+    public void DiscardFromHand(Card.CardType cardType , Card cardToDiscard)
     {
         GameplayManagerRef.ThisDeckManager.AddCardToDiscardPile(cardType, cardToDiscard, CardsInhand);
         if(cardType == Card.CardType.Movement)
@@ -318,7 +406,7 @@ public class Player : MonoBehaviour
 
         if (CardsLeftToDiscard > 0)
         {
-            DiscardCard(cardType, cardToDiscard);
+            DiscardFromHand(cardType, cardToDiscard);
             CardsLeftToDiscard -= 1;
             if(CardsLeftToDiscard <= 0)
             {
@@ -343,7 +431,7 @@ public class Player : MonoBehaviour
         {
             foreach(Card card in cardsToDiscard) 
             {
-                DiscardCard(cardType, card);
+                DiscardFromHand(cardType, card);
             }
 
             CardsLeftToDiscard -= cardsToDiscard.Count;
@@ -371,6 +459,7 @@ public class Player : MonoBehaviour
         {
             if(card is MovementCard)
             {
+                card.gameObject.transform.SetParent(MovementCardsInHandHolderPanel.transform);
                 MovementCardsInHand++;
             }
         }
@@ -389,6 +478,7 @@ public class Player : MonoBehaviour
         {
             if (card is SupportCard)
             {
+                card.gameObject.transform.SetParent(SupportCardsInHandHolderPanel.transform);
                 SupportCardsInHand++;
             }
         }
@@ -554,6 +644,7 @@ public class Player : MonoBehaviour
     {
         //Discard all Player's cards since they are no longer in the game.
         DiscardAllCardsInHand();
+        FinishedHandlingSpaceEffects();
 
         IsDefeated = true;
         //int indexOfCurrentPlayer = GameplayManagerRef.Players.IndexOf(GameplayManagerRef.playerCharacter.GetComponent<Player>());
@@ -564,5 +655,65 @@ public class Player : MonoBehaviour
         //}
     }
 
+    #endregion
+
+    #region TurnRelated
+
+    public void StartHandlingSpaceEffects()
+    {
+        IsHandlingSpaceEffects = true;
+        foreach (SpaceEffectData spaceEffect in spaceEffectsToHandle)
+        {
+            spaceEffect.SpaceEffectCompleted += ExecuteNextSpaceEffect;
+        }
+        ExecuteNextSpaceEffect();
+    }
+
+    public void FinishedHandlingSpaceEffects()
+    {
+        foreach (SpaceEffectData spaceEffect in spaceEffectsToHandle)
+        {
+            spaceEffect.SpaceEffectCompleted -= ExecuteNextSpaceEffect;
+        }
+        spaceEffectsToHandle.Clear();
+        IsHandlingSpaceEffects = false;
+        if(!IsMoving)
+        {
+            TurnIsCompleted();
+        }
+        
+    }
+
+    private void ExecuteNextSpaceEffect()
+    {
+        if(spaceEffectsToHandle.Count > 0)
+        {
+            Debug.Log($"spaceEffectsToHandle Count before dequeing is: {spaceEffectsToHandle.Count}");
+            SpaceEffectData spaceEffectDataToHandle;
+            spaceEffectDataToHandle = spaceEffectsToHandle.Dequeue();
+            spaceEffectDataToHandle.LandedOnEffect(this);
+            Debug.Log($"spaceEffectsToHandle Count after dequeing is: {spaceEffectsToHandle.Count}");
+           // Debug.Log($"Handling space effect: {spaceEffectDataToHandle.name}");
+        }
+        else
+        {
+            Debug.Log($"All space effects are done!");
+            FinishedHandlingSpaceEffects();
+            //Space effects are done. Now trigger curse/poison if needed. Then end the turn.
+        }
+    }
+
+    //Event triggers
+
+    private void TurnIsCompleted()
+    {
+        TurnHasEnded?.Invoke(this);
+    }
+
+    private void CompletedDiscardingForEffect()
+    {
+        DoneDiscardingForEffect?.Invoke(this);
+    }
+    
     #endregion
 }

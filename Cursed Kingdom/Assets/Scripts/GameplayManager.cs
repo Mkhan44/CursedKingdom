@@ -239,8 +239,8 @@ public class GameplayManager : MonoBehaviour
         //TODO: CHANGE THIS TO BE MORE DYNAMIC.
         Player playerTempReferencePlayer = playerTempReference.GetComponent<Player>();
         GameObject decksHolder = Instantiate(decksHolderPrefab, cardDisplayPanelParent.transform);
-        GameObject playerMovementCardPanel = decksHolder.transform.GetChild(0).gameObject;
-        GameObject playerSupportCardPanel = decksHolder.transform.GetChild(1).gameObject;
+        GameObject playerMovementCardPanel = decksHolder.transform.GetChild(0).GetChild(0).gameObject;
+        GameObject playerSupportCardPanel = decksHolder.transform.GetChild(1).GetChild(0).gameObject;
         HandDisplayPanel.AddNewHandUI(playerMovementCardPanel.GetComponent<RectTransform>(), playerSupportCardPanel.GetComponent<RectTransform>());
 
         playerTempReferencePlayer.MovementCardsInHandHolderPanel = playerMovementCardPanel;
@@ -258,6 +258,8 @@ public class GameplayManager : MonoBehaviour
         playerTempReferencePlayer.MovementCardsInHandHolderPanel.SetActive(false);
         playerTempReferencePlayer.SupportCardsInHandHolderPanel.SetActive(false);
 
+        //Setup event subscriptions:
+        playerTempReferencePlayer.TurnHasEnded += EndOfTurn;
         spacesToMoveText.text = "Spaces left: 0";
 
         playerMovementManager.Animator = playerTempReference.GetComponent<Animator>();
@@ -268,7 +270,6 @@ public class GameplayManager : MonoBehaviour
         playerTempReferencePlayer.playerIDIntVal = Players.Count;
         return playerTempReference;
     }
-
 
     private void Update()
     {
@@ -515,7 +516,7 @@ public class GameplayManager : MonoBehaviour
                 HandDisplayPanel.SetCurrentActiveHandUI(Players.IndexOf(nextPlayer));
                 currentPlayer.HideHand();
                 nextPlayer.ShowHand();
-                DialogueBoxPopup.instance.ActivatePopup($"Player {nextPlayer.playerIDIntVal}'s turn!", 0);
+                DialogueBoxPopup.instance.ActivatePopupMessage($"Player {nextPlayer.playerIDIntVal}'s turn!", 0);
                 break;
             }
         }
@@ -544,7 +545,7 @@ public class GameplayManager : MonoBehaviour
         playerCharacter = Players[Players.IndexOf(playerWhoWins)].GetComponent<Transform>();
         cinemachineVirtualCameras[0].LookAt = playerCharacter;
         cinemachineVirtualCameras[0].Follow = playerCharacter;
-        DialogueBoxPopup.instance.ActivatePopup($"Congratulations, player: {playerWhoWins.playerIDIntVal} wins!", 0);
+        DialogueBoxPopup.instance.ActivatePopupMessage($"Congratulations, player: {playerWhoWins.playerIDIntVal} wins!", 0);
     }
     
 

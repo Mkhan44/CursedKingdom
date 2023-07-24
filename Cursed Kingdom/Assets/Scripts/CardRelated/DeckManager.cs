@@ -166,6 +166,7 @@ public class DeckManager : MonoBehaviour
 
     public void DrawCards(Card.CardType deckTypeToDrawFrom, Player playerDrawingCard, int numCardsToDraw)
     {
+        List<Card> cardsToDraw = new();
         if (deckTypeToDrawFrom == Card.CardType.Movement)
         {
             if (MovementDeckList.Count < numCardsToDraw)
@@ -177,7 +178,7 @@ public class DeckManager : MonoBehaviour
             for (int i = 0; i < numCardsToDraw; i++)
             {
                 //Always do 0 since we're removing it immediately after...Though maybe this might not be smart since it's so fast...?
-                playerDrawingCard.DrawCard(MovementDeckList[0]);
+                cardsToDraw.Add(MovementDeckList[0]);
                 MovementDeckList.Remove(MovementDeckList[0]);
             }
 
@@ -193,9 +194,14 @@ public class DeckManager : MonoBehaviour
             for (int i = 0; i < numCardsToDraw; i++)
             {
                 //Always do 0 since we're removing it immediately after...Though maybe this might not be smart since it's so fast...?
-                playerDrawingCard.DrawCard(SupportDeckList[0]);
+                cardsToDraw.Add(SupportDeckList[0]);
                 SupportDeckList.Remove(SupportDeckList[0]);
             }
+        }
+
+        if(cardsToDraw.Count > 0)
+        {
+            playerDrawingCard.DrawCards(cardsToDraw);
         }
 
         gameplayManager.UpdatePlayerInfoUICardCount(playerDrawingCard);

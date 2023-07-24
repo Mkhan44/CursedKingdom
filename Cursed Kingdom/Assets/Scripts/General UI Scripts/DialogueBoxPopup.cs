@@ -24,23 +24,35 @@ public class DialogueBoxPopup : MonoBehaviour
         buttonOptions = new();
     }
 
-    public void ActivatePopup(string textToDisplay, int buttonsToSpawn)
+    public void ActivatePopupMessage(string textToDisplay, int buttonsToSpawn)
     {
         displayText.text = textToDisplay;
 
-        for (int i = 0; i <buttonsToSpawn; i++)
+        if(buttonsToSpawn > 0) 
         {
-            GameObject buttonInstance = Instantiate(buttonPrefab, buttonLayoutParent.transform);
+            for (int i = 0; i < buttonsToSpawn; i++)
+            {
+                GameObject buttonInstance = Instantiate(buttonPrefab, buttonLayoutParent.transform);
+                Button theButton = buttonInstance.GetComponent<Button>();
+                //  theButton.onClick.AddListener(=> test);
+            }
         }
+        else
+        {
+            //Add debug close button.
+            GameObject buttonInstanceFinal = Instantiate(buttonPrefab, buttonLayoutParent.transform);
+            buttonInstanceFinal.GetComponent<Button>().onClick.AddListener(DeactivatePopup);
+            buttonInstanceFinal.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Close DEBUG";
+        }
+        
 
-        //Add debug close button.
-        GameObject buttonInstanceFinal = Instantiate(buttonPrefab, buttonLayoutParent.transform);
-        buttonInstanceFinal.GetComponent<Button>().onClick.AddListener(DeactivatePopup);
-        buttonInstanceFinal.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Close DEBUG";
+        
         
         isActive = true;
         blockerPanel.SetActive(true);
     }
+
+
 
     public void DeactivatePopup()
     {

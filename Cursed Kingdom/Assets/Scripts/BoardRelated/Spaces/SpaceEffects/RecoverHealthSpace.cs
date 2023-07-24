@@ -14,8 +14,8 @@ public class RecoverHealthSpace : SpaceEffectData, ISpaceEffect
 
     public override void LandedOnEffect(Player playerReference)
     {
-        base.LandedOnEffect(playerReference);
         playerReference.RecoverHealth(HealthToRecover);
+        base.LandedOnEffect(playerReference);
         Debug.Log($"Landed on: {this.name} space and should recover: {HealthToRecover} health.");
        // playerReference.CurrentHealth += HealthToRecover;
     }

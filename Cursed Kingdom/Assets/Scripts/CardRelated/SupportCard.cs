@@ -59,6 +59,7 @@ public class SupportCard : Card
 
         if (handExpandUI is not null)
         {
+            int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
             if (!handExpandUI.CurrentActiveTransform.IsExpanded)
             {
                 handExpandUI.ExpandHand(ThisCardType, GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>()));
@@ -67,6 +68,23 @@ public class SupportCard : Card
             {
                 DeselectOtherSelectedCards();
 
+                if(GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard > 0 && !SelectedForDiscard && IsValidCardTypeToDiscard(GameplayManager.Players[indexOfCurrentPlayer]))
+                {
+                    SelectForDiscard();
+                    return;
+                }
+                else if(GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard > 0 &&  !SelectedForDiscard && !IsValidCardTypeToDiscard(GameplayManager.Players[indexOfCurrentPlayer]))
+                {
+                    Debug.LogWarning("Hey! You can't select this card to discard.");
+                    return;
+                }
+
+                if(SelectedForDiscard)
+                {
+                    DeselectForDiscard();
+                    return;
+                }
+
                 if (!CardIsSelected)
                 {
                     CardIsSelected = true;
@@ -74,14 +92,14 @@ public class SupportCard : Card
                 }
                 else
                 {
-                    int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
+                    
                     if (GameplayManager.ThisDeckManager.IsDiscarding)
                     {
                         GameplayManager.Players[indexOfCurrentPlayer].DiscardCardToGetToMaxHandSize(ThisCardType, this);
                     }
                     else
                     {
-                        GameplayManager.Players[indexOfCurrentPlayer].DiscardCard(ThisCardType, this);
+                        GameplayManager.Players[indexOfCurrentPlayer].DiscardFromHand(ThisCardType, this);
                     }
                     
                     GameplayManager.HandDisplayPanel.ShrinkHand();
@@ -90,6 +108,17 @@ public class SupportCard : Card
                 }
             }
         }
+    }
+
+    public bool IsValidCardTypeToDiscard(Player playerReference)
+    {
+        bool isValid = false;
+
+        if((playerReference.ValidCardTypesToDiscard == CardType.Support || playerReference.ValidCardTypesToDiscard == CardType.Both) && playerReference.CardsLeftToDiscard > 0)
+        {
+            isValid = true;
+        }
+        return isValid;
     }
 }
 

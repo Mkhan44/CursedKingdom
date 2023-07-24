@@ -2,6 +2,7 @@
 //All code is written by me (Above name) unless otherwise stated via comments below.
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,8 +32,8 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         handUITransform.SupportCardsHolder = supportCardHolder;
         handUITransform.MovementLayoutGroup = movementCardHolder.GetComponent<HorizontalLayoutGroup>();
         handUITransform.SupportLayoutGroup = supportCardHolder.GetComponent<HorizontalLayoutGroup>();
-        handUITransform.MovementAnimator = movementCardHolder.GetComponent<Animator>();
-        handUITransform.SupportAnimator = supportCardHolder.GetComponent<Animator>();
+        handUITransform.MovementAnimator = movementCardHolder.transform.parent.GetComponent<Animator>();
+        handUITransform.SupportAnimator = supportCardHolder.transform.parent.GetComponent<Animator>();
 
         handUITransform.IsExpanded = false;
         handUITransform.MovementCardAnchorMaxInitial = handUITransform.MovementCardsHolder.anchorMax;
@@ -151,7 +152,6 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 
         //CurrentActiveTransform.SupportCardsHolder.gameObject.SetActive(true);
 
-       
     }
 
     public IEnumerator WaitForAnimation(float waitTime = 0f)
@@ -211,6 +211,7 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
                 if (theCard.CardIsSelected)
                 {
                     theCard.DeselectCard();
+                    theCard.DeselectForDiscard();
                     break;
                 }
             }
