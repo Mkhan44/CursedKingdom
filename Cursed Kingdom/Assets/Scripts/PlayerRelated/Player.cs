@@ -345,11 +345,29 @@ public class Player : MonoBehaviour
     {
         CardsLeftToDiscard -= 1;
 
-        //Discard has been completed.
+        //Confirmation for discard.
         if( CardsLeftToDiscard == 0)
         {
-           // DialogueBoxPopup.instance.DeactivatePopup();
-            DiscardTheSelectedCards();
+            List<Tuple<string, string, object>> insertedParams = new();
+            insertedParams.Add(Tuple.Create<string, string, object>("Yes", "DiscardTheSelectedCards", this));
+            insertedParams.Add(Tuple.Create<string, string, object>("No", "DeselectAllSelectedCards", this));
+
+            DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to discard these cards?", insertedParams);
+        }
+    }
+
+    public void DeselectAllSelectedCards()
+    {
+        foreach (Card card in CardsInhand)
+        {
+            if (card.SelectedForDiscard)
+            {
+                card.DeselectForDiscard();
+                if(CardsLeftToDiscard == 0)
+                {
+                    CardsLeftToDiscard += 1;
+                }
+            }
         }
     }
 

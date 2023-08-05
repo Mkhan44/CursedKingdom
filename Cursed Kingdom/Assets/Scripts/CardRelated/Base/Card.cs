@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour , IPointerClickHandler
 {
+    protected const string hidden = "IsHidden";
     public enum CardType 
     {
         Movement,
@@ -25,6 +26,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
     [SerializeField] private Button clickableAreaButton;
     [SerializeField] private GameplayManager gameplayManager;
     [SerializeField] private Image backgroundSelectedGlow;
+    [SerializeField] private Animator parentAnimator;
 
     [SerializeField] private bool cardIsSelected;
     [SerializeField] private bool selectedForDiscard;
@@ -38,6 +40,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
     public CardType ThisCardType { get => thisCardType; }
     public Button ClickableAreaButton { get => clickableAreaButton; set => clickableAreaButton = value; }
     public Image BackgroundSelectedGlow { get => backgroundSelectedGlow; set => backgroundSelectedGlow = value; }
+    public Animator ParentAnimator { get => parentAnimator; set => parentAnimator = value; }
     public bool CardIsSelected { get => cardIsSelected; set => cardIsSelected = value; }
     public bool SelectedForDiscard { get => selectedForDiscard; set => selectedForDiscard = value; }
     public GameplayManager GameplayManager { get => gameplayManager; set => gameplayManager = value; }

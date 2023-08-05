@@ -57,6 +57,7 @@ public class MovementCard : Card
         //If card is big, use it and then shrink the panel.
         //DON'T WANT TO KEEP DOING GETCOMPONENT ON THIS!
         PlayerHandDisplayUI handExpandUI = GetComponentInParent<PlayerHandDisplayUI>();
+        ParentAnimator = GetComponentInParent<Animator>();
 
         if (handExpandUI is not null)
         {
@@ -64,11 +65,18 @@ public class MovementCard : Card
             if (!handExpandUI.CurrentActiveTransform.IsExpanded)
             {
                 handExpandUI.ExpandHand(ThisCardType, GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>()));
+                
             }
             else
             {
+                if(ParentAnimator != null)
+                {
+                    if(ParentAnimator.GetBool(hidden))
+                    {
+                        return;
+                    }
+                }
                 DeselectOtherSelectedCards();
-
 
                 if (GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard > 0 && !SelectedForDiscard && IsValidCardTypeToDiscard(GameplayManager.Players[indexOfCurrentPlayer]))
                 {
