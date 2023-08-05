@@ -516,7 +516,7 @@ public class GameplayManager : MonoBehaviour
                 HandDisplayPanel.SetCurrentActiveHandUI(Players.IndexOf(nextPlayer));
                 currentPlayer.HideHand();
                 nextPlayer.ShowHand();
-                DialogueBoxPopup.instance.ActivatePopupMessage($"Player {nextPlayer.playerIDIntVal}'s turn!", 0);
+                DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"Player {nextPlayer.playerIDIntVal}'s turn!", "Start!");
                 break;
             }
         }
@@ -545,7 +545,7 @@ public class GameplayManager : MonoBehaviour
         playerCharacter = Players[Players.IndexOf(playerWhoWins)].GetComponent<Transform>();
         cinemachineVirtualCameras[0].LookAt = playerCharacter;
         cinemachineVirtualCameras[0].Follow = playerCharacter;
-        DialogueBoxPopup.instance.ActivatePopupMessage($"Congratulations, player: {playerWhoWins.playerIDIntVal} wins!", 0);
+        DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"Congratulations, player: {playerWhoWins.playerIDIntVal} wins!", "Yay!");
     }
     
 

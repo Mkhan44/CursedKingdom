@@ -43,7 +43,10 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
             GameObject newIcon = Instantiate(iconPrefab, IconParent.transform);
             Image iconImage = newIcon.transform.GetChild(0).GetComponent<Image>();
             TextMeshProUGUI iconText = newIcon.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-            iconImage.sprite = CurrentSpacePlayerIsOn.iconHolderParent.transform.GetChild(count).GetChild(0).GetComponent<Image>().sprite;
+            if(CurrentSpacePlayerIsOn.iconHolderParent.transform.childCount == CurrentSpacePlayerIsOn.spaceData.spaceEffects.Count)
+            {
+                iconImage.sprite = CurrentSpacePlayerIsOn.iconHolderParent.transform.GetChild(count).GetChild(0).GetComponent<Image>().sprite;
+            }
             iconText.text = CurrentSpacePlayerIsOn.spaceData.spaceEffects[count].spaceEffectData.EffectDescription;
             count++;
         }
