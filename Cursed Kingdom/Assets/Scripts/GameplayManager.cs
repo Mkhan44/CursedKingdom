@@ -216,6 +216,9 @@ public class GameplayManager : MonoBehaviour
             space.SpaceTravelSetup();
         }
 
+        //For debug mode.
+        DebugModeSingleton.instance.SetupOverrideSpaceLandEffectDropdownOptions(spaces);
+
 
         //DialogueBoxPopup.instance.ActivatePopup("This is a test option.", 4);
 

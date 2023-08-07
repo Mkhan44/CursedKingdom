@@ -16,9 +16,13 @@ public class PlayerMovementManager : MonoBehaviour
     [SerializeField] private float rayCastLength;
     [SerializeField] private Animator animator;
 
+    //Debug
+    [SerializeField] private bool hasBeenOveriddenOnce;
+
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
     public float RayCastLength { get => rayCastLength; set => rayCastLength = value; }
     public Animator Animator { get => animator; set => animator = value; }
+    public bool HasBeenOveriddenOnce { get => hasBeenOveriddenOnce; }
 
     private void Start()
     {
@@ -28,6 +32,16 @@ public class PlayerMovementManager : MonoBehaviour
     public void SetupMove(Player playerToMove)
     {
         Space currentSpacePlayerIsOn = playerToMove.CurrentSpacePlayerIsOn;
+
+        if(DebugModeSingleton.instance.IsDebugActive)
+        {
+            if(!hasBeenOveriddenOnce)
+            {
+                DebugModeSingleton.instance.OverrideCurrentPlayerSpacesLeftToMove(playerToMove);
+                hasBeenOveriddenOnce = true;
+            }
+        }
+
         gameplayManagerRef.spacesToMoveText.text = $"Spaces left: {playerToMove.SpacesLeftToMove}";
 
         //Figure out how to know which spaces are valid for the Player to travel to. If there is more than 1, give them an option...Otherwise just move the Player.
@@ -257,6 +271,7 @@ public class PlayerMovementManager : MonoBehaviour
             if (decreaseSpacesToMove)
             {
                 playerReference.SpacesLeftToMove = 0;
+                hasBeenOveriddenOnce = false;
             }
             else
             {

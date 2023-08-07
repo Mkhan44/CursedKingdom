@@ -490,10 +490,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayText: {fileID: 899872851083352864}
   blockerPanel: {fileID: 6021277378193107456}
+  blockerPanelImage: {fileID: 0}
   buttonLayoutParent: {fileID: 8305615895690427342}
   imageLayoutParent: {fileID: 3408473877873400019}
   buttonPrefab: {fileID: 3538230746626650711, guid: 31a5bbad8d26fe94da2b3e42d95e5add, type: 3}
   imagePrefab: {fileID: 8342517921554372969, guid: c169d25161d9fe44a870544dc8f54885, type: 3}
+  isActive: 0
   buttonOptions: []
 --- !u!1 &8305615895690427342
 GameObject:

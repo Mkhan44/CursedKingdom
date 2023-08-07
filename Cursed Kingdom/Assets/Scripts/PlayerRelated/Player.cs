@@ -356,6 +356,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// If the user decides to reselect cards that is what this option is for.
+    /// </summary>
     public void DeselectAllSelectedCards()
     {
         foreach (Card card in CardsInhand)
@@ -369,6 +372,16 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        if(ValidCardTypesToDiscard != CardType.Both)
+        {
+            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} {ValidCardTypesToDiscard} card(s) to discard.");
+        }
+        else
+        {
+            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} Movement and/or Support cards to discard.");
+        }
+        
     }
 
     public void DiscardTheSelectedCards()

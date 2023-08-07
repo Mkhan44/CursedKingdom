@@ -30,6 +30,18 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
 
     public void TurnOnDisplay(Space spaceInfo)
     {
+        Space cachedSpace = spaceInfo;
+
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            Space tempSpace = DebugModeSingleton.instance.OverrideSpaceLandEffect();
+
+            if(tempSpace != null)
+            {
+                spaceInfo = tempSpace;
+            }
+        }
+
         CurrentSpacePlayerIsOn = spaceInfo;
         CanvasGroup.blocksRaycasts = true;
         CanvasGroup.alpha = 1f;
@@ -55,6 +67,11 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
       //  CurrentSpacePlayerIsOn.gameplayManagerRef.Players[indexOfCurrentPlayer].HideHand();
 
         CurrentCoroutine = StartCoroutine(WaitTillTurnOff(CurrentSpacePlayerIsOn));
+
+        if(DebugModeSingleton.instance.IsDebugActive)
+        {
+            CurrentSpacePlayerIsOn = cachedSpace;
+        }
     }
 
     public void TurnOffDisplay(Space spaceInfo)

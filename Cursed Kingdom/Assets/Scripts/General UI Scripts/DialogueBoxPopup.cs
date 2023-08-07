@@ -14,10 +14,12 @@ public class DialogueBoxPopup : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI displayText;
     [SerializeField] private GameObject blockerPanel;
+    [SerializeField] private Image blockerPanelImage;
     [SerializeField] private GameObject buttonLayoutParent;
     [SerializeField] private GameObject imageLayoutParent;
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private GameObject imagePrefab;
+    [SerializeField] private bool isActive;
     [SerializeField] private List<Button> buttonOptions;
 
     public GameObject ButtonLayoutParent { get => buttonLayoutParent; set => buttonLayoutParent = value; }
@@ -27,8 +29,10 @@ public class DialogueBoxPopup : MonoBehaviour
     {
         blockerPanel.SetActive(true);
         blockerPanel.SetActive(false);
-        instance = this;
+        blockerPanelImage = this.GetComponent<Image>();
+        isActive = false;
         buttonOptions = new();
+        instance = this;
     }
 
     /// <summary>
@@ -37,11 +41,18 @@ public class DialogueBoxPopup : MonoBehaviour
     /// <param name="textToDisplay"></param>
     public void ActivatePopupWithJustText(string textToDisplay)
     {
+        if (isActive)
+        {
+            DeactivatePopup();
+        }
+
         displayText.text = textToDisplay;
         ImageLayoutParent.SetActive(false);
         ButtonLayoutParent.SetActive(false);
 
         blockerPanel.SetActive(true);
+        blockerPanelImage.raycastTarget = false;
+        isActive = true;
         //Need a way to call Deactivate and also the action afterwards.
     }
 
@@ -51,8 +62,14 @@ public class DialogueBoxPopup : MonoBehaviour
     /// <param name="textToDisplay"></param>
     public void ActivatePopupWithConfirmation(string textToDisplay, string closeButtonText = "Okay")
     {
+        if(isActive)
+        {
+            DeactivatePopup();
+        }
+
         displayText.text = textToDisplay;
         ImageLayoutParent.SetActive(false);
+        blockerPanelImage.raycastTarget = true;
 
         GameObject buttonInstanceFinal = Instantiate(buttonPrefab, ButtonLayoutParent.transform);
         buttonInstanceFinal.GetComponent<Button>().onClick.AddListener(DeactivatePopup);
@@ -60,32 +77,22 @@ public class DialogueBoxPopup : MonoBehaviour
         buttonInstanceFinal.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = closeButtonText;
 
         blockerPanel.SetActive(true);
+        isActive = true;
     }
 
     public void ActivatePopupWithImageChoices(string textToDisplay, List<Image> imagesToSpawn)
     {
+        if (isActive)
+        {
+            DeactivatePopup();
+        }
+
         displayText.text = textToDisplay;
         ButtonLayoutParent.SetActive(false);
-
-        //if (buttonsToSpawn > 0) 
-        //{
-        //    for (int i = 0; i < buttonsToSpawn; i++)
-        //    {
-        //        GameObject buttonInstance = Instantiate(buttonPrefab, ButtonLayoutParent.transform);
-        //        Button theButton = buttonInstance.GetComponent<Button>();
-        //    }
-        //}
-        //else
-        //{
-        //    Add debug close button.
-        //    GameObject buttonInstanceFinal = Instantiate(buttonPrefab, ButtonLayoutParent.transform);
-        //    buttonInstanceFinal.GetComponent<Button>().onClick.AddListener(DeactivatePopup);
-        //    buttonInstanceFinal.GetComponent<Button>().onClick.AddListener(chooseOption);
-        //    buttonInstanceFinal.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Close DEBUG";
-        //}
-        
+        blockerPanelImage.raycastTarget = true;
 
         blockerPanel.SetActive(true);
+        isActive = true;
     }
     /// <summary>
     /// A method that displays a popup with button options. For the button setup each item in the list: 
@@ -95,6 +102,11 @@ public class DialogueBoxPopup : MonoBehaviour
     /// <param name="buttonSetupParams">A tuple where for each item in the list: T1 = The text on the button, T2 = the method name you want to call, and T3 is the object from which this popup is being called from.</param>
     public void ActivatePopupWithButtonChoices(string textToDisplay, List<Tuple<string, string, object>> buttonSetupParams )
     {
+        if (isActive)
+        {
+            DeactivatePopup();
+        }
+
         displayText.text = textToDisplay;
         ImageLayoutParent.SetActive(false);
 
@@ -109,7 +121,6 @@ public class DialogueBoxPopup : MonoBehaviour
 
             if(type.GetMethod("Invoke") != null)
             {
-                Debug.Log($"Invoke exists! Attempting to add {buttonSetupParams[index].Item2} as an on click method to the {i}th(st) button.");
                 theButton.onClick.AddListener(() => ((MonoBehaviour)buttonSetupParams[index].Item3).Invoke(buttonSetupParams[index].Item2, 0));
             }
             else
@@ -122,6 +133,7 @@ public class DialogueBoxPopup : MonoBehaviour
         }
 
         blockerPanel.SetActive(true);
+        isActive = true;
     }
 
 
@@ -130,11 +142,11 @@ public class DialogueBoxPopup : MonoBehaviour
     {
         ImageLayoutParent.SetActive(true);
         ButtonLayoutParent.SetActive(true);
+        blockerPanelImage.raycastTarget = true;
         blockerPanel.SetActive(false);
         DestroyChildrenOfParent(ButtonLayoutParent.transform);
         DestroyChildrenOfParent(ImageLayoutParent.transform);
-
-        buttonOptions.Clear();
+        isActive = false;
     }
 
     private void DestroyChildrenOfParent(Transform parent)

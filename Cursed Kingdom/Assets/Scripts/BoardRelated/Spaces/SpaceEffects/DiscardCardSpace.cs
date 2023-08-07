@@ -24,6 +24,15 @@ public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
         {
             playerReference.DoneDiscardingForEffect += PlayerDoneDiscarding;
             playerReference.SetCardsToDiscard(CardTypeToDiscard, NumToDiscard);
+            if(CardTypeToDiscard != Card.CardType.Both)
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {NumToDiscard} {CardTypeToDiscard} card(s) to discard.");
+            }
+            else
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {NumToDiscard} Movement and/or Support cards to discard.");
+            }
+            
         }
         else
         {

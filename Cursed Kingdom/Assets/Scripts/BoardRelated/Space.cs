@@ -172,6 +172,20 @@ public class Space : MonoBehaviour
     //Will probably need a way to check if it's the beginning of the turn, if the player just landed on the space, etc.
     private void ApplySpaceEffects(Player player)
     {
+        //For debug mode.
+        SpaceData cachedSpaceData = spaceData;
+
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            Space tempSpace = DebugModeSingleton.instance.OverrideSpaceLandEffect();
+            
+            if (tempSpace != null) 
+            {
+                spaceData = tempSpace.spaceData;
+            }
+
+        }
+
         if(spaceData.spaceEffects.Count < 1)
         {
             Debug.LogWarning("Hey, no space effects on this space currently!");
@@ -244,7 +258,12 @@ public class Space : MonoBehaviour
         {
             gameplayManagerRef.EndOfTurn(player);
         }
-        
+
+        //Revert the space data back if we used debug to change it.
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            spaceData = cachedSpaceData;
+        }
     }
 
     private IEnumerator WaitASec(Player player)
