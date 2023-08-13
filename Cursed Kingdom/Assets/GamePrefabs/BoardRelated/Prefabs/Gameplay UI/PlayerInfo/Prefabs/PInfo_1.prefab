@@ -1149,7 +1149,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1348432062, guid: cd975023caa31a747a50d628d3799635, type: 3}
+  m_Sprite: {fileID: -1629337821, guid: 485103097f0636e459c3635eae95cb94, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1992,7 +1992,7 @@ GameObject:
   - component: {fileID: 6576579928189851841}
   - component: {fileID: 4642810455363289786}
   m_Layer: 5
-  m_Name: Image
+  m_Name: TextureMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2016,8 +2016,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.6233978, y: -0.67209625}
-  m_SizeDelta: {x: 464.142, y: 170.9377}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 473.2504, y: 181.1663}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1007812854842483941
 CanvasRenderer:
@@ -2047,7 +2047,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1348432062, guid: cd975023caa31a747a50d628d3799635, type: 3}
+  m_Sprite: {fileID: -1629337821, guid: 485103097f0636e459c3635eae95cb94, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2082,7 +2082,7 @@ GameObject:
   - component: {fileID: 3449600851170359183}
   - component: {fileID: 1124630869013228456}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Texture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2105,7 +2105,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7.0976257, y: 14.400124}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 360, y: 504}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3449600851170359183
@@ -2129,7 +2129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 0.39607844}
+  m_Color: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 0.53333336}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
