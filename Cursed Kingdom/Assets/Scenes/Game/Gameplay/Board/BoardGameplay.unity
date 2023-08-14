@@ -364,7 +364,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2567285720081007278, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 700
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2567285720081007278, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -388,7 +388,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4573234100213797042, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 700
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4573234100213797042, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -998,6 +998,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6377051867729702790, guid: 7408f6982cc20634cba4d0be0690482b, type: 3}
   m_PrefabInstance: {fileID: 842774677}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &920352276 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4790587157385098707, guid: 5ec9238a82b9a114a9a4b25ccab7fb27, type: 3}
+  m_PrefabInstance: {fileID: 684553640}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &920733139
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1005,34 +1016,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 552496509598875668, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: m_LookaheadTime
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509598875668, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: m_LookaheadSmoothing
-      value: 8.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509598875668, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: m_TrackedObjectOffset.y
-      value: -0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509598875674, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: Damping.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509598875674, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: Damping.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509598875674, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: ShoulderOffset.z
-      value: -5
-      objectReference: {fileID: 0}
-    - target: {fileID: 552496509646438508, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
-      propertyPath: m_Lens.FieldOfView
-      value: 45
-      objectReference: {fileID: 0}
     - target: {fileID: 552496509646438509, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
       propertyPath: m_Name
       value: Player Cam Cinemachine
@@ -1159,6 +1142,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 257672509}
     - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: cinemachineVirtualCameras.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: cinemachineVirtualCameras.Array.data[0]
       value: 
       objectReference: {fileID: 387828857}
@@ -1166,6 +1153,10 @@ PrefabInstance:
       propertyPath: cinemachineVirtualCameras.Array.data[1]
       value: 
       objectReference: {fileID: 1653587192}
+    - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: cinemachineVirtualCameras.Array.data[2]
+      value: 
+      objectReference: {fileID: 920352276}
     - target: {fileID: 711935881242953986, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -1549,7 +1540,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3337721393476324776, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: field of view
-      value: 36
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324776, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: near clip plane
@@ -1561,31 +1552,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.7
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 28.9
+      value: -1.0999999
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.3000002
+      value: 0.29999995
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8112422
+      value: 0.9925076
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.5847103
+      value: 0.000000030489367
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000019740355
+      value: -0.122183256
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000014228043
+      value: 0.0000000037534122
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

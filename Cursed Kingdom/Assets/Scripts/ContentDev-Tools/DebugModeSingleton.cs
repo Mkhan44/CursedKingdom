@@ -24,8 +24,6 @@ public class DebugModeSingleton : MonoBehaviour
     public bool IsDebugActive { get => isDebugActive; }
     public int MovementNumberOverride { get => movementNumberOverride; }
 
-    // [SerializeField] 
-
     private void Awake()
     {
         if(instance == null) 

@@ -11,9 +11,13 @@ using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 using TMPro;
 using Unity.VisualScripting;
+using System;
 
 public class GameplayManager : MonoBehaviour
 {
+    public Action<KeyCode> MoveHighlightedSpaceIconGroundView;
+    public Action<KeyCode> MoveHighlightedSpaceIconOverheadView;
+
     public GameObject cardToSpawn;
     public List<Space> spaces;
     public GameObject spaceHolderParent;
@@ -63,7 +67,7 @@ public class GameplayManager : MonoBehaviour
     public MapManager mapManager;
     public BoardManager boardManager;
 
-    CinemachineVirtualCamera cinemachineVirtualCamera;
+    private CinemachineVirtualCamera cinemachineVirtualCamera;
 
     public CinemachineVirtualCamera currentActiveCamera;
     int currentActiveCameraIndex = 0;
@@ -276,14 +280,7 @@ public class GameplayManager : MonoBehaviour
 
     private void Update()
     {
-        //if (!isPlayerMoving && Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    StartMove();
-
-        //}
-        
-
-        if(fpsText is not null)
+        if(fpsText is not null && DebugModeSingleton.instance.IsDebugActive)
         {
             frameDeltaTimeArray[lastFrameIndex] = Time.unscaledDeltaTime;
             lastFrameIndex = (lastFrameIndex + 1) % frameDeltaTimeArray.Length;
@@ -293,42 +290,29 @@ public class GameplayManager : MonoBehaviour
         //Map controls.
         if (Input.GetKeyDown(KeyCode.Y))
         {
-            SwitchCamera();
+            ToggleOverheadMapCamera();
         }
 
-        if(mapManager.IsViewingMap)
+        if (Input.GetKeyDown(KeyCode.U))
         {
-            if(Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                if(mapManager.currentHighlightedSpace.NorthNeighbor != null)
-                {
-                    mapManager.ChangeCurrentHighlightedSpace(mapManager.currentHighlightedSpace.NorthNeighbor);
-                }
-            }
+            ToggleGroundMapCamera();
+        }
 
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                if (mapManager.currentHighlightedSpace.SouthNeighbor != null)
-                {
-                    mapManager.ChangeCurrentHighlightedSpace(mapManager.currentHighlightedSpace.SouthNeighbor);
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                if (mapManager.currentHighlightedSpace.WestNeighbor != null)
-                {
-                    mapManager.ChangeCurrentHighlightedSpace(mapManager.currentHighlightedSpace.WestNeighbor);
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                if (mapManager.currentHighlightedSpace.EastNeighbor != null)
-                {
-                    mapManager.ChangeCurrentHighlightedSpace(mapManager.currentHighlightedSpace.EastNeighbor);
-                }
-            }
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            HandleMapKeyInput(KeyCode.UpArrow);
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            HandleMapKeyInput(KeyCode.DownArrow);
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            HandleMapKeyInput(KeyCode.LeftArrow);
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            HandleMapKeyInput(KeyCode.RightArrow);
         }
 
         if(Input.GetKeyDown(KeyCode.R))
@@ -337,6 +321,12 @@ public class GameplayManager : MonoBehaviour
         }
 
        
+    }
+
+    public void HandleMapKeyInput(KeyCode keyCodePressed)
+    {
+        MoveHighlightedSpaceIconGroundView?.Invoke(keyCodePressed);
+        MoveHighlightedSpaceIconOverheadView?.Invoke(keyCodePressed);
     }
 
     public void ReloadScene()
@@ -415,28 +405,55 @@ public class GameplayManager : MonoBehaviour
 
 
     //Right now this only works for 2 cameras. Anymore we'll have to specify the target based on what's clicked.
-    public void SwitchCamera(int index = 0)
+    public void ToggleOverheadMapCamera()
     {
+        int index = 0;
         index = currentActiveCameraIndex;
         currentActiveCamera.enabled = false;
         int indexOfPlayer = Players.IndexOf(playerCharacter.GetComponent<Player>());
 
-        if (currentActiveCameraIndex == cinemachineVirtualCameras.Count - 1)
+        if (!mapManager.IsViewingMapOverhead)
+        {
+            //Hardcoded right now. Need this index to change later to be more dynamic.
+            index = 1;
+            currentActiveCameraIndex = index;
+            currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
+            mapManager.ActivateHighlightOverheadView(Players[indexOfPlayer].CurrentSpacePlayerIsOn);
+            currentActiveCameraIndex++;
+        }
+        else
         {
             currentActiveCameraIndex = 0;
             currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-            mapManager.DisableCurrentHighlightedSpace(players[indexOfPlayer].CurrentSpacePlayerIsOn);
+            mapManager.DisableCurrentHighlightedSpaceOverheadView(players[indexOfPlayer].CurrentSpacePlayerIsOn);
         }
 
-        else
+        currentActiveCamera.enabled = true;
+    }
+
+    public void ToggleGroundMapCamera()
+    {
+        int index = 0;
+        index = currentActiveCameraIndex;
+        currentActiveCamera.enabled = false;
+        int indexOfPlayer = Players.IndexOf(playerCharacter.GetComponent<Player>());
+
+        if (!mapManager.IsViewingMapGround)
         {
-            //NEED TO CHANGE THIS WHEN WE HAVE MULTIPLE CHARACTERS.
-           
-            mapManager.ActivateHighlight(Players[indexOfPlayer].CurrentSpacePlayerIsOn);
+            //Hardcoded right now. Need this index to change later to be more dynamic.
+            index = 2;
+            currentActiveCameraIndex = index;
+            currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
+            mapManager.SetupGroundViewCamera(currentActiveCamera, Players[indexOfPlayer].CurrentSpacePlayerIsOn);
             currentActiveCameraIndex++;
         }
+        else
+        {
+            currentActiveCameraIndex = 0;
+            currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
+            mapManager.DisableHighlightedSpaceGroundView(players[indexOfPlayer].CurrentSpacePlayerIsOn);
+        }
 
-        currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
         currentActiveCamera.enabled = true;
     }
 
