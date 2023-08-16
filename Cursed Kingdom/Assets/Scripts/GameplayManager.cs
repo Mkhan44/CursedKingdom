@@ -26,8 +26,6 @@ public class GameplayManager : MonoBehaviour
     public GameObject boardParent;
     public GameObject boardPrefab;
     public GameObject decksHolderPrefab;
-    public GameObject movementCardHolderPrefab;
-    public GameObject supportCardHolderPrefab;
     public GameObject PlayerInfoCanvas;
     public Transform playerCharacter;
     public bool isPlayerMoving = false;
@@ -155,7 +153,7 @@ public class GameplayManager : MonoBehaviour
         //Spawn in the players.
         for (int i = 0; i <numPlayersToStartWith; i++)
         {
-            tempPlayerReferences.Add(SpawnPlayersStart());
+            tempPlayerReferences.Add(SpawnPlayersStart(classdatas[i]));
         }
 
 
@@ -234,7 +232,7 @@ public class GameplayManager : MonoBehaviour
         //CardTest();
     }
 
-    private GameObject SpawnPlayersStart()
+    private GameObject SpawnPlayersStart(ClassData playerClass)
     {
         //Spawn player.
         int randomSpawnSpace = Random.Range(0, spaces.Count - 1);
@@ -245,6 +243,18 @@ public class GameplayManager : MonoBehaviour
         playerTempReference.transform.position = spaces[randomSpawnSpace].spawnPoint.position;
         //TODO: CHANGE THIS TO BE MORE DYNAMIC.
         Player playerTempReferencePlayer = playerTempReference.GetComponent<Player>();
+        playerTempReferencePlayer.ClassData = playerClass;
+
+        //setup animation
+        Animator playerAnimator = playerTempReferencePlayer.GetComponent<Animator>();
+        playerMovementManager.Animator = playerAnimator;
+
+        if (playerClass.animatorController != null)
+        {
+            playerAnimator.runtimeAnimatorController = playerClass.animatorController;
+        }
+        
+        //Setup player hand UI
         GameObject decksHolder = Instantiate(decksHolderPrefab, cardDisplayPanelParent.transform);
         GameObject playerMovementCardPanel = decksHolder.transform.GetChild(0).GetChild(0).gameObject;
         GameObject playerSupportCardPanel = decksHolder.transform.GetChild(1).GetChild(0).gameObject;
@@ -269,7 +279,7 @@ public class GameplayManager : MonoBehaviour
         playerTempReferencePlayer.TurnHasEnded += EndOfTurn;
         spacesToMoveText.text = "Spaces left: 0";
 
-        playerMovementManager.Animator = playerTempReference.GetComponent<Animator>();
+        
 
         Players.Add(playerTempReferencePlayer);
 
