@@ -14,6 +14,8 @@ public class MovementCard : Card
     //Data
     [SerializeField] private MovementCardData movementCardData;
     [SerializeField] private int movementCardValue;
+    //Used for if we need to temporarily halve or increase a movement card's value while in the player's hand due to item being used or curse, etc.
+    [SerializeField] private int tempCardValue;
 
     //References
     [SerializeField] private TextMeshProUGUI movementValueText;
@@ -32,22 +34,54 @@ public class MovementCard : Card
         SetupCard(movementCardData);
     }
 
-    public override void AddCardUseListener(GameplayManager gameplayManager)
-    {
-        //base.AddCardUseListener(gameplayManager);
-        //ClickableAreaButton.onClick.AddListener(() => gameplayManager.StartMove(MovementCardValue));
-        //ClickableAreaButton.onClick.AddListener(() => gameplayManager.Players[0].DiscardAfterUse(ThisCardType, this));
-        //ClickableAreaButton.onClick.AddListener(() => gameplayManager.HandDisplayPanel.ShrinkHand());
-        //ClickableAreaButton.onClick.AddListener(() => RemoveListeners());
-    }
-
     protected override void SetupCard(CardData cardData)
     {
         base.SetupCard(cardData);
         MovementCardData = cardData as MovementCardData;
-        MovementCardValue = movementCardData.MovementValue;
+        MovementCardValue = MovementCardData.MovementValue;
+        tempCardValue = 0;
         TitleText.text = "Movement";
         movementValueText.text = MovementCardValue.ToString();
+    }
+
+    public void ChangeMovementValue(bool halfTheValue = false, bool increaseTheValue = false, int valueToIncreaseBy = 0)
+    {
+        if(halfTheValue && increaseTheValue)
+        {
+            Debug.LogWarning("You're trying to both half and increase the value of the card!! We're not gonna change the value.");
+        }
+
+        if(halfTheValue)
+        {
+            tempCardValue = Mathf.CeilToInt(MovementCardValue / 2);
+            movementValueText.text = tempCardValue.ToString();
+            return;
+        }
+
+        if(increaseTheValue)
+        {
+            tempCardValue += valueToIncreaseBy;
+            movementValueText.text = tempCardValue.ToString();
+            return;
+        }
+    }
+
+    public void ResetMovementValue()
+    {
+        movementValueText.text = MovementCardValue.ToString();
+        tempCardValue = 0;
+    }
+
+    public int MovementValueToUse()
+    {
+        if(tempCardValue > 0)
+        {
+            return tempCardValue;
+        }
+        else
+        {
+            return MovementCardValue;
+        }
     }
 
     public override void OnPointerClick(PointerEventData eventData)
@@ -108,7 +142,17 @@ public class MovementCard : Card
                     }
                     else
                     {
-                        GameplayManager.StartMove(MovementCardValue);
+                        if(tempCardValue > 0)
+                        {
+                            GameplayManager.StartMove(tempCardValue);
+                            tempCardValue = 0;
+                            movementValueText.text = movementCardValue.ToString();
+                        }
+                        else
+                        {
+                            GameplayManager.StartMove(MovementCardValue);
+                        }
+
                         GameplayManager.Players[indexOfCurrentPlayer].DiscardFromHand(ThisCardType, this);
                     }
 
