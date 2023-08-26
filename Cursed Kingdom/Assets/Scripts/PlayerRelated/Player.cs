@@ -14,7 +14,6 @@ public class Player : MonoBehaviour
 
     //Events
 
-    //Discard events
     public event Action<Player> TurnHasEnded;
     public event Action<Player> EffectCompleted;
     public event Action<Player> DoneDiscardingForEffect;
@@ -36,6 +35,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject supportCardsInHandHolderPanel;
     [SerializeField] private GameObject handDisplayPanel;
     [SerializeField] private Queue<SpaceEffectData> spaceEffectsToHandle;
+    [SerializeField] private List<SpaceEffectData> tempSpaceEffectsToHandle;
     [SerializeField] private bool isHandlingSpaceEffects;
     [SerializeField] private bool isMoving;
     [SerializeField] private bool isOnCooldown;
@@ -171,6 +171,7 @@ public class Player : MonoBehaviour
         CardsLeftToDiscard = 0;
         ValidCardTypesToDiscard = CardType.None;
         SpaceEffectsToHandle = new();
+        tempSpaceEffectsToHandle = new();
         isHandlingSpaceEffects = false;
         // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
@@ -212,6 +213,13 @@ public class Player : MonoBehaviour
 
         SetMovementCardsInHand();
         SetSupportCardsInHand();
+
+
+        //Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
+        if (IsCursed)
+        {
+            CurseEffect();
+        }
     }
 
     public void DrawCards(List<Card> cards)
@@ -530,7 +538,7 @@ public class Player : MonoBehaviour
     public virtual bool CanBeCursed()
     {
         bool canBeCursed = false;
-        if (IsPoisoned || IsCursed)
+        if ((IsPoisoned || IsCursed) && !WasAfflictedWithStatusThisTurn)
         {
             canBeCursed = false;
         }
@@ -550,7 +558,7 @@ public class Player : MonoBehaviour
     public virtual bool CanBePoisoned()
     {
         bool canBePoisoned = false;
-        if (IsPoisoned || IsCursed)
+        if ((IsPoisoned || IsCursed) && !WasAfflictedWithStatusThisTurn)
         {
             canBePoisoned = false;
         }
@@ -562,12 +570,20 @@ public class Player : MonoBehaviour
         return canBePoisoned;
     }
 
-    
+    public virtual void PoisonEffect()
+    {
+        PoisonEffectPriv();
+    }
 
-    public virtual void UpdateStatusEffectCount()
+    public virtual void CurseEffect()
+    {
+        CurseEffectPriv();
+    }
+
+    public virtual void UpdateStatusEffectCount(bool isEndOfTurn = true)
     {
         //Were just afflicted with the status. Don't do anything.
-        if(WasAfflictedWithStatusThisTurn)
+        if(WasAfflictedWithStatusThisTurn && isEndOfTurn)
         {
             WasAfflictedWithStatusThisTurn = false;
             return;
@@ -576,8 +592,19 @@ public class Player : MonoBehaviour
         if (IsCursed) 
         {
             CurseDuration -= 1;
+
             if(CurseDuration == 0)
             {
+                foreach (Card card in CardsInhand)
+                {
+                    MovementCard tempMovementCard = card as MovementCard;
+
+                    if (tempMovementCard != null)
+                    {
+                        tempMovementCard.ResetMovementValue();
+                    }
+                }
+
                 GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
                 IsCursed = false;
             }
@@ -585,12 +612,25 @@ public class Player : MonoBehaviour
 
         if (IsPoisoned)
         {
+            PoisonEffect();
             PoisonDuration -= 1;
             if (PoisonDuration == 0)
             {
                 GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
                 IsPoisoned = false;
             }
+        }
+    }
+
+    private void PoisonPlayerPriv(int numTurnsToPoison)
+    {
+        if (CanBePoisoned())
+        {
+            IsPoisoned = true;
+            PoisonDuration = numTurnsToPoison;
+            WasAfflictedWithStatusThisTurn = true;
+            GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+            //play animation of some sort...
         }
     }
 
@@ -606,15 +646,22 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void PoisonPlayerPriv(int numTurnsToPoison)
+    private void PoisonEffectPriv()
     {
-        if (CanBePoisoned())
+        TakeDamage(1);
+        //Play poison animation particle effect or something before player takes damage.
+    }
+
+    private void CurseEffectPriv()
+    {
+        foreach(Card card in CardsInhand)
         {
-            IsPoisoned = true;
-            PoisonDuration = numTurnsToPoison;
-            WasAfflictedWithStatusThisTurn = true;
-            GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
-            //play animation of some sort...
+            MovementCard tempMovementCard = card as MovementCard;
+
+            if (tempMovementCard != null) 
+            {
+                tempMovementCard.ChangeMovementValue(true);
+            }
         }
     }
 
@@ -696,18 +743,23 @@ public class Player : MonoBehaviour
         foreach (SpaceEffectData spaceEffect in spaceEffectsToHandle)
         {
             spaceEffect.SpaceEffectCompleted += ExecuteNextSpaceEffect;
+            tempSpaceEffectsToHandle.Add(spaceEffect);
         }
         ExecuteNextSpaceEffect();
     }
 
     public void FinishedHandlingSpaceEffects()
     {
-        foreach (SpaceEffectData spaceEffect in spaceEffectsToHandle)
+        
+        foreach(SpaceEffectData spaceEffect in tempSpaceEffectsToHandle)
         {
             spaceEffect.SpaceEffectCompleted -= ExecuteNextSpaceEffect;
         }
+
         spaceEffectsToHandle.Clear();
+        tempSpaceEffectsToHandle.Clear();
         IsHandlingSpaceEffects = false;
+
         if(!IsMoving)
         {
             TurnIsCompleted();
