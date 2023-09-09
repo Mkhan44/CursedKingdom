@@ -20,6 +20,10 @@ public class Player : MonoBehaviour
 
     //Events End
 
+    //Consts
+    [SerializeField] public const string NEGATIVEEFFECT = "NegativeEffect";
+    [SerializeField] public const string POSITIVEEFFECT = "PositiveEffect";
+
     //Properties
     [SerializeField] private int maxHealth;
     [SerializeField] private int currentHealth;
@@ -280,8 +284,9 @@ public class Player : MonoBehaviour
 
         if(CardsInhand.Count > MaxHandSize)
         {
-            GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
-            CardsLeftToDiscard = CardsInhand.Count - MaxHandSize;
+           // GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
+            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).");
+            SetCardsToDiscard(CardType.Both, CardsInhand.Count - MaxHandSize);
             result = true;
         }
         else
@@ -360,7 +365,7 @@ public class Player : MonoBehaviour
             insertedParams.Add(Tuple.Create<string, string, object>("Yes", "DiscardTheSelectedCards", this));
             insertedParams.Add(Tuple.Create<string, string, object>("No", "DeselectAllSelectedCards", this));
 
-            DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to discard these cards?", insertedParams);
+            DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to discard the selected card(s)?", insertedParams);
         }
     }
 
@@ -440,56 +445,6 @@ public class Player : MonoBehaviour
         SetSupportCardsInHand();
     }
 
-    public void DiscardCardToGetToMaxHandSize(Card.CardType cardType, Card cardToDiscard)
-    {
-
-        if (CardsLeftToDiscard > 0)
-        {
-            DiscardFromHand(cardType, cardToDiscard);
-            CardsLeftToDiscard -= 1;
-            if(CardsLeftToDiscard <= 0)
-            {
-                GameplayManagerRef.CloseDebugMessengerPanel();
-            }
-            else
-            {
-                GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} cards.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Trying to discard but handsize isn't above max amount!");
-        }
-
-        GameplayManagerRef.ThisDeckManager.IsDiscarding = false;
-    }
-
-    public void DiscardCardsToGetToMaxHandSize(Card.CardType cardType, List<Card> cardsToDiscard)
-    {
-        if(CardsLeftToDiscard > 0)
-        {
-            foreach(Card card in cardsToDiscard) 
-            {
-                DiscardFromHand(cardType, card);
-            }
-
-            CardsLeftToDiscard -= cardsToDiscard.Count;
-            if (CardsLeftToDiscard <= 0)
-            {
-                GameplayManagerRef.CloseDebugMessengerPanel();
-            }
-            else
-            {
-                GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} cards.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Trying to discard but handsize isn't above max amount!");
-        }
-
-        GameplayManagerRef.ThisDeckManager.IsDiscarding = false;
-    }
 
     public void SetMovementCardsInHand()
     {
@@ -760,7 +715,7 @@ public class Player : MonoBehaviour
         tempSpaceEffectsToHandle.Clear();
         IsHandlingSpaceEffects = false;
 
-        if(!IsMoving)
+        if(!IsMoving && !MaxHandSizeExceeded())
         {
             TurnIsCompleted();
         }
@@ -771,18 +726,14 @@ public class Player : MonoBehaviour
     {
         if(spaceEffectsToHandle.Count > 0)
         {
-            Debug.Log($"spaceEffectsToHandle Count before dequeing is: {spaceEffectsToHandle.Count}");
             SpaceEffectData spaceEffectDataToHandle;
             spaceEffectDataToHandle = spaceEffectsToHandle.Dequeue();
             spaceEffectDataToHandle.LandedOnEffect(this);
-            Debug.Log($"spaceEffectsToHandle Count after dequeing is: {spaceEffectsToHandle.Count}");
-           // Debug.Log($"Handling space effect: {spaceEffectDataToHandle.name}");
         }
         else
         {
             Debug.Log($"All space effects are done!");
             FinishedHandlingSpaceEffects();
-            //Space effects are done. Now trigger curse/poison if needed. Then end the turn.
         }
     }
 

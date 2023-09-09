@@ -136,25 +136,18 @@ public class MovementCard : Card
                 }
                 else
                 {
-                    if (GameplayManager.ThisDeckManager.IsDiscarding)
+                    if(tempCardValue > 0)
                     {
-                        GameplayManager.Players[indexOfCurrentPlayer].DiscardCardToGetToMaxHandSize(ThisCardType, this);
+                        GameplayManager.StartMove(tempCardValue);
+                        tempCardValue = 0;
+                        movementValueText.text = movementCardValue.ToString();
                     }
                     else
                     {
-                        if(tempCardValue > 0)
-                        {
-                            GameplayManager.StartMove(tempCardValue);
-                            tempCardValue = 0;
-                            movementValueText.text = movementCardValue.ToString();
-                        }
-                        else
-                        {
-                            GameplayManager.StartMove(MovementCardValue);
-                        }
-
-                        GameplayManager.Players[indexOfCurrentPlayer].DiscardFromHand(ThisCardType, this);
+                        GameplayManager.StartMove(MovementCardValue);
                     }
+
+                    GameplayManager.Players[indexOfCurrentPlayer].DiscardFromHand(ThisCardType, this);
 
                     GameplayManager.HandDisplayPanel.ShrinkHand();
                     transform.localScale = OriginalSize;

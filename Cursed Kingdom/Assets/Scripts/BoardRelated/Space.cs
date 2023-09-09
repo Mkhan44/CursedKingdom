@@ -18,8 +18,7 @@ public class Space : MonoBehaviour
         West,
     }
 
-    [SerializeField] private const string NEGATIVEEFFECT = "NegativeEffect";
-    [SerializeField] private const string POSITIVEEFFECT = "PositiveEffect";
+    
 
     public Transform spawnPoint;
     public GameObject selectedBorder;
@@ -197,12 +196,12 @@ public class Space : MonoBehaviour
         {
             if (spaceData.IsNegative)
             {
-                player.Animator.SetBool(NEGATIVEEFFECT, true);
+                player.Animator.SetBool(Player.NEGATIVEEFFECT, true);
                 Debug.LogWarning("NEGATIVE SPACE EFFECT");
             }
             else
             {
-                player.Animator.SetBool(POSITIVEEFFECT, true);
+                player.Animator.SetBool(Player.POSITIVEEFFECT, true);
                 Debug.LogWarning("POSITIVE SPACE EFFECT");
             }
         }
@@ -272,11 +271,11 @@ public class Space : MonoBehaviour
 
         if (spaceData.IsNegative)
         {
-            player.Animator.SetBool(NEGATIVEEFFECT, false);
+            player.Animator.SetBool(Player.NEGATIVEEFFECT, false);
         }
         else
         {
-            player.Animator.SetBool(POSITIVEEFFECT, false);
+            player.Animator.SetBool(Player.POSITIVEEFFECT, false);
         }
 
         player.ShowHand();

@@ -20,6 +20,8 @@ public class PlayerInfoDisplay : MonoBehaviour
     [SerializeField] private List<Image> hearts;
     [SerializeField] private Image curseImage;
     [SerializeField] private Image poisonImage;
+    [SerializeField] private TextMeshProUGUI curseTurnsText;
+    [SerializeField] private TextMeshProUGUI poisonTurnsText;
     [SerializeField] private TextMeshProUGUI cooldownText;
     [SerializeField] private GameObject heartPrefab;
 
@@ -40,6 +42,8 @@ public class PlayerInfoDisplay : MonoBehaviour
     public List<Image> Hearts { get => hearts; set => hearts = value; }
     public Player PlayerReference { get => playerReference; set => playerReference = value; }
     public Image CurseImage { get => curseImage; set => curseImage = value; }
+    public TextMeshProUGUI CurseTurnsText { get => curseTurnsText; set => curseTurnsText = value; }
+    public TextMeshProUGUI PoisonTurnsText { get => poisonTurnsText; set => poisonTurnsText = value; }
     public Image PoisonImage { get => poisonImage; set => poisonImage = value; }
     public TextMeshProUGUI CooldownText { get => cooldownText; set => cooldownText = value; }
     public GameObject HeartPrefab { get => heartPrefab; set => heartPrefab = value; }
@@ -54,6 +58,8 @@ public class PlayerInfoDisplay : MonoBehaviour
         PlayerSupportCardsInHandText.text = playerRef.SupportCardsInHand.ToString();
         PlayerPortraitImage.sprite = playerRef.ClassData.defaultPortraitImage;
         CooldownText.text = string.Empty;
+        CurseTurnsText.text = string.Empty;
+        PoisonTurnsText.text = string.Empty;
         CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
         PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
 
@@ -93,11 +99,13 @@ public class PlayerInfoDisplay : MonoBehaviour
             {
                 CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 100f);
                 PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
+                CurseTurnsText.text = PlayerReference.CurseDuration.ToString();
             }
             else
             {
                 CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
                 PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
+                CurseTurnsText.text = string.Empty;
             }
             
             return;
@@ -109,11 +117,13 @@ public class PlayerInfoDisplay : MonoBehaviour
             {
                 PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 100f);
                 CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
+                PoisonTurnsText.text = PlayerReference.PoisonDuration.ToString();
             }
             else
             {
                 PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
                 CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
+                PoisonTurnsText.text = string.Empty;
             }
           
             return;
