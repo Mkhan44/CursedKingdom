@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.TextCore;
 
 public class Space : MonoBehaviour
 {
@@ -97,7 +98,7 @@ public class Space : MonoBehaviour
                // Debug.Log($"Player landed on space: {spaceData.spaceName}");
                 ApplySpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
-                gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this);
+                gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
                 //playerReference.DebugTheSpace();
             }
         }
@@ -116,7 +117,6 @@ public class Space : MonoBehaviour
             if (playerReference.PreviousSpacePlayerWasOn is null)
             {
                 playerReference.PreviousSpacePlayerWasOn = this;
-              //  Debug.Log($"Previous space was null, assigning current space as previous space.");
             }
             playerReference.CurrentSpacePlayerIsOn = this;
             if(this.spaceData.PassingOverSpaceEffect && playerReference.IsMoving)
@@ -141,8 +141,7 @@ public class Space : MonoBehaviour
                // Debug.Log($"Player landed on space: {spaceData.spaceName}");
                 ApplySpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
-                gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this);
-                //playerReference.DebugTheSpace();
+                gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
             }
         }
         else
