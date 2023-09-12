@@ -268,6 +268,13 @@ public class Player : MonoBehaviour
 
         MovementCardsInHandHolderPanel.SetActive(true);
         SupportCardsInHandHolderPanel.SetActive(true);
+
+        //For Curse animation on cards.
+        if (IsCursed)
+        {
+            CurseEffect();
+        }
+
     }
 
     public void HideHand()
@@ -557,6 +564,7 @@ public class Player : MonoBehaviour
                     if (tempMovementCard != null)
                     {
                         tempMovementCard.ResetMovementValue();
+                        tempMovementCard.DeactivateCurseEffect();
                     }
                 }
 
@@ -616,6 +624,7 @@ public class Player : MonoBehaviour
             if (tempMovementCard != null) 
             {
                 tempMovementCard.ChangeMovementValue(true);
+                tempMovementCard.ActivateCurseEffect();
             }
         }
     }

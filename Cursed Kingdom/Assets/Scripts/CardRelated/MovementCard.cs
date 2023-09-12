@@ -53,8 +53,12 @@ public class MovementCard : Card
 
         if(halfTheValue)
         {
-            tempCardValue = Mathf.CeilToInt(MovementCardValue / 2);
-            movementValueText.text = tempCardValue.ToString();
+            if(MovementCardValue != 1)
+            {
+                tempCardValue = Mathf.CeilToInt(MovementCardValue / 2);
+                movementValueText.text = tempCardValue.ToString();
+            }
+
             return;
         }
 
@@ -139,8 +143,11 @@ public class MovementCard : Card
                     if(tempCardValue > 0)
                     {
                         GameplayManager.StartMove(tempCardValue);
-                        tempCardValue = 0;
-                        movementValueText.text = movementCardValue.ToString();
+                        ResetMovementValue();
+                        if(!GameplayManager.Players[indexOfCurrentPlayer].IsCursed)
+                        {
+                            DeactivateCurseEffect();
+                        }
                     }
                     else
                     {
@@ -167,4 +174,17 @@ public class MovementCard : Card
         }
         return isValid;
     }
+
+    #region Status Effects
+    public override void ActivateCurseEffect()
+    {
+        TextureAnimator.SetBool(isCursed, true);
+    }
+
+    public override void DeactivateCurseEffect()
+    {
+        TextureAnimator.SetBool(isCursed, false);
+    }
+
+    #endregion
 }

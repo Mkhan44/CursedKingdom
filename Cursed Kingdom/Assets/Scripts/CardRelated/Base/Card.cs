@@ -11,6 +11,9 @@ using UnityEngine.UI;
 public class Card : MonoBehaviour , IPointerClickHandler
 {
     protected const string hidden = "IsHidden";
+
+    //Animation string parameters
+    protected const string isCursed = "isCursed";
     public enum CardType 
     {
         Movement,
@@ -27,6 +30,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
     [SerializeField] private GameplayManager gameplayManager;
     [SerializeField] private Image backgroundSelectedGlow;
     [SerializeField] private Animator parentAnimator;
+    [SerializeField] private Animator textureAnimator;
 
     [SerializeField] private bool cardIsSelected;
     [SerializeField] private bool selectedForDiscard;
@@ -41,6 +45,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
     public Button ClickableAreaButton { get => clickableAreaButton; set => clickableAreaButton = value; }
     public Image BackgroundSelectedGlow { get => backgroundSelectedGlow; set => backgroundSelectedGlow = value; }
     public Animator ParentAnimator { get => parentAnimator; set => parentAnimator = value; }
+    public Animator TextureAnimator { get => textureAnimator; set => textureAnimator = value; }
     public bool CardIsSelected { get => cardIsSelected; set => cardIsSelected = value; }
     public bool SelectedForDiscard { get => selectedForDiscard; set => selectedForDiscard = value; }
     public GameplayManager GameplayManager { get => gameplayManager; set => gameplayManager = value; }
@@ -151,6 +156,19 @@ public class Card : MonoBehaviour , IPointerClickHandler
         }
         yield return null;
     }
+
+    #region Status Effects
+    public virtual void ActivateCurseEffect()
+    {
+        
+    }
+
+    public virtual void DeactivateCurseEffect()
+    {
+
+    }
+
+    #endregion
 
     public virtual void OnPointerClick(PointerEventData eventData)
     {
