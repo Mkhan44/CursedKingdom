@@ -535,6 +535,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5159184796897898715 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4355792334435015625, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
+  m_PrefabInstance: {fileID: 8929504671365573394}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &4179026387483826834
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5159184796897898715}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5d5c92ad1cabee04dab4af42e37bd39d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &6468020530379724207 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2461497947193884349, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
@@ -556,7 +581,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2254910237170926910, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
   m_PrefabInstance: {fileID: 8929504671365573394}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 5159184796897898715}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -605,4 +630,5 @@ MonoBehaviour:
   originalBackgroundGlowColor: {r: 0, g: 0, b: 0, a: 0}
   movementCardData: {fileID: 0}
   movementCardValue: 0
+  tempCardValue: 0
   movementValueText: {fileID: 425628439522279369}
