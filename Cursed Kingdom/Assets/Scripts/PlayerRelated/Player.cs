@@ -5,7 +5,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using static Card;
 
 public class Player : MonoBehaviour
@@ -39,6 +41,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject supportCardsInHandHolderPanel;
     [SerializeField] private GameObject handDisplayPanel;
     [SerializeField] private Queue<SpaceEffectData> spaceEffectsToHandle;
+    [SerializeField] private SpaceEffectData currentSpaceEffectDataToHandle;
     [SerializeField] private List<SpaceEffectData> tempSpaceEffectsToHandle;
     [SerializeField] private bool isHandlingSpaceEffects;
     [SerializeField] private bool isMoving;
@@ -206,6 +209,74 @@ public class Player : MonoBehaviour
         GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
     }
 
+    #region AttackPlayers
+    public void ActivatePlayerToAttackSelectionPopup(int numPlayersToChoose, int damageToGive)
+    {
+        List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+        
+
+        foreach (Player player in GameplayManagerRef.Players)
+        {
+            if(!player.IsDefeated && player != this)
+            {
+                List<object> paramsList = new();
+                paramsList.Add(player);
+                paramsList.Add(damageToGive);
+                insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToAttack), this, paramsList));
+            }
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams);
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SelectPlayerToAttack(List<object> objects)
+    {
+        yield return null;
+        Player playerTarget = objects[0] as Player;
+        int damageToTake = (int)objects[1];
+
+        if (playerTarget != null)
+        {
+            if(damageToTake > 0)
+            {
+                playerTarget.TakeDamage(damageToTake);
+                Debug.Log($"Calling the method to attack the player. Player {playerTarget} will take {damageToTake} Damage!");
+            }
+        }
+        else
+        {
+            Debug.Log($"Calling the method to attack the player but don't have a target...");
+        }
+        
+        if(currentSpaceEffectDataToHandle != null)
+        {
+            
+        }
+    }
+    public void AttackPlayer()
+    {
+
+    }
+
+    public void AttackAllOtherPlayers(int damageToGive)
+    {
+        foreach(Player player in GameplayManagerRef.Players)
+        {
+            if (!player.IsDefeated && player != this)
+            {
+                //Will need a way to queue up death scene if a player in this chain of events is dealt a killing blow from this attack.
+                player.TakeDamage(damageToGive);
+            }
+        }
+        //Put some dialogue box here for now to showcase that we've attacked all other players. Will need a log entry + animation here.
+    }
+    #endregion
+
+    #region CardsInHandMethods
     public void DrawCard(Card card)
     {
         CardsInhand.Add(card);
@@ -294,6 +365,8 @@ public class Player : MonoBehaviour
            // GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
             DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).");
             SetCardsToDiscard(CardType.Both, CardsInhand.Count - MaxHandSize);
+            HideHand();
+            ShowHand();
             result = true;
         }
         else
@@ -369,8 +442,8 @@ public class Player : MonoBehaviour
         if( CardsLeftToDiscard == 0)
         {
             List<Tuple<string, string, object>> insertedParams = new();
-            insertedParams.Add(Tuple.Create<string, string, object>("Yes", "DiscardTheSelectedCards", this));
-            insertedParams.Add(Tuple.Create<string, string, object>("No", "DeselectAllSelectedCards", this));
+            insertedParams.Add(Tuple.Create<string, string, object>("Yes", nameof(DiscardTheSelectedCards), this));
+            insertedParams.Add(Tuple.Create<string, string, object>("No", nameof(DeselectAllSelectedCards), this));
 
             DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to discard the selected card(s)?", insertedParams);
         }
@@ -379,8 +452,10 @@ public class Player : MonoBehaviour
     /// <summary>
     /// If the user decides to reselect cards that is what this option is for.
     /// </summary>
-    public void DeselectAllSelectedCards()
+    public IEnumerator DeselectAllSelectedCards()
     {
+        yield return null;
+
         foreach (Card card in CardsInhand)
         {
             if (card.SelectedForDiscard)
@@ -399,13 +474,26 @@ public class Player : MonoBehaviour
         }
         else
         {
-            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} Movement and/or Support cards to discard.");
+            if(MaxHandSizeExceeded())
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).");
+            }
+            else
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} Movement and/or Support cards to discard.");
+            }
+            
         }
+        
         
     }
 
-    public void DiscardTheSelectedCards()
+    public IEnumerator DiscardTheSelectedCards()
     {
+        yield return null;
+
+        bool discardingDueToMaxHand = MaxHandSizeExceeded();
+
         List<Card> cardsToDiscard = new();
 
         foreach(Card card in CardsInhand)
@@ -425,7 +513,14 @@ public class Player : MonoBehaviour
             cardsToDiscard.RemoveAt(0);
         }
 
-        CompletedDiscardingForEffect();
+        if(discardingDueToMaxHand && !IsHandlingSpaceEffects)
+        {
+            TurnIsCompleted();
+        }
+        else
+        {
+            CompletedDiscardingForEffect();
+        }
     }
 
     public void DiscardFromHand(Card.CardType cardType , Card cardToDiscard)
@@ -489,6 +584,8 @@ public class Player : MonoBehaviour
             GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
         }
     }
+
+    #endregion
 
     #region StatusEffects
 
@@ -722,6 +819,7 @@ public class Player : MonoBehaviour
 
         spaceEffectsToHandle.Clear();
         tempSpaceEffectsToHandle.Clear();
+        currentSpaceEffectDataToHandle = null;
         IsHandlingSpaceEffects = false;
 
         if(!IsMoving && !MaxHandSizeExceeded())
@@ -735,9 +833,8 @@ public class Player : MonoBehaviour
     {
         if(spaceEffectsToHandle.Count > 0)
         {
-            SpaceEffectData spaceEffectDataToHandle;
-            spaceEffectDataToHandle = spaceEffectsToHandle.Dequeue();
-            spaceEffectDataToHandle.LandedOnEffect(this);
+            currentSpaceEffectDataToHandle = spaceEffectsToHandle.Dequeue();
+            currentSpaceEffectDataToHandle.LandedOnEffect(this);
         }
         else
         {
