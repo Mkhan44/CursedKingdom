@@ -22,7 +22,7 @@ public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
 
         if(playerReference.CheckIfEnoughCardsToDiscard(CardTypeToDiscard, NumToDiscard))
         {
-            playerReference.DoneDiscardingForEffect += PlayerDoneDiscarding;
+            playerReference.DoneDiscardingForEffect += CompletedEffect;
             playerReference.SetCardsToDiscard(CardTypeToDiscard, NumToDiscard);
             if(CardTypeToDiscard != Card.CardType.Both)
             {
@@ -42,10 +42,10 @@ public class DiscardCardSpace : SpaceEffectData, ISpaceEffect
         Debug.Log($"Landed on: {this.name} space and should discard: {NumToDiscard} {CardTypeToDiscard} card(s)");
     }
 
-    private void PlayerDoneDiscarding(Player player)
+    public override void CompletedEffect(Player playerReference)
     {
-        player.DoneDiscardingForEffect -= PlayerDoneDiscarding;
-        base.CompletedEffect();
+        playerReference.DoneDiscardingForEffect -= CompletedEffect;
+        base.CompletedEffect(playerReference);
     }
 
     public override void StartOfTurnEffect(Player playerReference)

@@ -86,7 +86,7 @@ public class DialogueBoxPopup : MonoBehaviour
 
     /// <summary>
     /// A method that displays a popup with image options. For the image setup each item in the list: 
-    /// The SPRITE used for the image, METHOD NAME you want to call and OBJECT you are calling this from need to be populated respectively.
+    /// The SPRITE used for the image, METHOD NAME you want to call which *MUST BE A COROUTINE* and OBJECT you are calling this from need to be populated respectively.
     /// </summary>
     /// <param name="textToDisplay"></param>
     /// <param name="imageSetupParams">A tuple where for each item in the list: T1 = The image sprite to click on, T2 = the method name you want to call, and T3 is the object from which this popup is being called from
@@ -131,7 +131,7 @@ public class DialogueBoxPopup : MonoBehaviour
     }
     /// <summary>
     /// A method that displays a popup with button options. For the button setup each item in the list: 
-    /// The TEXT on the button, METHOD NAME you want to call, and OBJECT you are calling this from need to be populated respectively.
+    /// The TEXT on the button, METHOD NAME you want to call which *MUST BE A COROUTINE* and OBJECT you are calling this from need to be populated respectively.
     /// </summary>
     /// <param name="textToDisplay"></param>
     /// <param name="buttonSetupParams">A tuple where for each item in the list: T1 = The text on the button, T2 = the method name you want to call, and T3 is the object from which this popup is being called from.</param>

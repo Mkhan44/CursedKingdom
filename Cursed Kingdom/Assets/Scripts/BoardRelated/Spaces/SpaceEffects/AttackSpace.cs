@@ -25,12 +25,14 @@ public class AttackSpace : SpaceEffectData, ISpaceEffect
     {
         if(AttackAllPlayers)
         {
+            playerReference.DoneAttackingForEffect += CompletedEffect;
             playerReference.AttackAllOtherPlayers(DamageToGive);
             return;
         }
 
         if(OpponentsCanBeChosen)
         {
+            playerReference.DoneAttackingForEffect += CompletedEffect;
             playerReference.ActivatePlayerToAttackSelectionPopup(NumPlayersToAttack, DamageToGive);
         }
 
@@ -45,6 +47,12 @@ public class AttackSpace : SpaceEffectData, ISpaceEffect
     public override void EndOfTurnEffect(Player playerReference)
     {
         base.EndOfTurnEffect(playerReference);
+    }
+
+    public override void CompletedEffect(Player playerReference)
+    {
+        playerReference.DoneAttackingForEffect -= CompletedEffect;
+        base.CompletedEffect(playerReference);
     }
 
     protected override void UpdateEffectDescription()

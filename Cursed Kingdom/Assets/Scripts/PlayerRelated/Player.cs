@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,8 @@ public class Player : MonoBehaviour
     public event Action<Player> TurnHasEnded;
     public event Action<Player> EffectCompleted;
     public event Action<Player> DoneDiscardingForEffect;
+    public event Action<Player> DoneAttackingForEffect;
+    public event Action<Player> DoneDrawingCard;
 
     //Events End
 
@@ -252,14 +255,10 @@ public class Player : MonoBehaviour
             Debug.Log($"Calling the method to attack the player but don't have a target...");
         }
         
-        if(currentSpaceEffectDataToHandle != null)
+        if(IsHandlingSpaceEffects)
         {
-            
+            CompletedAttackingEffect();
         }
-    }
-    public void AttackPlayer()
-    {
-
     }
 
     public void AttackAllOtherPlayers(int damageToGive)
@@ -273,10 +272,57 @@ public class Player : MonoBehaviour
             }
         }
         //Put some dialogue box here for now to showcase that we've attacked all other players. Will need a log entry + animation here.
+
+        if (IsHandlingSpaceEffects)
+        {
+            CompletedAttackingEffect();
+        }
     }
     #endregion
 
     #region CardsInHandMethods
+
+   
+    public void SelectCardTypeToDrawPopup(int numCardsToDraw)
+    {
+        List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+
+        List<object> movementParamsList = new();
+
+        CardType movementType = CardType.Movement;
+        movementParamsList.Add(movementType);
+        movementParamsList.Add(numCardsToDraw);
+        insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(Resources.Load<Sprite>("CardArtwork/CardBacksFullArtwork/Movementbackfull"), nameof(SelectCardToDraw), this, movementParamsList));
+
+        List<object> supportParamsList = new();
+
+        CardType supportType = CardType.Support;
+        supportParamsList.Add(supportType);
+        supportParamsList.Add(numCardsToDraw);
+        insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(Resources.Load<Sprite>("CardArtwork/CardBacksFullArtwork/Supportbackfull"), nameof(SelectCardToDraw), this, supportParamsList));
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Select which deck you would like to draw {numCardsToDraw} card(s) from.", insertedParams);
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Card.CardType typeOfCard, int cardsToDraw.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SelectCardToDraw(List<object> objects)
+    {
+        yield return null;
+        CardType cardType = (CardType)objects[0];
+        int numCardsToDraw = (int)objects[1];
+
+        if(numCardsToDraw > 1)
+        {
+            GameplayManagerRef.ThisDeckManager.DrawCards(cardType, this, numCardsToDraw);
+        }
+        else
+        {
+            GameplayManagerRef.ThisDeckManager.DrawCard(cardType, this);
+        }
+    }
     public void DrawCard(Card card)
     {
         CardsInhand.Add(card);
@@ -295,6 +341,7 @@ public class Player : MonoBehaviour
         {
             CurseEffect();
         }
+
     }
 
     public void DrawCards(List<Card> cards)
@@ -311,13 +358,12 @@ public class Player : MonoBehaviour
 
         SetMovementCardsInHand();
         SetSupportCardsInHand();
-
     }
 
     //Shows this player's hand on screen.
     public void ShowHand()
     {
-        foreach(Card card in CardsInhand)
+        foreach (Card card in CardsInhand)
         {
             if(card.ThisCardType == Card.CardType.Movement)
             {
@@ -845,14 +891,24 @@ public class Player : MonoBehaviour
 
     //Event triggers
 
-    private void TurnIsCompleted()
+    public void TurnIsCompleted()
     {
         TurnHasEnded?.Invoke(this);
     }
 
-    private void CompletedDiscardingForEffect()
+    public void CompletedAttackingEffect()
+    {
+        DoneAttackingForEffect?.Invoke(this);
+    }
+
+    public void CompletedDiscardingForEffect()
     {
         DoneDiscardingForEffect?.Invoke(this);
+    }
+
+    public void CompletedDrawingForEffect()
+    {
+        DoneDrawingCard?.Invoke(this);
     }
     
     #endregion

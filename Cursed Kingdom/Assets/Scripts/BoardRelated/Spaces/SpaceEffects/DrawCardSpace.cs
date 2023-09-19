@@ -25,18 +25,19 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
         if(CardTypeToDraw == Card.CardType.Movement)
         {
             playerReference.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Movement, playerReference, NumToDraw);
+            CompletedEffect(playerReference);
         }
         else if(CardTypeToDraw == Card.CardType.Support)
         {
             playerReference.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Support, playerReference, NumToDraw);
+            CompletedEffect(playerReference);
         }
-        else
+        else if(CardTypeToDraw == Card.CardType.Both)
         {
-            ChooseCardToDraw(playerReference);
-            //Dialouge box to pick which card.
+            Debug.Log("TRYING TO DRAW 2 CARDS");
+            playerReference.DoneDrawingCard += CompletedEffect;
+            playerReference.SelectCardTypeToDrawPopup(NumToDraw);
         }
-
-        base.LandedOnEffect(playerReference);
 
 
         Debug.Log($"Landed on: {this.name} space and should draw: {NumToDraw} {CardTypeToDraw} card(s)");
@@ -50,6 +51,12 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
     public override void EndOfTurnEffect(Player playerReference)
     {
         base.EndOfTurnEffect(playerReference);
+    }
+
+    public override void CompletedEffect(Player playerReference)
+    {
+        playerReference.DoneDrawingCard -= CompletedEffect;
+        base.CompletedEffect(playerReference);
     }
 
     protected override void UpdateEffectDescription()
@@ -73,8 +80,4 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
         UpdateEffectDescription();
     }
 
-    private void ChooseCardToDraw(Player playerReference)
-    {
-        
-    }
 }
