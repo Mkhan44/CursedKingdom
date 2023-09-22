@@ -43,10 +43,18 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject movementCardsInHandHolderPanel;
     [SerializeField] private GameObject supportCardsInHandHolderPanel;
     [SerializeField] private GameObject handDisplayPanel;
+
+    //Effect handling
     [SerializeField] private Queue<SpaceEffectData> spaceEffectsToHandle;
     [SerializeField] private SpaceEffectData currentSpaceEffectDataToHandle;
     [SerializeField] private List<SpaceEffectData> tempSpaceEffectsToHandle;
     [SerializeField] private bool isHandlingSpaceEffects;
+
+    [SerializeField] private Queue<SupportCardEffectData> supportCardEffectsToHandle;
+    [SerializeField] private SupportCardEffectData currentSupportCardEffectTohandle;
+    [SerializeField] private List<SupportCardEffectData> tempSupportCardEffectsToHandle;
+    [SerializeField] private bool isHandlingSupportCardEffects;
+
     [SerializeField] private bool isMoving;
     [SerializeField] private bool isOnCooldown;
     [SerializeField] private bool isPoisoned;
@@ -84,6 +92,8 @@ public class Player : MonoBehaviour
     public GameObject HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
     public Queue<SpaceEffectData> SpaceEffectsToHandle { get => spaceEffectsToHandle; set => spaceEffectsToHandle = value; }
     public bool IsHandlingSpaceEffects { get => isHandlingSpaceEffects; set => isHandlingSpaceEffects = value; }
+    public Queue<SupportCardEffectData> SupportCardEffectsToHandle { get => supportCardEffectsToHandle; set => supportCardEffectsToHandle = value; }
+    public bool IsHandlingSupportCardEffects { get => isHandlingSupportCardEffects; set => isHandlingSupportCardEffects = value; }
     public bool IsMoving { get => isMoving; set => isMoving = value; }
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
@@ -151,6 +161,7 @@ public class Player : MonoBehaviour
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
     public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
     public Animator Animator { get => animator; set => animator = value; }
+   
 
     public void InitializePlayer(ClassData data)
     {
@@ -255,7 +266,7 @@ public class Player : MonoBehaviour
             Debug.Log($"Calling the method to attack the player but don't have a target...");
         }
         
-        if(IsHandlingSpaceEffects)
+        if(IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
         {
             CompletedAttackingEffect();
         }
@@ -273,7 +284,7 @@ public class Player : MonoBehaviour
         }
         //Put some dialogue box here for now to showcase that we've attacked all other players. Will need a log entry + animation here.
 
-        if (IsHandlingSpaceEffects)
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
         {
             CompletedAttackingEffect();
         }
@@ -844,6 +855,7 @@ public class Player : MonoBehaviour
 
     #region TurnRelated
 
+    #region Space Effects
     public void StartHandlingSpaceEffects()
     {
         IsHandlingSpaceEffects = true;
@@ -872,7 +884,6 @@ public class Player : MonoBehaviour
         {
             TurnIsCompleted();
         }
-        
     }
 
     private void ExecuteNextSpaceEffect()
@@ -884,10 +895,54 @@ public class Player : MonoBehaviour
         }
         else
         {
-            Debug.Log($"All space effects are done!");
             FinishedHandlingSpaceEffects();
         }
     }
+    #endregion
+
+    #region SupportCardEffectHandlers
+    public void StartHandlingSupportCardEffects()
+    {
+        IsHandlingSupportCardEffects = true;
+
+        foreach (SupportCardEffectData supportCardEffect in supportCardEffectsToHandle)
+        {
+            supportCardEffect.SupportCardEffectCompleted += ExecuteNextSupportCardEffect;
+            tempSupportCardEffectsToHandle.Add(supportCardEffect);
+        }
+        ExecuteNextSupportCardEffect();
+    }
+
+    public void FinishedHandlingSupportCardEffects()
+    {
+
+        foreach (SupportCardEffectData supportCardEffect in tempSupportCardEffectsToHandle)
+        {
+            supportCardEffect.SupportCardEffectCompleted -= ExecuteNextSupportCardEffect;
+        }
+
+        SupportCardEffectsToHandle.Clear();
+        tempSupportCardEffectsToHandle.Clear();
+        currentSupportCardEffectTohandle = null;
+        IsHandlingSupportCardEffects = false;
+
+        //We'll need to up the counter of the amount of Support cards the user has used this turn here.
+    }
+
+    private void ExecuteNextSupportCardEffect()
+    {
+        if (supportCardEffectsToHandle.Count > 0)
+        {
+            currentSupportCardEffectTohandle = supportCardEffectsToHandle.Dequeue();
+            currentSupportCardEffectTohandle.EffectOfCard(this);
+        }
+        else
+        {
+            FinishedHandlingSupportCardEffects();
+        }
+    }
+
+    #endregion
 
     //Event triggers
 

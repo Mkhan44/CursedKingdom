@@ -22,6 +22,7 @@ public class DialogueBoxPopup : MonoBehaviour
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private GameObject imagePrefab;
     [SerializeField] private bool isActive;
+    [SerializeField] private Coroutine delayCoroutine;
     [SerializeField] private List<Button> buttonOptions;
 
     public GameObject ButtonLayoutParent { get => buttonLayoutParent; set => buttonLayoutParent = value; }
@@ -36,6 +37,7 @@ public class DialogueBoxPopup : MonoBehaviour
         buttonOptions = new();
         numOptionsSelected = 0;
         maxNumOptionsToSelect = 0;
+        delayCoroutine = null;
         instance = this;
     }
 
@@ -43,7 +45,7 @@ public class DialogueBoxPopup : MonoBehaviour
     /// A popup with just text that stays up until the user completes the action needed.
     /// </summary>
     /// <param name="textToDisplay"></param>
-    public void ActivatePopupWithJustText(string textToDisplay)
+    public void ActivatePopupWithJustText(string textToDisplay, float numSecondsToStayActive = 0)
     {
         if (isActive)
         {
@@ -57,7 +59,21 @@ public class DialogueBoxPopup : MonoBehaviour
         blockerPanel.SetActive(true);
         blockerPanelImage.raycastTarget = false;
         isActive = true;
+        if(numSecondsToStayActive > 0)
+        {
+            delayCoroutine = StartCoroutine(DeactivateAfterWaiting(numSecondsToStayActive));
+        }
         //Need a way to call Deactivate and also the action afterwards.
+    }
+
+    public IEnumerator DeactivateAfterWaiting(float numSecondsToWait)
+    {
+        yield return new WaitForSeconds(numSecondsToWait);
+
+        if(delayCoroutine != null)
+        {
+            DeactivatePopup();
+        }
     }
 
     /// <summary>
@@ -179,6 +195,7 @@ public class DialogueBoxPopup : MonoBehaviour
 
     public void DeactivatePopup()
     {
+        delayCoroutine = null;
         numOptionsSelected = 0;
         maxNumOptionsToSelect = 0;
         ImageLayoutParent.SetActive(true);

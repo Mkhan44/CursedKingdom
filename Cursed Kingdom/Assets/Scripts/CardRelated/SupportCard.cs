@@ -100,7 +100,12 @@ public class SupportCard : Card
                 }
                 else
                 {
-                    
+                    bool canCostBePaid = false;
+                    ApplySupportCardEffects(GameplayManager.Players[indexOfCurrentPlayer], out canCostBePaid);
+                    if (!canCostBePaid)
+                    {
+                        return;
+                    }
                     GameplayManager.Players[indexOfCurrentPlayer].DiscardFromHand(ThisCardType, this);
                     GameplayManager.HandDisplayPanel.ShrinkHand();
                     transform.localScale = OriginalSize;
@@ -119,6 +124,81 @@ public class SupportCard : Card
             isValid = true;
         }
         return isValid;
+    }
+
+    private void ApplySupportCardEffects(Player player, out bool canAllCostsBePaid)
+    {
+        canAllCostsBePaid = false;
+        //For debug mode.
+        SupportCardData cachedSupportCardData = SupportCardData;
+
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            SupportCard tempSupportCard = DebugModeSingleton.instance.OverrideSupportCardUseEffect();
+
+            if (tempSupportCard != null)
+            {
+                SupportCardData = tempSupportCard.SupportCardData;
+            }
+
+        }
+
+        if (SupportCardData.supportCardEffects.Count < 1)
+        {
+            Debug.LogWarning("Hey, no support effects on this card currently!");
+        }
+
+
+
+        
+        for (int i = 0; i < SupportCardData.supportCardEffects.Count; i++)
+        {
+            if (SupportCardData.supportCardEffects[i].supportCardEffectData.IsACost)
+            {
+                if (!SupportCardData.supportCardEffects[i].supportCardEffectData.CanCostBePaid(player))
+                {
+                    Debug.LogWarning($"Cost of {SupportCardData.supportCardEffects[i].supportCardEffectData.name} can't be paid. Can't execute space effects.");
+                    DialogueBoxPopup.instance.ActivatePopupWithJustText($"Cost of {SupportCardData.supportCardEffects[i].supportCardEffectData.name} can't be paid.", 2.0f);
+                    canAllCostsBePaid = false;
+                    break;
+                }
+                else
+                {
+                    canAllCostsBePaid = true;
+                }
+            }
+            else
+            {
+                canAllCostsBePaid = true;
+            }
+        }
+
+        if (canAllCostsBePaid)
+        {
+            Queue<SupportCardEffectData> supportCardEffectsForPlayerToHandle = new();
+            int numSupportCardEffectData;
+            for (int j = 0; j < SupportCardData.supportCardEffects.Count; j++)
+            {
+                //Do the support card effects in sequence. We'll check for any external triggers here as well.
+                if (player.IsDefeated)
+                {
+                    break;
+                }
+                //This is too fast. Need a way to wait for each effect then go to the next.
+                numSupportCardEffectData = j;
+                supportCardEffectsForPlayerToHandle.Enqueue(SupportCardData.supportCardEffects[numSupportCardEffectData].supportCardEffectData);
+            }
+            //Whatever we already had from passing over effects + the new effects.
+            player.SupportCardEffectsToHandle = supportCardEffectsForPlayerToHandle;
+            player.StartHandlingSupportCardEffects();
+        }
+
+
+        //Revert the space data back if we used debug to change it.
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            SupportCardData = cachedSupportCardData;
+        }
     }
 }
 
