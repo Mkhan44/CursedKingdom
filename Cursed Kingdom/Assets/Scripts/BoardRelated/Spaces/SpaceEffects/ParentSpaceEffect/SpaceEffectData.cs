@@ -34,7 +34,7 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     public virtual void LandedOnEffect(Player playerReference)
     {
         //Usually called after the effect has been completed.
-        CompletedEffect();
+        CompletedEffect(playerReference);
     }
 
     public virtual void StartOfTurnEffect(Player playerReference)
@@ -51,7 +51,7 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
         return true;
     }
 
-    public virtual void CompletedEffect()
+    public virtual void CompletedEffect(Player playerReference)
     {
         SpaceEffectCompleted?.Invoke();
     }

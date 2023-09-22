@@ -5,7 +5,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using static Card;
 
 public class Player : MonoBehaviour
@@ -17,6 +20,8 @@ public class Player : MonoBehaviour
     public event Action<Player> TurnHasEnded;
     public event Action<Player> EffectCompleted;
     public event Action<Player> DoneDiscardingForEffect;
+    public event Action<Player> DoneAttackingForEffect;
+    public event Action<Player> DoneDrawingCard;
 
     //Events End
 
@@ -38,9 +43,18 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject movementCardsInHandHolderPanel;
     [SerializeField] private GameObject supportCardsInHandHolderPanel;
     [SerializeField] private GameObject handDisplayPanel;
+
+    //Effect handling
     [SerializeField] private Queue<SpaceEffectData> spaceEffectsToHandle;
+    [SerializeField] private SpaceEffectData currentSpaceEffectDataToHandle;
     [SerializeField] private List<SpaceEffectData> tempSpaceEffectsToHandle;
     [SerializeField] private bool isHandlingSpaceEffects;
+
+    [SerializeField] private Queue<SupportCardEffectData> supportCardEffectsToHandle;
+    [SerializeField] private SupportCardEffectData currentSupportCardEffectTohandle;
+    [SerializeField] private List<SupportCardEffectData> tempSupportCardEffectsToHandle;
+    [SerializeField] private bool isHandlingSupportCardEffects;
+
     [SerializeField] private bool isMoving;
     [SerializeField] private bool isOnCooldown;
     [SerializeField] private bool isPoisoned;
@@ -78,6 +92,8 @@ public class Player : MonoBehaviour
     public GameObject HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
     public Queue<SpaceEffectData> SpaceEffectsToHandle { get => spaceEffectsToHandle; set => spaceEffectsToHandle = value; }
     public bool IsHandlingSpaceEffects { get => isHandlingSpaceEffects; set => isHandlingSpaceEffects = value; }
+    public Queue<SupportCardEffectData> SupportCardEffectsToHandle { get => supportCardEffectsToHandle; set => supportCardEffectsToHandle = value; }
+    public bool IsHandlingSupportCardEffects { get => isHandlingSupportCardEffects; set => isHandlingSupportCardEffects = value; }
     public bool IsMoving { get => isMoving; set => isMoving = value; }
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
@@ -145,6 +161,7 @@ public class Player : MonoBehaviour
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
     public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
     public Animator Animator { get => animator; set => animator = value; }
+   
 
     public void InitializePlayer(ClassData data)
     {
@@ -206,6 +223,117 @@ public class Player : MonoBehaviour
         GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
     }
 
+    #region AttackPlayers
+    public void ActivatePlayerToAttackSelectionPopup(int numPlayersToChoose, int damageToGive)
+    {
+        List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+        
+
+        foreach (Player player in GameplayManagerRef.Players)
+        {
+            if(!player.IsDefeated && player != this)
+            {
+                List<object> paramsList = new();
+                paramsList.Add(player);
+                paramsList.Add(damageToGive);
+                insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToAttack), this, paramsList));
+            }
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams);
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SelectPlayerToAttack(List<object> objects)
+    {
+        yield return null;
+        Player playerTarget = objects[0] as Player;
+        int damageToTake = (int)objects[1];
+
+        if (playerTarget != null)
+        {
+            if(damageToTake > 0)
+            {
+                playerTarget.TakeDamage(damageToTake);
+                Debug.Log($"Calling the method to attack the player. Player {playerTarget} will take {damageToTake} Damage!");
+            }
+        }
+        else
+        {
+            Debug.Log($"Calling the method to attack the player but don't have a target...");
+        }
+        
+        if(IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        {
+            CompletedAttackingEffect();
+        }
+    }
+
+    public void AttackAllOtherPlayers(int damageToGive)
+    {
+        foreach(Player player in GameplayManagerRef.Players)
+        {
+            if (!player.IsDefeated && player != this)
+            {
+                //Will need a way to queue up death scene if a player in this chain of events is dealt a killing blow from this attack.
+                player.TakeDamage(damageToGive);
+            }
+        }
+        //Put some dialogue box here for now to showcase that we've attacked all other players. Will need a log entry + animation here.
+
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        {
+            CompletedAttackingEffect();
+        }
+    }
+    #endregion
+
+    #region CardsInHandMethods
+
+   
+    public void SelectCardTypeToDrawPopup(int numCardsToDraw)
+    {
+        List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+
+        List<object> movementParamsList = new();
+
+        CardType movementType = CardType.Movement;
+        movementParamsList.Add(movementType);
+        movementParamsList.Add(numCardsToDraw);
+        insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(Resources.Load<Sprite>("CardArtwork/CardBacksFullArtwork/Movementbackfull"), nameof(SelectCardToDraw), this, movementParamsList));
+
+        List<object> supportParamsList = new();
+
+        CardType supportType = CardType.Support;
+        supportParamsList.Add(supportType);
+        supportParamsList.Add(numCardsToDraw);
+        insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(Resources.Load<Sprite>("CardArtwork/CardBacksFullArtwork/Supportbackfull"), nameof(SelectCardToDraw), this, supportParamsList));
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Select which deck you would like to draw {numCardsToDraw} card(s) from.", insertedParams);
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Card.CardType typeOfCard, int cardsToDraw.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SelectCardToDraw(List<object> objects)
+    {
+        yield return null;
+        CardType cardType = (CardType)objects[0];
+        int numCardsToDraw = (int)objects[1];
+
+        if(numCardsToDraw > 1)
+        {
+            GameplayManagerRef.ThisDeckManager.DrawCards(cardType, this, numCardsToDraw);
+        }
+        else
+        {
+            GameplayManagerRef.ThisDeckManager.DrawCard(cardType, this);
+        }
+    }
     public void DrawCard(Card card)
     {
         CardsInhand.Add(card);
@@ -224,6 +352,7 @@ public class Player : MonoBehaviour
         {
             CurseEffect();
         }
+
     }
 
     public void DrawCards(List<Card> cards)
@@ -240,13 +369,12 @@ public class Player : MonoBehaviour
 
         SetMovementCardsInHand();
         SetSupportCardsInHand();
-
     }
 
     //Shows this player's hand on screen.
     public void ShowHand()
     {
-        foreach(Card card in CardsInhand)
+        foreach (Card card in CardsInhand)
         {
             if(card.ThisCardType == Card.CardType.Movement)
             {
@@ -268,6 +396,13 @@ public class Player : MonoBehaviour
 
         MovementCardsInHandHolderPanel.SetActive(true);
         SupportCardsInHandHolderPanel.SetActive(true);
+
+        //For Curse animation on cards.
+        if (IsCursed)
+        {
+            CurseEffect();
+        }
+
     }
 
     public void HideHand()
@@ -287,6 +422,8 @@ public class Player : MonoBehaviour
            // GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
             DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).");
             SetCardsToDiscard(CardType.Both, CardsInhand.Count - MaxHandSize);
+            HideHand();
+            ShowHand();
             result = true;
         }
         else
@@ -362,8 +499,8 @@ public class Player : MonoBehaviour
         if( CardsLeftToDiscard == 0)
         {
             List<Tuple<string, string, object>> insertedParams = new();
-            insertedParams.Add(Tuple.Create<string, string, object>("Yes", "DiscardTheSelectedCards", this));
-            insertedParams.Add(Tuple.Create<string, string, object>("No", "DeselectAllSelectedCards", this));
+            insertedParams.Add(Tuple.Create<string, string, object>("Yes", nameof(DiscardTheSelectedCards), this));
+            insertedParams.Add(Tuple.Create<string, string, object>("No", nameof(DeselectAllSelectedCards), this));
 
             DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to discard the selected card(s)?", insertedParams);
         }
@@ -372,8 +509,10 @@ public class Player : MonoBehaviour
     /// <summary>
     /// If the user decides to reselect cards that is what this option is for.
     /// </summary>
-    public void DeselectAllSelectedCards()
+    public IEnumerator DeselectAllSelectedCards()
     {
+        yield return null;
+
         foreach (Card card in CardsInhand)
         {
             if (card.SelectedForDiscard)
@@ -392,13 +531,26 @@ public class Player : MonoBehaviour
         }
         else
         {
-            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} Movement and/or Support cards to discard.");
+            if(MaxHandSizeExceeded())
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).");
+            }
+            else
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} Movement and/or Support cards to discard.");
+            }
+            
         }
+        
         
     }
 
-    public void DiscardTheSelectedCards()
+    public IEnumerator DiscardTheSelectedCards()
     {
+        yield return null;
+
+        bool discardingDueToMaxHand = MaxHandSizeExceeded();
+
         List<Card> cardsToDiscard = new();
 
         foreach(Card card in CardsInhand)
@@ -418,7 +570,14 @@ public class Player : MonoBehaviour
             cardsToDiscard.RemoveAt(0);
         }
 
-        CompletedDiscardingForEffect();
+        if(discardingDueToMaxHand && !IsHandlingSpaceEffects)
+        {
+            TurnIsCompleted();
+        }
+        else
+        {
+            CompletedDiscardingForEffect();
+        }
     }
 
     public void DiscardFromHand(Card.CardType cardType , Card cardToDiscard)
@@ -482,6 +641,8 @@ public class Player : MonoBehaviour
             GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
         }
     }
+
+    #endregion
 
     #region StatusEffects
 
@@ -557,6 +718,7 @@ public class Player : MonoBehaviour
                     if (tempMovementCard != null)
                     {
                         tempMovementCard.ResetMovementValue();
+                        tempMovementCard.DeactivateCurseEffect();
                     }
                 }
 
@@ -616,6 +778,7 @@ public class Player : MonoBehaviour
             if (tempMovementCard != null) 
             {
                 tempMovementCard.ChangeMovementValue(true);
+                tempMovementCard.ActivateCurseEffect();
             }
         }
     }
@@ -692,6 +855,7 @@ public class Player : MonoBehaviour
 
     #region TurnRelated
 
+    #region Space Effects
     public void StartHandlingSpaceEffects()
     {
         IsHandlingSpaceEffects = true;
@@ -713,40 +877,93 @@ public class Player : MonoBehaviour
 
         spaceEffectsToHandle.Clear();
         tempSpaceEffectsToHandle.Clear();
+        currentSpaceEffectDataToHandle = null;
         IsHandlingSpaceEffects = false;
 
         if(!IsMoving && !MaxHandSizeExceeded())
         {
             TurnIsCompleted();
         }
-        
     }
 
     private void ExecuteNextSpaceEffect()
     {
         if(spaceEffectsToHandle.Count > 0)
         {
-            SpaceEffectData spaceEffectDataToHandle;
-            spaceEffectDataToHandle = spaceEffectsToHandle.Dequeue();
-            spaceEffectDataToHandle.LandedOnEffect(this);
+            currentSpaceEffectDataToHandle = spaceEffectsToHandle.Dequeue();
+            currentSpaceEffectDataToHandle.LandedOnEffect(this);
         }
         else
         {
-            Debug.Log($"All space effects are done!");
             FinishedHandlingSpaceEffects();
         }
     }
+    #endregion
+
+    #region SupportCardEffectHandlers
+    public void StartHandlingSupportCardEffects()
+    {
+        IsHandlingSupportCardEffects = true;
+
+        foreach (SupportCardEffectData supportCardEffect in supportCardEffectsToHandle)
+        {
+            supportCardEffect.SupportCardEffectCompleted += ExecuteNextSupportCardEffect;
+            tempSupportCardEffectsToHandle.Add(supportCardEffect);
+        }
+        ExecuteNextSupportCardEffect();
+    }
+
+    public void FinishedHandlingSupportCardEffects()
+    {
+
+        foreach (SupportCardEffectData supportCardEffect in tempSupportCardEffectsToHandle)
+        {
+            supportCardEffect.SupportCardEffectCompleted -= ExecuteNextSupportCardEffect;
+        }
+
+        SupportCardEffectsToHandle.Clear();
+        tempSupportCardEffectsToHandle.Clear();
+        currentSupportCardEffectTohandle = null;
+        IsHandlingSupportCardEffects = false;
+
+        //We'll need to up the counter of the amount of Support cards the user has used this turn here.
+    }
+
+    private void ExecuteNextSupportCardEffect()
+    {
+        if (supportCardEffectsToHandle.Count > 0)
+        {
+            currentSupportCardEffectTohandle = supportCardEffectsToHandle.Dequeue();
+            currentSupportCardEffectTohandle.EffectOfCard(this);
+        }
+        else
+        {
+            FinishedHandlingSupportCardEffects();
+        }
+    }
+
+    #endregion
 
     //Event triggers
 
-    private void TurnIsCompleted()
+    public void TurnIsCompleted()
     {
         TurnHasEnded?.Invoke(this);
     }
 
-    private void CompletedDiscardingForEffect()
+    public void CompletedAttackingEffect()
+    {
+        DoneAttackingForEffect?.Invoke(this);
+    }
+
+    public void CompletedDiscardingForEffect()
     {
         DoneDiscardingForEffect?.Invoke(this);
+    }
+
+    public void CompletedDrawingForEffect()
+    {
+        DoneDrawingCard?.Invoke(this);
     }
     
     #endregion

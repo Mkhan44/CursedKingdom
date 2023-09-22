@@ -524,6 +524,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &3894583657381931620 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5613646790909034870, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
+  m_PrefabInstance: {fileID: 8929504671365573394}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5030779271017669191 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4484197816524573013, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
@@ -535,31 +540,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &5159184796897898715 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4355792334435015625, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
-  m_PrefabInstance: {fileID: 8929504671365573394}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &4179026387483826834
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5159184796897898715}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 5d5c92ad1cabee04dab4af42e37bd39d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &6468020530379724207 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2461497947193884349, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
@@ -581,7 +561,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2254910237170926910, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
   m_PrefabInstance: {fileID: 8929504671365573394}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5159184796897898715}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -623,6 +603,7 @@ MonoBehaviour:
   gameplayManager: {fileID: 0}
   backgroundSelectedGlow: {fileID: 7878321072262332126}
   parentAnimator: {fileID: 0}
+  textureAnimator: {fileID: 3894583657381931620}
   cardIsSelected: 0
   selectedForDiscard: 0
   originalSize: {x: 0, y: 0, z: 0}

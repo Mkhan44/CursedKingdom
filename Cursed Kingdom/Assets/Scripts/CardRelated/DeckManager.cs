@@ -162,6 +162,11 @@ public class DeckManager : MonoBehaviour
         }
 
         gameplayManager.UpdatePlayerInfoUICardCount(playerDrawingCard);
+
+        if (playerDrawingCard.IsHandlingSpaceEffects)
+        {
+            playerDrawingCard.CompletedDrawingForEffect();
+        }
     }
 
     public void DrawCards(Card.CardType deckTypeToDrawFrom, Player playerDrawingCard, int numCardsToDraw)

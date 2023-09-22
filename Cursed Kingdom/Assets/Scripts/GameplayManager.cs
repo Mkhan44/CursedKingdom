@@ -220,6 +220,7 @@ public class GameplayManager : MonoBehaviour
 
         //For debug mode.
         DebugModeSingleton.instance.SetupOverrideSpaceLandEffectDropdownOptions(spaces);
+        DebugModeSingleton.instance.SetupOverrideSupportCardEffectDropdownOptions(ThisDeckManager.SupportDeckData.SupportCardDatas);
 
 
         //DialogueBoxPopup.instance.ActivatePopup("This is a test option.", 4);

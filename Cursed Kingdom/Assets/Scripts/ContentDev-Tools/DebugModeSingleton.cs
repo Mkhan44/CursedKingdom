@@ -17,7 +17,9 @@ public class DebugModeSingleton : MonoBehaviour
     [SerializeField] private TextMeshProUGUI debugButtonToggleText;
     [SerializeField] private TMP_Dropdown movementOverrideDropdown;
     [SerializeField] private TMP_Dropdown spaceLandedOverrideDropdown;
+    [SerializeField] private TMP_Dropdown supportCardOverrideDropdown;
     [SerializeField] private bool isDebugActive;
+    [SerializeField] private string supportCardOverrideName;
     [SerializeField] private string spaceLandedOverrideName;
     [SerializeField] private int movementNumberOverride;
 
@@ -127,6 +129,46 @@ public class DebugModeSingleton : MonoBehaviour
             }
         }
         return spaceToReturn;
+    }
+
+    public void SetupOverrideSupportCardEffectDropdownOptions(List<SupportCardData> supportCardDatas)
+    {
+        supportCardOverrideDropdown.options.Clear();
+        List<string> supportCardNameStrings = new();
+        foreach (SupportCardData supportCardData in supportCardDatas)
+        {
+            string supportCardName = supportCardData.name;
+            if (!supportCardNameStrings.Contains(supportCardName))
+            {
+                supportCardNameStrings.Add(supportCardName);
+            }
+        }
+        supportCardOverrideDropdown.options.Add(new TMP_Dropdown.OptionData("No Override"));
+
+        supportCardOverrideDropdown.AddOptions(supportCardNameStrings);
+    }
+
+    public void SetOverrideSupportCardEffect()
+    {
+        supportCardOverrideName = supportCardOverrideDropdown.captionText.text;
+    }
+
+    public SupportCard OverrideSupportCardUseEffect()
+    {
+        SupportCard supportCardToReturn = null;
+        Debug.Log("IN DEBUG MODE OVERRIDING THE SUPPORT CARD THAT THE PLAYER WILL USE!");
+        if (!string.IsNullOrEmpty(supportCardOverrideName) && supportCardOverrideName != supportCardOverrideDropdown.options[0].text && gameplayManager != null)
+        {
+            foreach (SupportCard supportCard in gameplayManager.ThisDeckManager.SupportDeckList)
+            {
+                if (supportCard.SupportCardData.name == supportCardOverrideName)
+                {
+                    supportCardToReturn = supportCard;
+                    break;
+                }
+            }
+        }
+        return supportCardToReturn;
     }
 
     public void ReloadScene()
