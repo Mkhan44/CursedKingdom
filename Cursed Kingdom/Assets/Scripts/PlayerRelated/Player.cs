@@ -63,6 +63,9 @@ public class Player : MonoBehaviour
     [SerializeField] private bool wasAfflictedWithStatusThisTurn;
     [SerializeField] private int poisonDuration;
     [SerializeField] private int curseDuration;
+
+    [SerializeField] private int numSupportCardsUsedThisTurn;
+    [SerializeField] private int maxSupportCardsToUse;
     [SerializeField] private bool ableToLevelUp;
     [SerializeField] private ClassData classData;
     [SerializeField] private Space currentSpacePlayerIsOn;
@@ -101,6 +104,8 @@ public class Player : MonoBehaviour
     public bool IsDefeated { get => isDefeated; set => isDefeated = value; }
     public bool WasAfflictedWithStatusThisTurn { get => wasAfflictedWithStatusThisTurn; set => wasAfflictedWithStatusThisTurn = value; }
     public int PoisonDuration { get => poisonDuration; set => poisonDuration = value; }
+    public int MaxSupportCardsToUse { get => maxSupportCardsToUse; set => maxSupportCardsToUse = value; }
+    public int NumSupportCardsUsedThisTurn { get => numSupportCardsUsedThisTurn; set => numSupportCardsUsedThisTurn = value; }
     public int CurseDuration { get => curseDuration; set => curseDuration = value; }
     public bool AbleToLevelUp { get => ableToLevelUp; set => ableToLevelUp = value; }
     public ClassData ClassData { get => classData; set => classData = value; }
@@ -161,22 +166,27 @@ public class Player : MonoBehaviour
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
     public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
     public Animator Animator { get => animator; set => animator = value; }
-   
+    
 
     public void InitializePlayer(ClassData data)
     {
         ClassData = data;
 
-        MaxHealth = data.startingHealth;
+        MaxHealth = ClassData.startingHealth;
         CurrentHealth = maxHealth;
         CurrentLevel = 1;
-        AbleToLevelUp = false;
+        AbleToLevelUp = true;
         SpacesLeftToMove = 0;
+        MaxHandSize = 6;
+        MaxSupportCardsToUse = ClassData.maxSupportCardsToUsePerTurn;
+        NumSupportCardsUsedThisTurn = 0;
+        IsDefeated = false;
         CardsLeftToDiscard = 0;
         ValidCardTypesToDiscard = CardType.None;
         SpaceEffectsToHandle = new();
+        tempSpaceEffectsToHandle = new();
         isHandlingSpaceEffects = false;
-       // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
+        // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
 
     //Debug version where we hardcode the class.
@@ -188,6 +198,8 @@ public class Player : MonoBehaviour
         AbleToLevelUp = true;
         SpacesLeftToMove = 0;
         MaxHandSize = 6;
+        MaxSupportCardsToUse = ClassData.maxSupportCardsToUsePerTurn;
+        NumSupportCardsUsedThisTurn = 0;
         IsDefeated = false;
         CardsLeftToDiscard = 0;
         ValidCardTypesToDiscard = CardType.None;
@@ -541,8 +553,6 @@ public class Player : MonoBehaviour
             }
             
         }
-        
-        
     }
 
     public IEnumerator DiscardTheSelectedCards()
@@ -602,6 +612,32 @@ public class Player : MonoBehaviour
 
         SetMovementCardsInHand();
         SetSupportCardsInHand();
+    }
+
+    public void UseSupportCard()
+    {
+        NumSupportCardsUsedThisTurn += 1;
+    }
+
+    public void ResetSupportCardUsageCount()
+    {
+        NumSupportCardsUsedThisTurn = 0;
+    }
+
+    public bool CanUseSupportCard()
+    {
+        bool canUse;
+
+        if(NumSupportCardsUsedThisTurn >= MaxSupportCardsToUse)
+        {
+            canUse = false;
+        }
+        else
+        {
+            canUse = true;
+        }
+
+        return canUse;
     }
 
 
@@ -882,6 +918,7 @@ public class Player : MonoBehaviour
 
         if(!IsMoving && !MaxHandSizeExceeded())
         {
+            ResetSupportCardUsageCount();
             TurnIsCompleted();
         }
     }
