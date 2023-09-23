@@ -100,12 +100,25 @@ public class SupportCard : Card
                 }
                 else
                 {
+                    if(!GameplayManager.Players[indexOfCurrentPlayer].CanUseSupportCard())
+                    {
+                        DialogueBoxPopup.instance.ActivatePopupWithJustText($"You have already used a support card this turn.", 2.0f);
+                        GameplayManager.HandDisplayPanel.ShrinkHand();
+                        transform.localScale = OriginalSize;
+                        CardIsSelected = false;
+                        return;
+                    }
+
                     bool canCostBePaid = false;
                     ApplySupportCardEffects(GameplayManager.Players[indexOfCurrentPlayer], out canCostBePaid);
                     if (!canCostBePaid)
                     {
+                        GameplayManager.HandDisplayPanel.ShrinkHand();
+                        transform.localScale = OriginalSize;
+                        CardIsSelected = false;
                         return;
                     }
+                    GameplayManager.Players[indexOfCurrentPlayer].UseSupportCard();
                     GameplayManager.Players[indexOfCurrentPlayer].DiscardFromHand(ThisCardType, this);
                     GameplayManager.HandDisplayPanel.ShrinkHand();
                     transform.localScale = OriginalSize;
