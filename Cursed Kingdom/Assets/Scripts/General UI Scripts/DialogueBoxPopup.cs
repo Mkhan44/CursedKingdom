@@ -12,6 +12,8 @@ public class DialogueBoxPopup : MonoBehaviour
     public static Action optionChosen;
     public delegate void CalledDelegate();
 
+    private const string dialogueAnimBool = "IsOpen";
+
     [SerializeField] private TextMeshProUGUI displayText;
     [SerializeField] private GameObject blockerPanel;
     [SerializeField] private Image blockerPanelImage;
@@ -21,6 +23,7 @@ public class DialogueBoxPopup : MonoBehaviour
     [SerializeField] private GameObject imageLayoutParent;
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private GameObject imagePrefab;
+    [SerializeField] private Animator dialogueAnimator;
     [SerializeField] private bool isActive;
     [SerializeField] private Coroutine delayCoroutine;
     [SerializeField] private List<Button> buttonOptions;
@@ -31,7 +34,8 @@ public class DialogueBoxPopup : MonoBehaviour
     private void Awake()
     {
         blockerPanel.SetActive(true);
-        blockerPanel.SetActive(false);
+        blockerPanel.GetComponent<Image>().raycastTarget = false;
+        //blockerPanel.SetActive(true);
         blockerPanelImage = this.GetComponent<Image>();
         isActive = false;
         buttonOptions = new();
@@ -56,7 +60,9 @@ public class DialogueBoxPopup : MonoBehaviour
         ImageLayoutParent.SetActive(false);
         ButtonLayoutParent.SetActive(false);
 
-        blockerPanel.SetActive(true);
+        blockerPanel.GetComponent<Image>().raycastTarget = true;
+        dialogueAnimator.SetBool(dialogueAnimBool, true);
+        //blockerPanel.SetActive(true);
         blockerPanelImage.raycastTarget = false;
         isActive = true;
         if(numSecondsToStayActive > 0)
@@ -96,7 +102,9 @@ public class DialogueBoxPopup : MonoBehaviour
         buttonInstanceFinal.GetComponent<Button>().onClick.AddListener(chooseOption);
         buttonInstanceFinal.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = closeButtonText;
 
-        blockerPanel.SetActive(true);
+        blockerPanel.GetComponent<Image>().raycastTarget = true;
+        dialogueAnimator.SetBool(dialogueAnimBool, true);
+        //blockerPanel.SetActive(true);
         isActive = true;
     }
 
@@ -142,7 +150,10 @@ public class DialogueBoxPopup : MonoBehaviour
             theImageButton.onClick.AddListener(() => chooseOption());
         }
 
-        blockerPanel.SetActive(true);
+
+        blockerPanel.GetComponent<Image>().raycastTarget = true;
+        dialogueAnimator.SetBool(dialogueAnimBool, true);
+        //blockerPanel.SetActive(true);
         isActive = true;
     }
     /// <summary>
@@ -177,7 +188,9 @@ public class DialogueBoxPopup : MonoBehaviour
             theButton.onClick.AddListener(chooseOption);
         }
 
-        blockerPanel.SetActive(true);
+        blockerPanel.GetComponent<Image>().raycastTarget = true;
+        dialogueAnimator.SetBool(dialogueAnimBool, true);
+        //blockerPanel.SetActive(true);
         isActive = true;
     }
 
@@ -201,7 +214,9 @@ public class DialogueBoxPopup : MonoBehaviour
         ImageLayoutParent.SetActive(true);
         ButtonLayoutParent.SetActive(true);
         blockerPanelImage.raycastTarget = true;
-        blockerPanel.SetActive(false);
+        blockerPanel.GetComponent<Image>().raycastTarget = false;
+        dialogueAnimator.SetBool(dialogueAnimBool, false);
+        //blockerPanel.SetActive(false);
         DestroyChildrenOfParent(ButtonLayoutParent.transform);
         DestroyChildrenOfParent(ImageLayoutParent.transform);
         isActive = false;
