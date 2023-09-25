@@ -14,14 +14,17 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
     public const string active = "IsActive";
     public const string hidden = "IsHidden";
     public const string isHovered = "IsHovered";
+    private const string menuPopup = "MenuPopup";
 
     [SerializeField] private List<HandUITransform> handUITransforms = new();
     [SerializeField] private RectTransform smallCardHolderPanelTransform;
     [SerializeField] private HandUITransform currentActiveTransform;
+    [SerializeField] private Animator handUIControlPanelAnimator;
 
     public List<HandUITransform> HandUITransforms { get => handUITransforms; set => handUITransforms = value; }
     public RectTransform SmallCardHolderPanelTransform { get => smallCardHolderPanelTransform; set => smallCardHolderPanelTransform = value; }
     public HandUITransform CurrentActiveTransform { get => currentActiveTransform; set => currentActiveTransform = value; }
+    public Animator HandUIControlPanelAnimator { get => handUIControlPanelAnimator; set => handUIControlPanelAnimator = value; }
 
     public void AddNewHandUI(RectTransform movementCardHolder, RectTransform supportCardHolder)
     {
@@ -107,6 +110,7 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
             //CurrentActiveTransform.MovementCardsHolder.gameObject.SetActive(false);
         }
 
+        HandUIControlPanelAnimator.SetBool(menuPopup, true);
         CurrentActiveTransform.IsExpanded = true;
     }
 
@@ -131,8 +135,10 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
             CurrentActiveTransform.SupportAnimator.SetBool(active, false);
         }
 
+        HandUIControlPanelAnimator.SetBool(menuPopup, false);
 
-        if(waitForAnim)
+
+        if (waitForAnim)
         {
             StartCoroutine(WaitForAnimation(animTime));
         }
