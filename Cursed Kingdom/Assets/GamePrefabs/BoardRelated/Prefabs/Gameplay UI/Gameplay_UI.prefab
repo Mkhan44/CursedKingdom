@@ -496,6 +496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smallCardHolderPanelTransform: {fileID: 70923562604887435}
+  handUIControlPanelAnimator: {fileID: 2687977466921289221}
 --- !u!114 &8775317366621675837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1091,6 +1092,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ad93376f04fada4ba1da969373c089f, type: 3}
+--- !u!95 &2687977466921289221 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 418216703253176961, guid: 2ad93376f04fada4ba1da969373c089f, type: 3}
+  m_PrefabInstance: {fileID: 2341960471345849476}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5490824856754483625 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7832609392664974637, guid: 2ad93376f04fada4ba1da969373c089f, type: 3}
