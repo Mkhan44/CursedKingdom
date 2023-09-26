@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb85ac43493caf248880d01884122b89, type: 3}
   m_Name: DrawCardSpace
   m_EditorClassIdentifier: 
+  isACost: 0
+  isPositiveEffect: 0
+  effectDescription: 'Draw: 4 Support card(s)'
+  overrideAutoDescription: 0
   cardTypeToDraw: 1
   numToDraw: 2
   canBeEitherCard: 0
+  drawFromDiscardPile: 0

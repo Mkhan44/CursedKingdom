@@ -37,6 +37,9 @@ public class GameplayManager : MonoBehaviour
     public GameObject moveButtonPrefab;
     public float raycastLength = 2f;
 
+    //State machine for turn order.
+
+
     //Deck related
     [SerializeField] private DeckManager thisDeckManager;
     [SerializeField] private GameObject movementCardPrefab;
@@ -547,7 +550,7 @@ public class GameplayManager : MonoBehaviour
                 HandDisplayPanel.SetCurrentActiveHandUI(Players.IndexOf(nextPlayer));
                 currentPlayer.HideHand();
                 nextPlayer.ShowHand();
-                DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"Player {nextPlayer.playerIDIntVal}'s turn!", "Start!");
+                DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"Player {nextPlayer.playerIDIntVal}'s turn!", "Start!", "Turn start");
                 break;
             }
         }

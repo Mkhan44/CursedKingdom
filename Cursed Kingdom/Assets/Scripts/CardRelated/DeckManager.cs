@@ -163,7 +163,7 @@ public class DeckManager : MonoBehaviour
 
         gameplayManager.UpdatePlayerInfoUICardCount(playerDrawingCard);
 
-        if (playerDrawingCard.IsHandlingSpaceEffects)
+        if (playerDrawingCard.IsHandlingSpaceEffects && !playerDrawingCard.MaxHandSizeExceeded())
         {
             playerDrawingCard.CompletedDrawingForEffect();
         }
@@ -210,6 +210,11 @@ public class DeckManager : MonoBehaviour
         }
 
         gameplayManager.UpdatePlayerInfoUICardCount(playerDrawingCard);
+
+        if (playerDrawingCard.IsHandlingSpaceEffects && !playerDrawingCard.MaxHandSizeExceeded())
+        {
+            playerDrawingCard.CompletedDrawingForEffect();
+        }
 
     }
 

@@ -15,6 +15,7 @@ public class DialogueBoxPopup : MonoBehaviour
     private const string dialogueAnimBool = "IsOpen";
 
     [SerializeField] private TextMeshProUGUI displayText;
+    [SerializeField] private TextMeshProUGUI headerNoticeText;
     [SerializeField] private GameObject blockerPanel;
     [SerializeField] private Image blockerPanelImage;
     [SerializeField] private int numOptionsSelected;
@@ -39,6 +40,7 @@ public class DialogueBoxPopup : MonoBehaviour
         blockerPanelImage = this.GetComponent<Image>();
         isActive = false;
         buttonOptions = new();
+        headerNoticeText.text = "Notice";
         numOptionsSelected = 0;
         maxNumOptionsToSelect = 0;
         delayCoroutine = null;
@@ -48,8 +50,10 @@ public class DialogueBoxPopup : MonoBehaviour
     /// <summary>
     /// A popup with just text that stays up until the user completes the action needed.
     /// </summary>
-    /// <param name="textToDisplay"></param>
-    public void ActivatePopupWithJustText(string textToDisplay, float numSecondsToStayActive = 0)
+    /// <param name="textToDisplay">The text to display in the body of the box.</param>
+    /// <param name="numSecondsToStayActive">If this is 0, the popup stays indefinitely. Otherwise it will stay active for numSecondsToStayActive seconds.</param>
+    /// <param name="headerText">Text that appears at the top of the textbox. If no text is given it will just say "Notice"</param>
+    public void ActivatePopupWithJustText(string textToDisplay, float numSecondsToStayActive = 0, string headerText = "Notice")
     {
         if (isActive)
         {
@@ -57,6 +61,7 @@ public class DialogueBoxPopup : MonoBehaviour
         }
 
         displayText.text = textToDisplay;
+        headerNoticeText.text = headerText;
         ImageLayoutParent.SetActive(false);
         ButtonLayoutParent.SetActive(false);
 
@@ -85,8 +90,11 @@ public class DialogueBoxPopup : MonoBehaviour
     /// <summary>
     /// A popup with just a message and a button to close it.
     /// </summary>
-    /// <param name="textToDisplay"></param>
-    public void ActivatePopupWithConfirmation(string textToDisplay, string closeButtonText = "Okay")
+    /// <param name="textToDisplay">The text to display in the body of the box.</param>
+    /// <param name="closeButtonText">The text to display on the button. Defaults to "Okay" if not specified.</param>
+    /// <param name="headerText">Text that appears at the top of the textbox. If no text is given it will just say "Notice"</param>
+
+    public void ActivatePopupWithConfirmation(string textToDisplay, string closeButtonText = "Okay", string headerText = "Notice")
     {
         if(isActive)
         {
@@ -94,6 +102,7 @@ public class DialogueBoxPopup : MonoBehaviour
         }
 
         displayText.text = textToDisplay;
+        headerNoticeText.text = headerText;
         ImageLayoutParent.SetActive(false);
         blockerPanelImage.raycastTarget = true;
 
@@ -112,11 +121,12 @@ public class DialogueBoxPopup : MonoBehaviour
     /// A method that displays a popup with image options. For the image setup each item in the list: 
     /// The SPRITE used for the image, METHOD NAME you want to call which *MUST BE A COROUTINE* and OBJECT you are calling this from need to be populated respectively.
     /// </summary>
-    /// <param name="textToDisplay"></param>
+    /// <param name="textToDisplay">The text to display in the body of the box.</param>
     /// <param name="imageSetupParams">A tuple where for each item in the list: T1 = The image sprite to click on, T2 = the method name you want to call, and T3 is the object from which this popup is being called from
     /// T4 is a list of method parameters to be used within the method that is called. This can be empty if the method has no parameters.</param>
     /// <param name="numChoicesThatCanBeSelected">The number of choices that can be selected before all methods are executed.</param>
-    public void ActivatePopupWithImageChoices(string textToDisplay, List<Tuple<Sprite, string, object, List<object>>> imageSetupParams, int numChoicesThatCanBeSelected = 1)
+    /// <param name="headerText">Text that appears at the top of the textbox. If no text is given it will just say "Notice"</param>
+    public void ActivatePopupWithImageChoices(string textToDisplay, List<Tuple<Sprite, string, object, List<object>>> imageSetupParams, int numChoicesThatCanBeSelected = 1, string headerText = "Notice")
     {
         if (isActive)
         {
@@ -125,6 +135,7 @@ public class DialogueBoxPopup : MonoBehaviour
 
         maxNumOptionsToSelect = numChoicesThatCanBeSelected;
         displayText.text = textToDisplay;
+        headerNoticeText.text = headerText;
         ButtonLayoutParent.SetActive(false);
         blockerPanelImage.raycastTarget = true;
 
@@ -160,11 +171,12 @@ public class DialogueBoxPopup : MonoBehaviour
     /// A method that displays a popup with button options. For the button setup each item in the list: 
     /// The TEXT on the button, METHOD NAME you want to call which *MUST BE A COROUTINE* and OBJECT you are calling this from need to be populated respectively.
     /// </summary>
-    /// <param name="textToDisplay"></param>
+    /// <param name="textToDisplay">The text to display in the body of the box.</param>
     /// <param name="buttonSetupParams">A tuple where for each item in the list: T1 = The text on the button, T2 = the method name you want to call, and T3 is the object from which this popup is being called from.</param>
     /// <param name="methodParams">A list of objects that are used as parameters for the method in the Tuple. These MUST match valid parameters and order does matter.</param>
     /// <param name="numChoicesThatCanBeSelected">The number of choices that can be selected before all methods are executed.</param>
-    public void ActivatePopupWithButtonChoices(string textToDisplay, List<Tuple<string, string, object >> buttonSetupParams , List<object> methodParams = null, int numChoicesThatCanBeSelected = 1)
+    /// <param name="headerText">Text that appears at the top of the textbox. If no text is given it will just say "Notice"</param>
+    public void ActivatePopupWithButtonChoices(string textToDisplay, List<Tuple<string, string, object >> buttonSetupParams , List<object> methodParams = null, int numChoicesThatCanBeSelected = 1, string headerText = "Notice")
     {
         if (isActive)
         {
@@ -173,6 +185,7 @@ public class DialogueBoxPopup : MonoBehaviour
 
         maxNumOptionsToSelect = numChoicesThatCanBeSelected;
         displayText.text = textToDisplay;
+        headerNoticeText.text = headerText;
         ImageLayoutParent.SetActive(false);
 
         for (int i = 0; i < buttonSetupParams.Count; i++)

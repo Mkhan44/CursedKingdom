@@ -252,7 +252,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams);
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams, 1, "Attack");
     }
 
     /// <summary>
@@ -324,7 +324,7 @@ public class Player : MonoBehaviour
         supportParamsList.Add(numCardsToDraw);
         insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(Resources.Load<Sprite>("CardArtwork/CardBacksFullArtwork/Supportbackfull"), nameof(SelectCardToDraw), this, supportParamsList));
 
-        DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Select which deck you would like to draw {numCardsToDraw} card(s) from.", insertedParams);
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Select which deck you would like to draw {numCardsToDraw} card(s) from.", insertedParams, 1, "Draw");
     }
 
     /// <summary>
@@ -381,6 +381,12 @@ public class Player : MonoBehaviour
 
         SetMovementCardsInHand();
         SetSupportCardsInHand();
+
+        //Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
+        if (IsCursed)
+        {
+            CurseEffect();
+        }
     }
 
     //Shows this player's hand on screen.
@@ -432,10 +438,11 @@ public class Player : MonoBehaviour
         if(CardsInhand.Count > MaxHandSize)
         {
            // GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
-            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).");
+            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).", 0, "Discard");
             SetCardsToDiscard(CardType.Both, CardsInhand.Count - MaxHandSize);
             HideHand();
             ShowHand();
+            GameplayManagerRef.HandDisplayPanel.ShrinkHand();
             result = true;
         }
         else
@@ -514,7 +521,7 @@ public class Player : MonoBehaviour
             insertedParams.Add(Tuple.Create<string, string, object>("Yes", nameof(DiscardTheSelectedCards), this));
             insertedParams.Add(Tuple.Create<string, string, object>("No", nameof(DeselectAllSelectedCards), this));
 
-            DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to discard the selected card(s)?", insertedParams);
+            DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to discard the selected card(s)?", insertedParams, null, 1, "Confirm Selection");
         }
     }
 
@@ -539,17 +546,17 @@ public class Player : MonoBehaviour
 
         if(ValidCardTypesToDiscard != CardType.Both)
         {
-            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} {ValidCardTypesToDiscard} card(s) to discard.");
+            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} {ValidCardTypesToDiscard} card(s) to discard.", 0, "Discard");
         }
         else
         {
             if(MaxHandSizeExceeded())
             {
-                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).");
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).", 0, "Discard");
             }
             else
             {
-                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} Movement and/or Support cards to discard.");
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} Movement and/or Support cards to discard.", 0, "Discard");
             }
             
         }
@@ -582,7 +589,14 @@ public class Player : MonoBehaviour
 
         if(discardingDueToMaxHand && !IsHandlingSpaceEffects)
         {
-            TurnIsCompleted();
+            if(!IsHandlingSupportCardEffects)
+            {
+                TurnIsCompleted();
+            }
+            else
+            {
+                CompletedDiscardingForEffect();
+            }
         }
         else
         {
