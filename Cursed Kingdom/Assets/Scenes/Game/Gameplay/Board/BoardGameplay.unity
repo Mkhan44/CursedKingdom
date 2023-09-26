@@ -336,7 +336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 349450324890439099, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 280.15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 349450324890439099, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -420,7 +420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2823927558034779905, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 505.21
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2823927558034779905, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -580,7 +580,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6638796246786080582, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 130
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6638796246786080582, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1648,7 +1648,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3337721393476324776, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: field of view
-      value: 36
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324776, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: near clip plane
@@ -1660,31 +1660,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 28.9
+      value: 8.82
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.3000002
+      value: -9.7
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8112422
+      value: 0.9327034
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.5847103
+      value: 0.36064452
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000019740355
+      value: -0.00000001604845
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000014228043
+      value: 0.000000006205388
       objectReference: {fileID: 0}
     - target: {fileID: 3337721393476324777, guid: dbaba1b0b4525c84ab30f75473c6891c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2411,6 +2411,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1949894356}
   - component: {fileID: 1949894355}
+  - component: {fileID: 1949894357}
   m_Layer: 0
   m_Name: LOGIC - GENERAL
   m_TagString: Untagged
@@ -2445,6 +2446,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1949894357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1949894354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 606a50de3a523e8458bb3a0aed7a8406, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spaceIconPreset: {fileID: 11400000, guid: 704cadbfcf164054d845afb6831847f7, type: 2}
+  supportCardTypeIconPreset: {fileID: 11400000, guid: b7bdfe1cf1ac50749b37eec41951c3f6, type: 2}
 --- !u!1001 &185116683685290941
 PrefabInstance:
   m_ObjectHideFlags: 0

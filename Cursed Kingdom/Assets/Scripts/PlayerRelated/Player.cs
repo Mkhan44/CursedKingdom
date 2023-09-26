@@ -236,7 +236,7 @@ public class Player : MonoBehaviour
     }
 
     #region AttackPlayers
-    public void ActivatePlayerToAttackSelectionPopup(int numPlayersToChoose, int damageToGive)
+    public void ActivatePlayerToAttackSelectionPopup(int numPlayersToChoose, int damageToGive, bool isElemental = false)
     {
         List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
         
@@ -248,6 +248,7 @@ public class Player : MonoBehaviour
                 List<object> paramsList = new();
                 paramsList.Add(player);
                 paramsList.Add(damageToGive);
+                paramsList.Add(isElemental);
                 insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToAttack), this, paramsList));
             }
         }
@@ -256,7 +257,7 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict
+    /// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict, bool isElemental
     /// </summary>
     /// <returns></returns>
     public IEnumerator SelectPlayerToAttack(List<object> objects)
@@ -264,6 +265,7 @@ public class Player : MonoBehaviour
         yield return null;
         Player playerTarget = objects[0] as Player;
         int damageToTake = (int)objects[1];
+        bool isElemental = (bool)objects[2];
 
         if (playerTarget != null)
         {
@@ -284,7 +286,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void AttackAllOtherPlayers(int damageToGive)
+    public void AttackAllOtherPlayers(int damageToGive, bool isElemental = false)
     {
         foreach(Player player in GameplayManagerRef.Players)
         {

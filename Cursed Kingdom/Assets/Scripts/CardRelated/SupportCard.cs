@@ -13,6 +13,7 @@ public class SupportCard : Card
 {
     //References
     [SerializeField] private TextMeshProUGUI descriptionText;
+    [SerializeField] private Image supportCardTypeImage;
 
 
     //Data
@@ -43,10 +44,27 @@ public class SupportCard : Card
     protected override void SetupCard(CardData cardData)
     {
         base.SetupCard(cardData);
-        supportCardData = cardData as SupportCardData;
-        TitleText.text = supportCardData.CardTitle;
-        DescriptionText.text = supportCardData.CardDescription;
-        CardArtworkImage.sprite = supportCardData.CardArtwork;
+        SupportCardData = cardData as SupportCardData;
+        TitleText.text = SupportCardData.CardTitle;
+        DescriptionText.text = SupportCardData.CardDescription;
+        CardArtworkImage.sprite = SupportCardData.CardArtwork;
+        SetupCardTypeImage();
+    }
+
+    private void SetupCardTypeImage()
+    {
+        if (SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Movement)
+        {
+            supportCardTypeImage.sprite = IconPresetsSingleton.instance.SupportCardTypeIconPreset.MovementSprite;
+        }
+        else if (SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Duel)
+        {
+            supportCardTypeImage.sprite = IconPresetsSingleton.instance.SupportCardTypeIconPreset.DuelSprite;
+        }
+        else
+        {
+            supportCardTypeImage.sprite = IconPresetsSingleton.instance.SupportCardTypeIconPreset.SpecialSprite;
+        }
     }
 
     public override void OnPointerClick(PointerEventData eventData)

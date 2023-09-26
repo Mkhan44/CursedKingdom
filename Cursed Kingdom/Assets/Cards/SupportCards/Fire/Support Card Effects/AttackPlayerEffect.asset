@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e9a83eadf2c8f642a2d1febc9714bd5, type: 3}
   m_Name: AttackPlayerEffect
   m_EditorClassIdentifier: 
-  damageToDeal: 1
+  isACost: 0
+  isElemental: 1
+  damageToGive: 1
+  numPlayersToAttack: 1
+  opponentsCanBeChosen: 1
   attackAllPlayers: 0
