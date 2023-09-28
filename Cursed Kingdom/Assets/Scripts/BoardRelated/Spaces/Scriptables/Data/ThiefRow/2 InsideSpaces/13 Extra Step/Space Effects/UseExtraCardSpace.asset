@@ -12,5 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1a8429b524d5e3449e72eda7a50760f, type: 3}
   m_Name: UseExtraCardSpace
   m_EditorClassIdentifier: 
+  isACost: 0
+  isPositiveEffect: 0
+  onSpaceTurnStartEffect: 1
+  effectDescription: can use 1 extra Movement card(s) this turn if you start your
+    turn on this space.
+  overrideAutoDescription: 0
   cardTypeToUse: 0
   numExtraToUse: 1
