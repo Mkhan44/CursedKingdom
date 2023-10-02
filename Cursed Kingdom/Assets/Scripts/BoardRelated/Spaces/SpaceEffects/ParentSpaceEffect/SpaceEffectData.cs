@@ -24,6 +24,7 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     public bool IsACost { get => isACost; set => isACost = value; }
     public bool IsPositiveEffect { get => isPositiveEffect; set => isPositiveEffect = value; }
     public bool OnSpaceTurnStartEffect { get => onSpaceTurnStartEffect; set => onSpaceTurnStartEffect = value; }
+    public bool AfterDuelEffect { get => afterDuelEffect; set => afterDuelEffect = value; }
     public string EffectDescription { get => effectDescription; set => effectDescription = value; }
     public bool OverrideAutoDescription { get => overrideAutoDescription; set => overrideAutoDescription = value; }
 
@@ -43,12 +44,14 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
 
     public virtual void StartOfTurnEffect(Player playerReference)
     {
-        
+        //Usually called after the effect has been completed.
+        CompletedEffect(playerReference);
     }
 
     public virtual void EndOfTurnEffect(Player playerReference)
     {
-        
+        //Usually called after the effect has been completed.
+        CompletedEffect(playerReference);
     }
     public virtual bool CanCostBePaid(Player playerReference)
     {

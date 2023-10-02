@@ -200,7 +200,7 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 
             if (theCard is not null)
             {
-                if (theCard.CardIsSelected)
+                if (theCard.CardIsActiveHovered)
                 {
                     theCard.DeselectCard();
                     break;
@@ -214,7 +214,7 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 
             if (theCard is not null)
             {
-                if (theCard.CardIsSelected)
+                if (theCard.CardIsActiveHovered)
                 {
                     theCard.DeselectCard();
                     theCard.DeselectForDiscard();

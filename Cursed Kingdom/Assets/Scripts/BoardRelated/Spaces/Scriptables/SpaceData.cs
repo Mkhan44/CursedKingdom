@@ -65,7 +65,6 @@ public class SpaceData : ScriptableObject
     }
 
     public List<SpaceEffect> spaceEffects;
-    public List<SpaceType> thisSpaceTypes;
     public string spaceName = "Space";
     [TextArea(3,10)]
     public string spaceDescription = "Please input a space description...";

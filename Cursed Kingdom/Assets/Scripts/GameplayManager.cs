@@ -48,6 +48,9 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] private GameObject supportDeckCardHolder;
     [SerializeField] private GameObject movementCardDiscardPileHolder;
     [SerializeField] private GameObject supportCardDiscardPileHolder;
+    [SerializeField] private GameObject useSelectedCardsPanel;
+    [SerializeField] private TextMeshProUGUI useSelectedCardsText;
+    [SerializeField] private Button useSelectedCardsButton;
 
     //Gameboard Data
     [SerializeField] private TopDownMapDisplay topDownMapDisplay;
@@ -96,11 +99,15 @@ public class GameplayManager : MonoBehaviour
     public GameObject SupportDeckCardHolder { get => supportDeckCardHolder; set => supportDeckCardHolder = value; }
     public GameObject MovementCardDiscardPileHolder { get => movementCardDiscardPileHolder; set => movementCardDiscardPileHolder = value; }
     public GameObject SupportCardDiscardPileHolder { get => supportCardDiscardPileHolder; set => supportCardDiscardPileHolder = value; }
+    public GameObject UseSelectedCardsPanel { get => useSelectedCardsPanel; set => useSelectedCardsPanel = value; }
+    public TextMeshProUGUI UseSelectedCardsText { get => useSelectedCardsText; set => useSelectedCardsText = value; }
+    public Button UseSelectedCardsButton { get => useSelectedCardsButton; set => useSelectedCardsButton = value; }
     public List<PlayerInfoDisplay> PlayerInfoDisplays { get => playerInfoDisplays; set => playerInfoDisplays = value; }
     public PlayerHandDisplayUI HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
     public TopDownMapDisplay TopDownMapDisplay { get => topDownMapDisplay; set => topDownMapDisplay = value; }
     public SpaceArtworkPopupDisplay SpaceArtworkPopupDisplay { get => spaceArtworkPopupDisplay; set => spaceArtworkPopupDisplay = value; }
     public SpaceIconPreset IconPresets { get => iconPresets; set => iconPresets = value; }
+
 
     private void Start()
     {
@@ -112,6 +119,7 @@ public class GameplayManager : MonoBehaviour
 
         //Deck related
         ThisDeckManager = GetComponent<DeckManager>();
+        UseSelectedCardsPanel.SetActive(false);
 
         //Get a list of movement cards, pass them in.
         ThisDeckManager.CreateDeck();
@@ -477,12 +485,6 @@ public class GameplayManager : MonoBehaviour
         int numPlayersDefeated = 0;
         Player currentNonDefeatedPlayer = currentPlayer;
 
-        //Player's turn ends: They draw a card.
-        if (!playersTurnToEnd.IsDefeated)
-        {
-            ThisDeckManager.DrawCard(Card.CardType.Movement, playersTurnToEnd);   
-        }
-
         
         foreach(Player checkIfDefeatedPlayer in Players)
         {
@@ -551,7 +553,24 @@ public class GameplayManager : MonoBehaviour
                 currentPlayer.HideHand();
                 nextPlayer.ShowHand();
                 DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"Player {nextPlayer.playerIDIntVal}'s turn!", "Start!", "Turn start");
-                break;
+
+                if(DebugModeSingleton.instance.IsDebugActive)
+                {
+                    Space tempSpace = DebugModeSingleton.instance.OverrideSpaceLandEffect();
+                    Space currentSpace = nextPlayer.CurrentSpacePlayerIsOn;
+                    if (tempSpace != null)
+                    {
+                        nextPlayer.CurrentSpacePlayerIsOn = tempSpace;
+                    }
+                    nextPlayer.CurrentSpacePlayerIsOn.ApplyStartOfTurnSpaceEffects(nextPlayer);
+                    nextPlayer.CurrentSpacePlayerIsOn = currentSpace;
+                    break;
+                }
+                else
+                {
+                    nextPlayer.CurrentSpacePlayerIsOn.ApplyStartOfTurnSpaceEffects(nextPlayer);
+                    break;
+                }
             }
         }
 
