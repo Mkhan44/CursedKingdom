@@ -103,8 +103,19 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     public virtual void DeselectForUse()
     {
+        int indexOfCurrentPlayer;
+        int numSelected;
+        int maxNumPlayerCanSelect;
+
         SelectedForUse = false;
         BackgroundSelectedGlow.color = originalBackgroundGlowColor;
+
+        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        if (numSelected < 1)
+        {
+            GameplayManager.Players[indexOfCurrentPlayer].MovementCardSelectedForUse = false;
+            GameplayManager.Players[indexOfCurrentPlayer].SupportCardSelectedForUse = false;
+        }
     }
     protected void CheckAmountOfCardsPlayerHasSelected(out int indexOfCurrentPlayer, out int numSelected, out int maxNumPlayerCanSelect)
     {

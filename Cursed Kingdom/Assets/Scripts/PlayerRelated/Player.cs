@@ -65,12 +65,16 @@ public class Player : MonoBehaviour
     [SerializeField] private int poisonDuration;
     [SerializeField] private int curseDuration;
 
+    //CardsInHand
     [SerializeField] private int numSupportCardsUsedThisTurn;
     [SerializeField] private int maxSupportCardsToUse;
     [SerializeField] private int extraSupportCardUses;
     [SerializeField] private int numMovementCardsUsedThisTurn;
     [SerializeField] private int maxMovementCardsToUse;
     [SerializeField] private int extraMovementCardUses;
+    [SerializeField] private bool movementCardSelectedForUse;
+    [SerializeField] private bool supportCardSelectedForUse;
+
     [SerializeField] private bool ableToLevelUp;
     [SerializeField] private ClassData classData;
     [SerializeField] private Space currentSpacePlayerIsOn;
@@ -109,13 +113,15 @@ public class Player : MonoBehaviour
     public bool IsDefeated { get => isDefeated; set => isDefeated = value; }
     public bool WasAfflictedWithStatusThisTurn { get => wasAfflictedWithStatusThisTurn; set => wasAfflictedWithStatusThisTurn = value; }
     public int PoisonDuration { get => poisonDuration; set => poisonDuration = value; }
+    public int CurseDuration { get => curseDuration; set => curseDuration = value; }
     public int MaxSupportCardsToUse { get => maxSupportCardsToUse; set => maxSupportCardsToUse = value; }
     public int NumSupportCardsUsedThisTurn { get => numSupportCardsUsedThisTurn; set => numSupportCardsUsedThisTurn = value; }
     public int ExtraSupportCardUses { get => extraSupportCardUses; set => extraSupportCardUses = value; }
     public int MaxMovementCardsToUse { get => maxMovementCardsToUse; set => maxMovementCardsToUse = value; }
     public int NumMovementCardsUsedThisTurn { get => numMovementCardsUsedThisTurn; set => numMovementCardsUsedThisTurn = value; }
     public int ExtraMovementCardUses { get => extraMovementCardUses; set => extraMovementCardUses = value; }
-    public int CurseDuration { get => curseDuration; set => curseDuration = value; }
+    public bool MovementCardSelectedForUse { get => movementCardSelectedForUse; set => movementCardSelectedForUse = value; }
+    public bool SupportCardSelectedForUse { get => supportCardSelectedForUse; set => supportCardSelectedForUse = value; }
     public bool AbleToLevelUp { get => ableToLevelUp; set => ableToLevelUp = value; }
     public ClassData ClassData { get => classData; set => classData = value; }
     public Space CurrentSpacePlayerIsOn
@@ -175,7 +181,6 @@ public class Player : MonoBehaviour
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
     public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
     public Animator Animator { get => animator; set => animator = value; }
-    
 
     public void InitializePlayer(ClassData data)
     {
@@ -191,6 +196,8 @@ public class Player : MonoBehaviour
         NumSupportCardsUsedThisTurn = 0;
         MaxMovementCardsToUse = ClassData.maxMovementCardsToUsePerTurn;
         NumMovementCardsUsedThisTurn = 0;
+        MovementCardSelectedForUse = false;
+        SupportCardSelectedForUse = false;
         IsDefeated = false;
         CardsLeftToDiscard = 0;
         ValidCardTypesToDiscard = CardType.None;
@@ -213,6 +220,8 @@ public class Player : MonoBehaviour
         NumSupportCardsUsedThisTurn = 0;
         MaxMovementCardsToUse = ClassData.maxMovementCardsToUsePerTurn;
         NumMovementCardsUsedThisTurn = 0;
+        MovementCardSelectedForUse = false;
+        SupportCardSelectedForUse = false;
         IsDefeated = false;
         CardsLeftToDiscard = 0;
         ValidCardTypesToDiscard = CardType.None;
@@ -818,6 +827,8 @@ public class Player : MonoBehaviour
             DiscardFromHand(cardsToDiscard[i].ThisCardType, cardsToDiscard[i]);
         }
 
+        MovementCardSelectedForUse = false;
+        SupportCardSelectedForUse = false;
         GameplayManagerRef.UseSelectedCardsButton.onClick.RemoveAllListeners();
         GameplayManagerRef.UseSelectedCardsPanel.SetActive(false);
         GameplayManagerRef.HandDisplayPanel.ShrinkHand();

@@ -111,6 +111,12 @@ public class SupportCard : Card
                     return;
                 }
 
+                if (GameplayManager.Players[indexOfCurrentPlayer].MovementCardSelectedForUse)
+                {
+                    DialogueBoxPopup.instance.ActivatePopupWithJustText("You're currently selecting movement cards. Deselect all movement cards to select a support card.", 2.0f);
+                    return;
+                }
+
                 if (!CardIsActiveHovered)
                 {
                     CardIsActiveHovered = true;
@@ -144,6 +150,17 @@ public class SupportCard : Card
                 }
             }
         }
+    }
+
+    public override void SelectForUse()
+    {
+        base.SelectForUse();
+        int indexOfCurrentPlayer;
+        int numSelected;
+        int maxNumPlayerCanSelect;
+
+        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        GameplayManager.Players[indexOfCurrentPlayer].SupportCardSelectedForUse = true;
     }
 
     public override void DeselectForUse()

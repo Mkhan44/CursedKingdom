@@ -134,6 +134,12 @@ public class MovementCard : Card
                     return;
                 }
 
+                if (GameplayManager.Players[indexOfCurrentPlayer].SupportCardSelectedForUse)
+                {
+                    DialogueBoxPopup.instance.ActivatePopupWithJustText("You're currently selecting support cards. Deselect all support cards to select a movement card.", 2.0f);
+                    return;
+                }
+
                 int maxNumPlayerCanSelect = thePlayer.MaxMovementCardsToUse + thePlayer.ExtraMovementCardUses;
 
                 if (maxNumPlayerCanSelect > 1 && thePlayer.NumMovementCardsUsedThisTurn <= 1 && !SelectedForUse)
@@ -203,6 +209,16 @@ public class MovementCard : Card
         }
     }
 
+    public override void SelectForUse()
+    {
+        base.SelectForUse();
+        int indexOfCurrentPlayer;
+        int numSelected;
+        int maxNumPlayerCanSelect;
+
+        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        GameplayManager.Players[indexOfCurrentPlayer].MovementCardSelectedForUse = true;
+    }
     public override void DeselectForUse()
     {
         base.DeselectForUse();
