@@ -111,9 +111,15 @@ public class SupportCard : Card
                     return;
                 }
 
-                if (!CardIsSelected)
+                if (GameplayManager.Players[indexOfCurrentPlayer].MovementCardSelectedForUse)
                 {
-                    CardIsSelected = true;
+                    DialogueBoxPopup.instance.ActivatePopupWithJustText("You're currently selecting movement cards. Deselect all movement cards to select a support card.", 2.0f);
+                    return;
+                }
+
+                if (!CardIsActiveHovered)
+                {
+                    CardIsActiveHovered = true;
                     StartCoroutine(HoverCardEffect());
                 }
                 else
@@ -123,7 +129,7 @@ public class SupportCard : Card
                         DialogueBoxPopup.instance.ActivatePopupWithJustText($"You have already used a support card this turn.", 2.0f);
                         GameplayManager.HandDisplayPanel.ShrinkHand();
                         transform.localScale = OriginalSize;
-                        CardIsSelected = false;
+                        CardIsActiveHovered = false;
                         return;
                     }
 
@@ -133,16 +139,48 @@ public class SupportCard : Card
                     {
                         GameplayManager.HandDisplayPanel.ShrinkHand();
                         transform.localScale = OriginalSize;
-                        CardIsSelected = false;
+                        CardIsActiveHovered = false;
                         return;
                     }
                     GameplayManager.Players[indexOfCurrentPlayer].UseSupportCard();
                     GameplayManager.Players[indexOfCurrentPlayer].DiscardFromHand(ThisCardType, this);
                     GameplayManager.HandDisplayPanel.ShrinkHand();
                     transform.localScale = OriginalSize;
-                    CardIsSelected = false;
+                    CardIsActiveHovered = false;
                 }
             }
+        }
+    }
+
+    public override void SelectForUse()
+    {
+        base.SelectForUse();
+        int indexOfCurrentPlayer;
+        int numSelected;
+        int maxNumPlayerCanSelect;
+
+        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        GameplayManager.Players[indexOfCurrentPlayer].SupportCardSelectedForUse = true;
+    }
+
+    public override void DeselectForUse()
+    {
+        base.DeselectForUse();
+        int indexOfCurrentPlayer;
+        int numSelected;
+        int maxNumPlayerCanSelect;
+
+        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+
+        if (GameplayManager.Players[indexOfCurrentPlayer].ExtraSupportCardUses > 0)
+        {
+            if (!GameplayManager.UseSelectedCardsPanel.activeInHierarchy)
+            {
+                GameplayManager.UseSelectedCardsPanel.SetActive(true);
+            }
+            GameplayManager.UseSelectedCardsText.text = $"Selected cards: {numSelected}/{maxNumPlayerCanSelect}";
+            GameplayManager.UseSelectedCardsButton.onClick.RemoveAllListeners();
+            GameplayManager.UseSelectedCardsButton.onClick.AddListener(GameplayManager.Players[indexOfCurrentPlayer].UseMultipleCards);
         }
     }
 

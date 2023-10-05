@@ -21,6 +21,8 @@ public class ClassData : ScriptableObject
     public int startingHealth;
     [Range(1,10)]
     public int maxSupportCardsToUsePerTurn = 1;
+    [Range(1, 10)]
+    public int maxMovementCardsToUsePerTurn = 1;
     [TextArea(3, 5)]
     public string description;
     public RuntimeAnimatorController animatorController;

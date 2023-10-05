@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -64,8 +65,16 @@ public class Player : MonoBehaviour
     [SerializeField] private int poisonDuration;
     [SerializeField] private int curseDuration;
 
+    //CardsInHand
     [SerializeField] private int numSupportCardsUsedThisTurn;
     [SerializeField] private int maxSupportCardsToUse;
+    [SerializeField] private int extraSupportCardUses;
+    [SerializeField] private int numMovementCardsUsedThisTurn;
+    [SerializeField] private int maxMovementCardsToUse;
+    [SerializeField] private int extraMovementCardUses;
+    [SerializeField] private bool movementCardSelectedForUse;
+    [SerializeField] private bool supportCardSelectedForUse;
+
     [SerializeField] private bool ableToLevelUp;
     [SerializeField] private ClassData classData;
     [SerializeField] private Space currentSpacePlayerIsOn;
@@ -104,9 +113,15 @@ public class Player : MonoBehaviour
     public bool IsDefeated { get => isDefeated; set => isDefeated = value; }
     public bool WasAfflictedWithStatusThisTurn { get => wasAfflictedWithStatusThisTurn; set => wasAfflictedWithStatusThisTurn = value; }
     public int PoisonDuration { get => poisonDuration; set => poisonDuration = value; }
+    public int CurseDuration { get => curseDuration; set => curseDuration = value; }
     public int MaxSupportCardsToUse { get => maxSupportCardsToUse; set => maxSupportCardsToUse = value; }
     public int NumSupportCardsUsedThisTurn { get => numSupportCardsUsedThisTurn; set => numSupportCardsUsedThisTurn = value; }
-    public int CurseDuration { get => curseDuration; set => curseDuration = value; }
+    public int ExtraSupportCardUses { get => extraSupportCardUses; set => extraSupportCardUses = value; }
+    public int MaxMovementCardsToUse { get => maxMovementCardsToUse; set => maxMovementCardsToUse = value; }
+    public int NumMovementCardsUsedThisTurn { get => numMovementCardsUsedThisTurn; set => numMovementCardsUsedThisTurn = value; }
+    public int ExtraMovementCardUses { get => extraMovementCardUses; set => extraMovementCardUses = value; }
+    public bool MovementCardSelectedForUse { get => movementCardSelectedForUse; set => movementCardSelectedForUse = value; }
+    public bool SupportCardSelectedForUse { get => supportCardSelectedForUse; set => supportCardSelectedForUse = value; }
     public bool AbleToLevelUp { get => ableToLevelUp; set => ableToLevelUp = value; }
     public ClassData ClassData { get => classData; set => classData = value; }
     public Space CurrentSpacePlayerIsOn
@@ -166,7 +181,6 @@ public class Player : MonoBehaviour
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
     public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
     public Animator Animator { get => animator; set => animator = value; }
-    
 
     public void InitializePlayer(ClassData data)
     {
@@ -180,6 +194,10 @@ public class Player : MonoBehaviour
         MaxHandSize = 6;
         MaxSupportCardsToUse = ClassData.maxSupportCardsToUsePerTurn;
         NumSupportCardsUsedThisTurn = 0;
+        MaxMovementCardsToUse = ClassData.maxMovementCardsToUsePerTurn;
+        NumMovementCardsUsedThisTurn = 0;
+        MovementCardSelectedForUse = false;
+        SupportCardSelectedForUse = false;
         IsDefeated = false;
         CardsLeftToDiscard = 0;
         ValidCardTypesToDiscard = CardType.None;
@@ -200,6 +218,10 @@ public class Player : MonoBehaviour
         MaxHandSize = 6;
         MaxSupportCardsToUse = ClassData.maxSupportCardsToUsePerTurn;
         NumSupportCardsUsedThisTurn = 0;
+        MaxMovementCardsToUse = ClassData.maxMovementCardsToUsePerTurn;
+        NumMovementCardsUsedThisTurn = 0;
+        MovementCardSelectedForUse = false;
+        SupportCardSelectedForUse = false;
         IsDefeated = false;
         CardsLeftToDiscard = 0;
         ValidCardTypesToDiscard = CardType.None;
@@ -271,13 +293,23 @@ public class Player : MonoBehaviour
         {
             if(damageToTake > 0)
             {
-                playerTarget.TakeDamage(damageToTake);
-                Debug.Log($"Calling the method to attack the player. Player {playerTarget} will take {damageToTake} Damage!");
+                if(IsHandlingSupportCardEffects && isElemental)
+                {
+                    //Allow target player to respond with elemental barrier if they have it.
+                    playerTarget.TakeDamage(damageToTake);
+                }
+                else
+                {
+                    playerTarget.TakeDamage(damageToTake);
+                }
+
+                
+               // Debug.Log($"Calling the method to attack the player. Player {playerTarget} will take {damageToTake} Damage!");
             }
         }
         else
         {
-            Debug.Log($"Calling the method to attack the player but don't have a target...");
+            Debug.LogWarning($"Calling the method to attack the player but don't have a target...");
         }
         
         if(IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
@@ -512,7 +544,7 @@ public class Player : MonoBehaviour
         CardsLeftToDiscard = numToDiscard;
     }
 
-    public void SelectCardToDiscard()
+    public void SelectCardForDiscard()
     {
         CardsLeftToDiscard -= 1;
 
@@ -521,7 +553,7 @@ public class Player : MonoBehaviour
         {
             List<Tuple<string, string, object>> insertedParams = new();
             insertedParams.Add(Tuple.Create<string, string, object>("Yes", nameof(DiscardTheSelectedCards), this));
-            insertedParams.Add(Tuple.Create<string, string, object>("No", nameof(DeselectAllSelectedCards), this));
+            insertedParams.Add(Tuple.Create<string, string, object>("No", nameof(DeselectAllSelectedCardsForDiscard), this));
 
             DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to discard the selected card(s)?", insertedParams, null, 1, "Confirm Selection");
         }
@@ -530,7 +562,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// If the user decides to reselect cards that is what this option is for.
     /// </summary>
-    public IEnumerator DeselectAllSelectedCards()
+    public IEnumerator DeselectAllSelectedCardsForDiscard()
     {
         yield return null;
 
@@ -560,7 +592,6 @@ public class Player : MonoBehaviour
             {
                 DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select {CardsLeftToDiscard} Movement and/or Support cards to discard.", 0, "Discard");
             }
-            
         }
     }
 
@@ -593,6 +624,8 @@ public class Player : MonoBehaviour
         {
             if(!IsHandlingSupportCardEffects)
             {
+                ResetSupportCardUsageCount();
+                ResetMovementCardUsageCount();
                 TurnIsCompleted();
             }
             else
@@ -604,6 +637,9 @@ public class Player : MonoBehaviour
         {
             CompletedDiscardingForEffect();
         }
+
+        ValidCardTypesToDiscard = CardType.None;
+        CardsLeftToDiscard = 0;
     }
 
     public void DiscardFromHand(Card.CardType cardType , Card cardToDiscard)
@@ -630,21 +666,23 @@ public class Player : MonoBehaviour
         SetSupportCardsInHand();
     }
 
-    public void UseSupportCard()
+    public void UseMovementCard()
     {
-        NumSupportCardsUsedThisTurn += 1;
+        NumMovementCardsUsedThisTurn += 1;
     }
 
-    public void ResetSupportCardUsageCount()
+    public void ResetMovementCardUsageCount()
     {
-        NumSupportCardsUsedThisTurn = 0;
+        ExtraMovementCardUses = 0;
+        NumMovementCardsUsedThisTurn = 0;
     }
 
-    public bool CanUseSupportCard()
+    public bool CanUseMovementCard()
     {
         bool canUse;
+        int maximumAmountTouse = ExtraMovementCardUses + MaxMovementCardsToUse;
 
-        if(NumSupportCardsUsedThisTurn >= MaxSupportCardsToUse)
+        if(NumMovementCardsUsedThisTurn >= maximumAmountTouse)
         {
             canUse = false;
         }
@@ -654,6 +692,166 @@ public class Player : MonoBehaviour
         }
 
         return canUse;
+    }
+
+    public void UseSupportCard()
+    {
+        NumSupportCardsUsedThisTurn += 1;
+    }
+
+    public void ResetSupportCardUsageCount()
+    {
+        ExtraSupportCardUses = 0;
+        NumSupportCardsUsedThisTurn = 0;
+    }
+
+    public bool CanUseSupportCard()
+    {
+        bool canUse;
+        int maximumAmountTouse = ExtraMovementCardUses + MaxMovementCardsToUse;
+
+        if (NumSupportCardsUsedThisTurn >= maximumAmountTouse)
+        {
+            canUse = false;
+        }
+        else
+        {
+            canUse = true;
+        }
+
+        return canUse;
+    }
+
+    public void IncreaseMaxCardUses(int numToIncreaseBy, CardType cardType)
+    {
+        if(cardType == CardType.Movement)
+        {
+            ExtraMovementCardUses += numToIncreaseBy;
+        }
+        else
+        {
+            ExtraSupportCardUses += numToIncreaseBy;
+        }
+    }
+
+    public void SelectMultipleCardsToUse()
+    {
+        int numSelected = 0;
+        int maxNumPlayerCanSelect = MaxMovementCardsToUse + ExtraMovementCardUses;
+
+        foreach (Card card in CardsInhand)
+        {
+            if (card.SelectedForUse)
+            {
+                numSelected += 1;
+            }
+        }
+
+        if(!GameplayManagerRef.UseSelectedCardsPanel.activeInHierarchy)
+        {
+            GameplayManagerRef.UseSelectedCardsPanel.SetActive(true);
+        }
+
+        GameplayManagerRef.UseSelectedCardsText.text = $"Selected cards: {numSelected}/{maxNumPlayerCanSelect}";
+        GameplayManagerRef.UseSelectedCardsButton.onClick.RemoveAllListeners();
+        GameplayManagerRef.UseSelectedCardsButton.onClick.AddListener(UseMultipleCards);
+        List<Tuple<string, string, object>> insertedParams = new();
+
+        if (numSelected < maxNumPlayerCanSelect)
+        {
+            //insertedParams.Add(Tuple.Create<string, string, object>("Select more", nameof(SelectMoreCardsToUse), this));
+            //insertedParams.Add(Tuple.Create<string, string, object>("Use selected", nameof(UseMultipleCards), this));
+
+            //DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Do you want to select more cards to use? (Max {maxNumPlayerCanSelect})", insertedParams, null, 1, "Confirm Selection");
+            
+        }
+        else
+        {
+            //insertedParams.Add(Tuple.Create<string, string, object>("Yes", nameof(UseMultipleCards), this));
+            //insertedParams.Add(Tuple.Create<string, string, object>("No", nameof(DeselectAllSelectedCardsForUse), this));
+
+            //DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to use the selected movement cards together?", insertedParams, null, 1, "Confirm Selection");
+        }
+
+    }
+
+    public IEnumerator SelectMoreCardsToUse()
+    {
+        yield return null;
+
+        DialogueBoxPopup.instance.DeactivatePopup();
+    }
+
+
+    /// <summary>
+    /// Takes in a list of objects in this order: List<Card> cards to use.
+    /// </summary>
+    /// <returns></returns>
+    public void UseMultipleCards()
+    {
+        int totalToUse = 0;
+        List<Card> cardsToDiscard = new();
+        foreach (Card card in CardsInhand)
+        {
+            if(card is MovementCard)
+            {
+                MovementCard movementCard = (MovementCard)card;
+
+                if(movementCard.SelectedForUse)
+                {
+                    cardsToDiscard.Add(card);
+
+                    if (movementCard.TempCardValue > 0)
+                    {
+                        totalToUse += movementCard.TempCardValue;
+                        movementCard.ResetMovementValue();
+                        if (!IsCursed)
+                        {
+                            movementCard.DeactivateCurseEffect();
+                        }
+                    }
+                    else
+                    {
+                        totalToUse += movementCard.MovementCardValue;
+                    }
+
+                    movementCard.transform.localScale = movementCard.OriginalSize;
+                    movementCard.CardIsActiveHovered = false;
+                }
+            }
+        }
+
+        for (int i = 0; i < cardsToDiscard.Count; i++)
+        {
+            UseMovementCard();
+            DiscardFromHand(cardsToDiscard[i].ThisCardType, cardsToDiscard[i]);
+        }
+
+        MovementCardSelectedForUse = false;
+        SupportCardSelectedForUse = false;
+        GameplayManagerRef.UseSelectedCardsButton.onClick.RemoveAllListeners();
+        GameplayManagerRef.UseSelectedCardsPanel.SetActive(false);
+        GameplayManagerRef.HandDisplayPanel.ShrinkHand();
+        GameplayManagerRef.StartMove(totalToUse);
+        
+    }
+
+    /// <summary>
+    /// If the user decides to reselect cards to use multiple of that is what this option is for.
+    /// </summary>
+    public IEnumerator DeselectAllSelectedCardsForUse()
+    {
+        yield return null;
+
+        foreach (Card card in CardsInhand)
+        {
+            if (card.SelectedForUse)
+            {
+                card.DeselectForUse();
+            }
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithJustText("Movement cards deselected.", 1f);
     }
 
 
@@ -921,7 +1119,6 @@ public class Player : MonoBehaviour
 
     public void FinishedHandlingSpaceEffects()
     {
-        
         foreach(SpaceEffectData spaceEffect in tempSpaceEffectsToHandle)
         {
             spaceEffect.SpaceEffectCompleted -= ExecuteNextSpaceEffect;
@@ -932,9 +1129,18 @@ public class Player : MonoBehaviour
         currentSpaceEffectDataToHandle = null;
         IsHandlingSpaceEffects = false;
 
+        //Change this check to be based on state of the game rather than movement cards.
+        if (NumMovementCardsUsedThisTurn == 0)
+        {
+            return;
+        }
+
+        GameplayManagerRef.ThisDeckManager.DrawCard(CardType.Movement, this);
+
         if(!IsMoving && !MaxHandSizeExceeded())
         {
             ResetSupportCardUsageCount();
+            ResetMovementCardUsageCount();
             TurnIsCompleted();
         }
     }
@@ -944,7 +1150,17 @@ public class Player : MonoBehaviour
         if(spaceEffectsToHandle.Count > 0)
         {
             currentSpaceEffectDataToHandle = spaceEffectsToHandle.Dequeue();
-            currentSpaceEffectDataToHandle.LandedOnEffect(this);
+
+            //Change this check to be based on state of the game rather than movement cards.
+            if(NumMovementCardsUsedThisTurn == 0)
+            {
+                currentSpaceEffectDataToHandle.StartOfTurnEffect(this);
+            }
+            else
+            {
+                currentSpaceEffectDataToHandle.LandedOnEffect(this);
+            }
+            
         }
         else
         {

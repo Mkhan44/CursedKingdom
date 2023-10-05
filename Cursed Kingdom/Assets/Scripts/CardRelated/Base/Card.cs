@@ -32,8 +32,9 @@ public class Card : MonoBehaviour , IPointerClickHandler
     [SerializeField] private Animator parentAnimator;
     [SerializeField] private Animator textureAnimator;
 
-    [SerializeField] private bool cardIsSelected;
+    [SerializeField] private bool cardIsActiveHovered;
     [SerializeField] private bool selectedForDiscard;
+    [SerializeField] private bool selectedForUse;
     [SerializeField] private Vector3 originalSize;
     [SerializeField] private Vector3 hoveredSize;
     [SerializeField] private Color originalBackgroundGlowColor;
@@ -46,8 +47,9 @@ public class Card : MonoBehaviour , IPointerClickHandler
     public Image BackgroundSelectedGlow { get => backgroundSelectedGlow; set => backgroundSelectedGlow = value; }
     public Animator ParentAnimator { get => parentAnimator; set => parentAnimator = value; }
     public Animator TextureAnimator { get => textureAnimator; set => textureAnimator = value; }
-    public bool CardIsSelected { get => cardIsSelected; set => cardIsSelected = value; }
+    public bool CardIsActiveHovered { get => cardIsActiveHovered; set => cardIsActiveHovered = value; }
     public bool SelectedForDiscard { get => selectedForDiscard; set => selectedForDiscard = value; }
+    public bool SelectedForUse { get => selectedForUse; set => selectedForUse = value; }
     public GameplayManager GameplayManager { get => gameplayManager; set => gameplayManager = value; }
     public Vector3 OriginalSize { get => originalSize; set => originalSize = value; }
     public Vector3 HoveredSize { get => hoveredSize; set => hoveredSize = value; }
@@ -78,6 +80,60 @@ public class Card : MonoBehaviour , IPointerClickHandler
         
     }
 
+    public virtual void SelectForUse()
+    {
+        int indexOfCurrentPlayer;
+        int numSelected;
+        int maxNumPlayerCanSelect;
+
+        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+
+        if (numSelected == maxNumPlayerCanSelect)
+        {
+            DialogueBoxPopup.instance.ActivatePopupWithJustText("You have already selected the maximum amount of cards that can be used.", 1.5f);
+            return;
+        }
+
+        SelectedForUse = true;
+        Color selectedColor = OriginalBackgroundGlowColor;
+        selectedColor.a = 150;
+        BackgroundSelectedGlow.color = selectedColor;
+        GameplayManager.Players[indexOfCurrentPlayer].SelectMultipleCardsToUse();
+    }
+
+    public virtual void DeselectForUse()
+    {
+        int indexOfCurrentPlayer;
+        int numSelected;
+        int maxNumPlayerCanSelect;
+
+        SelectedForUse = false;
+        BackgroundSelectedGlow.color = originalBackgroundGlowColor;
+
+        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        if (numSelected < 1)
+        {
+            GameplayManager.Players[indexOfCurrentPlayer].MovementCardSelectedForUse = false;
+            GameplayManager.Players[indexOfCurrentPlayer].SupportCardSelectedForUse = false;
+        }
+    }
+    protected void CheckAmountOfCardsPlayerHasSelected(out int indexOfCurrentPlayer, out int numSelected, out int maxNumPlayerCanSelect)
+    {
+        //Check if Player has selected max they are allowed to, if they can't then don't select and make a popup.
+        indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
+        numSelected = 0;
+        maxNumPlayerCanSelect = GameplayManager.Players[indexOfCurrentPlayer].MaxMovementCardsToUse + GameplayManager.Players[indexOfCurrentPlayer].ExtraMovementCardUses;
+
+        foreach (Card card in GameplayManager.Players[indexOfCurrentPlayer].CardsInhand)
+        {
+            if (card.SelectedForUse)
+            {
+                numSelected += 1;
+            }
+        }
+    }
+
+
     public virtual void SelectForDiscard()
     {
         selectedForDiscard = true;
@@ -85,7 +141,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
         selectedColor.a = 150;
         BackgroundSelectedGlow.color = selectedColor;
         int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
-        GameplayManager.Players[indexOfCurrentPlayer].SelectCardToDiscard();
+        GameplayManager.Players[indexOfCurrentPlayer].SelectCardForDiscard();
     }
 
     public virtual void DeselectForDiscard()
@@ -102,8 +158,9 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     public virtual void DeselectCard()
     {
-        CardIsSelected = false;
+        CardIsActiveHovered = false;
         DeselectForDiscard();
+        DeselectForUse();
         StartCoroutine(LeaveCardEffect());
     }
 
@@ -116,7 +173,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
             if (theCard is not null && theCard != this)
             {
-                if (theCard.CardIsSelected)
+                if (theCard.CardIsActiveHovered)
                 {
                     theCard.DeselectCard();
                     break;
@@ -133,7 +190,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
         float rate = 0.0f;
 
         rate = 1.0f / 2.0f * 3.0f;
-        while (CardIsSelected)
+        while (CardIsActiveHovered)
         {
             transform.localScale = Vector3.Lerp(transform.localScale, HoveredSize, timePassed / rate);
             timePassed += Time.unscaledDeltaTime;
@@ -148,7 +205,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
         float rate = 0.0f;
 
         rate = 1.0f / 2.0f * 3.0f;
-        while (!CardIsSelected)
+        while (!CardIsActiveHovered)
         {
             transform.localScale = Vector3.Lerp(transform.localScale, OriginalSize, timePassed / rate);
             timePassed += Time.unscaledDeltaTime;

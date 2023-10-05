@@ -22,7 +22,7 @@ public class MovementCard : Card
 
     public MovementCardData MovementCardData { get => movementCardData; set => movementCardData = value; }
     public int MovementCardValue { get => movementCardValue; set => movementCardValue = value; }
-
+    public int TempCardValue { get => tempCardValue; set => tempCardValue = value; }
 
     private void Start()
     {
@@ -39,7 +39,7 @@ public class MovementCard : Card
         base.SetupCard(cardData);
         MovementCardData = cardData as MovementCardData;
         MovementCardValue = MovementCardData.MovementValue;
-        tempCardValue = 0;
+        TempCardValue = 0;
         TitleText.text = "Movement";
         movementValueText.text = MovementCardValue.ToString();
     }
@@ -55,8 +55,8 @@ public class MovementCard : Card
         {
             if(MovementCardValue != 1)
             {
-                tempCardValue = Mathf.CeilToInt(MovementCardValue / 2);
-                movementValueText.text = tempCardValue.ToString();
+                TempCardValue = Mathf.CeilToInt(MovementCardValue / 2);
+                movementValueText.text = TempCardValue.ToString();
             }
 
             return;
@@ -64,8 +64,8 @@ public class MovementCard : Card
 
         if(increaseTheValue)
         {
-            tempCardValue += valueToIncreaseBy;
-            movementValueText.text = tempCardValue.ToString();
+            TempCardValue += valueToIncreaseBy;
+            movementValueText.text = TempCardValue.ToString();
             return;
         }
     }
@@ -73,14 +73,14 @@ public class MovementCard : Card
     public void ResetMovementValue()
     {
         movementValueText.text = MovementCardValue.ToString();
-        tempCardValue = 0;
+        TempCardValue = 0;
     }
 
     public int MovementValueToUse()
     {
-        if(tempCardValue > 0)
+        if(TempCardValue > 0)
         {
-            return tempCardValue;
+            return TempCardValue;
         }
         else
         {
@@ -100,6 +100,7 @@ public class MovementCard : Card
         if (handExpandUI is not null)
         {
             int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
+            Player thePlayer = GameplayManager.Players[indexOfCurrentPlayer];
             if (!handExpandUI.CurrentActiveTransform.IsExpanded)
             {
                 handExpandUI.ExpandHand(ThisCardType, GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>()));
@@ -116,12 +117,12 @@ public class MovementCard : Card
                 }
                 DeselectOtherSelectedCards();
 
-                if (GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard > 0 && !SelectedForDiscard && IsValidCardTypeToDiscard(GameplayManager.Players[indexOfCurrentPlayer]))
+                if (thePlayer.CardsLeftToDiscard > 0 && !SelectedForDiscard && IsValidCardTypeToDiscard(thePlayer))
                 {
                     SelectForDiscard();
                     return;
                 }
-                else if (GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard > 0 && !SelectedForDiscard && !IsValidCardTypeToDiscard(GameplayManager.Players[indexOfCurrentPlayer]))
+                else if (thePlayer.CardsLeftToDiscard > 0 && !SelectedForDiscard && !IsValidCardTypeToDiscard(thePlayer))
                 {
                     Debug.LogWarning("Hey! You can't select this card to discard.");
                     return;
@@ -133,34 +134,109 @@ public class MovementCard : Card
                     return;
                 }
 
-                if (!CardIsSelected)
+                if (GameplayManager.Players[indexOfCurrentPlayer].SupportCardSelectedForUse)
                 {
-                    CardIsSelected = true;
+                    DialogueBoxPopup.instance.ActivatePopupWithJustText("You're currently selecting support cards. Deselect all support cards to select a movement card.", 2.0f);
+                    return;
+                }
+
+                int maxNumPlayerCanSelect = thePlayer.MaxMovementCardsToUse + thePlayer.ExtraMovementCardUses;
+
+                if (maxNumPlayerCanSelect > 1 && thePlayer.NumMovementCardsUsedThisTurn <= 1 && !SelectedForUse)
+                {
+                    SelectForUse();
+                    return;
+                }
+
+                if (SelectedForUse)
+                {
+                    DeselectForUse();
+                    return;
+                }
+
+                if (!CardIsActiveHovered)
+                {
+                    CardIsActiveHovered = true;
                     StartCoroutine(HoverCardEffect());
                 }
                 else
                 {
-                    if(tempCardValue > 0)
+                    if(TempCardValue > 0)
                     {
-                        GameplayManager.StartMove(tempCardValue);
-                        ResetMovementValue();
-                        if(!GameplayManager.Players[indexOfCurrentPlayer].IsCursed)
+                        if(thePlayer.CanUseMovementCard())
                         {
-                            DeactivateCurseEffect();
+                            GameplayManager.StartMove(TempCardValue);
+                            ResetMovementValue();
+                            if (!thePlayer.IsCursed)
+                            {
+                                DeactivateCurseEffect();
+                            }
                         }
+                        else
+                        {
+                            DialogueBoxPopup.instance.ActivatePopupWithJustText($"You can't use anymore movement cards this turn.", 2.0f);
+                            GameplayManager.HandDisplayPanel.ShrinkHand();
+                            transform.localScale = OriginalSize;
+                            CardIsActiveHovered = false;
+                            return;
+                        }
+                        
                     }
                     else
                     {
-                        GameplayManager.StartMove(MovementCardValue);
+                        if (thePlayer.CanUseMovementCard())
+                        {
+                            thePlayer.UseMovementCard();
+                            GameplayManager.StartMove(MovementCardValue);
+                        }
+                        else
+                        {
+                            DialogueBoxPopup.instance.ActivatePopupWithJustText($"You can't use anymore movement cards this turn.", 2.0f);
+                            GameplayManager.HandDisplayPanel.ShrinkHand();
+                            transform.localScale = OriginalSize;
+                            CardIsActiveHovered = false;
+                            return;
+                        }
                     }
 
-                    GameplayManager.Players[indexOfCurrentPlayer].DiscardFromHand(ThisCardType, this);
+                    thePlayer.DiscardFromHand(ThisCardType, this);
 
                     GameplayManager.HandDisplayPanel.ShrinkHand();
                     transform.localScale = OriginalSize;
-                    CardIsSelected = false;
+                    CardIsActiveHovered = false;
                 }
             }
+        }
+    }
+
+    public override void SelectForUse()
+    {
+        base.SelectForUse();
+        int indexOfCurrentPlayer;
+        int numSelected;
+        int maxNumPlayerCanSelect;
+
+        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        GameplayManager.Players[indexOfCurrentPlayer].MovementCardSelectedForUse = true;
+    }
+    public override void DeselectForUse()
+    {
+        base.DeselectForUse();
+        int indexOfCurrentPlayer;
+        int numSelected;
+        int maxNumPlayerCanSelect;
+
+        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+
+        if (GameplayManager.Players[indexOfCurrentPlayer].ExtraMovementCardUses > 0)
+        {
+            if (!GameplayManager.UseSelectedCardsPanel.activeInHierarchy)
+            {
+                GameplayManager.UseSelectedCardsPanel.SetActive(true);
+            }
+            GameplayManager.UseSelectedCardsText.text = $"Selected cards: {numSelected}/{maxNumPlayerCanSelect}";
+            GameplayManager.UseSelectedCardsButton.onClick.RemoveAllListeners();
+            GameplayManager.UseSelectedCardsButton.onClick.AddListener(GameplayManager.Players[indexOfCurrentPlayer].UseMultipleCards);
         }
     }
 
@@ -174,6 +250,7 @@ public class MovementCard : Card
         }
         return isValid;
     }
+
 
     #region Status Effects
     public override void ActivateCurseEffect()

@@ -13,15 +13,20 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     [SerializeField] private bool isACost;
     [SerializeField] private bool isPositiveEffect;
 
+    [Tooltip("This should be true if the space effect happens when a player starts their turn on the space. NOTE: SHOULD BE THE 1ST EFFECT IN SPACE EFFECTS LIST.")]
+    [SerializeField] private bool onSpaceTurnStartEffect;
+    [Tooltip("This should be true if the space effect happens AFTER a duel.")]
+    [SerializeField] private bool afterDuelEffect;
     [SerializeField] [TextArea(3,10)] private string effectDescription;
     [Tooltip("Check this box if you want to override the auto-description setup by the code.")]
     [SerializeField] private bool overrideAutoDescription;
 
     public bool IsACost { get => isACost; set => isACost = value; }
     public bool IsPositiveEffect { get => isPositiveEffect; set => isPositiveEffect = value; }
+    public bool OnSpaceTurnStartEffect { get => onSpaceTurnStartEffect; set => onSpaceTurnStartEffect = value; }
+    public bool AfterDuelEffect { get => afterDuelEffect; set => afterDuelEffect = value; }
     public string EffectDescription { get => effectDescription; set => effectDescription = value; }
     public bool OverrideAutoDescription { get => overrideAutoDescription; set => overrideAutoDescription = value; }
-
 
     public enum DirectionToTravel
     {
@@ -39,12 +44,14 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
 
     public virtual void StartOfTurnEffect(Player playerReference)
     {
-        
+        //Usually called after the effect has been completed.
+        CompletedEffect(playerReference);
     }
 
     public virtual void EndOfTurnEffect(Player playerReference)
     {
-        
+        //Usually called after the effect has been completed.
+        CompletedEffect(playerReference);
     }
     public virtual bool CanCostBePaid(Player playerReference)
     {

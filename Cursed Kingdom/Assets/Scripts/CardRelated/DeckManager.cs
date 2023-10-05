@@ -148,6 +148,13 @@ public class DeckManager : MonoBehaviour
             }
             playerDrawingCard.DrawCard(MovementDeckList[0]);
             MovementDeckList.Remove(MovementDeckList[0]);
+
+            //End of turn darw
+            if(!playerDrawingCard.IsHandlingSpaceEffects && !playerDrawingCard.IsHandlingSupportCardEffects && playerDrawingCard.MaxHandSizeExceeded())
+            {
+                gameplayManager.UpdatePlayerInfoUICardCount(playerDrawingCard);
+                IsDiscarding = true;
+            }
         }
         else
         {

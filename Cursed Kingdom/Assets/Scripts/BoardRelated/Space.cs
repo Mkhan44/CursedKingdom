@@ -96,7 +96,7 @@ public class Space : MonoBehaviour
             {
                 playerReference.IsMoving = false;
                // Debug.Log($"Player landed on space: {spaceData.spaceName}");
-                ApplySpaceEffects(playerReference);
+                ApplyLandedOnSpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
                 gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
                 //playerReference.DebugTheSpace();
@@ -121,7 +121,7 @@ public class Space : MonoBehaviour
             playerReference.CurrentSpacePlayerIsOn = this;
             if(this.spaceData.PassingOverSpaceEffect && playerReference.IsMoving)
             {
-                ApplySpaceEffects(playerReference);
+                ApplyLandedOnSpaceEffects(playerReference);
             }
         }
         else
@@ -139,7 +139,7 @@ public class Space : MonoBehaviour
             {
                 playerReference.IsMoving = false;
                // Debug.Log($"Player landed on space: {spaceData.spaceName}");
-                ApplySpaceEffects(playerReference);
+                ApplyLandedOnSpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
                 gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
             }
@@ -166,9 +166,112 @@ public class Space : MonoBehaviour
     }
 
 
+    //Apply all space effects at the beginning of the Player's turn. Anything that is a landed on effect/after duel effect will not be activated here.
+    public void ApplyStartOfTurnSpaceEffects(Player player)
+    {
+        //For debug mode.
+        SpaceData cachedSpaceData = spaceData;
 
-    //Will probably need a way to check if it's the beginning of the turn, if the player just landed on the space, etc.
-    private void ApplySpaceEffects(Player player)
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            Space tempSpace = DebugModeSingleton.instance.OverrideSpaceLandEffect();
+
+            if (tempSpace != null)
+            {
+                spaceData = tempSpace.spaceData;
+            }
+
+        }
+
+        if (spaceData.spaceEffects.Count < 1)
+        {
+            Debug.LogWarning("Hey, no space effects on this space currently!");
+        }
+
+        StartCoroutine(PlaySpaceInfoDisplayAnimationUI(player));
+
+        bool canAllCostsBePaid = false;
+        for (int i = 0; i < spaceData.spaceEffects.Count; i++)
+        {
+            if (spaceData.spaceEffects[i].spaceEffectData.IsACost && spaceData.spaceEffects[i].spaceEffectData.OnSpaceTurnStartEffect)
+            {
+                if (!spaceData.spaceEffects[i].spaceEffectData.CanCostBePaid(player))
+                {
+                    Debug.LogWarning($"Cost of {spaceData.spaceEffects[i].spaceEffectData.name} can't be paid. Can't execute space effects.");
+                    canAllCostsBePaid = false;
+                    break;
+                }
+                else
+                {
+                    canAllCostsBePaid = true;
+                }
+            }
+            else
+            {
+                canAllCostsBePaid = true;
+            }
+        }
+
+        if (canAllCostsBePaid)
+        {
+            Queue<SpaceEffectData> spaceEffectsForPlayerToHandle = new();
+            int numSpaceEffectData;
+            for (int j = 0; j < spaceData.spaceEffects.Count; j++)
+            {
+                //Do the space effect in sequence. We'll check for any external triggers here as well.
+                if (player.IsDefeated)
+                {
+                    break;
+                }
+                //This is too fast. Need a way to wait for each effect then go to the next.
+                numSpaceEffectData = j;
+                if (spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.OnSpaceTurnStartEffect && !spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.AfterDuelEffect)
+                {
+                    spaceEffectsForPlayerToHandle.Enqueue(spaceData.spaceEffects[numSpaceEffectData].spaceEffectData);
+                }
+            }
+
+            //If there's none, exit early.
+            if (spaceEffectsForPlayerToHandle.Count < 1)
+            {
+                return;
+            }
+
+            //Whatever we already had from passing over effects + the new effects.
+            player.SpaceEffectsToHandle = spaceEffectsForPlayerToHandle;
+        }
+
+        if (!player.IsMoving)
+        {
+            if (spaceData.IsNegative)
+            {
+                player.Animator.SetBool(Player.NEGATIVEEFFECT, true);
+            }
+            else
+            {
+                player.Animator.SetBool(Player.POSITIVEEFFECT, true);
+            }
+        }
+
+        if (!player.IsDefeated)
+        {
+            StartCoroutine(WaitASec(player));
+        }
+        //Player is defeated so their turn ends immediately.
+        else
+        {
+            gameplayManagerRef.EndOfTurn(player);
+        }
+
+        //Revert the space data back if we used debug to change it.
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            spaceData = cachedSpaceData;
+        }
+    }
+
+    //Apply all space effects after the Player has landed. Anything that is after duel/start of turn will not be activated here.
+    private void ApplyLandedOnSpaceEffects(Player player)
     {
         //For debug mode.
         SpaceData cachedSpaceData = spaceData;
@@ -181,7 +284,6 @@ public class Space : MonoBehaviour
             {
                 spaceData = tempSpace.spaceData;
             }
-
         }
 
         if(spaceData.spaceEffects.Count < 1)
@@ -191,24 +293,10 @@ public class Space : MonoBehaviour
 
         StartCoroutine(PlaySpaceInfoDisplayAnimationUI(player));
 
-        if(!player.IsMoving)
-        {
-            if (spaceData.IsNegative)
-            {
-                player.Animator.SetBool(Player.NEGATIVEEFFECT, true);
-                Debug.LogWarning("NEGATIVE SPACE EFFECT");
-            }
-            else
-            {
-                player.Animator.SetBool(Player.POSITIVEEFFECT, true);
-                Debug.LogWarning("POSITIVE SPACE EFFECT");
-            }
-        }
-
         bool canAllCostsBePaid = false;
         for (int i = 0; i < spaceData.spaceEffects.Count; i++)
         {
-            if (spaceData.spaceEffects[i].spaceEffectData.IsACost)
+            if (spaceData.spaceEffects[i].spaceEffectData.IsACost && !spaceData.spaceEffects[i].spaceEffectData.OnSpaceTurnStartEffect && !spaceData.spaceEffects[i].spaceEffectData.AfterDuelEffect)
             {
                 if (!spaceData.spaceEffects[i].spaceEffectData.CanCostBePaid(player))
                 {
@@ -240,14 +328,28 @@ public class Space : MonoBehaviour
                 }
                 //This is too fast. Need a way to wait for each effect then go to the next.
                 numSpaceEffectData = j;
-                spaceEffectsForPlayerToHandle.Enqueue(spaceData.spaceEffects[numSpaceEffectData].spaceEffectData);
+                if(!spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.OnSpaceTurnStartEffect && !spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.AfterDuelEffect)
+                {
+                    spaceEffectsForPlayerToHandle.Enqueue(spaceData.spaceEffects[numSpaceEffectData].spaceEffectData);
+                }
             }
             //Whatever we already had from passing over effects + the new effects.
             player.SpaceEffectsToHandle = spaceEffectsForPlayerToHandle;
         }
-        
 
-        if(!player.IsMoving && !player.IsDefeated)
+        if (!player.IsMoving)
+        {
+            if (spaceData.IsNegative)
+            {
+                player.Animator.SetBool(Player.NEGATIVEEFFECT, true);
+            }
+            else
+            {
+                player.Animator.SetBool(Player.POSITIVEEFFECT, true);
+            }
+        }
+
+        if (!player.IsMoving && !player.IsDefeated)
         {
             StartCoroutine(WaitASec(player));
         }

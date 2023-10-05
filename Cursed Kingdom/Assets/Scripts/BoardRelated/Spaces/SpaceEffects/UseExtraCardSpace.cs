@@ -25,6 +25,7 @@ public class UseExtraCardSpace : SpaceEffectData, ISpaceEffect
 
     public override void StartOfTurnEffect(Player playerReference)
     {
+        playerReference.IncreaseMaxCardUses(numExtraToUse, cardTypeToUse);
         base.StartOfTurnEffect(playerReference);
     }
 
