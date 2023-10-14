@@ -335,11 +335,214 @@ public class Player : MonoBehaviour
             CompletedAttackingEffect();
         }
     }
+
+    #region TakeCardsFromOpponentsSpaceEffect
+    public bool CheckIfCanTakeCardsFromOtherPlayersHand(int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent)
+    {
+        bool canTake = false;
+        int numCardsPlayerCanDiscard = 0;
+        int numCardsPlayerCanTake = 0;
+
+        if (numCardsToDiscard <= 0)
+        {
+            //Go into check for other players ability to have this type of card taken from them immediately.
+            CheckIfOtherPlayersHaveEnoughCardsToTake(numCardsToTakeFromOpponent, cardTypeToTakeFromOpponent, ref canTake, ref numCardsPlayerCanTake);
+        }
+        else
+        {
+            numCardsPlayerCanDiscard = CheckIfCurrentPlayerCanDiscardEnoughCards(cardTypeToDiscard, numCardsPlayerCanDiscard);
+
+            //Current player doesn't have enough to discard.
+            if (numCardsPlayerCanDiscard < numCardsToDiscard)
+            {
+                canTake = false;
+                return canTake;
+            }
+
+            CheckIfOtherPlayersHaveEnoughCardsToTake(numCardsToTakeFromOpponent, cardTypeToTakeFromOpponent, ref canTake, ref numCardsPlayerCanTake);
+        }
+
+        return canTake;
+    }
+    /// <summary>
+    /// For TakeCardsFromOpponents space effect.
+    /// </summary>
+    /// <param name="cardTypeToDiscard"></param>
+    /// <param name="numCardsPlayerCanDiscard"></param>
+    /// <returns></returns>
+    private int CheckIfCurrentPlayerCanDiscardEnoughCards(CardType cardTypeToDiscard, int numCardsPlayerCanDiscard)
+    {
+        //Check if Player has enough to discard.
+        if (cardTypeToDiscard == CardType.Movement)
+        {
+            foreach (Player player in GameplayManagerRef.Players)
+            {
+                if (player == this)
+                {
+                    foreach (Card card in player.CardsInhand)
+                    {
+                        MovementCard movementCard = (MovementCard)card;
+                        if (movementCard != null)
+                        {
+                            numCardsPlayerCanDiscard++;
+                        }
+                    }
+                }
+            }
+        }
+        else if (cardTypeToDiscard == CardType.Support)
+        {
+            foreach (Player player in GameplayManagerRef.Players)
+            {
+                if (player == this)
+                {
+                    foreach (Card card in player.CardsInhand)
+                    {
+                        SupportCard supportCard = (SupportCard)card;
+                        if (supportCard != null)
+                        {
+                            numCardsPlayerCanDiscard++;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            foreach (Player player in GameplayManagerRef.Players)
+            {
+                if (player == this)
+                {
+                    foreach (Card card in player.CardsInhand)
+                    {
+                        numCardsPlayerCanDiscard++;
+                    }
+                }
+            }
+        }
+
+        return numCardsPlayerCanDiscard;
+    }
+    /// <summary>
+    /// For TakeCardsFromOpponents space effect.
+    /// </summary>
+    /// <param name="numCardsToTakeFromOpponent"></param>
+    /// <param name="cardTypeToTakeFromOpponent"></param>
+    /// <param name="canTake"></param>
+    /// <param name="numCardsPlayerCanTake"></param>
+    private void CheckIfOtherPlayersHaveEnoughCardsToTake(int numCardsToTakeFromOpponent, CardType cardTypeToTakeFromOpponent, ref bool canTake, ref int numCardsPlayerCanTake)
+    {
+        //Check if other players have enough of the card type we want to take.
+        if (cardTypeToTakeFromOpponent == CardType.Movement)
+        {
+            foreach (Player player in GameplayManagerRef.Players)
+            {
+                if (player != this)
+                {
+                    numCardsPlayerCanTake = 0;
+                    foreach (Card card in player.CardsInhand)
+                    {
+                        MovementCard movementCard = (MovementCard)card;
+                        if (movementCard != null)
+                        {
+                            numCardsPlayerCanTake++;
+                        }
+                    }
+                    if (numCardsPlayerCanTake < numCardsToTakeFromOpponent)
+                    {
+                        canTake = false;
+                        break;
+                    }
+                }
+            }
+        }
+        else if (cardTypeToTakeFromOpponent == CardType.Support)
+        {
+            foreach (Player player in GameplayManagerRef.Players)
+            {
+                if (player != this)
+                {
+                    numCardsPlayerCanTake = 0;
+                    foreach (Card card in player.CardsInhand)
+                    {
+                        SupportCard supportCard = (SupportCard)card;
+                        if (supportCard != null)
+                        {
+                            numCardsPlayerCanTake++;
+                        }
+                    }
+                    if (numCardsPlayerCanTake < numCardsToTakeFromOpponent)
+                    {
+                        canTake = false;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            foreach (Player player in GameplayManagerRef.Players)
+            {
+                if (player != this)
+                {
+                    numCardsPlayerCanTake = 0;
+                    foreach (Card card in player.CardsInhand)
+                    {
+                        numCardsPlayerCanTake++;
+                    }
+                    if (numCardsPlayerCanTake < numCardsToTakeFromOpponent)
+                    {
+                        canTake = false;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public void ActivatePlayerToTakeCardsFromSelectionPopup(int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent)
+    {
+        List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+
+
+        foreach (Player player in GameplayManagerRef.Players)
+        {
+            if (!player.IsDefeated && player != this)
+            {
+                List<object> paramsList = new();
+                paramsList.Add(player);
+                paramsList.Add(numCardsToDiscard);
+                paramsList.Add(cardTypeToDiscard);
+                paramsList.Add(numCardsToTakeFromOpponent);
+                paramsList.Add(cardTypeToTakeFromOpponent);
+
+                insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToTakeCardsFrom), this, paramsList));
+            }
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to take cards from.", insertedParams, 1, "Attack");
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player playerToAttack, int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SelectPlayerToTakeCardsFrom(List<object> objects)
+    {
+        yield return null;
+
+
+    }
+
+
+
+    #endregion
+
     #endregion
 
     #region CardsInHandMethods
 
-   
+
     public void SelectCardTypeToDrawPopup(int numCardsToDraw)
     {
         List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();

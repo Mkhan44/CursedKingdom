@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 530fe9d9e01fbe54a987d9000cf7433f, type: 3}
+  m_Name: TakeCardsFromOpponentsHand
+  m_EditorClassIdentifier: 
+  isACost: 1
+  isPositiveEffect: 0
+  onSpaceTurnStartEffect: 0
+  afterDuelEffect: 0
+  effectDescription: Look at an opponent's hand and discard 1 card(s) then take 1
+    card(s).
+  overrideAutoDescription: 1
+  numCardsToDiscard: 1
+  cardTypeToDiscard: 2
+  numCardsToTake: 1
+  cardTypeToTake: 2
