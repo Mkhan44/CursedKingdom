@@ -527,11 +527,6 @@ public class Space : MonoBehaviour
                         iconSprite = gameplayManagerRef.IconPresets.SpecialAttackSprite;
                         break;
                     }
-                case nameof(SwiftSwipe):
-                    {
-                        iconSprite = gameplayManagerRef.IconPresets.SpecialAttackSprite;
-                        break;
-                    }
                 case nameof(SpecialAttackSpace):
                     {
                         iconSprite = gameplayManagerRef.IconPresets.SpecialAttackSprite;
