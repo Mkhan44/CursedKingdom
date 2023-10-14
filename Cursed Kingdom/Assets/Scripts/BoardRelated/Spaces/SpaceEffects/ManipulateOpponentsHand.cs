@@ -5,20 +5,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SwiftSwipeEffect", menuName = "Space Effect Data/Swift Swipe", order = 0)]
-public class SwiftSwipe : SpecialAttackSpace, ISpaceEffect
+[CreateAssetMenu(fileName = "TakeCardsFromOpponentsHand", menuName = "Space Effect Data/Take Cards From Opponents Hand", order = 0)]
+public class TakeCardsFromOpponentsHand : SpaceEffectData, ISpaceEffect
 {
-    [Range(1, 10)] [SerializeField] private int numCardsToDiscard = 1;
+    [Range(1, 10)][SerializeField] private int numCardsToDiscard = 1;
     [SerializeField] private Card.CardType cardTypeToDiscard;
+    [Range(1, 10)][SerializeField] private int numCardsToTake = 1;
+    [SerializeField] private Card.CardType cardTypeToTake;
+
 
     public int NumCardsToDiscard { get => numCardsToDiscard; set => numCardsToDiscard = value; }
     public Card.CardType CardTypeToDiscard { get => cardTypeToDiscard; set => cardTypeToDiscard = value; }
+    public int NumCardsToTake { get => numCardsToTake; set => numCardsToTake = value; }
+    public Card.CardType CardTypeToTake { get => cardTypeToTake; set => cardTypeToTake = value; }
 
     public override void LandedOnEffect(Player playerReference)
     {
         base.LandedOnEffect(playerReference);
         //Need a reference to another player that has at least 2 cards in their hand. Otherwise just don't do this effect.
-        Debug.Log($"Landed on: {this.name} special attack space. Discard {NumCardsToDiscard} {CardTypeToDiscard}(s) to look at opponent's hand and discard 1 card then take 1 card.");
+        Debug.Log($"Landed on: {this.name} TakeCardsFromOpponentsHand space.");
     }
 
     public override void StartOfTurnEffect(Player playerReference)
@@ -30,11 +35,16 @@ public class SwiftSwipe : SpecialAttackSpace, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+
+    public override void CompletedEffect(Player playerReference)
+    {
+        base.CompletedEffect(playerReference);
+    }
     protected override void UpdateEffectDescription()
     {
         if (!OverrideAutoDescription)
         {
-            EffectDescription = $"Discard {NumCardsToDiscard} {CardTypeToDiscard}(s) to look at opponent's hand and discard 1 card then take 1 card. Only the 'Thief' class may activate this effect.";
+            EffectDescription = $"Look at an opponent's hand and discard {NumCardsToDiscard} {CardTypeToDiscard} then take {NumCardsToTake} {CardTypeToTake} card.";
         }
     }
 
