@@ -552,7 +552,6 @@ public class GameplayManager : MonoBehaviour
                 HandDisplayPanel.SetCurrentActiveHandUI(Players.IndexOf(nextPlayer));
                 currentPlayer.HideHand();
                 nextPlayer.ShowHand();
-                DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"Player {nextPlayer.playerIDIntVal}'s turn!", "Start!", "Turn start");
 
                 if(DebugModeSingleton.instance.IsDebugActive)
                 {
@@ -562,19 +561,100 @@ public class GameplayManager : MonoBehaviour
                     {
                         nextPlayer.CurrentSpacePlayerIsOn = tempSpace;
                     }
-                    nextPlayer.CurrentSpacePlayerIsOn.ApplyStartOfTurnSpaceEffects(nextPlayer);
+                    
+
+                    bool hasStartTurnEffect = false;
+                    foreach(SpaceData.SpaceEffect spaceEffectData in tempSpace.spaceData.spaceEffects)
+                    {
+                        if(spaceEffectData.spaceEffectData.OnSpaceTurnStartEffect)
+                        {
+                            hasStartTurnEffect = true;
+                            break;
+                        }
+                    }
+                    if(hasStartTurnEffect)
+                    {
+                        nextPlayer.startOfTurnEffect = true;
+                        ActivateStartTurnPopup(nextPlayer, tempSpace);
+                    }
+                    else
+                    {
+                        DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"Player {nextPlayer.playerIDIntVal}'s turn!", "Start!", "Turn start");
+                    }
+
                     nextPlayer.CurrentSpacePlayerIsOn = currentSpace;
                     break;
                 }
                 else
                 {
-                    nextPlayer.CurrentSpacePlayerIsOn.ApplyStartOfTurnSpaceEffects(nextPlayer);
+                    bool hasStartTurnEffect = false;
+                    foreach (SpaceData.SpaceEffect spaceEffectData in nextPlayer.CurrentSpacePlayerIsOn.spaceData.spaceEffects)
+                    {
+                        if (spaceEffectData.spaceEffectData.OnSpaceTurnStartEffect)
+                        {
+                            hasStartTurnEffect = true;
+                            break;
+                        }
+                    }
+                    if (hasStartTurnEffect)
+                    {
+                        nextPlayer.startOfTurnEffect = true;
+                        ActivateStartTurnPopup(nextPlayer, nextPlayer.CurrentSpacePlayerIsOn);
+                    }
+                    else
+                    {
+                        DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"Player {nextPlayer.playerIDIntVal}'s turn!", "Start!", "Turn start");
+                    }
                     break;
                 }
             }
         }
 
 
+    }
+
+    public void ActivateStartTurnPopup(Player nextPlayer, Space spaceStartEffectToTrigger)
+    {
+        List<Tuple<string, string, object, List<object>>> insertedParams = new();
+
+        List<object> paramsList = new();
+        paramsList.Add(nextPlayer);
+        paramsList.Add(spaceStartEffectToTrigger);
+
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Start!", nameof(StartTurnConfirmation), this, paramsList));
+
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {nextPlayer.playerIDIntVal}'s turn!", insertedParams, 1,"Turn start!");
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player nextPlayer.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator StartTurnConfirmation(List<object> objects)
+    {
+        yield return null;
+        Player player = (Player)objects[0];
+        Space spaceEffectToTrigger = (Space)objects[1];
+
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            Space tempSpace = DebugModeSingleton.instance.OverrideSpaceLandEffect();
+            Space currentSpace = player.CurrentSpacePlayerIsOn;
+            if (tempSpace != null)
+            {
+                SpaceArtworkPopupDisplay.TurnOnDisplay(tempSpace, player);
+            }
+            else
+            {
+                SpaceArtworkPopupDisplay.TurnOnDisplay(spaceEffectToTrigger, player);
+            }
+
+            //SpaceArtworkPopupDisplay.TurnOnDisplay(tempSpace, player);
+        }
+        else
+        {
+            SpaceArtworkPopupDisplay.TurnOnDisplay(spaceEffectToTrigger, player);
+        }
     }
 
     public bool IsPlayerDefeated(Player playerToCheck)

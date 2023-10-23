@@ -6,9 +6,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class SpaceArtworkPopupDisplay : MonoBehaviour
 {
+    //Events
+    public event Action<Player> SpaceArtworkDisplayTurnOff;
+
     public GameObject iconPrefab;
     [SerializeField] private TextMeshProUGUI spaceTitle;
     [SerializeField] private TextMeshProUGUI spaceDescription;
@@ -84,13 +88,15 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
         }
         CanvasGroup.blocksRaycasts = false;
         CanvasGroup.alpha = 0f;
+        SpaceArtworkDisplayTurnOff?.Invoke(PlayerOnSpace);
 
-        if(PlayerOnSpace is not null)
+        if (PlayerOnSpace is not null)
         {
-            PlayerOnSpace.Animator.SetBool(Player.NEGATIVEEFFECT, false);
-            PlayerOnSpace.Animator.SetBool(Player.POSITIVEEFFECT, false);
+            //PlayerOnSpace.Animator.SetBool(Player.NEGATIVEEFFECT, false);
+            //PlayerOnSpace.Animator.SetBool(Player.POSITIVEEFFECT, false);
             PlayerOnSpace = null;
         }
+
         
     }
 

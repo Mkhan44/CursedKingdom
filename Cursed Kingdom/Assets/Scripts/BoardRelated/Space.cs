@@ -62,7 +62,7 @@ public class Space : MonoBehaviour
     {
         ValidDirectionsFromThisSpace = new();
         DirectionsHashsetVisual = new();
-        gameplayManagerRef = GameObject.Find("Game Manager").GetComponent<GameplayManager>();
+        gameplayManagerRef = GameObject.Find("Game Manager").GetComponent<GameplayManager>(); 
     }
 
     public void CollisionEntry(Collision collision)
@@ -95,11 +95,11 @@ public class Space : MonoBehaviour
             if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
             {
                 playerReference.IsMoving = false;
-               // Debug.Log($"Player landed on space: {spaceData.spaceName}");
-                ApplyLandedOnSpaceEffects(playerReference);
-                playerReference.CurrentSpacePlayerIsOn = this;
+                // Debug.Log($"Player landed on space: {spaceData.spaceName}");
+                StartCoroutine(PlaySpaceInfoDisplayAnimationUI(playerReference));
                 gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
-                //playerReference.DebugTheSpace();
+               // ApplyLandedOnSpaceEffects(playerReference);
+                playerReference.CurrentSpacePlayerIsOn = this;
             }
         }
         else
@@ -121,7 +121,7 @@ public class Space : MonoBehaviour
             playerReference.CurrentSpacePlayerIsOn = this;
             if(this.spaceData.PassingOverSpaceEffect && playerReference.IsMoving)
             {
-                ApplyLandedOnSpaceEffects(playerReference);
+                //ApplyLandedOnSpaceEffects(playerReference);
             }
         }
         else
@@ -138,10 +138,11 @@ public class Space : MonoBehaviour
             if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
             {
                 playerReference.IsMoving = false;
-               // Debug.Log($"Player landed on space: {spaceData.spaceName}");
-                ApplyLandedOnSpaceEffects(playerReference);
-                playerReference.CurrentSpacePlayerIsOn = this;
+                // Debug.Log($"Player landed on space: {spaceData.spaceName}");
+                StartCoroutine(PlaySpaceInfoDisplayAnimationUI(playerReference));
                 gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
+               // ApplyLandedOnSpaceEffects(playerReference);
+                playerReference.CurrentSpacePlayerIsOn = this;
             }
         }
         else
@@ -187,8 +188,6 @@ public class Space : MonoBehaviour
         {
             Debug.LogWarning("Hey, no space effects on this space currently!");
         }
-
-        StartCoroutine(PlaySpaceInfoDisplayAnimationUI(player));
 
         bool canAllCostsBePaid = false;
         for (int i = 0; i < spaceData.spaceEffects.Count; i++)
@@ -271,7 +270,7 @@ public class Space : MonoBehaviour
     }
 
     //Apply all space effects after the Player has landed. Anything that is after duel/start of turn will not be activated here.
-    private void ApplyLandedOnSpaceEffects(Player player)
+    public void ApplyLandedOnSpaceEffects(Player player)
     {
         //For debug mode.
         SpaceData cachedSpaceData = spaceData;
@@ -290,8 +289,6 @@ public class Space : MonoBehaviour
         {
             Debug.LogWarning("Hey, no space effects on this space currently!");
         }
-
-        StartCoroutine(PlaySpaceInfoDisplayAnimationUI(player));
 
         bool canAllCostsBePaid = false;
         for (int i = 0; i < spaceData.spaceEffects.Count; i++)
