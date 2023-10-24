@@ -176,7 +176,7 @@ public class DialogueBoxPopup : MonoBehaviour
     /// <param name="methodParams">A list of objects that are used as parameters for the method in the Tuple. These MUST match valid parameters and order does matter.</param>
     /// <param name="numChoicesThatCanBeSelected">The number of choices that can be selected before all methods are executed.</param>
     /// <param name="headerText">Text that appears at the top of the textbox. If no text is given it will just say "Notice"</param>
-    public void ActivatePopupWithButtonChoices(string textToDisplay, List<Tuple<string, string, object >> buttonSetupParams , List<object> methodParams = null, int numChoicesThatCanBeSelected = 1, string headerText = "Notice")
+    public void ActivatePopupWithButtonChoices(string textToDisplay, List<Tuple<string, string, object, List<object> >> buttonSetupParams, int numChoicesThatCanBeSelected = 1, string headerText = "Notice")
     {
         if (isActive)
         {
@@ -196,7 +196,16 @@ public class DialogueBoxPopup : MonoBehaviour
             TextMeshProUGUI buttonText = (TextMeshProUGUI)buttonInstance.GetComponentInChildren(typeof(TextMeshProUGUI));
             buttonText.text = buttonSetupParams[index].Item1;
             Type type = buttonSetupParams[index].Item3.GetType();
-            theButton.onClick.AddListener(() => ((MonoBehaviour)buttonSetupParams[index].Item3).StartCoroutine(buttonSetupParams[index].Item2));
+
+            if (buttonSetupParams[index].Item4.Count > 0)
+            {
+                theButton.onClick.AddListener(() => ((MonoBehaviour)buttonSetupParams[index].Item3).StartCoroutine(buttonSetupParams[index].Item2, buttonSetupParams[index].Item4));
+            }
+            else
+            {
+                theButton.onClick.AddListener(() => ((MonoBehaviour)buttonSetupParams[index].Item3).StartCoroutine(buttonSetupParams[index].Item2));
+            }
+           
             theButton.onClick.AddListener(DeactivatePopup);
             theButton.onClick.AddListener(chooseOption);
         }

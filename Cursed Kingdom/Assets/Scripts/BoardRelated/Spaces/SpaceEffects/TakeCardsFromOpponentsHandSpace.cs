@@ -5,8 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ManipulateOpponentsHandEffect", menuName = "Space Effect Data/Manipulate Opponents Hand", order = 0)]
-public class ManipulateOpponentsHand : SpaceEffectData, ISpaceEffect
+[CreateAssetMenu(fileName = "TakeCardsFromOpponentsHandSpace", menuName = "Space Effect Data/Take Cards From Opponents Hand", order = 0)]
+public class TakeCardsFromOpponentsHandSpace : SpaceEffectData, ISpaceEffect
 {
     [Range(1, 10)][SerializeField] private int numCardsToDiscard = 1;
     [SerializeField] private Card.CardType cardTypeToDiscard;
@@ -26,11 +26,18 @@ public class ManipulateOpponentsHand : SpaceEffectData, ISpaceEffect
     {
         if (playerReference.CheckIfCanTakeCardsFromOtherPlayersHand(NumCardsToDiscard, CardTypeToDiscard, NumCardsToTake, CardTypeToTake))
         {
+            playerReference.DoneAttackingForEffect += CompletedEffect;
             //Call method on Player to give option to pick which player to take card from.
             playerReference.ActivatePlayerToTakeCardsFromSelectionPopup(NumCardsToDiscard, CardTypeToDiscard, NumCardsToTake, CardTypeToTake);
         }
         
-        Debug.Log($"Landed on: {this.name} ManipulateOpponentsHandEffect space. Discard {NumCardsToDiscard} {CardTypeToDiscard}(s) to look at opponent's hand and discard 1 card then take 1 card.");
+        Debug.Log($"Landed on: {this.name} TakeCardsFromOpponentsHand space.");
+    }
+
+    public override void CompletedEffect(Player playerReference)
+    {
+        playerReference.DoneAttackingForEffect -= CompletedEffect;
+        base.CompletedEffect(playerReference);
     }
 
     public override void StartOfTurnEffect(Player playerReference)
@@ -42,6 +49,21 @@ public class ManipulateOpponentsHand : SpaceEffectData, ISpaceEffect
     {
         base.EndOfTurnEffect(playerReference);
     }
+
+    public override bool CanCostBePaid(Player playerReference)
+    {
+        if (playerReference.CheckIfCanTakeCardsFromOtherPlayersHand(NumCardsToDiscard, CardTypeToDiscard, NumCardsToTake, CardTypeToTake))
+        {
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning($"Player {playerReference.playerIDIntVal} doesn't have any valid targets to take cards from!");
+            return false;
+        }
+
+    }
+
     protected override void UpdateEffectDescription()
     {
         if (!OverrideAutoDescription)

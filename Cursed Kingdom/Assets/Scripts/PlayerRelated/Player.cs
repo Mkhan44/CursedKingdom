@@ -11,6 +11,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static Card;
+using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
@@ -29,6 +30,9 @@ public class Player : MonoBehaviour
     //Consts
     [SerializeField] public const string NEGATIVEEFFECT = "NegativeEffect";
     [SerializeField] public const string POSITIVEEFFECT = "PositiveEffect";
+
+    //TEMPORARY GET RID OF THESE.
+    public bool startOfTurnEffect;
 
     //Properties
     [SerializeField] private int maxHealth;
@@ -186,29 +190,18 @@ public class Player : MonoBehaviour
     {
         ClassData = data;
 
-        MaxHealth = ClassData.startingHealth;
-        CurrentHealth = maxHealth;
-        CurrentLevel = 1;
-        AbleToLevelUp = true;
-        SpacesLeftToMove = 0;
-        MaxHandSize = 6;
-        MaxSupportCardsToUse = ClassData.maxSupportCardsToUsePerTurn;
-        NumSupportCardsUsedThisTurn = 0;
-        MaxMovementCardsToUse = ClassData.maxMovementCardsToUsePerTurn;
-        NumMovementCardsUsedThisTurn = 0;
-        MovementCardSelectedForUse = false;
-        SupportCardSelectedForUse = false;
-        IsDefeated = false;
-        CardsLeftToDiscard = 0;
-        ValidCardTypesToDiscard = CardType.None;
-        SpaceEffectsToHandle = new();
-        tempSpaceEffectsToHandle = new();
-        isHandlingSpaceEffects = false;
+        SetupPlayerInfo();
         // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
     }
 
     //Debug version where we hardcode the class.
     public void InitializePlayer()
+    {
+        SetupPlayerInfo();
+        // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
+    }
+
+    private void SetupPlayerInfo()
     {
         MaxHealth = ClassData.startingHealth;
         CurrentHealth = maxHealth;
@@ -228,7 +221,7 @@ public class Player : MonoBehaviour
         SpaceEffectsToHandle = new();
         tempSpaceEffectsToHandle = new();
         isHandlingSpaceEffects = false;
-        // Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
+        GameplayManagerRef.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += ApplyCurrentSpaceEffects;
     }
 
     public void DebugTheSpace()
@@ -340,27 +333,9 @@ public class Player : MonoBehaviour
     public bool CheckIfCanTakeCardsFromOtherPlayersHand(int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent)
     {
         bool canTake = false;
-        int numCardsPlayerCanDiscard = 0;
         int numCardsPlayerCanTake = 0;
 
-        if (numCardsToDiscard <= 0)
-        {
-            //Go into check for other players ability to have this type of card taken from them immediately.
-            CheckIfOtherPlayersHaveEnoughCardsToTake(numCardsToTakeFromOpponent, cardTypeToTakeFromOpponent, ref canTake, ref numCardsPlayerCanTake);
-        }
-        else
-        {
-            numCardsPlayerCanDiscard = CheckIfCurrentPlayerCanDiscardEnoughCards(cardTypeToDiscard, numCardsPlayerCanDiscard);
-
-            //Current player doesn't have enough to discard.
-            if (numCardsPlayerCanDiscard < numCardsToDiscard)
-            {
-                canTake = false;
-                return canTake;
-            }
-
-            CheckIfOtherPlayersHaveEnoughCardsToTake(numCardsToTakeFromOpponent, cardTypeToTakeFromOpponent, ref canTake, ref numCardsPlayerCanTake);
-        }
+        CheckIfOtherPlayersHaveEnoughCardsToTake(numCardsToTakeFromOpponent, cardTypeToTakeFromOpponent, ref canTake, ref numCardsPlayerCanTake);
 
         return canTake;
     }
@@ -439,16 +414,7 @@ public class Player : MonoBehaviour
             {
                 if (player != this)
                 {
-                    numCardsPlayerCanTake = 0;
-                    foreach (Card card in player.CardsInhand)
-                    {
-                        MovementCard movementCard = (MovementCard)card;
-                        if (movementCard != null)
-                        {
-                            numCardsPlayerCanTake++;
-                        }
-                    }
-                    if (numCardsPlayerCanTake < numCardsToTakeFromOpponent)
+                    if (player.MovementCardsInHand < numCardsToTakeFromOpponent)
                     {
                         canTake = false;
                         break;
@@ -462,16 +428,8 @@ public class Player : MonoBehaviour
             {
                 if (player != this)
                 {
-                    numCardsPlayerCanTake = 0;
-                    foreach (Card card in player.CardsInhand)
-                    {
-                        SupportCard supportCard = (SupportCard)card;
-                        if (supportCard != null)
-                        {
-                            numCardsPlayerCanTake++;
-                        }
-                    }
-                    if (numCardsPlayerCanTake < numCardsToTakeFromOpponent)
+
+                    if (player.SupportCardsInHand < numCardsToTakeFromOpponent)
                     {
                         canTake = false;
                         break;
@@ -485,12 +443,7 @@ public class Player : MonoBehaviour
             {
                 if (player != this)
                 {
-                    numCardsPlayerCanTake = 0;
-                    foreach (Card card in player.CardsInhand)
-                    {
-                        numCardsPlayerCanTake++;
-                    }
-                    if (numCardsPlayerCanTake < numCardsToTakeFromOpponent)
+                    if (player.CardsInhand.Count < numCardsToTakeFromOpponent)
                     {
                         canTake = false;
                         break;
@@ -498,6 +451,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        canTake = true;
     }
 
     public void ActivatePlayerToTakeCardsFromSelectionPopup(int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent)
@@ -509,6 +463,10 @@ public class Player : MonoBehaviour
         {
             if (!player.IsDefeated && player != this)
             {
+                if(player.CardsInhand.Count < (numCardsToDiscard + numCardsToTakeFromOpponent))
+                {
+                    continue;
+                }
                 List<object> paramsList = new();
                 paramsList.Add(player);
                 paramsList.Add(numCardsToDiscard);
@@ -530,11 +488,121 @@ public class Player : MonoBehaviour
     public IEnumerator SelectPlayerToTakeCardsFrom(List<object> objects)
     {
         yield return null;
+        Player playerToAttack = (Player)objects[0];
+        int numCardsToDiscard = (int)objects[1];
+        Card.CardType cardTypeToDiscard = (Card.CardType)objects[2];
+        int numCardsToTakeFromOpponent = (int)objects[3];
+        Card.CardType cardTypeToTakeFromOpponent = (Card.CardType)objects[4];
+
+        //Cards to discard.
+        for(int i = 0; i < numCardsToDiscard; i++)
+        {
+            if (cardTypeToDiscard == CardType.Movement)
+            {
+                int cardToTakeIndex = Random.Range(0, playerToAttack.MovementCardsInHand);
+                List<MovementCard> movementCardsInHand = new List<MovementCard>();
+
+                foreach (Card card in playerToAttack.CardsInhand)
+                {
+                    MovementCard movementCard = (MovementCard)card;
+
+                    if (movementCard != null)
+                    {
+                        movementCardsInHand.Add(movementCard);
+                    }
+                }
+
+                //Discard it from the player who we're attacking's hand.
+                playerToAttack.DiscardFromHand(movementCardsInHand[cardToTakeIndex].ThisCardType, movementCardsInHand[cardToTakeIndex]);
+            }
+            if (cardTypeToDiscard == CardType.Support)
+            {
+                int cardToTakeIndex = Random.Range(0, playerToAttack.SupportCardsInHand);
+                List<SupportCard> supportCardsInHand = new List<SupportCard>();
+
+                foreach (Card card in playerToAttack.CardsInhand)
+                {
+                    SupportCard supportCard = (SupportCard)card;
+
+                    if (supportCard != null)
+                    {
+                        supportCardsInHand.Add(supportCard);
+                    }
+                }
+
+                //Discard it from the player who we're attacking's hand.
+                playerToAttack.DiscardFromHand(supportCardsInHand[cardToTakeIndex].ThisCardType, supportCardsInHand[cardToTakeIndex]);
+            }
+            else
+            {
+                int cardToTakeIndex = Random.Range(0, playerToAttack.CardsInhand.Count);
+                List<Card> cardsInHand = new List<Card>();
+
+                //Discard it from the player who we're attacking's hand.
+                playerToAttack.DiscardFromHand(playerToAttack.CardsInhand[cardToTakeIndex].ThisCardType, playerToAttack.CardsInhand[cardToTakeIndex]);
+            }
+        }
 
 
+        //Cards to take.
+        for (int i = 0; i < numCardsToTakeFromOpponent; i++)
+        {
+            if (cardTypeToTakeFromOpponent == CardType.Movement)
+            {
+                int cardToTakeIndex = Random.Range(0, playerToAttack.MovementCardsInHand);
+                List<MovementCard> movementCardsInHand = new List<MovementCard>();
+
+                foreach (Card card in playerToAttack.CardsInhand)
+                {
+                    MovementCard movementCard = (MovementCard)card;
+
+                    if (movementCard != null)
+                    {
+                        movementCardsInHand.Add(movementCard);
+                    }
+                }
+
+                //Remove it from the player we're attacking's hand, then add it to the currentPlayer's hand.
+                Card cardToDraw = movementCardsInHand[cardToTakeIndex];
+                playerToAttack.DiscardFromHand(movementCardsInHand[cardToTakeIndex].ThisCardType, movementCardsInHand[cardToTakeIndex]);
+                DrawCard(cardToDraw);
+            }
+            if (cardTypeToTakeFromOpponent == CardType.Support)
+            {
+                int cardToTakeIndex = Random.Range(0, playerToAttack.SupportCardsInHand);
+                List<SupportCard> supportCardsInHand = new List<SupportCard>();
+
+                foreach (Card card in playerToAttack.CardsInhand)
+                {
+                    SupportCard supportCard = (SupportCard)card;
+
+                    if (supportCard != null)
+                    {
+                        supportCardsInHand.Add(supportCard);
+                    }
+                }
+
+                //Remove it from the player we're attacking's hand, then add it to the currentPlayer's hand.
+                Card cardToDraw = supportCardsInHand[cardToTakeIndex];
+                playerToAttack.DiscardFromHand(supportCardsInHand[cardToTakeIndex].ThisCardType, supportCardsInHand[cardToTakeIndex]);
+                DrawCard(cardToDraw);
+            }
+            else
+            {
+                int cardToTakeIndex = Random.Range(0, playerToAttack.CardsInhand.Count);
+
+                //Remove it from the player we're attacking's hand, then add it to the currentPlayer's hand.
+                Card cardToDraw = playerToAttack.CardsInhand[cardToTakeIndex];
+                playerToAttack.DiscardFromHand(playerToAttack.CardsInhand[cardToTakeIndex].ThisCardType, playerToAttack.CardsInhand[cardToTakeIndex]);
+                DrawCard(cardToDraw);
+            }
+        }
+
+        if(IsHandlingSpaceEffects)
+        {
+            CompletedAttackingEffect();
+        }
     }
-
-
 
     #endregion
 
@@ -754,11 +822,11 @@ public class Player : MonoBehaviour
         //Confirmation for discard.
         if( CardsLeftToDiscard == 0)
         {
-            List<Tuple<string, string, object>> insertedParams = new();
-            insertedParams.Add(Tuple.Create<string, string, object>("Yes", nameof(DiscardTheSelectedCards), this));
-            insertedParams.Add(Tuple.Create<string, string, object>("No", nameof(DeselectAllSelectedCardsForDiscard), this));
+            List<Tuple<string, string, object, List<object>>> insertedParams = new();
+            insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Yes", nameof(DiscardTheSelectedCards), this, new List<object>()));
+            insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DeselectAllSelectedCardsForDiscard), this, new List<object>()));
 
-            DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to discard the selected card(s)?", insertedParams, null, 1, "Confirm Selection");
+            DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to discard the selected card(s)?", insertedParams, 1, "Confirm Selection");
         }
     }
 
@@ -1414,6 +1482,26 @@ public class Player : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Space activation
+    private void ApplyCurrentSpaceEffects(Player player)
+    {
+        if (GameplayManagerRef.playerCharacter.GetComponent<Player>() == this)
+        {
+            //We'll check states for the phases of the game here to determine whether or not to use the landed on effect/passing effect/start of turn effect.
+            if (startOfTurnEffect)
+            {
+                CurrentSpacePlayerIsOn.ApplyStartOfTurnSpaceEffects(this);
+            }
+            else
+            {
+                CurrentSpacePlayerIsOn.ApplyLandedOnSpaceEffects(this);
+            }
+            startOfTurnEffect = false;
+
+        }
+    }
     #endregion
 
     //Event triggers
