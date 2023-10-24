@@ -34,11 +34,11 @@ RectTransform:
   m_Father: {fileID: 959177630722259951}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.11388889, y: 0.404}
-  m_AnchorMax: {x: 0.11388889, y: 0.404}
-  m_AnchoredPosition: {x: -0.000061035156, y: -0.00032043457}
-  m_SizeDelta: {x: 52, y: 54}
-  m_Pivot: {x: 0.49999997, y: 0.5000003}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 14.9, y: 177.5}
+  m_SizeDelta: {x: 95.9317, y: 99.6237}
+  m_Pivot: {x: 0, y: 0}
 --- !u!222 &4105685989152371529
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -172,8 +172,9 @@ MonoBehaviour:
   backgroundSelectedGlow: {fileID: 1638908350152578508}
   parentAnimator: {fileID: 0}
   textureAnimator: {fileID: 0}
-  cardIsSelected: 0
+  cardIsActiveHovered: 0
   selectedForDiscard: 0
+  selectedForUse: 0
   originalSize: {x: 0, y: 0, z: 0}
   hoveredSize: {x: 0, y: 0, z: 0}
   originalBackgroundGlowColor: {r: 0, g: 0, b: 0, a: 0}
@@ -1107,7 +1108,6 @@ GameObject:
   - component: {fileID: 4400837046663161556}
   - component: {fileID: 5207862017075415188}
   - component: {fileID: 6156671067884578251}
-  - component: {fileID: 1986986187723281932}
   m_Layer: 5
   m_Name: UseIcon
   m_TagString: Untagged
@@ -1132,8 +1132,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000019073486, y: 0}
-  m_SizeDelta: {x: 25.8825, y: 25.8825}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 49.4913, y: 69.2878}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5207862017075415188
 CanvasRenderer:
@@ -1159,7 +1159,7 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1173,22 +1173,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1986986187723281932
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7584686307488218504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97bc2ebab6563400c95b036136d26ea6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Inverse: 0
-  m_MaskInteraction: 85
-  m_UseStencil: 1
-  m_RaycastFilter: 0
 --- !u!1 &7808997500795234198
 GameObject:
   m_ObjectHideFlags: 0
