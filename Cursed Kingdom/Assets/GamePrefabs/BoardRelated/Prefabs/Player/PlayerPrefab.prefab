@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 8325634510494661577}
   - component: {fileID: 6811609303460852829}
   - component: {fileID: -6543908066680211804}
+  - component: {fileID: 9142830609579601361}
+  - component: {fileID: 2224669604791333325}
   m_Layer: 2
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -117,6 +119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerIDIntVal: 0
+  startOfTurnEffect: 0
   maxHealth: 0
   currentHealth: 0
   currentLevel: 0
@@ -124,14 +127,34 @@ MonoBehaviour:
   movementCardsInHand: 0
   supportCardsInHand: 0
   maxHandSize: 0
+  cardsLeftToDiscard: 0
+  validCardTypesToDiscard: 0
   cardsInhand: []
-  cardsInHandHolderPanel: {fileID: 0}
+  movementCardsInHandHolderPanel: {fileID: 0}
+  supportCardsInHandHolderPanel: {fileID: 0}
+  handDisplayPanel: {fileID: 0}
+  currentSpaceEffectDataToHandle: {fileID: 0}
+  tempSpaceEffectsToHandle: []
+  isHandlingSpaceEffects: 0
+  currentSupportCardEffectTohandle: {fileID: 0}
+  tempSupportCardEffectsToHandle: []
+  isHandlingSupportCardEffects: 0
   isMoving: 0
   isOnCooldown: 0
   isPoisoned: 0
   isCursed: 0
+  isDefeated: 0
+  wasAfflictedWithStatusThisTurn: 0
   poisonDuration: 0
   curseDuration: 0
+  numSupportCardsUsedThisTurn: 0
+  maxSupportCardsToUse: 0
+  extraSupportCardUses: 0
+  numMovementCardsUsedThisTurn: 0
+  maxMovementCardsToUse: 0
+  extraMovementCardUses: 0
+  movementCardSelectedForUse: 0
+  supportCardSelectedForUse: 0
   ableToLevelUp: 0
   classData: {fileID: 11400000, guid: 36314dd781939014dace6307901964a3, type: 2}
   currentSpacePlayerIsOn: {fileID: 0}
@@ -172,3 +195,117 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!82 &9142830609579601361
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6264876491439458418}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &2224669604791333325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6264876491439458418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7906d1f4f2eed8458b403eda0422628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundPool:
+  - {fileID: 8300000, guid: cf3f1201b89584043b2fdec309904040, type: 3}
+  - {fileID: 8300000, guid: 93ffcbdd70122e3448f970c8443581cb, type: 3}
+  - {fileID: 8300000, guid: 23fd4646f2ad9bb40a82fe48487a4fba, type: 3}
+  - {fileID: 8300000, guid: f9d6288b37ab0cf42ad985b9ba019a6e, type: 3}
+  - {fileID: 8300000, guid: a927518f6f730c149ad0ece896a1c2c5, type: 3}
