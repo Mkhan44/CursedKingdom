@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 4 Sand Dunes
   m_EditorClassIdentifier: 
-  afterDuelEffect: 0
   passingOverSpaceEffect: 0
   isMandatory: 1
   decreasesSpacesToMove: 1
@@ -21,7 +20,6 @@ MonoBehaviour:
   spaceEffects:
   - spaceEffectData: {fileID: 11400000, guid: 038a33b2505363c4a84aced3bf21714f, type: 2}
     spaceTypeStringHidden: HalveMovementCardSpace
-  thisSpaceTypes: 0e000000
   spaceName: Sand Dunes
   spaceDescription: Halve the value of all movement cards in your hand if your turn
     begins on this space.
