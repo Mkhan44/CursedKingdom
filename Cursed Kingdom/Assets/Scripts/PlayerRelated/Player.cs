@@ -11,6 +11,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static Card;
+using static ClassData;
 using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
     public event Action<Player> DoneDiscardingForEffect;
     public event Action<Player> DoneAttackingForEffect;
     public event Action<Player> DoneDrawingCard;
+    public event Action<Player> DoneActivatingAbilityEffect;
 
     //Events End
 
@@ -49,6 +51,12 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject supportCardsInHandHolderPanel;
     [SerializeField] private GameObject handDisplayPanel;
 
+    //Abilities
+    [SerializeField] private List<NegativeCooldownEffects> negativeCooldownEffects; 
+    [SerializeField] private bool isOnCooldown;
+    [SerializeField] private bool wentOnCooldownThisTurn;
+    [SerializeField] private bool isHandlingAbilityActivation;
+
     //Effect handling
     [SerializeField] private Queue<SpaceEffectData> spaceEffectsToHandle;
     [SerializeField] private SpaceEffectData currentSpaceEffectDataToHandle;
@@ -61,7 +69,6 @@ public class Player : MonoBehaviour
     [SerializeField] private bool isHandlingSupportCardEffects;
 
     [SerializeField] private bool isMoving;
-    [SerializeField] private bool isOnCooldown;
     [SerializeField] private bool isPoisoned;
     [SerializeField] private bool isCursed;
     [SerializeField] private bool isDefeated;
@@ -106,12 +113,15 @@ public class Player : MonoBehaviour
     public GameObject MovementCardsInHandHolderPanel { get => movementCardsInHandHolderPanel; set => movementCardsInHandHolderPanel = value; }
     public GameObject SupportCardsInHandHolderPanel { get => supportCardsInHandHolderPanel; set => supportCardsInHandHolderPanel = value; }
     public GameObject HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
+    public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
+    public bool WentOnCooldownThisTurn { get => wentOnCooldownThisTurn; set => wentOnCooldownThisTurn = value; }
+    public bool IsHandlingAbilityActivation { get => isHandlingAbilityActivation; set => isHandlingAbilityActivation = value; }
+    public List<NegativeCooldownEffects> NegativeCooldownEffects { get => negativeCooldownEffects; set => negativeCooldownEffects = value; }
     public Queue<SpaceEffectData> SpaceEffectsToHandle { get => spaceEffectsToHandle; set => spaceEffectsToHandle = value; }
     public bool IsHandlingSpaceEffects { get => isHandlingSpaceEffects; set => isHandlingSpaceEffects = value; }
     public Queue<SupportCardEffectData> SupportCardEffectsToHandle { get => supportCardEffectsToHandle; set => supportCardEffectsToHandle = value; }
     public bool IsHandlingSupportCardEffects { get => isHandlingSupportCardEffects; set => isHandlingSupportCardEffects = value; }
     public bool IsMoving { get => isMoving; set => isMoving = value; }
-    public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
     public bool IsCursed { get => isCursed; set => isCursed = value; }
     public bool IsDefeated { get => isDefeated; set => isDefeated = value; }
@@ -215,6 +225,12 @@ public class Player : MonoBehaviour
         NumMovementCardsUsedThisTurn = 0;
         MovementCardSelectedForUse = false;
         SupportCardSelectedForUse = false;
+
+        IsOnCooldown = false;
+        WentOnCooldownThisTurn = false;
+        NegativeCooldownEffects = ClassData.negativeCooldownEffects;
+        isHandlingAbilityActivation = false;
+
         IsDefeated = false;
         CardsLeftToDiscard = 0;
         ValidCardTypesToDiscard = CardType.None;
@@ -1003,6 +1019,12 @@ public class Player : MonoBehaviour
         {
             ExtraSupportCardUses += numToIncreaseBy;
         }
+
+        if(IsHandlingAbilityActivation)
+        {
+            CompletedAbilityActivation();
+        }
+        
     }
 
     public void SelectMultipleCardsToUse()
@@ -1504,6 +1526,42 @@ public class Player : MonoBehaviour
     }
     #endregion
 
+    #region Ability Effects
+    public void UseAbility()
+    {
+        if(ClassData.abilityData != null)
+        {
+            ClassData.abilityData.ActivateEffect(this);
+            if(ClassData.abilityData.CanBeManuallyActivated)
+            {
+                GameplayManagerRef.UseAbilityButton.transform.parent.gameObject.SetActive(false);
+            }
+        }
+    }
+    public void ActivateAbilityEffects()
+    {
+        IsHandlingAbilityActivation = true;
+    }
+
+    public void UpdateCooldownStatus()
+    {
+        if(WentOnCooldownThisTurn && IsOnCooldown)
+        {
+            WentOnCooldownThisTurn = false;
+
+            if(ClassData.abilityData.CanBeManuallyActivated)
+            {
+                GameplayManagerRef.UseAbilityButton.transform.parent.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            IsOnCooldown = false;
+            GameplayManagerRef.UpdatePlayerCooldownText(this);
+        }
+    }
+
+    #endregion
     //Event triggers
 
     public void TurnIsCompleted()
@@ -1524,6 +1582,19 @@ public class Player : MonoBehaviour
     public void CompletedDrawingForEffect()
     {
         DoneDrawingCard?.Invoke(this);
+    }
+
+    public void CompletedAbilityActivation()
+    {
+        IsHandlingAbilityActivation = false;
+
+        if(ClassData.abilityData.PutsCharacterInCooldown)
+        {
+            IsOnCooldown = true;
+            WentOnCooldownThisTurn = true;
+        }
+        GameplayManagerRef.UpdatePlayerCooldownText(this);
+        DoneActivatingAbilityEffect?.Invoke(this);
     }
     
     #endregion

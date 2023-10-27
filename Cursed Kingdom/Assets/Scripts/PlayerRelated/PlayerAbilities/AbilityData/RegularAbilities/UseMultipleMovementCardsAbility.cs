@@ -8,12 +8,21 @@ using UnityEngine;
 /// <summary>
 /// Allow the character that uses this ability to use x amount of extra Movement cards to move during Movement phase.
 /// </summary>
+
+[CreateAssetMenu(fileName = "UseMultipleMovementCardsAbility", menuName = "Player/Ability/UseMultipleMovementCards", order = 0)]
 public class UseMultipleMovementCardsAbility : AbilityData , IAbility
 {
     [SerializeField] [Range(0,10)] private int numExtraCardsToUse = 1;
     public override void ActivateEffect(Player playerReference)
     {
+        base.ActivateEffect(playerReference);
+        playerReference.ActivateAbilityEffects();
+        playerReference.IncreaseMaxCardUses(numExtraCardsToUse, Card.CardType.Movement);
+    }
 
+    public override void CompletedEffect(Player playerReference)
+    {
+        base.CompletedEffect(playerReference);
     }
 
     protected override void UpdateEffectDescription()

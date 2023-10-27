@@ -152,4 +152,16 @@ public class PlayerInfoDisplay : MonoBehaviour
             
         }
     }
+
+    public void UpdateCooldownText()
+    {
+        if(PlayerReference.IsOnCooldown)
+        {
+            CooldownText.text = "Cooldown";
+        }
+        else
+        {
+            CooldownText.text = string.Empty;
+        }
+    }
 }

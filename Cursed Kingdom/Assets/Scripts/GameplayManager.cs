@@ -59,6 +59,9 @@ public class GameplayManager : MonoBehaviour
     //Player UI related
     [SerializeField] private PlayerHandDisplayUI handDisplayPanel;
 
+    //Player ability related
+    [SerializeField] private Button useAbilityButton;
+
     //Scriptables for UI packs.
     [SerializeField] private SpaceIconPreset iconPresets;
 
@@ -102,12 +105,12 @@ public class GameplayManager : MonoBehaviour
     public GameObject UseSelectedCardsPanel { get => useSelectedCardsPanel; set => useSelectedCardsPanel = value; }
     public TextMeshProUGUI UseSelectedCardsText { get => useSelectedCardsText; set => useSelectedCardsText = value; }
     public Button UseSelectedCardsButton { get => useSelectedCardsButton; set => useSelectedCardsButton = value; }
+    public Button UseAbilityButton { get => useAbilityButton; set => useAbilityButton = value; }
     public List<PlayerInfoDisplay> PlayerInfoDisplays { get => playerInfoDisplays; set => playerInfoDisplays = value; }
     public PlayerHandDisplayUI HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
     public TopDownMapDisplay TopDownMapDisplay { get => topDownMapDisplay; set => topDownMapDisplay = value; }
     public SpaceArtworkPopupDisplay SpaceArtworkPopupDisplay { get => spaceArtworkPopupDisplay; set => spaceArtworkPopupDisplay = value; }
     public SpaceIconPreset IconPresets { get => iconPresets; set => iconPresets = value; }
-
 
     private void Start()
     {
@@ -201,6 +204,16 @@ public class GameplayManager : MonoBehaviour
 
         //DEBUG.
         Players[0].ShowHand();
+        if (Players[0].ClassData.abilityData.CanBeManuallyActivated)
+        {
+            UseAbilityButton.gameObject.SetActive(true);
+            UseAbilityButton.onClick.RemoveAllListeners();
+            UseAbilityButton.onClick.AddListener(Players[0].UseAbility);
+        }
+        else
+        {
+            UseAbilityButton.gameObject.SetActive(false);
+        }
         HandDisplayPanel.SetCurrentActiveHandUI(0);
         //DEBUG.
 
@@ -423,6 +436,16 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    public void UpdatePlayerCooldownText(Player playerRef)
+    {
+        int playerNum = GetCurrentPlayer(playerRef);
+
+        if (playerNum is not -1)
+        {
+            PlayerInfoDisplays[playerNum].UpdateCooldownText();
+        }
+    }
+
     #endregion
 
 
@@ -553,7 +576,15 @@ public class GameplayManager : MonoBehaviour
                 currentPlayer.HideHand();
                 nextPlayer.ShowHand();
 
-                if(DebugModeSingleton.instance.IsDebugActive)
+                if(!nextPlayer.IsOnCooldown && nextPlayer.ClassData.abilityData.CanBeManuallyActivated)
+                {
+                    UseAbilityButton.transform.parent.gameObject.SetActive(true);
+                    UseAbilityButton.onClick.RemoveAllListeners();
+                    UseAbilityButton.onClick.AddListener(nextPlayer.UseAbility);
+                }
+                nextPlayer.UpdateCooldownStatus();
+
+                if (DebugModeSingleton.instance.IsDebugActive)
                 {
                     Space tempSpace = DebugModeSingleton.instance.OverrideSpaceLandEffect();
                     Space currentSpace = nextPlayer.CurrentSpacePlayerIsOn;
