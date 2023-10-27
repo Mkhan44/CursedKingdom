@@ -12,4 +12,7 @@ public interface IAbility
     /// </summary>
     /// <param name="playerReference">The player who's ability is being used.</param>
     public abstract void ActivateEffect(Player playerReference);
+
+    public abstract void CompletedEffect(Player playerReference);
+
 }

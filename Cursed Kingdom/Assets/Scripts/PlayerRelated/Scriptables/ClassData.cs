@@ -17,6 +17,12 @@ public class ClassData : ScriptableObject
         Archer,
     }
 
+    public enum NegativeCooldownEffects
+    {
+        CannotUseAbility,
+        CannotUseSupportCards,
+    }
+
     public ClassType classType;
     public int startingHealth;
     [Range(1,10)]
@@ -27,5 +33,7 @@ public class ClassData : ScriptableObject
     public string description;
     public RuntimeAnimatorController animatorController;
     public Sprite defaultPortraitImage;
-
+    public AbilityData abilityData;
+    public EliteAbilityData eliteAbilityData;
+    public List<NegativeCooldownEffects> negativeCooldownEffects;
 }
