@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 8 Supply
   m_EditorClassIdentifier: 
-  afterDuelEffect: 0
-  onSpaceTurnStartEffect: 0
   passingOverSpaceEffect: 0
   isMandatory: 1
+  decreasesSpacesToMove: 1
   isNonDuelSpace: 0
   isNegative: 0
   spaceEffects:
@@ -23,7 +22,6 @@ MonoBehaviour:
     spaceTypeStringHidden: DiscardCardSpace
   - spaceEffectData: {fileID: 11400000, guid: a8073371f36be6942867484a699d2f85, type: 2}
     spaceTypeStringHidden: DrawCardSpace
-  thisSpaceTypes: 0e00000001000000
   spaceName: Supply
   spaceDescription: Discard 1 support card to draw 2 support cards.
   spaceSprite: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
