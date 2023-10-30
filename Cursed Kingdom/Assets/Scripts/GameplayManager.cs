@@ -528,6 +528,7 @@ public class GameplayManager : MonoBehaviour
         }    
 
         playersTurnToEnd.UpdateStatusEffectCount();
+        playersTurnToEnd.UpdateCooldownStatus();
 
 
         foreach (Player player in Players)
@@ -582,7 +583,11 @@ public class GameplayManager : MonoBehaviour
                     UseAbilityButton.onClick.RemoveAllListeners();
                     UseAbilityButton.onClick.AddListener(nextPlayer.UseAbility);
                 }
-                nextPlayer.UpdateCooldownStatus();
+                else
+                {
+                    UseAbilityButton.transform.parent.gameObject.SetActive(false);
+                    UseAbilityButton.onClick.RemoveAllListeners();
+                }
 
                 if (DebugModeSingleton.instance.IsDebugActive)
                 {
