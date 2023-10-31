@@ -1314,16 +1314,7 @@ public class Player : MonoBehaviour
 
     private void CurseEffectPriv()
     {
-        foreach(Card card in CardsInhand)
-        {
-            MovementCard tempMovementCard = card as MovementCard;
-
-            if (tempMovementCard != null) 
-            {
-                tempMovementCard.ChangeMovementValue(true);
-                tempMovementCard.ActivateCurseEffect();
-            }
-        }
+        HalveAllMovementCardsInHand();
     }
 
     #endregion
@@ -1458,6 +1449,21 @@ public class Player : MonoBehaviour
         else
         {
             FinishedHandlingSpaceEffects();
+        }
+    }
+
+    //This can stack. Example: Cursed + also on a space that halves movement card values.
+    public void HalveAllMovementCardsInHand()
+    {
+        foreach (Card card in CardsInhand)
+        {
+            MovementCard tempMovementCard = card as MovementCard;
+
+            if (tempMovementCard != null)
+            {
+                tempMovementCard.ChangeMovementValue(true);
+                tempMovementCard.ActivateCurseEffect();
+            }
         }
     }
     #endregion

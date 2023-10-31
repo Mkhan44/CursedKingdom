@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using System.Net;
 
 public class MovementCard : Card
 {
@@ -55,7 +56,18 @@ public class MovementCard : Card
         {
             if(MovementCardValue != 1)
             {
-                TempCardValue = Mathf.CeilToInt(MovementCardValue / 2);
+                //Stack with Curse.
+                if(TempCardValue != 0)
+                {
+                    if(TempCardValue != 1)
+                    {
+                        TempCardValue = Mathf.CeilToInt(TempCardValue / 2);
+                    }
+                }
+                else
+                {
+                    TempCardValue = Mathf.CeilToInt(MovementCardValue / 2);
+                }
                 movementValueText.text = TempCardValue.ToString();
             }
 
@@ -165,6 +177,7 @@ public class MovementCard : Card
                     {
                         if(thePlayer.CanUseMovementCard())
                         {
+                            thePlayer.UseMovementCard();
                             GameplayManager.StartMove(TempCardValue);
                             ResetMovementValue();
                             if (!thePlayer.IsCursed)

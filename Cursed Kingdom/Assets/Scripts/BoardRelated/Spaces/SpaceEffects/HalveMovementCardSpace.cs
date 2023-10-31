@@ -19,6 +19,7 @@ public class HalveMovementCardSpace : SpaceEffectData, ISpaceEffect
     public override void StartOfTurnEffect(Player playerReference)
     {
         base.StartOfTurnEffect(playerReference);
+        playerReference.HalveAllMovementCardsInHand();
     }
 
     public override void EndOfTurnEffect(Player playerReference)

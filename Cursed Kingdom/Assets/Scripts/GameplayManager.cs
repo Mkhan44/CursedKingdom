@@ -684,8 +684,6 @@ public class GameplayManager : MonoBehaviour
             {
                 SpaceArtworkPopupDisplay.TurnOnDisplay(spaceEffectToTrigger, player);
             }
-
-            //SpaceArtworkPopupDisplay.TurnOnDisplay(tempSpace, player);
         }
         else
         {

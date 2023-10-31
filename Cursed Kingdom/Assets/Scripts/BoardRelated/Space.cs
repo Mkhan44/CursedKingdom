@@ -8,6 +8,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.TextCore;
+using System.Threading.Tasks;
 
 public class Space : MonoBehaviour
 {
@@ -230,7 +231,7 @@ public class Space : MonoBehaviour
                 }
             }
 
-            //If there's none, exit early.
+            //If there are none, exit early.
             if (spaceEffectsForPlayerToHandle.Count < 1)
             {
                 return;
@@ -254,7 +255,8 @@ public class Space : MonoBehaviour
 
         if (!player.IsDefeated)
         {
-            StartCoroutine(WaitASec(player));
+            //StartCoroutine(WaitASec(player));
+            GoBackToIdle(player);
         }
         //Player is defeated so their turn ends immediately.
         else
@@ -348,7 +350,8 @@ public class Space : MonoBehaviour
 
         if (!player.IsMoving && !player.IsDefeated)
         {
-            StartCoroutine(WaitASec(player));
+            //StartCoroutine(WaitASec(player));
+            GoBackToIdle(player);
         }
         //Player is defeated so their turn ends immediately.
         else if(!player.IsMoving && player.IsDefeated) 
@@ -363,11 +366,12 @@ public class Space : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitASec(Player player)
+    private async void GoBackToIdle(Player player)
     {
-        yield return new WaitForSeconds(1.3f);
+        SpaceData spaceDataToUse = spaceData;
 
-        if (spaceData.IsNegative)
+        await Task.Delay(1300);
+        if (spaceDataToUse.IsNegative)
         {
             player.Animator.SetBool(Player.NEGATIVEEFFECT, false);
         }
@@ -378,8 +382,6 @@ public class Space : MonoBehaviour
 
         player.ShowHand();
         player.StartHandlingSpaceEffects();
-
-        //gameplayManagerRef.EndOfTurn(player);
     }
 
     private IEnumerator PlaySpaceInfoDisplayAnimationUI(Player player)
