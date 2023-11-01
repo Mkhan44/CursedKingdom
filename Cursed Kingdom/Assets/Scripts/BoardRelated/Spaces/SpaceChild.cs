@@ -16,15 +16,15 @@ public class SpaceChild : MonoBehaviour
         parentSpaceRef = transform.parent.GetComponent<Space>();
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        parentSpaceRef.CollisionEntry(collision);
-    }
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    parentSpaceRef.CollisionEntry(collision);
+    //}
 
-    private void OnCollisionStay(Collision collision)
-    {
-        parentSpaceRef.CollisionStay(collision);
-    }
+    //private void OnCollisionStay(Collision collision)
+    //{
+    //    parentSpaceRef.CollisionStay(collision);
+    //}
 
     private void OnTriggerEnter(Collider collider)
     {
@@ -34,6 +34,11 @@ public class SpaceChild : MonoBehaviour
     private void OnTriggerStay(Collider collider)
     {
         parentSpaceRef.TriggerStay(collider);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        parentSpaceRef.TriggerExit(other);
     }
 
 }

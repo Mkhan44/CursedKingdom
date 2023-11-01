@@ -269,6 +269,8 @@ public class GameplayManager : MonoBehaviour
         //TODO: CHANGE THIS TO BE MORE DYNAMIC.
         Player playerTempReferencePlayer = playerTempReference.GetComponent<Player>();
         playerTempReferencePlayer.ClassData = playerClass;
+        spaces[randomSpawnSpace].playersOnThisSpace.Add(playerTempReferencePlayer);
+        //END TODO:
 
         //setup animation
         Animator playerAnimator = playerTempReferencePlayer.GetComponent<Animator>();
@@ -589,7 +591,7 @@ public class GameplayManager : MonoBehaviour
                     UseAbilityButton.onClick.RemoveAllListeners();
                 }
 
-                if (DebugModeSingleton.instance.IsDebugActive)
+                if (DebugModeSingleton.instance.IsDebugActive && DebugModeSingleton.instance.OverrideSpaceLandEffect() != null)
                 {
                     Space tempSpace = DebugModeSingleton.instance.OverrideSpaceLandEffect();
                     Space currentSpace = nextPlayer.CurrentSpacePlayerIsOn;

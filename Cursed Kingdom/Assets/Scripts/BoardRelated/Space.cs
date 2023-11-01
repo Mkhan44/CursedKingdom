@@ -32,6 +32,10 @@ public class Space : MonoBehaviour
     public TextMeshPro spaceTitleTextMesh;
     public GameObject iconHolderPrefab;
     public GameObject iconHolderParent;
+    public GameObject multiplePlayersSameSpacePositionsParent;
+    public List<Player> playersOnThisSpace;
+
+    public bool haveSeparatedPlayersAlready;
 
     [Header("Space Icons")]
     public Sprite drawMovementCardIcon;
@@ -63,51 +67,54 @@ public class Space : MonoBehaviour
     {
         ValidDirectionsFromThisSpace = new();
         DirectionsHashsetVisual = new();
+        playersOnThisSpace = new();
+        //playersAlreadyMoved = new();
+        haveSeparatedPlayersAlready = false;
         gameplayManagerRef = GameObject.Find("Game Manager").GetComponent<GameplayManager>(); 
     }
 
-    public void CollisionEntry(Collision collision)
-    {
-        //Debug.Log($"The: {collision.gameObject.name} just touched the {this.name}!");
+    //public void CollisionEntry(Collision collision)
+    //{
+    //    //Debug.Log($"The: {collision.gameObject.name} just touched the {this.name}!");
 
-        Player playerReference = collision.gameObject.GetComponent<Player>();
+    //    Player playerReference = collision.gameObject.GetComponent<Player>();
 
-        if (playerReference != null)
-        {
-            if (playerReference.PreviousSpacePlayerWasOn is null)
-            {
-                playerReference.PreviousSpacePlayerWasOn = this;
-               // Debug.Log($"Previous space was null, assigning current space as previous space.");
-            }
-            playerReference.CurrentSpacePlayerIsOn = this;
-        }
-        else
-        {
-            Debug.LogWarning("playerReference is null!");
-        }
-    }
+    //    if (playerReference != null)
+    //    {
+    //        if (playerReference.PreviousSpacePlayerWasOn is null)
+    //        {
+    //            playerReference.PreviousSpacePlayerWasOn = this;
+    //           // Debug.Log($"Previous space was null, assigning current space as previous space.");
+    //        }
+    //        playerReference.CurrentSpacePlayerIsOn = this;
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("playerReference is null!");
+    //    }
+    //}
 
-    public void CollisionStay(Collision collision)
-    {
-        Player playerReference = collision.gameObject.GetComponent<Player>();
+    //public void CollisionStay(Collision collision)
+    //{
+    //    Player playerReference = collision.gameObject.GetComponent<Player>();
 
-        if (playerReference != null)
-        {
-            if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
-            {
-                playerReference.IsMoving = false;
-                // Debug.Log($"Player landed on space: {spaceData.spaceName}");
-                StartCoroutine(PlaySpaceInfoDisplayAnimationUI(playerReference));
-                gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
-               // ApplyLandedOnSpaceEffects(playerReference);
-                playerReference.CurrentSpacePlayerIsOn = this;
-            }
-        }
-        else
-        {
-            Debug.LogWarning("playerReference is null STAY!");
-        }
-    }
+    //    if (playerReference != null)
+    //    {
+    //        if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
+    //        {
+    //            playerReference.IsMoving = false;
+    //            // Debug.Log($"Player landed on space: {spaceData.spaceName}");
+    //            StartCoroutine(PlaySpaceInfoDisplayAnimationUI(playerReference));
+    //            gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
+    //           // ApplyLandedOnSpaceEffects(playerReference);
+    //            playerReference.CurrentSpacePlayerIsOn = this;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("playerReference is null STAY!");
+    //    }
+    //}
 
     public void TriggerEnter(Collider collider)
     {
@@ -136,7 +143,7 @@ public class Space : MonoBehaviour
 
         if (playerReference != null)
         {
-            if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
+            if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving && gameplayManagerRef.playerCharacter.GetComponent<Player>() == playerReference && !haveSeparatedPlayersAlready)
             {
                 playerReference.IsMoving = false;
                 // Debug.Log($"Player landed on space: {spaceData.spaceName}");
@@ -149,6 +156,46 @@ public class Space : MonoBehaviour
         else
         {
             Debug.LogWarning("playerReference is null STAY!");
+        }
+    }
+
+    public void TriggerExit(Collider collider)
+    {
+        if(playersOnThisSpace.Count > 0)
+        {
+            Player playerLeaving = collider.gameObject.GetComponent<Player>();
+            haveSeparatedPlayersAlready = true;
+            if (playersOnThisSpace.Contains(playerLeaving))
+            {
+                playersOnThisSpace.Remove(playerLeaving);
+            }
+            MoveMultiplePlayersOnSpace();
+            haveSeparatedPlayersAlready = false;
+        }
+        
+    }
+
+    public void MoveMultiplePlayersOnSpace()
+    {
+        if (playersOnThisSpace.Count > 1 && playersOnThisSpace.Count < 5)
+        {
+            haveSeparatedPlayersAlready = true;
+            for (int i = 0; i < playersOnThisSpace.Count; i++)
+            {
+                Vector3 positionToMoveTowards = multiplePlayersSameSpacePositionsParent.transform.GetChild(i).position;
+
+                playersOnThisSpace[i].transform.position = positionToMoveTowards;
+                //StartCoroutine(playersOnThisSpace[i].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(positionToMoveTowards, playersOnThisSpace[i]));
+            }
+            haveSeparatedPlayersAlready = false;
+        }
+        else
+        {
+            if(playersOnThisSpace.Count == 1)
+            {
+                playersOnThisSpace[0].transform.position = spawnPoint.position;
+               // StartCoroutine(playersOnThisSpace[0].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(spawnPoint.position, playersOnThisSpace[0]));
+            }
         }
     }
 

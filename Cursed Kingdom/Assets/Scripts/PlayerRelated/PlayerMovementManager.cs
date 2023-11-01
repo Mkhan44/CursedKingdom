@@ -15,6 +15,7 @@ public class PlayerMovementManager : MonoBehaviour
     [SerializeField] private GameplayManager gameplayManagerRef;
     [SerializeField] private float rayCastLength;
     [SerializeField] private Animator animator;
+    private Coroutine movingCoroutine;
 
     //Debug
     [SerializeField] private bool hasBeenOveriddenOnce;
@@ -106,7 +107,7 @@ public class PlayerMovementManager : MonoBehaviour
             }
             else
             {
-                StartCoroutine(MoveTowards(spaceChoicesToGive[0], playerToMove, playerToMove.SpacesLeftToMove));
+                movingCoroutine = StartCoroutine(MoveTowards(spaceChoicesToGive[0], playerToMove, playerToMove.SpacesLeftToMove));
             }
         }
         //Only 1 valid way to go from this space.
@@ -127,22 +128,22 @@ public class PlayerMovementManager : MonoBehaviour
 
             if(validDirection == Space.Direction.North)
             {
-                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.NorthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+                movingCoroutine = StartCoroutine(MoveTowards(currentSpacePlayerIsOn.NorthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
 
             if (validDirection == Space.Direction.South)
             {
-                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.SouthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+                movingCoroutine = StartCoroutine(MoveTowards(currentSpacePlayerIsOn.SouthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
 
             if (validDirection == Space.Direction.East)
             {
-                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.EastNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+                movingCoroutine = StartCoroutine(MoveTowards(currentSpacePlayerIsOn.EastNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
 
             if (validDirection == Space.Direction.West)
             {
-                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+                movingCoroutine = StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
         }
 
@@ -200,7 +201,7 @@ public class PlayerMovementManager : MonoBehaviour
     //Used when a direction is chosen. This function should be called by clicking a button.
     public void ChooseDirection(Space targetSpace, Player playerReference, int spacesLeftToMove)
     {
-        StartCoroutine(MoveTowards(targetSpace, playerReference, spacesLeftToMove));
+        movingCoroutine = StartCoroutine(MoveTowards(targetSpace, playerReference, spacesLeftToMove));
 
         //Cleanup button holder.
         foreach (Transform child in gameplayManagerRef.directionChoiceButtonHolder.transform)
@@ -214,7 +215,6 @@ public class PlayerMovementManager : MonoBehaviour
     public IEnumerator MoveTowards(Space spaceToMoveTo, Player playerReference, int spacesToMove = 1)
     {
         Transform playerCharacter = playerReference.gameObject.transform;
-        Rigidbody playerRigidBody = playerReference.gameObject.GetComponent<Rigidbody>();
         Animator = playerCharacter.GetComponent<Animator>();
         bool decreaseSpacesToMove = true;
 
@@ -272,6 +272,16 @@ public class PlayerMovementManager : MonoBehaviour
             {
                 playerReference.SpacesLeftToMove = 0;
                 hasBeenOveriddenOnce = false;
+                //Check if multiple characters are on the space, and move everyone accordingly if so.
+                if (!spaceToMoveTo.playersOnThisSpace.Contains(playerReference))
+                {
+                    spaceToMoveTo.playersOnThisSpace.Add(playerReference);
+                }
+
+                if (spaceToMoveTo.playersOnThisSpace.Count > 1 && !spaceToMoveTo.haveSeparatedPlayersAlready)
+                {
+                    spaceToMoveTo.MoveMultiplePlayersOnSpace();
+                }
             }
             else
             {
@@ -282,6 +292,53 @@ public class PlayerMovementManager : MonoBehaviour
 
         yield return null;
     }
+
+    //public IEnumerator MoveTowardsMultiSpace(Vector3 targetPosition, Player playerReference)
+    //{
+    //    if(movingCoroutine != null)
+    //    {
+    //        StopCoroutine(movingCoroutine);
+    //        movingCoroutine = null;
+    //    }
+        
+    //    Transform playerCharacter = playerReference.gameObject.transform;
+    //    Animator = playerCharacter.GetComponent<Animator>();
+
+
+    //    playerReference.IsMoving = true;
+    //    gameplayManagerRef.isPlayerMoving = true;
+    //    Animator.SetBool(ISMOVINGPARAMETER, true);
+    //    // playerReference.HideHand();
+
+    //    float rate = 10.0f;
+    //    float finalRate;
+    //    float timeElapsed = 0f;
+
+    //    while (Vector3.Distance(playerCharacter.localPosition, targetPosition) > 0.15f)
+    //    {
+    //        timeElapsed += 1f;
+    //        Debug.Log("Time elapsed is: " + timeElapsed);
+    //        //  Debug.Log(playerCharacter.localPosition);
+    //        finalRate = rate * Time.deltaTime;
+    //        //playerCharacter.localPosition = 
+    //        Vector3 smoothedMovement = Vector3.MoveTowards(playerCharacter.localPosition, targetPosition, finalRate);
+    //        playerCharacter.position = smoothedMovement;
+    //        //playerRigidBody.MovePosition(smoothedMovement);
+    //        yield return new WaitForFixedUpdate();
+    //    }
+
+    //    gameplayManagerRef.isPlayerMoving = false;
+    //    Animator.SetBool(ISMOVINGPARAMETER, false);
+    //    Debug.Log("Animator for: " + playerReference.ClassData.name + " should be false and is: " + Animator.GetBool(ISMOVINGPARAMETER));
+    //    playerReference.CurrentSpacePlayerIsOn.haveSeparatedPlayersAlready = true;
+    //    if(playerReference.CurrentSpacePlayerIsOn.playersAlreadyMoved.Contains(playerReference))
+    //    {
+    //        playerReference.CurrentSpacePlayerIsOn.playersAlreadyMoved.Remove(playerReference);
+    //    }
+
+    //    yield return null;
+    //}
+
 
     private void MovementExecute(Player playerToMove, Space targetSpace)
     {
