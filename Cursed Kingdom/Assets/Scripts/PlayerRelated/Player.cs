@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
 
     //TEMPORARY GET RID OF THESE.
     public bool startOfTurnEffect;
+    public bool endOfTurnSpaceEffects;
 
     //Properties
     [SerializeField] private int maxHealth;
@@ -230,6 +231,7 @@ public class Player : MonoBehaviour
         WentOnCooldownThisTurn = false;
         NegativeCooldownEffects = ClassData.negativeCooldownEffects;
         isHandlingAbilityActivation = false;
+        endOfTurnSpaceEffects = false;
 
         IsDefeated = false;
         CardsLeftToDiscard = 0;
@@ -1254,16 +1256,7 @@ public class Player : MonoBehaviour
 
             if(CurseDuration == 0)
             {
-                foreach (Card card in CardsInhand)
-                {
-                    MovementCard tempMovementCard = card as MovementCard;
-
-                    if (tempMovementCard != null)
-                    {
-                        tempMovementCard.ResetMovementValue();
-                        tempMovementCard.DeactivateCurseEffect();
-                    }
-                }
+                ResetMovementCardsInHandValues();
 
                 GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
                 IsCursed = false;
@@ -1278,6 +1271,20 @@ public class Player : MonoBehaviour
             {
                 GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
                 IsPoisoned = false;
+            }
+        }
+    }
+
+    public void ResetMovementCardsInHandValues()
+    {
+        foreach (Card card in CardsInhand)
+        {
+            MovementCard tempMovementCard = card as MovementCard;
+
+            if (tempMovementCard != null)
+            {
+                tempMovementCard.ResetMovementValue();
+                tempMovementCard.DeactivateCurseEffect();
             }
         }
     }
@@ -1401,6 +1408,30 @@ public class Player : MonoBehaviour
         ExecuteNextSpaceEffect();
     }
 
+    public void HandleEndOfTurnSpaceEffects()
+    {
+        if(!endOfTurnSpaceEffects)
+        {
+            endOfTurnSpaceEffects = true;
+            ApplyCurrentSpaceEffects(this);
+        }
+
+        GameplayManagerRef.ThisDeckManager.DrawCard(CardType.Movement, this);
+
+        if (!IsMoving && !MaxHandSizeExceeded())
+        {
+            ResetSupportCardUsageCount();
+            ResetMovementCardUsageCount();
+            ResetMovementCardsInHandValues();
+            if(IsCursed)
+            {
+                CurseEffect();
+            }
+            endOfTurnSpaceEffects = false;
+            TurnIsCompleted();
+        }
+    }
+
     public void FinishedHandlingSpaceEffects()
     {
         foreach(SpaceEffectData spaceEffect in tempSpaceEffectsToHandle)
@@ -1419,14 +1450,9 @@ public class Player : MonoBehaviour
             return;
         }
 
-        GameplayManagerRef.ThisDeckManager.DrawCard(CardType.Movement, this);
 
-        if(!IsMoving && !MaxHandSizeExceeded())
-        {
-            ResetSupportCardUsageCount();
-            ResetMovementCardUsageCount();
-            TurnIsCompleted();
-        }
+        HandleEndOfTurnSpaceEffects();
+       
     }
 
     private void ExecuteNextSpaceEffect()
@@ -1439,6 +1465,10 @@ public class Player : MonoBehaviour
             if(NumMovementCardsUsedThisTurn == 0)
             {
                 currentSpaceEffectDataToHandle.StartOfTurnEffect(this);
+            }
+            else if(endOfTurnSpaceEffects)
+            {
+                currentSpaceEffectDataToHandle.EndOfTurnEffect(this);
             }
             else
             {
@@ -1521,6 +1551,10 @@ public class Player : MonoBehaviour
             if (startOfTurnEffect)
             {
                 CurrentSpacePlayerIsOn.ApplyStartOfTurnSpaceEffects(this);
+            }
+            else if(endOfTurnSpaceEffects)
+            {
+                CurrentSpacePlayerIsOn.ApplyEndOfTurnSpaceEffects(this);
             }
             else
             {

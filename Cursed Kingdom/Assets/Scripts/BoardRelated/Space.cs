@@ -177,24 +177,28 @@ public class Space : MonoBehaviour
 
     public void MoveMultiplePlayersOnSpace()
     {
+        List<Vector3> positionsToMoveTowards = new();
         if (playersOnThisSpace.Count > 1 && playersOnThisSpace.Count < 5)
         {
             haveSeparatedPlayersAlready = true;
+            
             for (int i = 0; i < playersOnThisSpace.Count; i++)
             {
                 Vector3 positionToMoveTowards = multiplePlayersSameSpacePositionsParent.transform.GetChild(i).position;
-
-                playersOnThisSpace[i].transform.position = positionToMoveTowards;
-                //StartCoroutine(playersOnThisSpace[i].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(positionToMoveTowards, playersOnThisSpace[i]));
+                positionsToMoveTowards.Add(positionToMoveTowards);
+               // playersOnThisSpace[i].transform.position = positionToMoveTowards;
+                
             }
+            StartCoroutine(playersOnThisSpace[0].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(positionsToMoveTowards, playersOnThisSpace));
             haveSeparatedPlayersAlready = false;
         }
         else
         {
             if(playersOnThisSpace.Count == 1)
             {
-                playersOnThisSpace[0].transform.position = spawnPoint.position;
-               // StartCoroutine(playersOnThisSpace[0].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(spawnPoint.position, playersOnThisSpace[0]));
+                positionsToMoveTowards.Add(spawnPoint.position);
+               // playersOnThisSpace[0].transform.position = spawnPoint.position;
+                StartCoroutine(playersOnThisSpace[0].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(positionsToMoveTowards, playersOnThisSpace));
             }
         }
     }
@@ -405,6 +409,64 @@ public class Space : MonoBehaviour
         {
             gameplayManagerRef.EndOfTurn(player);
         }
+
+        //Revert the space data back if we used debug to change it.
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            spaceData = cachedSpaceData;
+        }
+    }
+
+    //Apply all space effects at the end of the Player's turn. Before Status effects are applied.
+    public void ApplyEndOfTurnSpaceEffects(Player player)
+    {
+        //For debug mode.
+        SpaceData cachedSpaceData = spaceData;
+
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            Space tempSpace = DebugModeSingleton.instance.OverrideSpaceLandEffect();
+
+            if (tempSpace != null)
+            {
+                spaceData = tempSpace.spaceData;
+            }
+
+        }
+
+        if (spaceData.spaceEffects.Count < 1)
+        {
+            Debug.LogWarning("Hey, no space effects on this space currently!");
+        }
+
+
+
+        Queue<SpaceEffectData> spaceEffectsForPlayerToHandle = new();
+        int numSpaceEffectData;
+        for (int j = 0; j < spaceData.spaceEffects.Count; j++)
+        {
+            //Do the space effect in sequence. We'll check for any external triggers here as well.
+            if (player.IsDefeated)
+            {
+                break;
+            }
+            //This is too fast. Need a way to wait for each effect then go to the next.
+            numSpaceEffectData = j;
+            if (spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.OnSpaceTurnStartEffect && !spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.AfterDuelEffect)
+            {
+                spaceEffectsForPlayerToHandle.Enqueue(spaceData.spaceEffects[numSpaceEffectData].spaceEffectData);
+            }
+        }
+
+        //If there are none, exit early.
+        if (spaceEffectsForPlayerToHandle.Count < 1)
+        {
+            return;
+        }
+
+        //Whatever we already had from passing over effects + the new effects.
+        player.SpaceEffectsToHandle = spaceEffectsForPlayerToHandle;
+        
 
         //Revert the space data back if we used debug to change it.
         if (DebugModeSingleton.instance.IsDebugActive)

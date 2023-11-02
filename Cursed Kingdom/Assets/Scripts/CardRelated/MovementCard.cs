@@ -54,23 +54,19 @@ public class MovementCard : Card
 
         if(halfTheValue)
         {
-            if(MovementCardValue != 1)
+            //Stack with Curse.
+            if(TempCardValue != 0)
             {
-                //Stack with Curse.
-                if(TempCardValue != 0)
-                {
-                    if(TempCardValue != 1)
-                    {
-                        TempCardValue = Mathf.CeilToInt(TempCardValue / 2);
-                    }
-                }
-                else
-                {
-                    TempCardValue = Mathf.CeilToInt(MovementCardValue / 2);
-                }
-                movementValueText.text = TempCardValue.ToString();
+                float tempNum = (float)TempCardValue;
+                TempCardValue = Mathf.CeilToInt(TempCardValue / 2.0f);
             }
-
+            else
+            {
+                float tempNum = (float)MovementCardValue;
+                TempCardValue = Mathf.CeilToInt(MovementCardValue / 2.0f);
+            }
+            movementValueText.text = TempCardValue.ToString();
+            
             return;
         }
 

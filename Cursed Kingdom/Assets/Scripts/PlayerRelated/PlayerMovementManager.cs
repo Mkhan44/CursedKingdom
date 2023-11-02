@@ -293,51 +293,52 @@ public class PlayerMovementManager : MonoBehaviour
         yield return null;
     }
 
-    //public IEnumerator MoveTowardsMultiSpace(Vector3 targetPosition, Player playerReference)
-    //{
-    //    if(movingCoroutine != null)
-    //    {
-    //        StopCoroutine(movingCoroutine);
-    //        movingCoroutine = null;
-    //    }
+    public IEnumerator MoveTowardsMultiSpace(List<Vector3> targetPositions, List<Player> playerReferences)
+    {
+        //if (movingCoroutine != null)
+        //{
+        //    StopCoroutine(movingCoroutine);
+        //    movingCoroutine = null;
+        //}
+
+        for(int i = 0; i < playerReferences.Count; i++)
+        {
+            Transform playerCharacter = playerReferences[i].gameObject.transform;
+            Animator = playerCharacter.GetComponent<Animator>();
+
+
+            //playerReferences[i].IsMoving = true;
+            //gameplayManagerRef.isPlayerMoving = true;
+            Animator.SetBool(ISMOVINGPARAMETER, true);
+            // playerReference.HideHand();
+
+            float rate = 15.0f;
+            float finalRate;
+
+            //while (Vector3.Distance(playerCharacter.localPosition, targetPosition) > 0.15f)
+            //{
+            //    finalRate = rate * Time.deltaTime;
+            //    Vector3 smoothedMovement = Vector3.MoveTowards(playerCharacter.localPosition, targetPosition, finalRate);
+            //    playerCharacter.position = smoothedMovement;
+            //    yield return new WaitForFixedUpdate();
+            //}
+
+            finalRate = rate * Time.deltaTime;
+            Vector3 smoothedMovement = Vector3.MoveTowards(playerCharacter.localPosition, targetPositions[i], finalRate);
+            playerCharacter.position = smoothedMovement;
+
+            yield return new WaitForSeconds(0.5f);
+
+            playerCharacter.position = targetPositions[i];
+
+            //gameplayManagerRef.isPlayerMoving = false;
+            Animator.SetBool(ISMOVINGPARAMETER, false);
+            Debug.Log("Animator for: " + playerReferences[i].ClassData.name + " should be false and is: " + Animator.GetBool(ISMOVINGPARAMETER));
+        }
         
-    //    Transform playerCharacter = playerReference.gameObject.transform;
-    //    Animator = playerCharacter.GetComponent<Animator>();
 
-
-    //    playerReference.IsMoving = true;
-    //    gameplayManagerRef.isPlayerMoving = true;
-    //    Animator.SetBool(ISMOVINGPARAMETER, true);
-    //    // playerReference.HideHand();
-
-    //    float rate = 10.0f;
-    //    float finalRate;
-    //    float timeElapsed = 0f;
-
-    //    while (Vector3.Distance(playerCharacter.localPosition, targetPosition) > 0.15f)
-    //    {
-    //        timeElapsed += 1f;
-    //        Debug.Log("Time elapsed is: " + timeElapsed);
-    //        //  Debug.Log(playerCharacter.localPosition);
-    //        finalRate = rate * Time.deltaTime;
-    //        //playerCharacter.localPosition = 
-    //        Vector3 smoothedMovement = Vector3.MoveTowards(playerCharacter.localPosition, targetPosition, finalRate);
-    //        playerCharacter.position = smoothedMovement;
-    //        //playerRigidBody.MovePosition(smoothedMovement);
-    //        yield return new WaitForFixedUpdate();
-    //    }
-
-    //    gameplayManagerRef.isPlayerMoving = false;
-    //    Animator.SetBool(ISMOVINGPARAMETER, false);
-    //    Debug.Log("Animator for: " + playerReference.ClassData.name + " should be false and is: " + Animator.GetBool(ISMOVINGPARAMETER));
-    //    playerReference.CurrentSpacePlayerIsOn.haveSeparatedPlayersAlready = true;
-    //    if(playerReference.CurrentSpacePlayerIsOn.playersAlreadyMoved.Contains(playerReference))
-    //    {
-    //        playerReference.CurrentSpacePlayerIsOn.playersAlreadyMoved.Remove(playerReference);
-    //    }
-
-    //    yield return null;
-    //}
+        yield return null;
+    }
 
 
     private void MovementExecute(Player playerToMove, Space targetSpace)
