@@ -164,12 +164,14 @@ public class Space : MonoBehaviour
         if(playersOnThisSpace.Count > 0)
         {
             Player playerLeaving = collider.gameObject.GetComponent<Player>();
+            
             haveSeparatedPlayersAlready = true;
             if (playersOnThisSpace.Contains(playerLeaving))
             {
                 playersOnThisSpace.Remove(playerLeaving);
             }
-            MoveMultiplePlayersOnSpace();
+
+            //MoveMultiplePlayersOnSpace();
             haveSeparatedPlayersAlready = false;
         }
         
@@ -194,10 +196,10 @@ public class Space : MonoBehaviour
         }
         else
         {
-            if(playersOnThisSpace.Count == 1)
+            if(playersOnThisSpace.Count == 1 && playersOnThisSpace[0].transform.position != spawnPoint.position)
             {
                 positionsToMoveTowards.Add(spawnPoint.position);
-               // playersOnThisSpace[0].transform.position = spawnPoint.position;
+                // playersOnThisSpace[0].transform.position = spawnPoint.position;
                 StartCoroutine(playersOnThisSpace[0].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(positionsToMoveTowards, playersOnThisSpace));
             }
         }

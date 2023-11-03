@@ -89,6 +89,7 @@ public class GameplayManager : MonoBehaviour
     private float[] frameDeltaTimeArray;
     public TextMeshProUGUI spacesToMoveText;
     public GameObject debugMessagePanel;
+    public bool spawnSameSpotDebug;
     [Range(1,4)] public int numPlayersToStartWith = 1;
 
     //Properties
@@ -260,16 +261,27 @@ public class GameplayManager : MonoBehaviour
     private GameObject SpawnPlayersStart(ClassData playerClass)
     {
         //Spawn player.
-        int randomSpawnSpace = Random.Range(0, spaces.Count - 1);
-        GameObject playerTempReference = Instantiate(playerPrefab, spaces[randomSpawnSpace].spawnPoint);
+        GameObject playerTempReference;
+        int spaceToSpawnPlayer;
+        if (!spawnSameSpotDebug)
+        {
+            spaceToSpawnPlayer = Random.Range(0, spaces.Count - 1);
+            playerTempReference = Instantiate(playerPrefab, spaces[spaceToSpawnPlayer].spawnPoint);
+        }
+        else
+        {
+            spaceToSpawnPlayer = 0;
+            playerTempReference = Instantiate(playerPrefab, spaces[spaceToSpawnPlayer].spawnPoint);
+        }
+        
 
         playerTempReference.transform.parent = null;
         playerTempReference.transform.localScale = playerPrefab.transform.localScale;
-        playerTempReference.transform.position = spaces[randomSpawnSpace].spawnPoint.position;
+        playerTempReference.transform.position = spaces[spaceToSpawnPlayer].spawnPoint.position;
         //TODO: CHANGE THIS TO BE MORE DYNAMIC.
         Player playerTempReferencePlayer = playerTempReference.GetComponent<Player>();
         playerTempReferencePlayer.ClassData = playerClass;
-        spaces[randomSpawnSpace].playersOnThisSpace.Add(playerTempReferencePlayer);
+        spaces[spaceToSpawnPlayer].playersOnThisSpace.Add(playerTempReferencePlayer);
         //END TODO:
 
         //setup animation

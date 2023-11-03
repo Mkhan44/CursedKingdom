@@ -15,7 +15,6 @@ public class PlayerMovementManager : MonoBehaviour
     [SerializeField] private GameplayManager gameplayManagerRef;
     [SerializeField] private float rayCastLength;
     [SerializeField] private Animator animator;
-    private Coroutine movingCoroutine;
 
     //Debug
     [SerializeField] private bool hasBeenOveriddenOnce;
@@ -107,7 +106,7 @@ public class PlayerMovementManager : MonoBehaviour
             }
             else
             {
-                movingCoroutine = StartCoroutine(MoveTowards(spaceChoicesToGive[0], playerToMove, playerToMove.SpacesLeftToMove));
+                StartCoroutine(MoveTowards(spaceChoicesToGive[0], playerToMove, playerToMove.SpacesLeftToMove));
             }
         }
         //Only 1 valid way to go from this space.
@@ -128,22 +127,22 @@ public class PlayerMovementManager : MonoBehaviour
 
             if(validDirection == Space.Direction.North)
             {
-                movingCoroutine = StartCoroutine(MoveTowards(currentSpacePlayerIsOn.NorthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.NorthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
 
             if (validDirection == Space.Direction.South)
             {
-                movingCoroutine = StartCoroutine(MoveTowards(currentSpacePlayerIsOn.SouthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.SouthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
 
             if (validDirection == Space.Direction.East)
             {
-                movingCoroutine = StartCoroutine(MoveTowards(currentSpacePlayerIsOn.EastNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.EastNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
 
             if (validDirection == Space.Direction.West)
             {
-                movingCoroutine = StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+                StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
             }
         }
 
@@ -201,7 +200,7 @@ public class PlayerMovementManager : MonoBehaviour
     //Used when a direction is chosen. This function should be called by clicking a button.
     public void ChooseDirection(Space targetSpace, Player playerReference, int spacesLeftToMove)
     {
-        movingCoroutine = StartCoroutine(MoveTowards(targetSpace, playerReference, spacesLeftToMove));
+        StartCoroutine(MoveTowards(targetSpace, playerReference, spacesLeftToMove));
 
         //Cleanup button holder.
         foreach (Transform child in gameplayManagerRef.directionChoiceButtonHolder.transform)
@@ -253,7 +252,7 @@ public class PlayerMovementManager : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         // Debug.Log("Done moving");
-
+        
         gameplayManagerRef.isPlayerMoving = false;
         Animator.SetBool(ISMOVINGPARAMETER, false);
 
@@ -270,6 +269,7 @@ public class PlayerMovementManager : MonoBehaviour
         {
             if (decreaseSpacesToMove)
             {
+                playerCharacter.position = targetPosition;
                 playerReference.SpacesLeftToMove = 0;
                 hasBeenOveriddenOnce = false;
                 //Check if multiple characters are on the space, and move everyone accordingly if so.
@@ -298,7 +298,7 @@ public class PlayerMovementManager : MonoBehaviour
         //if (movingCoroutine != null)
         //{
         //    StopCoroutine(movingCoroutine);
-        //    movingCoroutine = null;
+        //    null;
         //}
 
         for(int i = 0; i < playerReferences.Count; i++)
@@ -312,7 +312,7 @@ public class PlayerMovementManager : MonoBehaviour
             Animator.SetBool(ISMOVINGPARAMETER, true);
             // playerReference.HideHand();
 
-            float rate = 15.0f;
+            float rate = 5.0f;
             float finalRate;
 
             //while (Vector3.Distance(playerCharacter.localPosition, targetPosition) > 0.15f)
@@ -335,8 +335,6 @@ public class PlayerMovementManager : MonoBehaviour
             Animator.SetBool(ISMOVINGPARAMETER, false);
             Debug.Log("Animator for: " + playerReferences[i].ClassData.name + " should be false and is: " + Animator.GetBool(ISMOVINGPARAMETER));
         }
-        
-
         yield return null;
     }
 
