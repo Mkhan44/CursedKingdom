@@ -15,7 +15,25 @@ public class CureCursedEffect : SupportCardEffectData, ISupportEffect
 {
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
-        
+        playerReference.StatusEffectUpdateCompleted += CompletedEffect;
+        playerReference.CureCurse();
+    }
+
+    public override void CompletedEffect(Player playerReference)
+    {
+        playerReference.StatusEffectUpdateCompleted -= CompletedEffect;
+        base.CompletedEffect(playerReference);
+    }
+
+    public override bool CanCostBePaid(Player playerReference)
+    {
+        bool canCostBePaid = playerReference.IsCursed;
+
+        if (!canCostBePaid)
+        {
+            DialogueBoxPopup.instance.ActivatePopupWithJustText("You're not cursed currently.", 1.5f);
+        }
+        return canCostBePaid;
     }
 
 }

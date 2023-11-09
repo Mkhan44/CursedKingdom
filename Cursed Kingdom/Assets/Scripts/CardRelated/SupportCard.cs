@@ -126,6 +126,7 @@ public class SupportCard : Card
                 {
                     if(!GameplayManager.Players[indexOfCurrentPlayer].CanUseSupportCard())
                     {
+                        if(GameplayManager.Players[indexOfCurrentPlayer])
                         DialogueBoxPopup.instance.ActivatePopupWithJustText($"You have already used a support card this turn.", 2.0f);
                         GameplayManager.HandDisplayPanel.ShrinkHand();
                         transform.localScale = OriginalSize;
@@ -155,33 +156,33 @@ public class SupportCard : Card
     public override void SelectForUse()
     {
         base.SelectForUse();
-        int indexOfCurrentPlayer;
-        int numSelected;
-        int maxNumPlayerCanSelect;
+        //int indexOfCurrentPlayer;
+        //int numSelected;
+        //int maxNumPlayerCanSelect;
 
-        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
-        GameplayManager.Players[indexOfCurrentPlayer].SupportCardSelectedForUse = true;
+        //CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        //GameplayManager.Players[indexOfCurrentPlayer].SupportCardSelectedForUse = true;
     }
 
     public override void DeselectForUse()
     {
         base.DeselectForUse();
-        int indexOfCurrentPlayer;
-        int numSelected;
-        int maxNumPlayerCanSelect;
+        //int indexOfCurrentPlayer;
+        //int numSelected;
+        //int maxNumPlayerCanSelect;
 
-        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        //CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
 
-        if (GameplayManager.Players[indexOfCurrentPlayer].ExtraSupportCardUses > 0)
-        {
-            if (!GameplayManager.UseSelectedCardsPanel.activeInHierarchy)
-            {
-                GameplayManager.UseSelectedCardsPanel.SetActive(true);
-            }
-            GameplayManager.UseSelectedCardsText.text = $"Selected cards: {numSelected}/{maxNumPlayerCanSelect}";
-            GameplayManager.UseSelectedCardsButton.onClick.RemoveAllListeners();
-            GameplayManager.UseSelectedCardsButton.onClick.AddListener(GameplayManager.Players[indexOfCurrentPlayer].UseMultipleCards);
-        }
+        //if (GameplayManager.Players[indexOfCurrentPlayer].ExtraSupportCardUses > 0)
+        //{
+        //    if (!GameplayManager.UseSelectedCardsPanel.activeInHierarchy)
+        //    {
+        //        GameplayManager.UseSelectedCardsPanel.SetActive(true);
+        //    }
+        //    GameplayManager.UseSelectedCardsText.text = $"Selected cards: {numSelected}/{maxNumPlayerCanSelect}";
+        //    GameplayManager.UseSelectedCardsButton.onClick.RemoveAllListeners();
+        //    GameplayManager.UseSelectedCardsButton.onClick.AddListener(GameplayManager.Players[indexOfCurrentPlayer].UseMultipleCards);
+        //}
     }
 
     public bool IsValidCardTypeToDiscard(Player playerReference)
@@ -227,7 +228,7 @@ public class SupportCard : Card
                 if (!SupportCardData.supportCardEffects[i].supportCardEffectData.CanCostBePaid(player))
                 {
                     Debug.LogWarning($"Cost of {SupportCardData.supportCardEffects[i].supportCardEffectData.name} can't be paid. Can't execute space effects.");
-                    DialogueBoxPopup.instance.ActivatePopupWithJustText($"Cost of {SupportCardData.supportCardEffects[i].supportCardEffectData.name} can't be paid.", 2.0f);
+                    //DialogueBoxPopup.instance.ActivatePopupWithJustText($"Cost of {SupportCardData.supportCardEffects[i].supportCardEffectData.name} can't be paid.", 2.0f);
                     canAllCostsBePaid = false;
                     break;
                 }

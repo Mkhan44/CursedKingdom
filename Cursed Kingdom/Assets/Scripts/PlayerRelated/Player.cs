@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     public event Action<Player> DoneAttackingForEffect;
     public event Action<Player> DoneDrawingCard;
     public event Action<Player> DoneActivatingAbilityEffect;
+    public event Action<Player> StatusEffectUpdateCompleted;
 
     //Events End
 
@@ -997,7 +998,7 @@ public class Player : MonoBehaviour
     public bool CanUseSupportCard()
     {
         bool canUse;
-        int maximumAmountTouse = ExtraMovementCardUses + MaxMovementCardsToUse;
+        int maximumAmountTouse = ExtraSupportCardUses + MaxSupportCardsToUse;
 
         if (NumSupportCardsUsedThisTurn >= maximumAmountTouse)
         {
@@ -1241,12 +1242,33 @@ public class Player : MonoBehaviour
         CurseEffectPriv();
     }
 
+    public virtual void CurePoison()
+    {
+        PoisonDuration = 0;
+        WasAfflictedWithStatusThisTurn = false;
+        GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+        IsPoisoned = false;
+        CompletedStatusEffectUpdate();
+    }
+
+    public virtual void CureCurse()
+    {
+        CurseDuration = 0;
+        WasAfflictedWithStatusThisTurn = false;
+        //If player is on a 'halve movement cards when on this space' space, this will still reset to original value. Can't have that, need to only increase it by half it's value.
+        ResetMovementCardsInHandValues();
+        GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+        IsCursed = false;
+        CompletedStatusEffectUpdate();
+    }
+
     public virtual void UpdateStatusEffectCount(bool isEndOfTurn = true)
     {
         //Were just afflicted with the status. Don't do anything.
         if(WasAfflictedWithStatusThisTurn && isEndOfTurn)
         {
             WasAfflictedWithStatusThisTurn = false;
+            CompletedStatusEffectUpdate();
             return;
         }
 
@@ -1256,6 +1278,7 @@ public class Player : MonoBehaviour
 
             if(CurseDuration == 0)
             {
+                //If player is on a 'halve movement cards when on this space' space, this will still reset to original value. Can't have that, need to only increase it by half it's value.
                 ResetMovementCardsInHandValues();
 
                 GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
@@ -1273,6 +1296,8 @@ public class Player : MonoBehaviour
                 IsPoisoned = false;
             }
         }
+
+        CompletedStatusEffectUpdate();
     }
 
     public void ResetMovementCardsInHandValues()
@@ -1635,6 +1660,11 @@ public class Player : MonoBehaviour
         }
         GameplayManagerRef.UpdatePlayerCooldownText(this);
         DoneActivatingAbilityEffect?.Invoke(this);
+    }
+
+    public void CompletedStatusEffectUpdate()
+    {
+        StatusEffectUpdateCompleted?.Invoke(this);
     }
     
     #endregion
