@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class PlayerInfoDisplay : MonoBehaviour
 {
+    private const string ISPOISONED = "isPoisoned";
+
     [Header("References")]
     [SerializeField] private TextMeshProUGUI playerClassText;
     [SerializeField] private TextMeshProUGUI playerNameText;
@@ -24,6 +26,7 @@ public class PlayerInfoDisplay : MonoBehaviour
     [SerializeField] private TextMeshProUGUI poisonTurnsText;
     [SerializeField] private TextMeshProUGUI cooldownText;
     [SerializeField] private GameObject heartPrefab;
+    [SerializeField] private Animator animator;
 
 
     //TEST
@@ -47,6 +50,7 @@ public class PlayerInfoDisplay : MonoBehaviour
     public Image PoisonImage { get => poisonImage; set => poisonImage = value; }
     public TextMeshProUGUI CooldownText { get => cooldownText; set => cooldownText = value; }
     public GameObject HeartPrefab { get => heartPrefab; set => heartPrefab = value; }
+    public Animator Animator { get => animator; set => animator = value; }
 
     public void SetupPlayerInfo(Player playerRef)
     {
@@ -118,12 +122,14 @@ public class PlayerInfoDisplay : MonoBehaviour
                 PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 100f);
                 CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
                 PoisonTurnsText.text = PlayerReference.PoisonDuration.ToString();
+                animator.SetBool(ISPOISONED, true);
             }
             else
             {
                 PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
                 CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
                 PoisonTurnsText.text = string.Empty;
+                animator.SetBool(ISPOISONED, false);
             }
           
             return;
