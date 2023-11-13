@@ -50,6 +50,7 @@ public class MovementCard : Card
         if(halfTheValue && increaseTheValue)
         {
             Debug.LogWarning("You're trying to both half and increase the value of the card!! We're not gonna change the value.");
+            return;
         }
 
         if(halfTheValue)
@@ -58,12 +59,12 @@ public class MovementCard : Card
             if(TempCardValue != 0)
             {
                 float tempNum = (float)TempCardValue;
-                TempCardValue = Mathf.CeilToInt(TempCardValue / 2.0f);
+                TempCardValue = Mathf.CeilToInt(tempNum / 2.0f);
             }
             else
             {
                 float tempNum = (float)MovementCardValue;
-                TempCardValue = Mathf.CeilToInt(MovementCardValue / 2.0f);
+                TempCardValue = Mathf.CeilToInt(tempNum / 2.0f);
             }
             movementValueText.text = TempCardValue.ToString();
             

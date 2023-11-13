@@ -686,7 +686,12 @@ public class Player : MonoBehaviour
         //Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
         if (IsCursed)
         {
-            CurseEffect();
+            MovementCard tempMovementCard = (MovementCard)card;
+            if(tempMovementCard != null)
+            {
+                tempMovementCard.ChangeMovementValue(true);
+                CurseCardAnimationEffect();
+            }
         }
 
     }
@@ -709,7 +714,19 @@ public class Player : MonoBehaviour
         //Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
         if (IsCursed)
         {
-            CurseEffect();
+            //Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
+            if (IsCursed)
+            {
+                foreach(Card card in cards)
+                {
+                    MovementCard tempMovementCard = (MovementCard)card;
+                    if (tempMovementCard != null)
+                    {
+                        tempMovementCard.ChangeMovementValue(true);
+                        CurseCardAnimationEffect();
+                    }
+                }
+            }
         }
     }
 
@@ -742,7 +759,7 @@ public class Player : MonoBehaviour
         //For Curse animation on cards.
         if (IsCursed)
         {
-            CurseEffect();
+            CurseCardAnimationEffect();
         }
 
     }
@@ -1240,6 +1257,19 @@ public class Player : MonoBehaviour
     public virtual void CurseEffect()
     {
         CurseEffectPriv();
+    }
+
+    public virtual void CurseCardAnimationEffect()
+    {
+        foreach (Card card in CardsInhand)
+        {
+            MovementCard tempMovementCard = card as MovementCard;
+
+            if (tempMovementCard != null)
+            {
+                tempMovementCard.ActivateCurseEffect();
+            }
+        }
     }
 
     public virtual void CurePoison()
