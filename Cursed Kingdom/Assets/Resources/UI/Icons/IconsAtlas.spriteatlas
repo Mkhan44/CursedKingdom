@@ -20,7 +20,20 @@ SpriteAtlas:
       readable: 0
       crunchedCompression: 0
       sRGB: 1
-    platformSettings: []
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_IgnorePlatformSupport: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
       padding: 4
@@ -48,6 +61,9 @@ SpriteAtlas:
     - {fileID: 2800000, guid: cb64e1d1b8e1c6a4cb3a334fc066f31e, type: 3}
     - {fileID: 2800000, guid: a828947923ae6c14890c1b90cccbb324, type: 3}
     - {fileID: 2800000, guid: 31fecfc6a7e7901448321a41a1d8b28b, type: 3}
+    - {fileID: 2800000, guid: e4d4ebce42846c84b92b95b737cc571e, type: 3}
+    - {fileID: 2800000, guid: d5aadaf76d2b5464d862481d265641bb, type: 3}
+    - {fileID: 2800000, guid: 269860875cf29574bbcec11182e976aa, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -60,7 +76,9 @@ SpriteAtlas:
     - de72b85460fc8034399c1484637682fd: 21300000
     - 70a22cb55f734074981a7d650482c784: 21300000
     - 31fecfc6a7e7901448321a41a1d8b28b: 21300000
+    - 269860875cf29574bbcec11182e976aa: 21300000
     - 7e42e0e7c7d0afb46a1f8b3900e9856d: 21300000
+    - d5aadaf76d2b5464d862481d265641bb: 21300000
     - a828947923ae6c14890c1b90cccbb324: 21300000
     - 144acb3a0f08ad64aacc84395b1947d4: 21300000
     - 0e28df4a50b3ed74ba375e1fc5f7c49b: 21300000
@@ -68,6 +86,7 @@ SpriteAtlas:
     - 5333fb2ca9fb1714883328e4ac66be49: 21300000
     - f8f0289d8502b9048830ee8a211faa9b: 21300000
     - f3fb0cedb134845418e0feb4c8c71b4c: 21300000
+    - e4d4ebce42846c84b92b95b737cc571e: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 859c4ba0fc4435f42b78bf396b633d33, type: 3}
@@ -78,7 +97,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: de72b85460fc8034399c1484637682fd, type: 3}
   - {fileID: 21300000, guid: 70a22cb55f734074981a7d650482c784, type: 3}
   - {fileID: 21300000, guid: 31fecfc6a7e7901448321a41a1d8b28b, type: 3}
+  - {fileID: 21300000, guid: 269860875cf29574bbcec11182e976aa, type: 3}
   - {fileID: 21300000, guid: 7e42e0e7c7d0afb46a1f8b3900e9856d, type: 3}
+  - {fileID: 21300000, guid: d5aadaf76d2b5464d862481d265641bb, type: 3}
   - {fileID: 21300000, guid: a828947923ae6c14890c1b90cccbb324, type: 3}
   - {fileID: 21300000, guid: 144acb3a0f08ad64aacc84395b1947d4, type: 3}
   - {fileID: 21300000, guid: 0e28df4a50b3ed74ba375e1fc5f7c49b, type: 3}
@@ -86,6 +107,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5333fb2ca9fb1714883328e4ac66be49, type: 3}
   - {fileID: 21300000, guid: f8f0289d8502b9048830ee8a211faa9b, type: 3}
   - {fileID: 21300000, guid: f3fb0cedb134845418e0feb4c8c71b4c, type: 3}
+  - {fileID: 21300000, guid: e4d4ebce42846c84b92b95b737cc571e, type: 3}
   m_PackedSpriteNamesToIndex:
   - drawmove
   - noduel
@@ -95,7 +117,9 @@ SpriteAtlas:
   - heartgain
   - adventurer
   - supp
+  - direction
   - heart
+  - start
   - specialatk
   - move
   - poison
@@ -103,6 +127,7 @@ SpriteAtlas:
   - drawsupp
   - duel
   - curse
+  - doublemove
   m_RenderDataMap: {}
   m_Tag: IconsAtlas
   m_IsVariant: 0
