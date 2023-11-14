@@ -12,12 +12,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af44d92dc4e0aab47a7dc3879ed2a7e2, type: 3}
   m_Name: Default Space Icons
   m_EditorClassIdentifier: 
-  drawMovementCardSprite: {fileID: 21300000, guid: 859c4ba0fc4435f42b78bf396b633d33, type: 3}
-  drawSupportCardSprite: {fileID: 21300000, guid: 5333fb2ca9fb1714883328e4ac66be49, type: 3}
-  poisonSprite: {fileID: 21300000, guid: 0e28df4a50b3ed74ba375e1fc5f7c49b, type: 3}
-  curseSprite: {fileID: 21300000, guid: f3fb0cedb134845418e0feb4c8c71b4c, type: 3}
-  recoverHealthSprite: {fileID: 21300000, guid: de72b85460fc8034399c1484637682fd, type: 3}
-  loseHealthSprite: {fileID: 21300000, guid: 1b4bbf5abda7ce649ab6d5b4bf7af150, type: 3}
-  nonDuelSprite: {fileID: 21300000, guid: ab560ab0ee6f9c94685d94cf2a075c70, type: 3}
-  specialAttackSprite: {fileID: 21300000, guid: a828947923ae6c14890c1b90cccbb324, type: 3}
-  barricadeSprite: {fileID: 21300000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
+  spaceIconElements:
+  - spaceIconType: 0
+    sprite: {fileID: 21300000, guid: 859c4ba0fc4435f42b78bf396b633d33, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 1
+    sprite: {fileID: 21300000, guid: 5333fb2ca9fb1714883328e4ac66be49, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 2
+    sprite: {fileID: 21300000, guid: 0e28df4a50b3ed74ba375e1fc5f7c49b, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 3
+    sprite: {fileID: 21300000, guid: f3fb0cedb134845418e0feb4c8c71b4c, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 4
+    sprite: {fileID: 21300000, guid: de72b85460fc8034399c1484637682fd, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 5
+    sprite: {fileID: 21300000, guid: 1b4bbf5abda7ce649ab6d5b4bf7af150, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 6
+    sprite: {fileID: 21300000, guid: ab560ab0ee6f9c94685d94cf2a075c70, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 7
+    sprite: {fileID: 21300000, guid: a828947923ae6c14890c1b90cccbb324, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 8
+    sprite: {fileID: 21300000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 9
+    sprite: {fileID: 21300000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 10
+    sprite: {fileID: 21300000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 11
+    sprite: {fileID: 21300000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 12
+    sprite: {fileID: 21300000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 13
+    sprite: {fileID: 21300000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 14
+    sprite: {fileID: 21300000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - spaceIconType: 15
+    sprite: {fileID: 21300000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}

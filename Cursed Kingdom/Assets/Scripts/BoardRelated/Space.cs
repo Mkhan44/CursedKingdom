@@ -9,6 +9,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.TextCore;
 using System.Threading.Tasks;
+using System;
 
 public class Space : MonoBehaviour
 {
@@ -545,74 +546,75 @@ public class Space : MonoBehaviour
         {
             GameObject tempIcon = Instantiate(iconHolderPrefab, iconHolderParent.transform);
             Image iconImage = tempIcon.transform.GetChild(0).GetComponentInChildren<Image>();
+            SpaceIconPreset.SpaceIconElement.SpaceIconType typeToCheck = default;
             Sprite iconSprite = null;
             switch(spaceEffect.spaceEffectData.GetType().Name)
             {
                 case nameof(ArrowSpace):
                     {
-                       // Debug.Log("Arrow space has no sprite. Keeping it as default");
-                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.arrow;
+                        // Debug.Log("Arrow space has no sprite. Keeping it as default");
                         break;
                     }
                 case nameof(AttackSpace):
                     {
-                      //  Debug.Log("Attack space has no sprite. Keeping it as default");
-                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.attack;
+                        //  Debug.Log("Attack space has no sprite. Keeping it as default");
                         break;
                     }
                 case nameof(BarricadeSpace):
                     {
-                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.barricade;
                         break;
                     }
                 case nameof(ConferenceRoomSpace):
                     {
-                      //  Debug.Log("ConferenceRoom space has no sprite. Keeping it as default");
-                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        //  Debug.Log("ConferenceRoom space has no sprite. Keeping it as default");
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.conferenceRoom;
                         break;
                     }
                 case nameof(CurseSpace):
                     {
-                        iconSprite = gameplayManagerRef.IconPresets.CurseSprite;
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.curse;
                         break;
                     }
                 case nameof(DiscardCardSpace):
                     {
-                      //  Debug.Log("Discard Card space has no sprite. Keeping it as default");
-                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        //  Debug.Log("Discard Card space has no sprite. Keeping it as default");
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.discard;
                         break;
                     }
                 case nameof(HalveMovementCardSpace):
                     {
-                      //  Debug.Log("Halve movement card space has no sprite. Keeping it as default");
-                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        //  Debug.Log("Halve movement card space has no sprite. Keeping it as default");
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.halveMovementCard;
                         break;
                     }
                 case nameof(LevelUpSpace):
                     {
-                       // Debug.Log("Level up space has no sprite. Keeping it as default");
-                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                      //  Debug.Log("Level up space has no sprite. Keeping it as default");
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.levelUp;
                         break;
                     }
                 case nameof(LoseHealthSpace):
                     {
-                        iconSprite = gameplayManagerRef.IconPresets.LoseHealthSprite;
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.loseHealth;
                         break;
                     }
                 case nameof(PoisonSpace):
                     {
-                        iconSprite = gameplayManagerRef.IconPresets.PoisonSprite;
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.poison;
                         break;
                     }
                 case nameof(RecoverHealthSpace):
                     {
-                        iconSprite = gameplayManagerRef.IconPresets.RecoverHealthSprite;
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.recoverHealth;
                         break;
                     }
                 case nameof(UseExtraCardSpace):
                     {
-                       // Debug.Log("Use extra card space has no sprite. Keeping it as default");
-                        iconSprite = gameplayManagerRef.IconPresets.BarricadeSprite;
+                        // Debug.Log("Use extra card space has no sprite. Keeping it as default");
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.useExtraCard;
                         break;
                     }
                 case nameof(DrawCardSpace):
@@ -620,26 +622,26 @@ public class Space : MonoBehaviour
                         DrawCardSpace drawCardSpace = spaceEffect.spaceEffectData as DrawCardSpace;
                         if (drawCardSpace.CardTypeToDraw == Card.CardType.Movement)
                         {
-                            iconSprite = gameplayManagerRef.IconPresets.DrawMovementCardSprite;
+                            typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.drawMovementCard;
                         }
                         else if(drawCardSpace.CardTypeToDraw == Card.CardType.Support)
                         {
-                            iconSprite = gameplayManagerRef.IconPresets.DrawSupportCardSprite;
+                            typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.drawSupportCard;
                         }
                         else
                         {
-                            iconSprite = gameplayManagerRef.IconPresets.DrawMovementCardSprite;
+                            typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.drawMovementCard;
                         }
                         break;
                     }
                 case nameof(ExcaliburTheGreatSword):
                     {
-                        iconSprite = gameplayManagerRef.IconPresets.SpecialAttackSprite;
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.specialAttack;
                         break;
                     }
                 case nameof(SpecialAttackSpace):
                     {
-                        iconSprite = gameplayManagerRef.IconPresets.SpecialAttackSprite;
+                        typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.specialAttack;
                         break;
                     }
 
@@ -649,9 +651,26 @@ public class Space : MonoBehaviour
                         break;
                     }
             }
+            iconSprite = SetIconImage(typeToCheck, iconImage);
+
             iconImage.sprite = iconSprite;
         }
        
+    }
+
+    private Sprite SetIconImage(SpaceIconPreset.SpaceIconElement.SpaceIconType typeToCheck, Image iconImage)
+    {
+        Sprite iconSprite = null;
+        foreach (SpaceIconPreset.SpaceIconElement spaceIconElement in gameplayManagerRef.IconPresets.SpaceIconElements)
+        {
+            if (spaceIconElement.SpaceIconType1 == typeToCheck)
+            {
+                iconSprite = spaceIconElement.Sprite;
+                iconImage.color = spaceIconElement.Color;
+            }
+        }
+
+        return iconSprite;
     }
 
     private void GetSpaceNeighbors()
