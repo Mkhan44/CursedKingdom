@@ -547,7 +547,6 @@ public class Space : MonoBehaviour
             GameObject tempIcon = Instantiate(iconHolderPrefab, iconHolderParent.transform);
             Image iconImage = tempIcon.transform.GetChild(0).GetComponentInChildren<Image>();
             SpaceIconPreset.SpaceIconElement.SpaceIconType typeToCheck = default;
-            Sprite iconSprite = null;
             switch(spaceEffect.spaceEffectData.GetType().Name)
             {
                 case nameof(ArrowSpace):
@@ -651,26 +650,21 @@ public class Space : MonoBehaviour
                         break;
                     }
             }
-            iconSprite = SetIconImage(typeToCheck, iconImage);
-
-            iconImage.sprite = iconSprite;
+            SetIconImage(typeToCheck, iconImage);
         }
        
     }
 
-    private Sprite SetIconImage(SpaceIconPreset.SpaceIconElement.SpaceIconType typeToCheck, Image iconImage)
+    private void SetIconImage(SpaceIconPreset.SpaceIconElement.SpaceIconType typeToCheck, Image iconImage)
     {
-        Sprite iconSprite = null;
-        foreach (SpaceIconPreset.SpaceIconElement spaceIconElement in gameplayManagerRef.IconPresets.SpaceIconElements)
+        foreach (SpaceIconPreset.SpaceIconElement spaceIconElement in IconPresetsSingleton.instance.SpaceIconPreset.SpaceIconElements)
         {
             if (spaceIconElement.SpaceIconType1 == typeToCheck)
             {
-                iconSprite = spaceIconElement.Sprite;
+                iconImage.sprite = spaceIconElement.Sprite;
                 iconImage.color = spaceIconElement.Color;
             }
         }
-
-        return iconSprite;
     }
 
     private void GetSpaceNeighbors()

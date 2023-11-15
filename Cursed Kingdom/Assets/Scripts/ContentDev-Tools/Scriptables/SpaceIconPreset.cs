@@ -35,7 +35,7 @@ public class SpaceIconPreset : ScriptableObject
 
         [SerializeField] private SpaceIconType spaceIconType;
         [SerializeField] private Sprite sprite;
-        [ColorUsage(true, true)] [SerializeField] private Color color;
+        [ColorUsage(true, true)][SerializeField] private Color color;
 
 
         public SpaceIconType SpaceIconType1 { get => spaceIconType; set => spaceIconType = value; }
@@ -48,7 +48,7 @@ public class SpaceIconPreset : ScriptableObject
     private void OnValidate()
     {
         List<SpaceIconElement.SpaceIconType> duplicateTypeCheck = new();
-        foreach(var element in SpaceIconElements)
+        foreach(SpaceIconElement element in SpaceIconElements)
         {
             if(!duplicateTypeCheck.Contains(element.SpaceIconType1))
             {

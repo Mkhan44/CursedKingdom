@@ -53,17 +53,34 @@ public class SupportCard : Card
 
     private void SetupCardTypeImage()
     {
+        SupportCardTypeIconPreset.SupportCardIconElement.SupportIconType iconTypeToCheck = default;
+
         if (SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Movement)
         {
-            supportCardTypeImage.sprite = IconPresetsSingleton.instance.SupportCardTypeIconPreset.MovementSprite;
+            iconTypeToCheck = SupportCardTypeIconPreset.SupportCardIconElement.SupportIconType.movement;
         }
         else if (SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Duel)
         {
-            supportCardTypeImage.sprite = IconPresetsSingleton.instance.SupportCardTypeIconPreset.DuelSprite;
+            iconTypeToCheck = SupportCardTypeIconPreset.SupportCardIconElement.SupportIconType.duel;
         }
-        else
+        else if (supportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Special)
         {
-            supportCardTypeImage.sprite = IconPresetsSingleton.instance.SupportCardTypeIconPreset.SpecialSprite;
+            iconTypeToCheck = SupportCardTypeIconPreset.SupportCardIconElement.SupportIconType.special;
+        }
+
+        SetIconImage(iconTypeToCheck, supportCardTypeImage);
+
+    }
+
+    private void SetIconImage(SupportCardTypeIconPreset.SupportCardIconElement.SupportIconType typeToCheck, Image iconImage)
+    {
+        foreach (SupportCardTypeIconPreset.SupportCardIconElement supportCardIconElement in IconPresetsSingleton.instance.SupportCardTypeIconPreset.SupportCardIcons)
+        {
+            if (supportCardIconElement.SupportIconType1 == typeToCheck)
+            {
+                iconImage.sprite = supportCardIconElement.Sprite;
+                iconImage.color = supportCardIconElement.Color;
+            }
         }
     }
 

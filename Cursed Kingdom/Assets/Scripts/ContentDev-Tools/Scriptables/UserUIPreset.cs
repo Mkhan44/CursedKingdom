@@ -8,6 +8,8 @@ using UnityEngine;
 public class UserUIPreset : ScriptableObject
 {
     [SerializeField] private SpaceIconPreset spaceIconPresetData;
+    [SerializeField] private SupportCardTypeIconPreset supportIconPresetData;
 
     public SpaceIconPreset SpaceIconPresetData { get => spaceIconPresetData; set => spaceIconPresetData = value; }
+    public SupportCardTypeIconPreset SupportIconPresetData { get => supportIconPresetData; set => supportIconPresetData = value; }
 }

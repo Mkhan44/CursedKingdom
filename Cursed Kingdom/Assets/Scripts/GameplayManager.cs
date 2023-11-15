@@ -62,9 +62,6 @@ public class GameplayManager : MonoBehaviour
     //Player ability related
     [SerializeField] private Button useAbilityButton;
 
-    //Scriptables for UI packs.
-    [SerializeField] private SpaceIconPreset iconPresets;
-
 
     [SerializeField] private List<Player> players;
     [SerializeField] private List<PlayerInfoDisplay> playerInfoDisplays;
@@ -111,7 +108,6 @@ public class GameplayManager : MonoBehaviour
     public PlayerHandDisplayUI HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
     public TopDownMapDisplay TopDownMapDisplay { get => topDownMapDisplay; set => topDownMapDisplay = value; }
     public SpaceArtworkPopupDisplay SpaceArtworkPopupDisplay { get => spaceArtworkPopupDisplay; set => spaceArtworkPopupDisplay = value; }
-    public SpaceIconPreset IconPresets { get => iconPresets; set => iconPresets = value; }
 
     private void Start()
     {
