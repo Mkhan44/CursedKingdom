@@ -74,7 +74,7 @@ public class GameplayManager : MonoBehaviour
     private CinemachineVirtualCamera cinemachineVirtualCamera;
 
     public CinemachineVirtualCamera currentActiveCamera;
-    int currentActiveCameraIndex = 0;
+    private int currentActiveCameraIndex = 0;
 
     public List<CinemachineVirtualCamera> cinemachineVirtualCameras;
 

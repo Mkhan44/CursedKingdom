@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     public event Action<Player> DoneAttackingForEffect;
     public event Action<Player> DoneDrawingCard;
     public event Action<Player> DoneActivatingAbilityEffect;
+    public event Action<Player> DoneActivatingEliteAbilityEffect;
     public event Action<Player> StatusEffectUpdateCompleted;
 
     //Events End
@@ -58,6 +59,9 @@ public class Player : MonoBehaviour
     [SerializeField] private bool isOnCooldown;
     [SerializeField] private bool wentOnCooldownThisTurn;
     [SerializeField] private bool isHandlingAbilityActivation;
+    [SerializeField] private bool isHandlingEliteAbilityActivation;
+    [SerializeField] private bool canUseEliteAbility;
+
 
     //Effect handling
     [SerializeField] private Queue<SpaceEffectData> spaceEffectsToHandle;
@@ -70,6 +74,7 @@ public class Player : MonoBehaviour
     [SerializeField] private List<SupportCardEffectData> tempSupportCardEffectsToHandle;
     [SerializeField] private bool isHandlingSupportCardEffects;
 
+    //Status Effects
     [SerializeField] private bool isMoving;
     [SerializeField] private bool isPoisoned;
     [SerializeField] private bool isCursed;
@@ -77,6 +82,7 @@ public class Player : MonoBehaviour
     [SerializeField] private bool wasAfflictedWithStatusThisTurn;
     [SerializeField] private int poisonDuration;
     [SerializeField] private int curseDuration;
+    [SerializeField] private List<StatusEffectImmunityEliteAbility.StatusEffects> statusEffectImmunities;
 
     //CardsInHand
     [SerializeField] private int numSupportCardsUsedThisTurn;
@@ -118,6 +124,8 @@ public class Player : MonoBehaviour
     public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
     public bool WentOnCooldownThisTurn { get => wentOnCooldownThisTurn; set => wentOnCooldownThisTurn = value; }
     public bool IsHandlingAbilityActivation { get => isHandlingAbilityActivation; set => isHandlingAbilityActivation = value; }
+    public bool IsHandlingEliteAbilityActivation { get => isHandlingEliteAbilityActivation; set => isHandlingEliteAbilityActivation = value; }
+    public bool CanUseEliteAbility { get => canUseEliteAbility; set => canUseEliteAbility = value; }
     public List<NegativeCooldownEffects> NegativeCooldownEffects { get => negativeCooldownEffects; set => negativeCooldownEffects = value; }
     public Queue<SpaceEffectData> SpaceEffectsToHandle { get => spaceEffectsToHandle; set => spaceEffectsToHandle = value; }
     public bool IsHandlingSpaceEffects { get => isHandlingSpaceEffects; set => isHandlingSpaceEffects = value; }
@@ -130,6 +138,19 @@ public class Player : MonoBehaviour
     public bool WasAfflictedWithStatusThisTurn { get => wasAfflictedWithStatusThisTurn; set => wasAfflictedWithStatusThisTurn = value; }
     public int PoisonDuration { get => poisonDuration; set => poisonDuration = value; }
     public int CurseDuration { get => curseDuration; set => curseDuration = value; }
+    public List<StatusEffectImmunityEliteAbility.StatusEffects> StatusEffectImmunities 
+    {
+        get => statusEffectImmunities; 
+
+        set
+        {
+            if(StatusEffectImmunities.Count > 0)
+            {
+                StatusEffectImmunities.Clear();
+            }
+            statusEffectImmunities = value;
+        }
+    }
     public int MaxSupportCardsToUse { get => maxSupportCardsToUse; set => maxSupportCardsToUse = value; }
     public int NumSupportCardsUsedThisTurn { get => numSupportCardsUsedThisTurn; set => numSupportCardsUsedThisTurn = value; }
     public int ExtraSupportCardUses { get => extraSupportCardUses; set => extraSupportCardUses = value; }
@@ -197,6 +218,7 @@ public class Player : MonoBehaviour
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
     public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
     public Animator Animator { get => animator; set => animator = value; }
+    
 
     public void InitializePlayer(ClassData data)
     {
@@ -231,8 +253,11 @@ public class Player : MonoBehaviour
         IsOnCooldown = false;
         WentOnCooldownThisTurn = false;
         NegativeCooldownEffects = ClassData.negativeCooldownEffects;
-        isHandlingAbilityActivation = false;
+        IsHandlingAbilityActivation = false;
+        IsHandlingEliteAbilityActivation = false;
+        CanUseEliteAbility = false;
         endOfTurnSpaceEffects = false;
+        StatusEffectImmunities = new();
 
         IsDefeated = false;
         CardsLeftToDiscard = 0;
@@ -241,6 +266,9 @@ public class Player : MonoBehaviour
         tempSpaceEffectsToHandle = new();
         isHandlingSpaceEffects = false;
         GameplayManagerRef.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += ApplyCurrentSpaceEffects;
+
+        //DEBUG
+       // UseEliteAbility();
     }
 
     public void DebugTheSpace()
@@ -1209,6 +1237,11 @@ public class Player : MonoBehaviour
 
     #region StatusEffects
 
+    public virtual void SetStatusImmunities(List<StatusEffectImmunityEliteAbility.StatusEffects> immunities)
+    {
+        SetStatusImmunitiesPriv(immunities);
+    }
+
     public virtual void CursePlayer(int numTurnsToCurse)
     {
         CursePlayerPriv(numTurnsToCurse);
@@ -1217,6 +1250,29 @@ public class Player : MonoBehaviour
     public virtual bool CanBeCursed()
     {
         bool canBeCursed = false;
+        bool isImmune = false;
+
+        if (StatusEffectImmunities.Count > 0)
+        {
+            foreach (StatusEffectImmunityEliteAbility.StatusEffects immunity in StatusEffectImmunities)
+            {
+                if (immunity == StatusEffectImmunityEliteAbility.StatusEffects.Poison)
+                {
+                    isImmune = true;
+                    break;
+                }
+            }
+            if (isImmune)
+            {
+                canBeCursed = false;
+                UseEliteAbility();
+                DialogueBoxPopup.instance.ActivatePopupWithJustText("Immune to curse!");
+                CompletedEliteAbilityActivation();
+                return canBeCursed;
+            }
+        }
+
+
         if ((IsPoisoned || IsCursed) && !WasAfflictedWithStatusThisTurn)
         {
             canBeCursed = false;
@@ -1237,7 +1293,29 @@ public class Player : MonoBehaviour
     public virtual bool CanBePoisoned()
     {
         bool canBePoisoned = false;
-        if ((IsPoisoned || IsCursed) && !WasAfflictedWithStatusThisTurn)
+        bool isImmune = false;
+
+        if(StatusEffectImmunities.Count > 0)
+        {
+            foreach(StatusEffectImmunityEliteAbility.StatusEffects immunity in  StatusEffectImmunities)
+            {
+                if(immunity == StatusEffectImmunityEliteAbility.StatusEffects.Poison)
+                {
+                    isImmune = true;
+                    break;
+                }
+            }
+            if(isImmune)
+            {
+                canBePoisoned = false;
+                UseEliteAbility();
+                DialogueBoxPopup.instance.ActivatePopupWithJustText("Immune to poison!");
+                CompletedEliteAbilityActivation();
+                return canBePoisoned;
+            }
+        }
+
+        if (((IsPoisoned || IsCursed) && !WasAfflictedWithStatusThisTurn))
         {
             canBePoisoned = false;
         }
@@ -1342,6 +1420,11 @@ public class Player : MonoBehaviour
                 tempMovementCard.DeactivateCurseEffect();
             }
         }
+    }
+
+    private void SetStatusImmunitiesPriv(List<StatusEffectImmunityEliteAbility.StatusEffects> immunities)
+    {
+        StatusEffectImmunities = immunities;
     }
 
     private void PoisonPlayerPriv(int numTurnsToPoison)
@@ -1635,6 +1718,7 @@ public class Player : MonoBehaviour
     }
     public void ActivateAbilityEffects()
     {
+        //Play animation for Player activating their ability!!!!
         IsHandlingAbilityActivation = true;
     }
 
@@ -1654,6 +1738,27 @@ public class Player : MonoBehaviour
             IsOnCooldown = false;
             GameplayManagerRef.UpdatePlayerCooldownText(this);
         }
+    }
+
+    #endregion
+
+    #region Elite Ability Effects
+
+    public void UseEliteAbility()
+    {
+        if (ClassData.eliteAbilityData != null)
+        {
+            ClassData.eliteAbilityData.ActivateEffect(this);
+            if (ClassData.eliteAbilityData.CanBeManuallyActivated)
+            {
+                //GameplayManagerRef.UseAbilityButton.transform.parent.gameObject.SetActive(false);
+            }
+        }
+    }
+    public void ActivateEliteAbilityEffects()
+    {
+        //Play animation for Player activating their Elite ability!!!!
+        IsHandlingEliteAbilityActivation = true;
     }
 
     #endregion
@@ -1690,6 +1795,12 @@ public class Player : MonoBehaviour
         }
         GameplayManagerRef.UpdatePlayerCooldownText(this);
         DoneActivatingAbilityEffect?.Invoke(this);
+    }
+
+    public void CompletedEliteAbilityActivation()
+    {
+        IsHandlingEliteAbilityActivation = false;
+        DoneActivatingEliteAbilityEffect?.Invoke(this);
     }
 
     public void CompletedStatusEffectUpdate()

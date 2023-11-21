@@ -17,14 +17,13 @@ public class UseMultipleSupportCardsAbility : AbilityData, IAbility
     [SerializeField][Range(0, 10)] private int numExtraCardsToUse = 1;
     public override void ActivateEffect(Player playerReference)
     {
-        playerReference.StatusEffectUpdateCompleted += CompletedEffect;
+        base.ActivateEffect(playerReference);
         playerReference.ActivateAbilityEffects();
         playerReference.IncreaseMaxCardUses(numExtraCardsToUse, Card.CardType.Support);
     }
 
     public override void CompletedEffect(Player playerReference)
     {
-        playerReference.StatusEffectUpdateCompleted -= CompletedEffect;
         base.CompletedEffect(playerReference);
     }
 
