@@ -19,6 +19,8 @@ public class EliteAbilityData : ScriptableObject, IEliteAbility
     public string EffectDescription { get => effectDescription; set => effectDescription = value; }
     public bool OverrideAutoDescription { get => overrideAutoDescription; set => overrideAutoDescription = value; }
     public bool CanBeManuallyActivated { get => canBeManuallyActivated; set => canBeManuallyActivated = value; }
+    public bool IsPassive { get => isPassive; set => isPassive = value; }
+
     public virtual void ActivateEffect(Player playerReference)
     {
         //If there is a cost to pay and player can't pay the cost, early exit.

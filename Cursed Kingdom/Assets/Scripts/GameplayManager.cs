@@ -61,6 +61,7 @@ public class GameplayManager : MonoBehaviour
 
     //Player ability related
     [SerializeField] private Button useAbilityButton;
+    [SerializeField] private Button useEliteAbilityButton;
 
 
     [SerializeField] private List<Player> players;
@@ -104,6 +105,7 @@ public class GameplayManager : MonoBehaviour
     public TextMeshProUGUI UseSelectedCardsText { get => useSelectedCardsText; set => useSelectedCardsText = value; }
     public Button UseSelectedCardsButton { get => useSelectedCardsButton; set => useSelectedCardsButton = value; }
     public Button UseAbilityButton { get => useAbilityButton; set => useAbilityButton = value; }
+    public Button UseEliteAbilityButton { get => useEliteAbilityButton; set => useEliteAbilityButton = value; }
     public List<PlayerInfoDisplay> PlayerInfoDisplays { get => playerInfoDisplays; set => playerInfoDisplays = value; }
     public PlayerHandDisplayUI HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
     public TopDownMapDisplay TopDownMapDisplay { get => topDownMapDisplay; set => topDownMapDisplay = value; }
@@ -203,14 +205,18 @@ public class GameplayManager : MonoBehaviour
         Players[0].ShowHand();
         if (Players[0].ClassData.abilityData.CanBeManuallyActivated)
         {
-            UseAbilityButton.gameObject.SetActive(true);
+            UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(true);
             UseAbilityButton.onClick.RemoveAllListeners();
             UseAbilityButton.onClick.AddListener(Players[0].UseAbility);
         }
         else
         {
-            UseAbilityButton.gameObject.SetActive(false);
+            UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(false);
         }
+
+        //No player should start at level 5.
+        UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
+
         HandDisplayPanel.SetCurrentActiveHandUI(0);
         //DEBUG.
 
@@ -389,7 +395,7 @@ public class GameplayManager : MonoBehaviour
         playerReference.HideHand();
     }
 
-    private int GetCurrentPlayer(Player playerRef)
+    private int GetCurrentPlayerIndex(Player playerRef)
     {
         int playerNum = Players.IndexOf(playerRef);
 
@@ -404,11 +410,18 @@ public class GameplayManager : MonoBehaviour
 
     }
 
+    public Player GetCurrentPlayer()
+    {
+       Player currentPlayer = playerCharacter.GetComponent<Player>();
+
+        return currentPlayer;
+    }
+
     #region PlayerInfoUI Functions
 
     public void UpdatePlayerInfoUICardCount(Player playerRef)
     {
-        int playerNum = GetCurrentPlayer(playerRef);
+        int playerNum = GetCurrentPlayerIndex(playerRef);
 
         if(playerNum is not -1)
         {
@@ -418,7 +431,7 @@ public class GameplayManager : MonoBehaviour
 
     public void UpdatePlayerInfoUIStatusEffect(Player playerRef)
     {
-        int playerNum = GetCurrentPlayer(playerRef);
+        int playerNum = GetCurrentPlayerIndex(playerRef);
 
         if (playerNum is not -1)
         {
@@ -428,7 +441,7 @@ public class GameplayManager : MonoBehaviour
 
     public void UpdatePlayerLevel(Player playerRef)
     {
-        int playerNum = GetCurrentPlayer(playerRef);
+        int playerNum = GetCurrentPlayerIndex(playerRef);
 
         if (playerNum is not -1)
         {
@@ -438,7 +451,7 @@ public class GameplayManager : MonoBehaviour
 
     public void UpdatePlayerHealth(Player playerRef)
     {
-        int playerNum = GetCurrentPlayer(playerRef);
+        int playerNum = GetCurrentPlayerIndex(playerRef);
 
         if (playerNum is not -1)
         {
@@ -448,7 +461,7 @@ public class GameplayManager : MonoBehaviour
 
     public void UpdatePlayerCooldownText(Player playerRef)
     {
-        int playerNum = GetCurrentPlayer(playerRef);
+        int playerNum = GetCurrentPlayerIndex(playerRef);
 
         if (playerNum is not -1)
         {
@@ -597,6 +610,18 @@ public class GameplayManager : MonoBehaviour
                 {
                     UseAbilityButton.transform.parent.gameObject.SetActive(false);
                     UseAbilityButton.onClick.RemoveAllListeners();
+                }
+
+                if(nextPlayer.CanUseEliteAbility && nextPlayer.ClassData.eliteAbilityData.CanBeManuallyActivated)
+                {
+                    UseEliteAbilityButton.transform.parent.gameObject.SetActive(true);
+                    UseEliteAbilityButton.onClick.RemoveAllListeners();
+                    UseEliteAbilityButton.onClick.AddListener(nextPlayer.UseEliteAbility);
+                }
+                else
+                {
+                    UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
+                    UseEliteAbilityButton.onClick.RemoveAllListeners();
                 }
 
                 if (DebugModeSingleton.instance.IsDebugActive && DebugModeSingleton.instance.OverrideSpaceLandEffect() != null)

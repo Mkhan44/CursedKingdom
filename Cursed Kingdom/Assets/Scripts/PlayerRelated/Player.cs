@@ -282,6 +282,17 @@ public class Player : MonoBehaviour
         if(CurrentLevel > 5) 
         {
             CurrentLevel = 5;
+            CanUseEliteAbility = true;
+            if (ClassData.eliteAbilityData.IsPassive)
+            {
+                UseEliteAbility();
+            }
+            else if (ClassData.eliteAbilityData.CanBeManuallyActivated)
+            {
+                GameplayManagerRef.UseEliteAbilityButton.gameObject.transform.parent.gameObject.SetActive(true);
+                GameplayManagerRef.UseEliteAbilityButton.onClick.RemoveAllListeners();
+                GameplayManagerRef.UseEliteAbilityButton.onClick.AddListener(UseEliteAbility);
+            }
         }
 
         HandleLevelUp();
@@ -296,6 +307,34 @@ public class Player : MonoBehaviour
         GameplayManagerRef.UpdatePlayerLevel(this);
         GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
     }
+
+    //DEBUG
+    public void ChangeLevel(int levelToMakePlayer)
+    {
+        CurrentLevel = levelToMakePlayer;
+        if(CurrentLevel >= 5)
+        {
+            //Unless we want to keep max at 5.
+            CurrentLevel = 5;
+            CanUseEliteAbility = true;
+            if(ClassData.eliteAbilityData.IsPassive)
+            {
+                UseEliteAbility();
+            }
+            else if(ClassData.eliteAbilityData.CanBeManuallyActivated)
+            {
+                GameplayManagerRef.UseEliteAbilityButton.gameObject.transform.parent.gameObject.SetActive(true);
+                GameplayManagerRef.UseEliteAbilityButton.onClick.RemoveAllListeners();
+                GameplayManagerRef.UseEliteAbilityButton.onClick.AddListener(UseEliteAbility);
+            }
+        }
+        else if(levelToMakePlayer > 0)
+        {
+            CurrentLevel = levelToMakePlayer;
+        }
+
+    }
+    //DEBUG
 
     #region AttackPlayers
     public void ActivatePlayerToAttackSelectionPopup(int numPlayersToChoose, int damageToGive, bool isElemental = false)
@@ -1424,7 +1463,13 @@ public class Player : MonoBehaviour
 
     private void SetStatusImmunitiesPriv(List<StatusEffectImmunityEliteAbility.StatusEffects> immunities)
     {
-        StatusEffectImmunities = immunities;
+        List<StatusEffectImmunityEliteAbility.StatusEffects> copyImmunities = new();
+
+        foreach (StatusEffectImmunityEliteAbility.StatusEffects status in immunities)
+        {
+            copyImmunities.Add(status);
+        }
+        StatusEffectImmunities = copyImmunities;
     }
 
     private void PoisonPlayerPriv(int numTurnsToPoison)
@@ -1746,6 +1791,8 @@ public class Player : MonoBehaviour
 
     public void UseEliteAbility()
     {
+        //Check if cost can be paid since some Elite abilities require a cost to be paid!!!!
+
         if (ClassData.eliteAbilityData != null)
         {
             ClassData.eliteAbilityData.ActivateEffect(this);

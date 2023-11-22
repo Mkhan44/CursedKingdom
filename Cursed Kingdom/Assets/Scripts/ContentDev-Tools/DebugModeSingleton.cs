@@ -18,10 +18,12 @@ public class DebugModeSingleton : MonoBehaviour
     [SerializeField] private TMP_Dropdown movementOverrideDropdown;
     [SerializeField] private TMP_Dropdown spaceLandedOverrideDropdown;
     [SerializeField] private TMP_Dropdown supportCardOverrideDropdown;
+    [SerializeField] private TMP_Dropdown levelOverrideDropdown;
     [SerializeField] private bool isDebugActive;
     [SerializeField] private string supportCardOverrideName;
     [SerializeField] private string spaceLandedOverrideName;
     [SerializeField] private int movementNumberOverride;
+    [SerializeField] private int levelNumberOverride;
 
     public bool IsDebugActive { get => isDebugActive; }
     public int MovementNumberOverride { get => movementNumberOverride; }
@@ -62,25 +64,48 @@ public class DebugModeSingleton : MonoBehaviour
     {
         if(movementOverrideDropdown.value != 0)
         {
-            Debug.Log("The current value of the dropdown is: " + (movementOverrideDropdown.value));
+          //  Debug.Log("The current value of the dropdown is: " + (movementOverrideDropdown.value));
             movementNumberOverride = (movementOverrideDropdown.value);
         }
         else
         {
             movementNumberOverride = 0;
         }
-        
     }
+
     public void OverrideCurrentPlayerSpacesLeftToMove(Player player)
     {
-        Debug.Log("IN DEBUG MODE OVERRIDING PLAYER'S SPACES LEFT TO MOVE!");
-        if(movementNumberOverride == 0)
+       // Debug.Log("IN DEBUG MODE OVERRIDING PLAYER'S SPACES LEFT TO MOVE!");
+        if (movementNumberOverride == 0)
         {
             Debug.Log("Override value is 0. Not gonna do anything.");
             return;
         }
         player.SpacesLeftToMove = movementNumberOverride;
     }
+
+    public void SetOverrideLevelNumber()
+    {
+        if (levelOverrideDropdown.value != 0)
+        {
+           // Debug.Log("The current value of the dropdown is: " + (levelOverrideDropdown.value));
+            levelNumberOverride = (levelOverrideDropdown.value);
+            OverrideCurrentPlayerLevel(gameplayManager.GetCurrentPlayer());
+        }
+        else
+        {
+            Debug.Log("Player level debug set to 0. Not changing Player's level.");
+            levelNumberOverride = 0;
+        }
+
+    }
+
+    public void OverrideCurrentPlayerLevel(Player player)
+    {
+        player.ChangeLevel(levelNumberOverride);
+        Debug.Log($"Player is now level {player.CurrentLevel} !");
+    }
+    
 
     public void SetupOverrideSpaceLandEffectDropdownOptions(List<Space> gameBoardSpaces)
     {

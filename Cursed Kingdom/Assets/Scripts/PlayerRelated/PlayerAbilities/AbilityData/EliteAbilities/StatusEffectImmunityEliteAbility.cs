@@ -28,6 +28,17 @@ public class StatusEffectImmunityEliteAbility : EliteAbilityData, IEliteAbility
         playerReference.DoneActivatingEliteAbilityEffect += CompletedEffect;
         playerReference.ActivateEliteAbilityEffects();
         playerReference.SetStatusImmunities(statusEffectsToBeImmuneTo);
+        foreach(StatusEffects statusImmunity in StatusEffectsToBeImmuneTo)
+        {
+            if(statusImmunity == StatusEffects.Poison && playerReference.IsPoisoned)
+            {
+                playerReference.CurePoison();
+            }
+            else if(statusImmunity == StatusEffects.Curse && playerReference.IsCursed)
+            {
+                playerReference.CureCurse();
+            }
+        }
     }
 
     public override void CompletedEffect(Player playerReference)
