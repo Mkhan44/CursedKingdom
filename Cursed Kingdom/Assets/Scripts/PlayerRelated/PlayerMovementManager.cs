@@ -333,7 +333,6 @@ public class PlayerMovementManager : MonoBehaviour
 
             //gameplayManagerRef.isPlayerMoving = false;
             Animator.SetBool(ISMOVINGPARAMETER, false);
-            Debug.Log("Animator for: " + playerReferences[i].ClassData.name + " should be false and is: " + Animator.GetBool(ISMOVINGPARAMETER));
         }
         yield return null;
     }

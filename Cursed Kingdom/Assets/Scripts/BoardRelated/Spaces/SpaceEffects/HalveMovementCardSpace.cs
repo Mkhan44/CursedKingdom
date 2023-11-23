@@ -30,7 +30,7 @@ public class HalveMovementCardSpace : SpaceEffectData, ISpaceEffect
     {
         if (!OverrideAutoDescription)
         {
-            EffectDescription = $"All movement cards in your hand have their values halved this turn if your turn starts on this space.";
+            EffectDescription = $"Halve the value of all movement cards in your hand.";
         }
     }
 
