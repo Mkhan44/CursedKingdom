@@ -28,10 +28,14 @@ public class PlayerInfoDisplay : MonoBehaviour
     [SerializeField] private GameObject heartPrefab;
     [SerializeField] private Animator animator;
 
+    //Preset values
+    [Header("Presets")]
+    private PlayerInfoIconPreset.InfoIconElement poisonElement;
+    private PlayerInfoIconPreset.InfoIconElement curseElement;
+    private PlayerInfoIconPreset.InfoIconElement movementElement;
+    private PlayerInfoIconPreset.InfoIconElement supportElement;
+    private PlayerInfoIconPreset.InfoIconElement heartElement;
 
-    //TEST
-    public Sprite filledHeartSpriteTest;
-    public Sprite brokenHeartSpriteTest;
 
     private Player playerReference;
 
@@ -64,14 +68,26 @@ public class PlayerInfoDisplay : MonoBehaviour
         CooldownText.text = string.Empty;
         CurseTurnsText.text = string.Empty;
         PoisonTurnsText.text = string.Empty;
-        CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
-        PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
+
+        poisonElement = GrabPresetElementFromSingleton(PlayerInfoIconPreset.InfoIconElement.InfoIconType.poisonIcon);
+        curseElement = GrabPresetElementFromSingleton(PlayerInfoIconPreset.InfoIconElement.InfoIconType.curseicon);
+        movementElement = GrabPresetElementFromSingleton(PlayerInfoIconPreset.InfoIconElement.InfoIconType.movementCardIcon);
+        supportElement = GrabPresetElementFromSingleton(PlayerInfoIconPreset.InfoIconElement.InfoIconType.supportCardIcon);
+        heartElement = GrabPresetElementFromSingleton(PlayerInfoIconPreset.InfoIconElement.InfoIconType.heartIcon);
+
+        CurseImage.color = curseElement.InactiveColor;
+        PoisonImage.color = poisonElement.InactiveColor;
 
         if(HeartsHolder.transform.childCount < playerRef.MaxHealth)
         {
             for(int i = 0; i < playerRef.MaxHealth; i++)
             {
-                Instantiate(HeartPrefab, HeartsHolder.transform);
+                GameObject tempObj = Instantiate(HeartPrefab, HeartsHolder.transform);
+                Image image = tempObj.GetComponent<Image>();
+                if(heartElement != null)
+                {
+                    image.sprite = heartElement.ActiveSprite;
+                }
             }
         }
 
@@ -82,6 +98,22 @@ public class PlayerInfoDisplay : MonoBehaviour
 
         UpdatePlayerHealth();
         
+    }
+
+    private PlayerInfoIconPreset.InfoIconElement GrabPresetElementFromSingleton(PlayerInfoIconPreset.InfoIconElement.InfoIconType infoIconTypeToFind)
+    {
+        PlayerInfoIconPreset.InfoIconElement infoIconElementToReturn = default;
+
+        foreach (PlayerInfoIconPreset.InfoIconElement iconElement in IconPresetsSingleton.instance.PlayerInfoIconPreset.InfoIconElements)
+        {
+            if (iconElement.InfoIconType1 == infoIconTypeToFind)
+            {
+                infoIconElementToReturn = iconElement;
+                break;
+            }
+        }
+
+        return infoIconElementToReturn;
     }
 
     public void UpdateCardTotals()
@@ -101,14 +133,14 @@ public class PlayerInfoDisplay : MonoBehaviour
         {
             if(PlayerReference.CurseDuration > 0) 
             {
-                CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 100f);
-                PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
+                CurseImage.color = curseElement.ActiveColor;
+                PoisonImage.color = poisonElement.InactiveColor;
                 CurseTurnsText.text = PlayerReference.CurseDuration.ToString();
             }
             else
             {
-                CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
-                PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
+                CurseImage.color = curseElement.InactiveColor;
+                PoisonImage.color = poisonElement.InactiveColor;
                 CurseTurnsText.text = string.Empty;
             }
             
@@ -119,15 +151,15 @@ public class PlayerInfoDisplay : MonoBehaviour
         {
             if(PlayerReference.PoisonDuration > 0)
             {
-                PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 100f);
-                CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
+                PoisonImage.color = poisonElement.ActiveColor;
+                CurseImage.color = curseElement.InactiveColor;
                 PoisonTurnsText.text = PlayerReference.PoisonDuration.ToString();
                 animator.SetBool(ISPOISONED, true);
             }
             else
             {
-                PoisonImage.color = new Color(PoisonImage.color.r, PoisonImage.color.g, PoisonImage.color.b, 0f);
-                CurseImage.color = new Color(CurseImage.color.r, CurseImage.color.g, CurseImage.color.b, 0f);
+                PoisonImage.color = poisonElement.InactiveColor;
+                CurseImage.color = curseElement.InactiveColor;
                 PoisonTurnsText.text = string.Empty;
                 animator.SetBool(ISPOISONED, false);
             }
@@ -141,19 +173,17 @@ public class PlayerInfoDisplay : MonoBehaviour
     public void UpdatePlayerHealth()
     {
         int numActiveHearts = 0;
-        Color32 activeHeartColor = new Color(255f, 0f, 0f, 100f);
-        Color32 inactiveHeartColor = new Color(255f, 255f, 255f, 0.28f);
         foreach(Image image in Hearts)
         {
             numActiveHearts++;
             if (numActiveHearts <= PlayerReference.CurrentHealth)
             {
-                image.color = activeHeartColor;
+                image.color = heartElement.ActiveColor;
              //   Debug.Log($"Player health is: {PlayerReference.CurrentHealth} and numActive hearts is: {numActiveHearts}");
             }
             else
             {
-                image.color = inactiveHeartColor;
+                image.color = heartElement.InactiveColor;
             }
             
         }

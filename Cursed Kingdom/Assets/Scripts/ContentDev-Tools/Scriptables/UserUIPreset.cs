@@ -9,7 +9,9 @@ public class UserUIPreset : ScriptableObject
 {
     [SerializeField] private SpaceIconPreset spaceIconPresetData;
     [SerializeField] private SupportCardTypeIconPreset supportIconPresetData;
+    [SerializeField] private PlayerInfoIconPreset playerInfoIconPresetData;
 
     public SpaceIconPreset SpaceIconPresetData { get => spaceIconPresetData; set => spaceIconPresetData = value; }
     public SupportCardTypeIconPreset SupportIconPresetData { get => supportIconPresetData; set => supportIconPresetData = value; }
+    public PlayerInfoIconPreset PlayerInfoIconPresetData { get => playerInfoIconPresetData; set => playerInfoIconPresetData = value; }
 }
