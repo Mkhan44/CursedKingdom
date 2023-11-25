@@ -46,13 +46,18 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 2800000, guid: 70a22cb55f734074981a7d650482c784, type: 3}
+    - {fileID: 2800000, guid: 14c7483428bdd2b4e81af77b118ec9ab, type: 3}
     - {fileID: 2800000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
     - {fileID: 2800000, guid: f3fb0cedb134845418e0feb4c8c71b4c, type: 3}
+    - {fileID: 2800000, guid: 269860875cf29574bbcec11182e976aa, type: 3}
+    - {fileID: 2800000, guid: e4d4ebce42846c84b92b95b737cc571e, type: 3}
     - {fileID: 2800000, guid: 859c4ba0fc4435f42b78bf396b633d33, type: 3}
     - {fileID: 2800000, guid: 5333fb2ca9fb1714883328e4ac66be49, type: 3}
     - {fileID: 2800000, guid: f8f0289d8502b9048830ee8a211faa9b, type: 3}
+    - {fileID: 2800000, guid: 1f7599413df51da4cb13a2bead3df590, type: 3}
     - {fileID: 2800000, guid: 7e42e0e7c7d0afb46a1f8b3900e9856d, type: 3}
     - {fileID: 2800000, guid: de72b85460fc8034399c1484637682fd, type: 3}
+    - {fileID: 21300000, guid: de72b85460fc8034399c1484637682fd, type: 3}
     - {fileID: 2800000, guid: 1b4bbf5abda7ce649ab6d5b4bf7af150, type: 3}
     - {fileID: 2800000, guid: c0b4d0b300ebdd649b149ac43630e7e4, type: 3}
     - {fileID: 2800000, guid: 144acb3a0f08ad64aacc84395b1947d4, type: 3}
@@ -60,19 +65,20 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 0e28df4a50b3ed74ba375e1fc5f7c49b, type: 3}
     - {fileID: 2800000, guid: cb64e1d1b8e1c6a4cb3a334fc066f31e, type: 3}
     - {fileID: 2800000, guid: a828947923ae6c14890c1b90cccbb324, type: 3}
-    - {fileID: 2800000, guid: 31fecfc6a7e7901448321a41a1d8b28b, type: 3}
-    - {fileID: 2800000, guid: e4d4ebce42846c84b92b95b737cc571e, type: 3}
+    - {fileID: 21300000, guid: a828947923ae6c14890c1b90cccbb324, type: 3}
     - {fileID: 2800000, guid: d5aadaf76d2b5464d862481d265641bb, type: 3}
-    - {fileID: 2800000, guid: 269860875cf29574bbcec11182e976aa, type: 3}
+    - {fileID: 2800000, guid: 31fecfc6a7e7901448321a41a1d8b28b, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
     - 859c4ba0fc4435f42b78bf396b633d33: 21300000
     - ab560ab0ee6f9c94685d94cf2a075c70: 21300000
+    - 1f7599413df51da4cb13a2bead3df590: 21300000
     - cb64e1d1b8e1c6a4cb3a334fc066f31e: 21300000
     - a7c7653306208014fb852680d1516fa8: 21300000
     - c0b4d0b300ebdd649b149ac43630e7e4: 21300000
+    - 14c7483428bdd2b4e81af77b118ec9ab: 21300000
     - de72b85460fc8034399c1484637682fd: 21300000
     - 70a22cb55f734074981a7d650482c784: 21300000
     - 31fecfc6a7e7901448321a41a1d8b28b: 21300000
@@ -91,9 +97,11 @@ SpriteAtlas:
   m_PackedSprites:
   - {fileID: 21300000, guid: 859c4ba0fc4435f42b78bf396b633d33, type: 3}
   - {fileID: 21300000, guid: ab560ab0ee6f9c94685d94cf2a075c70, type: 3}
+  - {fileID: 21300000, guid: 1f7599413df51da4cb13a2bead3df590, type: 3}
   - {fileID: 21300000, guid: cb64e1d1b8e1c6a4cb3a334fc066f31e, type: 3}
   - {fileID: 21300000, guid: a7c7653306208014fb852680d1516fa8, type: 3}
   - {fileID: 21300000, guid: c0b4d0b300ebdd649b149ac43630e7e4, type: 3}
+  - {fileID: 21300000, guid: 14c7483428bdd2b4e81af77b118ec9ab, type: 3}
   - {fileID: 21300000, guid: de72b85460fc8034399c1484637682fd, type: 3}
   - {fileID: 21300000, guid: 70a22cb55f734074981a7d650482c784, type: 3}
   - {fileID: 21300000, guid: 31fecfc6a7e7901448321a41a1d8b28b, type: 3}
@@ -111,9 +119,11 @@ SpriteAtlas:
   m_PackedSpriteNamesToIndex:
   - drawmove
   - noduel
+  - halfmove
   - special
   - barricade
   - holder
+  - attack
   - heartgain
   - adventurer
   - supp
