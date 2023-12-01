@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3382278914954345268}
   - component: {fileID: 7904563902616261366}
   - component: {fileID: 8325634510494661577}
+  - component: {fileID: 3208987787406461510}
   - component: {fileID: 6811609303460852829}
   - component: {fileID: -6543908066680211804}
   - component: {fileID: 9142830609579601361}
@@ -131,6 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerIDIntVal: 0
   startOfTurnEffect: 0
+  endOfTurnSpaceEffects: 0
   maxHealth: 0
   currentHealth: 0
   currentLevel: 0
@@ -148,6 +150,8 @@ MonoBehaviour:
   isOnCooldown: 0
   wentOnCooldownThisTurn: 0
   isHandlingAbilityActivation: 0
+  isHandlingEliteAbilityActivation: 0
+  canUseEliteAbility: 0
   currentSpaceEffectDataToHandle: {fileID: 0}
   tempSpaceEffectsToHandle: []
   isHandlingSpaceEffects: 0
@@ -161,6 +165,7 @@ MonoBehaviour:
   wasAfflictedWithStatusThisTurn: 0
   poisonDuration: 0
   curseDuration: 0
+  statusEffectImmunities: 
   numSupportCardsUsedThisTurn: 0
   maxSupportCardsToUse: 0
   extraSupportCardUses: 0
@@ -176,6 +181,19 @@ MonoBehaviour:
   gameplayManagerRef: {fileID: 0}
   animatorController: {fileID: 0}
   animator: {fileID: -6543908066680211804}
+--- !u!114 &3208987787406461510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6264876491439458418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60eb1ec719843be4981aa6ed99ec379d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAnimator: {fileID: -6543908066680211804}
 --- !u!65 &6811609303460852829
 BoxCollider:
   m_ObjectHideFlags: 0

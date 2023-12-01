@@ -12,11 +12,16 @@ using Random = UnityEngine.Random;
 using TMPro;
 using Unity.VisualScripting;
 using System;
+using UnityEngine.XR;
 
 public class GameplayManager : MonoBehaviour
 {
-    public Action<KeyCode> MoveHighlightedSpaceIconGroundView;
-    public Action<KeyCode> MoveHighlightedSpaceIconOverheadView;
+    public event Action<KeyCode> MoveHighlightedSpaceIconGroundView;
+    public event Action<KeyCode> MoveHighlightedSpaceIconOverheadView;
+
+    //State machine events
+    public event Action<GameplayPhaseStates> changePhase;
+    public event Action<GameplayPhaseStates> onPhaseChanged;
 
     public GameObject cardToSpawn;
     public List<Space> spaces;
@@ -38,7 +43,16 @@ public class GameplayManager : MonoBehaviour
     public float raycastLength = 2f;
 
     //State machine for turn order.
+    public enum GameplayPhaseStates
+    {
+        startPhase,
+        movementPhase,
+        duelPhase,
+        endPhase,
+    }
 
+    [SerializeField] private Queue<GameplayPhaseStates> currentGameplayStatesQueue;
+    [SerializeField] private GameplayPhaseStates currentGameplayState;
 
     //Deck related
     [SerializeField] private DeckManager thisDeckManager;
@@ -93,6 +107,11 @@ public class GameplayManager : MonoBehaviour
     //Properties
     public List<Player> Players { get => players; set => players = value; }
 
+    //State machines
+    public Queue<GameplayPhaseStates> CurrentGameplayStatesQueue { get => currentGameplayStatesQueue; set => currentGameplayStatesQueue = value; }
+    public GameplayPhaseStates CurrentGameplayState { get => currentGameplayState; set => currentGameplayState = value; }
+
+
     //Deck related
     public DeckManager ThisDeckManager { get => thisDeckManager; set => thisDeckManager = value; }
     public GameObject MovementCardPrefab { get => movementCardPrefab; set => movementCardPrefab = value; }
@@ -126,8 +145,8 @@ public class GameplayManager : MonoBehaviour
         //Get a list of movement cards, pass them in.
         ThisDeckManager.CreateDeck();
 
-
         //Deck related
+
 
 
         GameObject boardHolder;
@@ -260,6 +279,7 @@ public class GameplayManager : MonoBehaviour
         //CardTest();
     }
 
+
     private GameObject SpawnPlayersStart(ClassData playerClass)
     {
         //Spawn player.
@@ -390,9 +410,9 @@ public class GameplayManager : MonoBehaviour
     public void StartMove(int spacesToMove = 1)
     {
         Player playerReference = playerCharacter.GetComponent<Player>();
-        playerReference.SpacesLeftToMove = spacesToMove;
+        GetCurrentPlayer().SpacesLeftToMove = spacesToMove;
         playerMovementManager.SetupMove(playerReference);
-        playerReference.HideHand();
+        GetCurrentPlayer().HideHand();
     }
 
     private int GetCurrentPlayerIndex(Player playerRef)
@@ -749,7 +769,36 @@ public class GameplayManager : MonoBehaviour
         cinemachineVirtualCameras[0].Follow = playerCharacter;
         DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"Congratulations, player: {playerWhoWins.playerIDIntVal} wins!", "Yay!");
     }
-    
+
+    #region State Machine functions
+
+    private void ChangeGameplayState()
+    {
+        if (CurrentGameplayStatesQueue.Count > 0)
+        {
+            
+            CurrentGameplayState = CurrentGameplayStatesQueue.Dequeue();
+            onPhaseChanged?.Invoke(CurrentGameplayState);
+
+            
+            if (CurrentGameplayStatesQueue.Count <= 0)
+            {
+                RefillGameplayStateQueue();
+            }
+        }
+    }
+
+    private void RefillGameplayStateQueue()
+    {
+        CurrentGameplayStatesQueue.Clear();
+        foreach (GameplayPhaseStates gameplayPhase in Enum.GetValues(typeof(GameplayPhaseStates)))
+        {
+            CurrentGameplayStatesQueue.Enqueue(gameplayPhase);
+        }
+    }
+
+    #endregion
+
 
     #region Debug functions
     private void FPSCounter()
