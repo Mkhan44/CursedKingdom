@@ -44,19 +44,6 @@ public class PlayerMovementManager : MonoBehaviour
 
 		gameplayManagerRef.spacesToMoveText.text = $"Spaces left: {playerToMove.SpacesLeftToMove}";
 
-		//Figure out how to know which spaces are valid for the Player to travel to. If there is more than 1, give them an option...Otherwise just move the Player.
-
-		//Just 1 valid space. No choice needed.
-		//if(currentSpacePlayerIsOn.NorthNeighbor is null && currentSpacePlayerIsOn.SouthNeighbor is null && currentSpacePlayerIsOn.WestNeighbor != null)
-		//{
-		//    StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
-		//    return;
-		//}
-		//else if(currentSpacePlayerIsOn.EastNeighbor is null && currentSpacePlayerIsOn.SouthNeighbor is null && currentSpacePlayerIsOn.WestNeighbor != null)
-		//{
-		//    StartCoroutine(MoveTowards(currentSpacePlayerIsOn.WestNeighbor.spawnPoint.position, playerToMove, playerToMove.SpacesLeftToMove));
-		//    return;
-		//}
 
 		//Multiple valid spaces you can go from this space.
 		if (currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.Count > 1)
@@ -230,7 +217,7 @@ public class PlayerMovementManager : MonoBehaviour
 
 		playerReference.IsMoving = true;
 		gameplayManagerRef.isPlayerMoving = true;
-		playerReference.StateMachineRef.ChangeState(playerReference.StateMachineRef.playerCharacterMoveState);
+		//playerReference.StateMachineRef.ChangeState(playerReference.StateMachineRef.playerCharacterMoveState);
 		//Animator.SetBool(ISMOVINGPARAMETER, true);
 	   // playerReference.HideHand();
 
@@ -255,7 +242,7 @@ public class PlayerMovementManager : MonoBehaviour
 		// Debug.Log("Done moving");
 		
 		gameplayManagerRef.isPlayerMoving = false;
-		playerReference.StateMachineRef.ChangeState(playerReference.StateMachineRef.playerCharacterIdleState);
+		//playerReference.StateMachineRef.ChangeState(playerReference.StateMachineRef.playerCharacterIdleState);
 		//Animator.SetBool(ISMOVINGPARAMETER, false);
 
 		if (spacesToMove > 1)

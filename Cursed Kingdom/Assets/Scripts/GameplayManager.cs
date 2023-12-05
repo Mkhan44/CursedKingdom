@@ -411,7 +411,8 @@ public class GameplayManager : MonoBehaviour
     {
         Player playerReference = playerCharacter.GetComponent<Player>();
         GetCurrentPlayer().SpacesLeftToMove = spacesToMove;
-        playerMovementManager.SetupMove(playerReference);
+        playerReference.StateMachineRef.ChangeState(playerReference.StateMachineRef.playerCharacterMoveState);
+        //playerMovementManager.SetupMove(playerReference);
         GetCurrentPlayer().HideHand();
     }
 

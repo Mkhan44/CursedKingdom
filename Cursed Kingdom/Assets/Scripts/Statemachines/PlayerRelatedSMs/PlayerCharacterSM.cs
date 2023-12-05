@@ -16,12 +16,16 @@ public class PlayerCharacterSM : BukuStateMachine
 	public PlayerCharacterMoveState playerCharacterMoveState;
 
 	public Animator playerAnimator;
+	public Player player;
 	
 	private void Awake() 
 	{
 		playerCharacterIdleState = new PlayerCharacterIdleState(this);
 		playerCharacterMoveState = new PlayerCharacterMoveState(this);
-	}
+		player = GetComponent<Player>();
+		playerAnimator = GetComponent<Animator>();
+
+    }
 
     protected override BaseState GetInitialState()
     {
