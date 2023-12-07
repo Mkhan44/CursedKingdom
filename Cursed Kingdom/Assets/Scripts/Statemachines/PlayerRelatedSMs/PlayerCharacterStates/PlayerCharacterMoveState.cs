@@ -27,7 +27,6 @@ public class PlayerCharacterMoveState : BaseState
 	{
 		base.Enter();
 		playerCharacterSM.playerAnimator.SetBool(playerCharacterSM.ISMOVINGPARAMETER, true);
-		//Animator to moving state
 	}
 
 	public override void Exit()
@@ -38,7 +37,7 @@ public class PlayerCharacterMoveState : BaseState
 	public override void UpdateLogic()
 	{
 		base.UpdateLogic();
-		if(!playerCharacterSM.player.IsMoving)
+		if(!playerCharacterSM.player.IsMoving && !playerCharacterSM.player.IsChoosingDirection)
 		{
 			SetupMove(playerCharacterSM.player);
 		}
@@ -111,7 +110,10 @@ public class PlayerCharacterMoveState : BaseState
 			}
 			else
 			{
-				playerCharacterSM.StartCoroutine(MoveTowards(spaceChoicesToGive[0], playerToMove, playerToMove.SpacesLeftToMove));
+				if(playerCharacterSM.player.SpacesLeftToMove > 0)
+				{
+					playerCharacterSM.StartCoroutine(MoveTowards(spaceChoicesToGive[0], playerToMove, playerToMove.SpacesLeftToMove));
+				}
 			}
 		}
 		//Only 1 valid way to go from this space.
@@ -151,8 +153,6 @@ public class PlayerCharacterMoveState : BaseState
 			}
 		}
 
-	  //  playerToMove.HideHand();
-
 	}
 
 	private bool CheckIfValidSpaceToMoveTo(Player player, Space spaceToTryMovingTo)
@@ -188,7 +188,9 @@ public class PlayerCharacterMoveState : BaseState
 
 	private void CreateDirectionChoicePopup(Player playerToMove, List<Space> targetSpacesToMoveTo)
 	{
-		for(int i = 0; i < targetSpacesToMoveTo.Count; i++)
+		playerToMove.IsChoosingDirection = true;
+        playerCharacterSM.playerAnimator.SetBool(playerCharacterSM.ISMOVINGPARAMETER, false);
+        for (int i = 0; i < targetSpacesToMoveTo.Count; i++)
 		{
 			int currentIndex = i;
 			GameObject directionButtonObj = GameObject.Instantiate(playerToMove.GameplayManagerRef.moveButtonPrefab, playerToMove.GameplayManagerRef.directionChoiceButtonHolder.transform);
@@ -205,7 +207,9 @@ public class PlayerCharacterMoveState : BaseState
 	//Used when a direction is chosen. This function should be called by clicking a button.
 	public void ChooseDirection(Space targetSpace, Player playerReference, int spacesLeftToMove)
 	{
-		playerCharacterSM.StartCoroutine(MoveTowards(targetSpace, playerReference, spacesLeftToMove));
+		playerReference.IsChoosingDirection = false;
+        playerCharacterSM.playerAnimator.SetBool(playerCharacterSM.ISMOVINGPARAMETER, true);
+        playerCharacterSM.StartCoroutine(MoveTowards(targetSpace, playerReference, spacesLeftToMove));
 
 		//Cleanup button holder.
 		foreach (Transform child in playerReference.GameplayManagerRef.directionChoiceButtonHolder.transform)
@@ -234,9 +238,6 @@ public class PlayerCharacterMoveState : BaseState
 
 		playerReference.IsMoving = true;
         playerReference.GameplayManagerRef.isPlayerMoving = true;
-		//playerReference.StateMachineRef.ChangeState(playerReference.StateMachineRef.playerCharacterMoveState);
-		//Animator.SetBool(ISMOVINGPARAMETER, true);
-	   // playerReference.HideHand();
 
 		float rate = 3.0f;
 
@@ -248,19 +249,13 @@ public class PlayerCharacterMoveState : BaseState
 
 		while (Vector3.Distance(playerCharacter.localPosition, targetPosition) > 0.15f)
 		{
-			//  Debug.Log(playerCharacter.localPosition);
 			finalRate = rate * Time.deltaTime;
-			//playerCharacter.localPosition = 
 			Vector3 smoothedMovement = Vector3.MoveTowards(playerCharacter.localPosition, targetPosition, finalRate);
 			playerCharacter.position = smoothedMovement;
-			//playerRigidBody.MovePosition(smoothedMovement);
 			yield return new WaitForFixedUpdate();
 		}
-        // Debug.Log("Done moving");
 
         playerReference.GameplayManagerRef.isPlayerMoving = false;
-		//playerReference.StateMachineRef.ChangeState(playerReference.StateMachineRef.playerCharacterIdleState);
-		//Animator.SetBool(ISMOVINGPARAMETER, false);
 
 		if (spacesToMove > 1)
 		{
@@ -279,6 +274,7 @@ public class PlayerCharacterMoveState : BaseState
 				playerReference.SpacesLeftToMove = 0;
 				hasBeenOveriddenOnce = false;
                 playerReference.StateMachineRef.ChangeState(playerReference.StateMachineRef.playerCharacterIdleState);
+
                 //Check if multiple characters are on the space, and move everyone accordingly if so.
                 if (!spaceToMoveTo.playersOnThisSpace.Contains(playerReference))
 				{
@@ -287,8 +283,32 @@ public class PlayerCharacterMoveState : BaseState
 
 				if (spaceToMoveTo.playersOnThisSpace.Count > 1 && !spaceToMoveTo.haveSeparatedPlayersAlready)
 				{
-					spaceToMoveTo.MoveMultiplePlayersOnSpace();
-				}
+                    List<Vector3> positionsToMoveTowards = new();
+                    if (spaceToMoveTo.playersOnThisSpace.Count > 1 && spaceToMoveTo.playersOnThisSpace.Count < 5)
+                    {
+                        spaceToMoveTo.haveSeparatedPlayersAlready = true;
+
+                        for (int i = 0; i < spaceToMoveTo.playersOnThisSpace.Count; i++)
+                        {
+                            Vector3 positionToMoveTowards = spaceToMoveTo.multiplePlayersSameSpacePositionsParent.transform.GetChild(i).position;
+                            positionsToMoveTowards.Add(positionToMoveTowards);
+                            spaceToMoveTo.playersOnThisSpace[i].transform.position = positionToMoveTowards;
+
+                        }
+                        playerCharacterSM.StartCoroutine(MoveTowardsMultiSpace(positionsToMoveTowards, spaceToMoveTo.playersOnThisSpace));
+                        spaceToMoveTo.haveSeparatedPlayersAlready = false;
+                    }
+                    else
+                    {
+                        if (spaceToMoveTo.playersOnThisSpace.Count == 1 && spaceToMoveTo.playersOnThisSpace[0].transform.position != spaceToMoveTo.spawnPoint.position)
+                        {
+                            positionsToMoveTowards.Add(spaceToMoveTo.spawnPoint.position);
+                            playerCharacterSM.StartCoroutine(MoveTowardsMultiSpace(positionsToMoveTowards, spaceToMoveTo.playersOnThisSpace));
+                        }
+                    }
+
+                    
+                }
 			}
 			else
 			{
@@ -302,33 +322,15 @@ public class PlayerCharacterMoveState : BaseState
 
 	public IEnumerator MoveTowardsMultiSpace(List<Vector3> targetPositions, List<Player> playerReferences)
 	{
-		//if (movingCoroutine != null)
-		//{
-		//    StopCoroutine(movingCoroutine);
-		//    null;
-		//}
-
 		for(int i = 0; i < playerReferences.Count; i++)
 		{
 			Transform playerCharacter = playerReferences[i].gameObject.transform;
-			//Animator = playerCharacter.GetComponent<Animator>();
+            playerReferences[i].IsMoving = true;
+            playerReferences[i].GameplayManagerRef.isPlayerMoving = true;
+			playerReferences[i].StateMachineRef.playerAnimator.SetBool(playerReferences[i].StateMachineRef.ISMOVINGPARAMETER, true);
 
-
-			//playerReferences[i].IsMoving = true;
-			//gameplayManagerRef.isPlayerMoving = true;
-			//Animator.SetBool(ISMOVINGPARAMETER, true);
-			// playerReference.HideHand();
-
-			float rate = 5.0f;
+            float rate = 5.0f;
 			float finalRate;
-
-			//while (Vector3.Distance(playerCharacter.localPosition, targetPosition) > 0.15f)
-			//{
-			//    finalRate = rate * Time.deltaTime;
-			//    Vector3 smoothedMovement = Vector3.MoveTowards(playerCharacter.localPosition, targetPosition, finalRate);
-			//    playerCharacter.position = smoothedMovement;
-			//    yield return new WaitForFixedUpdate();
-			//}
 
 			finalRate = rate * Time.deltaTime;
 			Vector3 smoothedMovement = Vector3.MoveTowards(playerCharacter.localPosition, targetPositions[i], finalRate);
@@ -337,10 +339,10 @@ public class PlayerCharacterMoveState : BaseState
 			yield return new WaitForSeconds(0.5f);
 
 			playerCharacter.position = targetPositions[i];
-
-			//gameplayManagerRef.isPlayerMoving = false;
-			//Animator.SetBool(ISMOVINGPARAMETER, false);
-		}
+            playerReferences[i].GameplayManagerRef.isPlayerMoving = false;
+            playerReferences[i].IsMoving = false;
+            playerReferences[i].StateMachineRef.playerAnimator.SetBool(playerReferences[i].StateMachineRef.ISMOVINGPARAMETER, false);
+        }
 		yield return null;
 	}
 

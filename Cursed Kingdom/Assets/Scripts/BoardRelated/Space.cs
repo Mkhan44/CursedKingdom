@@ -192,7 +192,7 @@ public class Space : MonoBehaviour
                // playersOnThisSpace[i].transform.position = positionToMoveTowards;
                 
             }
-            StartCoroutine(playersOnThisSpace[0].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(positionsToMoveTowards, playersOnThisSpace));
+            //StartCoroutine(playersOnThisSpace[0].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(positionsToMoveTowards, playersOnThisSpace));
             haveSeparatedPlayersAlready = false;
         }
         else
@@ -201,7 +201,7 @@ public class Space : MonoBehaviour
             {
                 positionsToMoveTowards.Add(spawnPoint.position);
                 // playersOnThisSpace[0].transform.position = spawnPoint.position;
-                StartCoroutine(playersOnThisSpace[0].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(positionsToMoveTowards, playersOnThisSpace));
+              //  StartCoroutine(playersOnThisSpace[0].GameplayManagerRef.playerMovementManager.MoveTowardsMultiSpace(positionsToMoveTowards, playersOnThisSpace));
             }
         }
     }

@@ -57,6 +57,8 @@ public class Player : MonoBehaviour
 	[SerializeField] private GameObject movementCardsInHandHolderPanel;
 	[SerializeField] private GameObject supportCardsInHandHolderPanel;
 	[SerializeField] private GameObject handDisplayPanel;
+	[SerializeField] private bool isMoving;
+	[SerializeField] private bool isChoosingDirection;
 
 	//Abilities
 	[SerializeField] private List<NegativeCooldownEffects> negativeCooldownEffects; 
@@ -79,7 +81,6 @@ public class Player : MonoBehaviour
 	[SerializeField] private bool isHandlingSupportCardEffects;
 
 	//Status Effects
-	[SerializeField] private bool isMoving;
 	[SerializeField] private bool isPoisoned;
 	[SerializeField] private bool isCursed;
 	[SerializeField] private bool isDefeated;
@@ -115,7 +116,9 @@ public class Player : MonoBehaviour
 	public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
 	//Clean this up vvvvv
 	
-	public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
+	public bool IsMoving { get => isMoving; set => isMoving = value; }
+    public bool IsChoosingDirection { get => isChoosingDirection; set => isChoosingDirection = value; }
+    public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
 	public int SpacesLeftToMove { get => spacesLeftToMove; set => spacesLeftToMove = value; }
 	public int MovementCardsInHand { get => movementCardsInHand; set => movementCardsInHand = value; }
 	public int SupportCardsInHand { get => supportCardsInHand; set => supportCardsInHand = value; }
@@ -136,7 +139,6 @@ public class Player : MonoBehaviour
 	public bool IsHandlingSpaceEffects { get => isHandlingSpaceEffects; set => isHandlingSpaceEffects = value; }
 	public Queue<SupportCardEffectData> SupportCardEffectsToHandle { get => supportCardEffectsToHandle; set => supportCardEffectsToHandle = value; }
 	public bool IsHandlingSupportCardEffects { get => isHandlingSupportCardEffects; set => isHandlingSupportCardEffects = value; }
-	public bool IsMoving { get => isMoving; set => isMoving = value; }
 	public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
 	public bool IsCursed { get => isCursed; set => isCursed = value; }
 	public bool IsDefeated { get => isDefeated; set => isDefeated = value; }
@@ -224,7 +226,8 @@ public class Player : MonoBehaviour
 	public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
 	public Animator Animator { get => animator; set => animator = value; }
 
-	public void InitializePlayer(ClassData data)
+
+    public void InitializePlayer(ClassData data)
 	{
 		ClassData = data;
 
@@ -256,7 +259,9 @@ public class Player : MonoBehaviour
 		SupportCardSelectedForUse = false;
 
 		IsOnCooldown = false;
-		WentOnCooldownThisTurn = false;
+		IsMoving = false;
+		IsChoosingDirection = false;
+        WentOnCooldownThisTurn = false;
 		NegativeCooldownEffects = ClassData.negativeCooldownEffects;
 		IsHandlingAbilityActivation = false;
 		IsHandlingEliteAbilityActivation = false;
