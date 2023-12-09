@@ -26,14 +26,14 @@ public class AttackSpace : SpaceEffectData, ISpaceEffect
         if(AttackAllPlayers)
         {
             playerReference.DoneAttackingForEffect += CompletedEffect;
-            playerReference.AttackAllOtherPlayers(DamageToGive);
+            playerReference.AttackAllOtherPlayersDamage(DamageToGive);
             return;
         }
 
         if(OpponentsCanBeChosen)
         {
             playerReference.DoneAttackingForEffect += CompletedEffect;
-            playerReference.ActivatePlayerToAttackSelectionPopup(NumPlayersToAttack, DamageToGive);
+            playerReference.ActivatePlayerToAttackDamageSelectionPopup(NumPlayersToAttack, DamageToGive);
         }
 
         Debug.Log($"Landed on: {this.name} space and should give: {DamageToGive} damage out to {NumPlayersToAttack} players each.");

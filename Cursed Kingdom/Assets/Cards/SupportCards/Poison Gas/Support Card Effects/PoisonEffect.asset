@@ -12,5 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8bcff472773796478c5c2f246620efd, type: 3}
   m_Name: PoisonEffect
   m_EditorClassIdentifier: 
-  numTurnsToPoison: 1
-  poisonImmediately: 0
+  isACost: 1
+  isElemental: 0
+  numTurnsToPoison: 3
+  poisonImmediately: 1
+  numPlayersToAttack: 0
+  opponentsCanBeChosen: 1
+  attackAllPlayers: 0
+  poisonUser: 0

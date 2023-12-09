@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
 	public event Action<Player> EffectCompleted;
 	public event Action<Player> DoneDiscardingForEffect;
 	public event Action<Player> DoneAttackingForEffect;
+	public event Action<Player> DoneRecoveringHealthEffect;
 	public event Action<Player> DoneDrawingCard;
 	public event Action<Player> DoneActivatingAbilityEffect;
 	public event Action<Player> DoneActivatingEliteAbilityEffect;
@@ -344,10 +345,105 @@ public class Player : MonoBehaviour
 		}
 
 	}
-	//DEBUG
+    //DEBUG
 
-	#region AttackPlayers
-	public void ActivatePlayerToAttackSelectionPopup(int numPlayersToChoose, int damageToGive, bool isElemental = false)
+    #region AttackPlayers
+
+    #region AttackStatusEffects
+    public void ActivatePlayerToAttackStatusEffectSelectionPopup(int numPlayersToChoose, string statusType, int statusDuration)
+    {
+        List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+
+
+        foreach (Player player in GameplayManagerRef.Players)
+        {
+            if (!player.IsDefeated && player != this)
+            {
+                List<object> paramsList = new();
+                paramsList.Add(player);
+				paramsList.Add(statusType);
+				paramsList.Add(statusDuration);
+                insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToAttackStatusEffect), this, paramsList));
+            }
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams, 1, "Attack");
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict, bool isElemental
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SelectPlayerToAttackStatusEffect(List<object> objects)
+    {
+        yield return null;
+        Player playerTarget = objects[0] as Player;
+        string statusType = (string)objects[1];
+		int statusDuration = (int)objects[2];
+
+        if (playerTarget != null)
+        {
+            if(statusType == "curse")
+			{
+				if(!playerTarget.IsPoisoned && !playerTarget.IsCursed)
+				{
+					playerTarget.CursePlayer(statusDuration);
+                    playerTarget.WasAfflictedWithStatusThisTurn = false;
+                }
+			}
+			else
+			{
+                if (!playerTarget.IsPoisoned && !playerTarget.IsCursed)
+                {
+                    playerTarget.PoisonPlayer(statusDuration);
+                    playerTarget.WasAfflictedWithStatusThisTurn = false;
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Calling the method to attack the player but don't have a target...");
+        }
+
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        {
+            CompletedAttackingEffect();
+        }
+    }
+
+    public void AttackAllOtherPlayersStatusEffect(string statusType, int statusDuration)
+    {
+        foreach (Player player in GameplayManagerRef.Players)
+        {
+            if (statusType == "curse")
+            {
+                if (!player.IsPoisoned && !player.IsCursed && player != this)
+                {
+                    player.CursePlayer(statusDuration);
+					player.WasAfflictedWithStatusThisTurn = false;
+                }
+            }
+            else
+            {
+                if (!player.IsPoisoned && !player.IsCursed && player != this)
+                {
+                    player.PoisonPlayer(statusDuration);
+                    player.WasAfflictedWithStatusThisTurn = false;
+                }
+            }
+        }
+        //Put some dialogue box here for now to showcase that we've attacked all other players. Will need a log entry + animation here.
+
+		//MAY HAVE TO CHANGE THIS BECAUSE IT'S AN ATTACK BUT KINDA BUT NOT RLLY.
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        {
+            CompletedAttackingEffect();
+        }
+    }
+    #endregion
+
+    #region AttackDamage
+    public void ActivatePlayerToAttackDamageSelectionPopup(int numPlayersToChoose, int damageToGive, bool isElemental = false)
 	{
 		List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
 		
@@ -360,7 +456,7 @@ public class Player : MonoBehaviour
 				paramsList.Add(player);
 				paramsList.Add(damageToGive);
 				paramsList.Add(isElemental);
-				insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToAttack), this, paramsList));
+				insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToAttackDamage), this, paramsList));
 			}
 		}
 
@@ -371,7 +467,7 @@ public class Player : MonoBehaviour
 	/// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict, bool isElemental
 	/// </summary>
 	/// <returns></returns>
-	public IEnumerator SelectPlayerToAttack(List<object> objects)
+	public IEnumerator SelectPlayerToAttackDamage(List<object> objects)
 	{
 		yield return null;
 		Player playerTarget = objects[0] as Player;
@@ -407,7 +503,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	public void AttackAllOtherPlayers(int damageToGive, bool isElemental = false)
+	public void AttackAllOtherPlayersDamage(int damageToGive, bool isElemental = false)
 	{
 		foreach(Player player in GameplayManagerRef.Players)
 		{
@@ -424,9 +520,10 @@ public class Player : MonoBehaviour
 			CompletedAttackingEffect();
 		}
 	}
+    #endregion
 
-	#region TakeCardsFromOpponentsSpaceEffect
-	public bool CheckIfCanTakeCardsFromOtherPlayersHand(int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent)
+    #region TakeCardsFromOpponentsSpaceEffect
+    public bool CheckIfCanTakeCardsFromOtherPlayersHand(int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent)
 	{
 		bool canTake = false;
 		int numCardsPlayerCanTake = 0;
@@ -1437,11 +1534,12 @@ public class Player : MonoBehaviour
 			{
 				//If player is on a 'halve movement cards when on this space' space, this will still reset to original value. Can't have that, need to only increase it by half it's value.
 				ResetMovementCardsInHandValues();
-
-				GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
-				IsCursed = false;
+                GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+                IsCursed = false;
+				return;
 			}
-		}
+            GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+        }
 
 		if (IsPoisoned)
 		{
@@ -1449,10 +1547,12 @@ public class Player : MonoBehaviour
 			PoisonDuration -= 1;
 			if (PoisonDuration == 0)
 			{
-				GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
-				IsPoisoned = false;
+                GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+                IsPoisoned = false;
+				return;
 			}
-		}
+            GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
+        }
 
 		CompletedStatusEffectUpdate();
 	}
@@ -1540,7 +1640,10 @@ public class Player : MonoBehaviour
 			GameplayManagerRef.UpdatePlayerHealth(this);
 			//Play heal animation.
 		}
-	}
+
+		CompletedRecoveringHealthForEffect();
+
+    }
 
 	public virtual void TakeDamage(int incomingDamage)
 	{
@@ -1834,6 +1937,11 @@ public class Player : MonoBehaviour
 	public void CompletedDiscardingForEffect()
 	{
 		DoneDiscardingForEffect?.Invoke(this);
+	}
+
+	public void CompletedRecoveringHealthForEffect()
+	{
+		DoneRecoveringHealthEffect?.Invoke(this);
 	}
 
 	public void CompletedDrawingForEffect()

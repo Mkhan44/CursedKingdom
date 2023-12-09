@@ -30,14 +30,14 @@ public class AttackPlayerEffect : SupportCardEffectData, ISupportEffect
         if (AttackAllPlayers)
         {
             playerReference.DoneAttackingForEffect += CompletedEffect;
-            playerReference.AttackAllOtherPlayers(DamageToGive, IsElemental);
+            playerReference.AttackAllOtherPlayersDamage(DamageToGive, IsElemental);
             return;
         }
 
         if (OpponentsCanBeChosen)
         {
             playerReference.DoneAttackingForEffect += CompletedEffect;
-            playerReference.ActivatePlayerToAttackSelectionPopup(NumPlayersToAttack, DamageToGive, IsElemental);
+            playerReference.ActivatePlayerToAttackDamageSelectionPopup(NumPlayersToAttack, DamageToGive, IsElemental);
         }
     }
 

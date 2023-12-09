@@ -19,7 +19,30 @@ public class RecoverHealthEffect : SupportCardEffectData, ISupportEffect
 
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
-        
+        playerReference.DoneRecoveringHealthEffect += CompletedEffect;
+        playerReference.RecoverHealth(HealthToRecover);
+    }
+
+    public override bool CanCostBePaid(Player playerReference)
+    {
+        bool canCostBePaid = false;
+
+        if(!(playerReference.CurrentHealth == playerReference.MaxHealth))
+        {
+            canCostBePaid = true;
+        }
+
+        if (!canCostBePaid)
+        {
+            DialogueBoxPopup.instance.ActivatePopupWithJustText("You're already at max health!", 1.5f);
+        }
+        return canCostBePaid;
+    }
+
+    public override void CompletedEffect(Player playerReference)
+    {
+        playerReference.DoneRecoveringHealthEffect -= CompletedEffect;
+        base.CompletedEffect(playerReference);
     }
 }
 
