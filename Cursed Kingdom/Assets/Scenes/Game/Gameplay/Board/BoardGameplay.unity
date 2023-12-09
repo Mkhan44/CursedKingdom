@@ -387,7 +387,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2567285720081007278, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 673.3571
+      value: 673.4898
       objectReference: {fileID: 0}
     - target: {fileID: 2567285720081007278, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -459,7 +459,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4573234100213797042, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 673.3571
+      value: 673.4898
       objectReference: {fileID: 0}
     - target: {fileID: 4573234100213797042, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1008,17 +1008,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6377051867729702790, guid: 7408f6982cc20634cba4d0be0690482b, type: 3}
   m_PrefabInstance: {fileID: 842774677}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &844006446 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6343464402353558907, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
-  m_PrefabInstance: {fileID: 481225215}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &920352276 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4790587157385098707, guid: 5ec9238a82b9a114a9a4b25ccab7fb27, type: 3}
@@ -1091,6 +1080,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
+--- !u!114 &933597032 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 299309404816822784, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &946127007
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1150,7 +1150,7 @@ PrefabInstance:
     - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: useEliteAbilityButton
       value: 
-      objectReference: {fileID: 844006446}
+      objectReference: {fileID: 933597032}
     - target: {fileID: 711935881092096549, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: useSelectedCardsPanel
       value: 
