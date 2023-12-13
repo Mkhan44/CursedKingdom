@@ -4,14 +4,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerCharacterMoveState : BaseState
 {
 	PlayerCharacterSM playerCharacterSM;
-	Player currentPlayer;
 	private const string stateName = "PlayerCharacterMoveState";
 
     //Debug
@@ -325,8 +323,8 @@ public class PlayerCharacterMoveState : BaseState
 		for(int i = 0; i < playerReferences.Count; i++)
 		{
 			Transform playerCharacter = playerReferences[i].gameObject.transform;
-            playerReferences[i].IsMoving = true;
-            playerReferences[i].GameplayManagerRef.isPlayerMoving = true;
+            //playerReferences[i].IsMoving = true;
+            //playerReferences[i].GameplayManagerRef.isPlayerMoving = true;
 			playerReferences[i].StateMachineRef.playerAnimator.SetBool(playerReferences[i].StateMachineRef.ISMOVINGPARAMETER, true);
 
             float rate = 5.0f;
@@ -339,8 +337,8 @@ public class PlayerCharacterMoveState : BaseState
 			yield return new WaitForSeconds(0.5f);
 
 			playerCharacter.position = targetPositions[i];
-            playerReferences[i].GameplayManagerRef.isPlayerMoving = false;
-            playerReferences[i].IsMoving = false;
+            //playerReferences[i].GameplayManagerRef.isPlayerMoving = false;
+            //playerReferences[i].IsMoving = false;
             playerReferences[i].StateMachineRef.playerAnimator.SetBool(playerReferences[i].StateMachineRef.ISMOVINGPARAMETER, false);
         }
 		yield return null;
