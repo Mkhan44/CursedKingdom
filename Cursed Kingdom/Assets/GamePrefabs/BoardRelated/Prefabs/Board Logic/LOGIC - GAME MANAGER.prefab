@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 711935881092096551}
   - component: {fileID: 711935881092096550}
   - component: {fileID: 7166908049358683936}
+  - component: {fileID: 1447546788679460028}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -28,13 +29,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 711935881092096547}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 711935881242953986}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &711935881092096549
 MonoBehaviour:
@@ -56,8 +57,6 @@ MonoBehaviour:
   boardParent: {fileID: 0}
   boardPrefab: {fileID: 6953770271459722323, guid: 49b3a25a452187b4582aa06b3eb51613, type: 3}
   decksHolderPrefab: {fileID: 726965400988219405, guid: 59acc5b444f480846930ad04f57230ba, type: 3}
-  movementCardHolderPrefab: {fileID: 300004012178065435, guid: e897adc4272d18341b60ee716d094013, type: 3}
-  supportCardHolderPrefab: {fileID: 4280961188737020259, guid: 0b4c17f7933a29b4cb4a71361ffeee33, type: 3}
   PlayerInfoCanvas: {fileID: 0}
   playerCharacter: {fileID: 0}
   isPlayerMoving: 0
@@ -66,6 +65,7 @@ MonoBehaviour:
   directionChoiceButtonHolder: {fileID: 0}
   moveButtonPrefab: {fileID: 3210510977898461855, guid: ffa6bcaf5d39d8a4fa397c3ebcf2537f, type: 3}
   raycastLength: 2
+  currentGameplayState: 0
   thisDeckManager: {fileID: 0}
   movementCardPrefab: {fileID: 8549054513579610354, guid: 5f5e3d4fbf94ee743a753bc6cda8a507, type: 3}
   supportCardPrefab: {fileID: 959177630722259936, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
@@ -73,10 +73,14 @@ MonoBehaviour:
   supportDeckCardHolder: {fileID: 0}
   movementCardDiscardPileHolder: {fileID: 0}
   supportCardDiscardPileHolder: {fileID: 0}
+  useSelectedCardsPanel: {fileID: 0}
+  useSelectedCardsText: {fileID: 0}
+  useSelectedCardsButton: {fileID: 0}
   topDownMapDisplay: {fileID: 0}
   spaceArtworkPopupDisplay: {fileID: 0}
   handDisplayPanel: {fileID: 0}
-  iconPresets: {fileID: 11400000, guid: 704cadbfcf164054d845afb6831847f7, type: 2}
+  useAbilityButton: {fileID: 0}
+  useEliteAbilityButton: {fileID: 0}
   players: []
   playerInfoDisplays: []
   classdatas:
@@ -98,6 +102,7 @@ MonoBehaviour:
   fpsCap: 60
   spacesToMoveText: {fileID: 0}
   debugMessagePanel: {fileID: 0}
+  spawnSameSpotDebug: 0
   numPlayersToStartWith: 4
 --- !u!114 &711935881092096548
 MonoBehaviour:
@@ -113,7 +118,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameplayManager: {fileID: 0}
   currentHighlightedSpace: {fileID: 0}
-  isViewingMap: 0
+  isViewingMapOverhead: 0
+  isViewingMapGround: 0
   spaceIsHighlighted: 0
 --- !u!114 &711935881092096551
 MonoBehaviour:
@@ -148,6 +154,7 @@ MonoBehaviour:
   gameplayManagerRef: {fileID: 0}
   rayCastLength: 0
   animator: {fileID: 0}
+  hasBeenOveriddenOnce: 0
 --- !u!114 &7166908049358683936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,6 +175,19 @@ MonoBehaviour:
   supportDiscardPileList: []
   isDiscarding: 0
   gameplayManager: {fileID: 0}
+--- !u!114 &1447546788679460028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711935881092096547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19845395dd9787e40b1c4dfc6e212daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameplayManager: {fileID: 711935881092096549}
 --- !u!1 &711935881242953987
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,6 +211,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 711935881242953987}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 237.92047, y: 165.95073, z: -1.4690567}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -198,5 +219,4 @@ Transform:
   m_Children:
   - {fileID: 711935881092096546}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
