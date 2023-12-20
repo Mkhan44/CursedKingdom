@@ -14,6 +14,7 @@ public class PlayerCharacterSM : BukuStateMachine
 	//States
 	public PlayerCharacterIdleState playerCharacterIdleState;
 	public PlayerCharacterMoveState playerCharacterMoveState;
+	public PlayerCharacterUseSupportCardState playerCharacterUseSupportCardState;
 
 	public Animator playerAnimator;
 	public Player player;
@@ -22,15 +23,16 @@ public class PlayerCharacterSM : BukuStateMachine
 	{
 		playerCharacterIdleState = new PlayerCharacterIdleState(this);
 		playerCharacterMoveState = new PlayerCharacterMoveState(this);
+		playerCharacterUseSupportCardState = new PlayerCharacterUseSupportCardState(this);
 		player = GetComponent<Player>();
 		playerAnimator = GetComponent<Animator>();
 
-    }
+	}
 
-    protected override BaseState GetInitialState()
-    {
-        return playerCharacterIdleState;
-    }
+	protected override BaseState GetInitialState()
+	{
+		return playerCharacterIdleState;
+	}
 
 
 }

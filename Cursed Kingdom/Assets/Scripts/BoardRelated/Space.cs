@@ -148,8 +148,8 @@ public class Space : MonoBehaviour
             {
                 playerReference.IsMoving = false;
                 // Debug.Log($"Player landed on space: {spaceData.spaceName}");
-                StartCoroutine(PlaySpaceInfoDisplayAnimationUI(playerReference));
-                gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
+                //StartCoroutine(PlaySpaceInfoDisplayAnimationUI(playerReference));
+                //gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
                // ApplyLandedOnSpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
             }
@@ -315,7 +315,8 @@ public class Space : MonoBehaviour
         //Player is defeated so their turn ends immediately.
         else
         {
-            gameplayManagerRef.EndOfTurn(player);
+            //gameplayManagerRef.EndOfTurn(player);
+            gameplayManagerRef.GameplayPhaseStatemachineRef.ChangeState(gameplayManagerRef.GameplayPhaseStatemachineRef.gameplayEndPhaseState);
         }
 
         //Revert the space data back if we used debug to change it.
@@ -410,7 +411,8 @@ public class Space : MonoBehaviour
         //Player is defeated so their turn ends immediately.
         else if(!player.IsMoving && player.IsDefeated) 
         {
-            gameplayManagerRef.EndOfTurn(player);
+            //gameplayManagerRef.EndOfTurn(player);
+            gameplayManagerRef.GameplayPhaseStatemachineRef.ChangeState(gameplayManagerRef.GameplayPhaseStatemachineRef.gameplayEndPhaseState);
         }
 
         //Revert the space data back if we used debug to change it.
@@ -496,7 +498,7 @@ public class Space : MonoBehaviour
         player.StartHandlingSpaceEffects();
     }
 
-    private IEnumerator PlaySpaceInfoDisplayAnimationUI(Player player)
+    public IEnumerator PlaySpaceInfoDisplayAnimationUI(Player player)
     {
         //Space info display panel set active. Populate information for the space.
         //Get animation clip length, Yield for that long.

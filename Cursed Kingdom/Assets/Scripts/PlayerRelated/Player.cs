@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
 
 	public event Action<Player> TurnHasEnded;
 	public event Action<Player> EffectCompleted;
+	public event Action<Player> FinishedHandlingCurrentSpaceEffects;
 	public event Action<Player> DoneDiscardingForEffect;
 	public event Action<Player> DoneAttackingForEffect;
 	public event Action<Player> DoneRecoveringHealthEffect;
@@ -38,11 +39,6 @@ public class Player : MonoBehaviour
 	
 	//State machine related
 	private PlayerCharacterSM stateMachineRef;
-	
-
-	//TEMPORARY GET RID OF THESE.
-	public bool startOfTurnEffect;
-	public bool endOfTurnSpaceEffects;
 
 	//Properties
 	[SerializeField] private int maxHealth;
@@ -267,7 +263,6 @@ public class Player : MonoBehaviour
 		IsHandlingAbilityActivation = false;
 		IsHandlingEliteAbilityActivation = false;
 		CanUseEliteAbility = false;
-		endOfTurnSpaceEffects = false;
 		StatusEffectImmunities = new();
 
 		IsDefeated = false;
@@ -1704,29 +1699,6 @@ public class Player : MonoBehaviour
 		ExecuteNextSpaceEffect();
 	}
 
-	public void HandleEndOfTurnSpaceEffects()
-	{
-		if(!endOfTurnSpaceEffects)
-		{
-			endOfTurnSpaceEffects = true;
-			ApplyCurrentSpaceEffects(this);
-		}
-
-		GameplayManagerRef.ThisDeckManager.DrawCard(CardType.Movement, this);
-
-		if (!IsMoving && !MaxHandSizeExceeded())
-		{
-			ResetSupportCardUsageCount();
-			ResetMovementCardUsageCount();
-			ResetMovementCardsInHandValues();
-			if(IsCursed)
-			{
-				CurseEffect();
-			}
-			endOfTurnSpaceEffects = false;
-			TurnIsCompleted();
-		}
-	}
 
 	public void FinishedHandlingSpaceEffects()
 	{
@@ -1740,15 +1712,13 @@ public class Player : MonoBehaviour
 		currentSpaceEffectDataToHandle = null;
 		IsHandlingSpaceEffects = false;
 
-		//Change this check to be based on state of the game rather than movement cards.
-		if (NumMovementCardsUsedThisTurn == 0)
+		if (gameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayStartResolveSpacePhaseState))
 		{
-			return;
+			CompletedHandlingSpaceEffects();
+            return;
 		}
 
-
-		HandleEndOfTurnSpaceEffects();
-	   
+		CompletedHandlingSpaceEffects();
 	}
 
 	private void ExecuteNextSpaceEffect()
@@ -1758,11 +1728,11 @@ public class Player : MonoBehaviour
 			currentSpaceEffectDataToHandle = spaceEffectsToHandle.Dequeue();
 
 			//Change this check to be based on state of the game rather than movement cards.
-			if(NumMovementCardsUsedThisTurn == 0)
+			if(gameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayStartResolveSpacePhaseState))
 			{
 				currentSpaceEffectDataToHandle.StartOfTurnEffect(this);
 			}
-			else if(endOfTurnSpaceEffects)
+			else if(gameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayEndPhaseState))
 			{
 				currentSpaceEffectDataToHandle.EndOfTurnEffect(this);
 			}
@@ -1839,16 +1809,16 @@ public class Player : MonoBehaviour
 	#endregion
 
 	#region Space activation
-	private void ApplyCurrentSpaceEffects(Player player)
+	public void ApplyCurrentSpaceEffects(Player player)
 	{
 		if (GameplayManagerRef.playerCharacter.GetComponent<Player>() == this)
 		{
 			//We'll check states for the phases of the game here to determine whether or not to use the landed on effect/passing effect/start of turn effect.
-			if (startOfTurnEffect)
+			if (gameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayStartResolveSpacePhaseState))
 			{
 				CurrentSpacePlayerIsOn.ApplyStartOfTurnSpaceEffects(this);
 			}
-			else if(endOfTurnSpaceEffects)
+			else if(gameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayEndPhaseState))
 			{
 				CurrentSpacePlayerIsOn.ApplyEndOfTurnSpaceEffects(this);
 			}
@@ -1856,9 +1826,12 @@ public class Player : MonoBehaviour
 			{
 				CurrentSpacePlayerIsOn.ApplyLandedOnSpaceEffects(this);
 			}
-			startOfTurnEffect = false;
-
 		}
+	}
+
+	public void ApplyCurrentStartSpaceEffects()
+	{
+
 	}
 	#endregion
 
@@ -1972,6 +1945,12 @@ public class Player : MonoBehaviour
 	{
 		StatusEffectUpdateCompleted?.Invoke(this);
 	}
+
+	public void CompletedHandlingSpaceEffects()
+	{
+		FinishedHandlingCurrentSpaceEffects?.Invoke(this);
+
+    }
 	
 	#endregion
 }

@@ -48,6 +48,10 @@ public class BukuStateMachine : MonoBehaviour
         return null;
     }
 
+    public virtual BaseState GetCurrentState()
+    {
+        return currentState;
+    }
 
 
 
