@@ -24,34 +24,49 @@ public class GameplayStartResolveSpacePhaseState : BaseState
 		base.Enter();
 		currentPlayer = gameplayPhaseSM.gameplayManager.GetCurrentPlayer();
 		startedHandlingPlayerSpaceStartEffects = false;
-		SubscribeToPlayerEvents();
-		Debug.Log($"Start Space Resolve phase entered!");
+        PhaseDisplay.instance.TurnOnDisplay("Resolve start space effects phase!", 1.5f);
+        PhaseDisplay.instance.displayTimeCompleted += AttemptToActivateSpaceEffects;
+        SubscribeToPlayerEvents();
 	}
 
 	public override void UpdateLogic()
 	{
 		base.UpdateLogic();
-		if (!startedHandlingPlayerSpaceStartEffects)
-		{
-			if(DoesSpaceHaveStartSpaceEffects())
-			{
-				HandleStartOfTurnSpaceEffects();
-				startedHandlingPlayerSpaceStartEffects = true;
-			}
-			else
-			{
-				gameplayPhaseSM.ChangeState(gameplayPhaseSM.gameplayMovementPhaseState);
-			}
+		//if (!startedHandlingPlayerSpaceStartEffects)
+		//{
+		//	if(DoesSpaceHaveStartSpaceEffects())
+		//	{
+		//		HandleStartOfTurnSpaceEffects();
+		//		startedHandlingPlayerSpaceStartEffects = true;
+		//	}
+		//	else
+		//	{
+		//		gameplayPhaseSM.ChangeState(gameplayPhaseSM.gameplayMovementPhaseState);
+		//	}
 			
-		}
+		//}
 	}
+
+	public void AttemptToActivateSpaceEffects()
+	{
+        if (DoesSpaceHaveStartSpaceEffects())
+        {
+            HandleStartOfTurnSpaceEffects();
+            startedHandlingPlayerSpaceStartEffects = true;
+        }
+        else
+        {
+            gameplayPhaseSM.ChangeState(gameplayPhaseSM.gameplayMovementPhaseState);
+        }
+    }
 
 	public override void Exit()
 	{
 		base.Exit();
 		UnsubscribeToPlayerEvents();
 		startedHandlingPlayerSpaceStartEffects = false;
-	}
+        PhaseDisplay.instance.displayTimeCompleted -= AttemptToActivateSpaceEffects;
+    }
 
 	private void SubscribeToPlayerEvents()
 	{

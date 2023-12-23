@@ -23,26 +23,32 @@ public class GameplayResolveSpacePhaseState : BaseState
 		currentPlayer = gameplayPhaseSM.gameplayManager.GetCurrentPlayer();
 		SubscribeToPlayerEvents();
 		isResolvingSpaceEffect = false;
-		Debug.Log($"Resolve Space phase entered!");
+        PhaseDisplay.instance.TurnOnDisplay("Resolve space effects phase!", 1.5f);
+        PhaseDisplay.instance.displayTimeCompleted += StartResolvingSpaceEffects;
 	}
 
 	public override void UpdateLogic()
 	{
 		base.UpdateLogic();
-		if(!isResolvingSpaceEffect)
-		{
-			isResolvingSpaceEffect = true;
-			currentPlayer.CurrentSpacePlayerIsOn.StartCoroutine(currentPlayer.CurrentSpacePlayerIsOn.PlaySpaceInfoDisplayAnimationUI(currentPlayer));
-			gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.TurnOnDisplay(currentPlayer.CurrentSpacePlayerIsOn, currentPlayer);
-		}
 	}
+
+	public void StartResolvingSpaceEffects()
+	{
+        if (!isResolvingSpaceEffect)
+        {
+            isResolvingSpaceEffect = true;
+            currentPlayer.CurrentSpacePlayerIsOn.StartCoroutine(currentPlayer.CurrentSpacePlayerIsOn.PlaySpaceInfoDisplayAnimationUI(currentPlayer));
+            gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.TurnOnDisplay(currentPlayer.CurrentSpacePlayerIsOn, currentPlayer);
+        }
+    }
 
 	public override void Exit()
 	{
 		base.Exit();
 		UnsubscribeToPlayerEvents();
 		isResolvingSpaceEffect = false;
-	}
+        PhaseDisplay.instance.displayTimeCompleted -= StartResolvingSpaceEffects;
+    }
 	
 	
 	private void SubscribeToPlayerEvents()

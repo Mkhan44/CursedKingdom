@@ -18,12 +18,24 @@ public class GameplayDuelPhaseState : BaseState
     public override void Enter()
     {
         base.Enter();
-        Debug.Log($"Duel phase entered!");
+        PhaseDisplay.instance.TurnOnDisplay("Duel phase!", 1.5f);
+        PhaseDisplay.instance.displayTimeCompleted += Logic;
     }
 
     public override void UpdateLogic()
     {
         base.UpdateLogic();
+        
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        PhaseDisplay.instance.displayTimeCompleted -= Logic;
+    }
+
+    public void Logic()
+    {
         gameplayPhaseSM.ChangeState(gameplayPhaseSM.gameplayEndPhaseState);
     }
 }

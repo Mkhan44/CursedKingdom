@@ -10,7 +10,7 @@ public class AttackSpace : SpaceEffectData, ISpaceEffect
 {
     [Range(1, 10)] [SerializeField] private int damageToGive = 1;
     [Range(1, 3)] [SerializeField] private int numPlayersToAttack = 1;
-    [Tooltip("Player can choose the opponent's they want to attack. This will prompt the game to give a choice box.")]
+    [Tooltip("Player can choose the opponents they want to attack. This will prompt the game to give a choice box.")]
     [SerializeField] private bool opponentsCanBeChosen = true;
     [Tooltip("Attacks all other players. This overrides 'numPlayersToAttack' and 'opponentsCanBeChosen' will be irrelevant.")]
     [SerializeField] private bool attackAllPlayers;

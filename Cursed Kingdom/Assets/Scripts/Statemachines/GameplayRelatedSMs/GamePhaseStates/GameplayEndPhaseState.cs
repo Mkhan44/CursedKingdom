@@ -24,13 +24,19 @@ public class GameplayEndPhaseState : BaseState
         currentPlayer = gameplayPhaseSM.gameplayManager.GetCurrentPlayer();
         SubscribeToPlayerEvents();
         endingTurn = false;
-        Debug.Log($"End phase entered!");
+        PhaseDisplay.instance.TurnOnDisplay("End phase!", 1.5f);
+        PhaseDisplay.instance.displayTimeCompleted += Logic;
     }
 
     public override void UpdateLogic()
     {
         base.UpdateLogic();
-        if(!endingTurn)
+        
+    }
+
+    public void Logic()
+    {
+        if (!endingTurn)
         {
             endingTurn = true;
             HandleEndOfTurnEffects();
@@ -42,6 +48,7 @@ public class GameplayEndPhaseState : BaseState
         base.Exit();
         UnsubscribeToPlayerEvents();
         endingTurn = false;
+        PhaseDisplay.instance.displayTimeCompleted -= Logic;
     }
 
     private void SubscribeToPlayerEvents()
