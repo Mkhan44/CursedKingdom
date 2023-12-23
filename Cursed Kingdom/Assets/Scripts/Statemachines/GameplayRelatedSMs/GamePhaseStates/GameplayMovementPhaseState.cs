@@ -22,7 +22,7 @@ public class GameplayMovementPhaseState : BaseState
 		base.Enter();
 		currentPlayer = gameplayPhaseSM.gameplayManager.GetCurrentPlayer();
 		playerStartedMoving = false;
-		Debug.Log($"Movement phase entered!");
+        PhaseDisplay.instance.TurnOnDisplay("Movement phase!", 1.5f);
 	}
 
 	public override void UpdateLogic()

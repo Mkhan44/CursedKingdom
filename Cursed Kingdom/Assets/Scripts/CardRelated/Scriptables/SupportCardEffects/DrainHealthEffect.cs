@@ -14,14 +14,47 @@ using UnityEngine;
 public class DrainHealthEffect : SupportCardEffectData, ISupportEffect
 {
     [SerializeField] [Range(1, 10)] private int amountOfHealthToDrainFromTarget = 1;
-    [SerializeField] private bool attackAllTargets = false;
+    [Range(1, 3)][SerializeField] private int numPlayersToAttack = 1;
+    [Tooltip("Player can choose the opponent's they want to attack. This will prompt the game to give a choice box.")]
+    [SerializeField] private bool opponentsCanBeChosen = true;
+    [Tooltip("Attacks all other players. This overrides 'numPlayersToAttack' and 'opponentsCanBeChosen' will be irrelevant.")]
+    [SerializeField] private bool attackAllPlayers = false;
 
     public int AmountOfHealthToDrainFromTarget { get => amountOfHealthToDrainFromTarget; set => amountOfHealthToDrainFromTarget = value; }
-    public bool AttackAllTargets { get => attackAllTargets; set => attackAllTargets = value; }
+    public int NumPlayersToAttack { get => numPlayersToAttack; set => numPlayersToAttack = value; }
+    public bool AttackAllPlayers { get => attackAllPlayers; set => attackAllPlayers = value; }
+    public bool OpponentsCanBeChosen { get => opponentsCanBeChosen; set => opponentsCanBeChosen = value; }
 
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
-        //If attackAllTargets = true, player gains the health from all targets and they all lose that same amount.
+        //If AttackAllPlayers = true, player gains the health from all targets and they all lose that same amount.
+
+        if (AttackAllPlayers)
+        {
+            playerReference.DoneAttackingForEffect += CompletedEffect;
+            playerReference.AttackAllOtherPlayersDamage(AmountOfHealthToDrainFromTarget, IsElemental);
+            return;
+        }
+
+        if (OpponentsCanBeChosen)
+        {
+            playerReference.DoneAttackingForEffect += CompletedEffect;
+            playerReference.ActivatePlayerToAttackDamageSelectionPopup(NumPlayersToAttack, AmountOfHealthToDrainFromTarget, IsElemental);
+        }
+    }
+
+    public override void CompletedEffect(Player playerReference)
+    {
+        if(AttackAllPlayers)
+        {
+            playerReference.RecoverHealth(AmountOfHealthToDrainFromTarget * (playerReference.GameplayManagerRef.Players.Count - 1));
+        }
+        else if(OpponentsCanBeChosen)
+        {
+            playerReference.RecoverHealth(AmountOfHealthToDrainFromTarget * NumPlayersToAttack);
+        }
+        playerReference.DoneAttackingForEffect -= CompletedEffect;
+        base.CompletedEffect(playerReference);
     }
 }
 

@@ -15,11 +15,13 @@ public class EliteAbilityData : ScriptableObject, IEliteAbility
     [SerializeField] private bool overrideAutoDescription;
     [SerializeField] private bool canBeManuallyActivated = false;
     [SerializeField] private bool isPassive = false;
+    [SerializeField] private bool hasACost;
 
     public string EffectDescription { get => effectDescription; set => effectDescription = value; }
     public bool OverrideAutoDescription { get => overrideAutoDescription; set => overrideAutoDescription = value; }
     public bool CanBeManuallyActivated { get => canBeManuallyActivated; set => canBeManuallyActivated = value; }
     public bool IsPassive { get => isPassive; set => isPassive = value; }
+    public bool HasACost { get => hasACost; set => hasACost = value; }
 
     public virtual void ActivateEffect(Player playerReference)
     {
@@ -29,6 +31,22 @@ public class EliteAbilityData : ScriptableObject, IEliteAbility
     public virtual void CompletedEffect(Player playerReference)
     {
         EliteAbilityCompletedEffect?.Invoke();
+    }
+
+    public virtual bool CanCostBePaid(Player playerReference)
+    {
+        return HasACost;
+    }
+
+    /// <summary>
+    /// This should play an animation and then afterwards activate the effect. 
+    /// Will need to hook into some event that gets triggered after the animation is finished so we can then do the effect afterwards.
+    /// </summary>
+    /// <param name="playerReference"></param>
+    /// <returns></returns>
+    public virtual void PlayEliteAbilityUseAnimation(Player playerReference)
+    {
+        //Play animation...Invoke an event afterwards.
     }
 
     protected virtual void UpdateEffectDescription()

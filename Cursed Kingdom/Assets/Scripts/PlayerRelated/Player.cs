@@ -458,6 +458,21 @@ public class Player : MonoBehaviour
 		DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams, 1, "Attack");
 	}
 
+	public void ActivatePlayerWithTargetSelectionToAttackDamageSelectionPopup(List<Player> validTargets, int damageToGive)
+	{
+        List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+
+        foreach (Player player in validTargets)
+		{
+            List<object> paramsList = new();
+            paramsList.Add(player);
+            paramsList.Add(damageToGive);
+            insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToAttackDamageNoElement), this, paramsList));
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams, 1, "Attack");
+    }
+
 	/// <summary>
 	/// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict, bool isElemental
 	/// </summary>
@@ -498,7 +513,32 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	public void AttackAllOtherPlayersDamage(int damageToGive, bool isElemental = false)
+    /// <summary>
+    /// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SelectPlayerToAttackDamageNoElement(List<object> objects)
+    {
+        yield return null;
+        Player playerTarget = objects[0] as Player;
+        int damageToTake = (int)objects[1];
+
+        if (playerTarget != null)
+        {
+            if (damageToTake > 0)
+            {
+                playerTarget.TakeDamage(damageToTake);
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Calling the method to attack the player but don't have a target...");
+        }
+
+        CompletedAttackingEffect();
+    }
+
+    public void AttackAllOtherPlayersDamage(int damageToGive, bool isElemental = false)
 	{
 		foreach(Player player in GameplayManagerRef.Players)
 		{
@@ -515,6 +555,19 @@ public class Player : MonoBehaviour
 			CompletedAttackingEffect();
 		}
 	}
+
+	public void AttackAllValidTargetsNoElement(List<Player> targetsToAttack, int damageToGive)
+	{
+		foreach(Player player in targetsToAttack)
+		{
+            //Will need a way to queue up death scene if a player in this chain of events is dealt a killing blow from this attack.
+            player.TakeDamage(damageToGive);
+		}
+
+		//Put some dialogue box here for now to showcase that we've attacked all other players. Will need a log entry + animation here.
+		CompletedAttackingEffect();
+
+    }
     #endregion
 
     #region TakeCardsFromOpponentsSpaceEffect
@@ -1881,6 +1934,11 @@ public class Player : MonoBehaviour
 
 		if (ClassData.eliteAbilityData != null)
 		{
+			if(!ClassData.eliteAbilityData.CanCostBePaid(this))
+			{
+				return;
+			}
+
 			ClassData.eliteAbilityData.ActivateEffect(this);
 			if (ClassData.eliteAbilityData.CanBeManuallyActivated)
 			{

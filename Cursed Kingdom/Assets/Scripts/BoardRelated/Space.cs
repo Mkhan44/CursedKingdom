@@ -217,7 +217,7 @@ public class Space : MonoBehaviour
 
     public void SpaceTravelSetup()
     {
-        GetSpaceNeighbors();
+        SetSpaceNeighbors();
         GetValidDirections();
     }
 
@@ -669,7 +669,7 @@ public class Space : MonoBehaviour
         }
     }
 
-    private void GetSpaceNeighbors()
+    private void SetSpaceNeighbors()
     {
         Space nextSpace = default;
 

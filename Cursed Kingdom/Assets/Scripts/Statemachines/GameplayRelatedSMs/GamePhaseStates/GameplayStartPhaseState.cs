@@ -21,39 +21,31 @@ public class GameplayStartPhaseState : BaseState
 	public override void Enter()
 	{
 		base.Enter();
-		Debug.Log($"Start phase entered!");
+        PhaseDisplay.instance.TurnOnDisplay("Start phase!", 1.5f);
+        PhaseDisplay.instance.displayTimeCompleted += ActivateStartTurnPopup;
 	}
 
 	public override void UpdateLogic()
 	{
 		base.UpdateLogic();
-        if(!popupAppeared)
-        {
-            ActivateStartTurnPopup(gameplayPhaseSM.gameplayStartResolveSpacePhaseState);
-            popupAppeared = true;
-        }
 	}
 
     public override void Exit()
     {
         base.Exit();
+        PhaseDisplay.instance.displayTimeCompleted -= ActivateStartTurnPopup;
         popupAppeared = false;
     }
 
-    public void ActivateStartTurnPopup(BaseState stateToChangeTo)
+    public void ActivateStartTurnPopup()
     {
         List<Tuple<string, string, object, List<object>>> insertedParams = new();
 
         List<object> paramsList = new List<object>();
-        paramsList.Add(stateToChangeTo);
+        paramsList.Add(gameplayPhaseSM.gameplayStartResolveSpacePhaseState);
 
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Start!", nameof(gameplayPhaseSM.StartTurnConfirmation), gameplayPhaseSM, paramsList));
 
         DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {gameplayPhaseSM.gameplayManager.GetCurrentPlayer().playerIDIntVal}'s turn!", insertedParams, 1, "Turn start!");
     }
-
-   
-
-
-    
 }
