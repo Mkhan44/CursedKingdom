@@ -13,6 +13,8 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
     //Events
     public event Action<Player> SpaceArtworkDisplayTurnOff;
 
+    private const string ISACTIVE = "isActive";
+
     public GameObject iconPrefab;
     [SerializeField] private TextMeshProUGUI spaceTitle;
     [SerializeField] private TextMeshProUGUI spaceDescription;
@@ -22,6 +24,7 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
     [SerializeField] private GameObject iconParent;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private Coroutine currentCoroutine;
+    [SerializeField] private Animator canvasAnimator;
     [SerializeField] [Range(0,30)] private float timeToKeepPanelActive = 5f;
 
     public TextMeshProUGUI SpaceTitle { get => spaceTitle; set => spaceTitle = value; }
@@ -50,8 +53,7 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
         }
 
         CurrentSpacePlayerIsOn = spaceInfo;
-        CanvasGroup.blocksRaycasts = true;
-        CanvasGroup.alpha = 1f;
+        canvasAnimator.SetBool(ISACTIVE, true);
         SpaceTitle.text = CurrentSpacePlayerIsOn.spaceData.spaceName;
         SpaceDescription.text = CurrentSpacePlayerIsOn.spaceData.spaceDescription;
         SpaceArtwork.sprite = CurrentSpacePlayerIsOn.spaceData.spaceSprite;
@@ -86,8 +88,7 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        CanvasGroup.blocksRaycasts = false;
-        CanvasGroup.alpha = 0f;
+        canvasAnimator.SetBool(ISACTIVE, false);
         SpaceArtworkDisplayTurnOff?.Invoke(PlayerOnSpace);
 
         if (PlayerOnSpace is not null)
