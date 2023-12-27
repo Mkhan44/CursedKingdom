@@ -164,10 +164,10 @@ public class AttackEnemiesEliteAbility : EliteAbilityData, IEliteAbility
         {
             List<Space> spacesToCheckNext = new();
             List<Space> spacesAlreadyChecked = new();
-            for (int i = 0; i < RangeOfSpacesBetweenPlayerAndEnemies - 1; i++)
+            for (int i = 0; i < RangeOfSpacesBetweenPlayerAndEnemies; i++)
             {
                 //We have obtained all other players in the game. No need to continue looping.
-                if (validTargets.Count == numPlayersToAttack || validTargets.Count >= playerReference.GameplayManagerRef.Players.Count -1)
+                if ((validTargets.Count == numPlayersToAttack && !AttackAllEnemiesInRange) || validTargets.Count >= playerReference.GameplayManagerRef.Players.Count -1)
                 {
                     break;
                 }
@@ -203,8 +203,16 @@ public class AttackEnemiesEliteAbility : EliteAbilityData, IEliteAbility
                     {
                         spacesAlreadyChecked.Add(space);
                     }
-                    
-                    tempSpacesToCheckNext = GetSpacesToCheckFromCurrentSpace(space, spacesAlreadyChecked);
+
+                    List<Space> superTempSpacesToCheckNext = GetSpacesToCheckFromCurrentSpace(space, spacesAlreadyChecked);
+
+                    foreach(Space superSpace in superTempSpacesToCheckNext)
+                    {
+                        if(!tempSpacesToCheckNext.Contains(superSpace))
+                        {
+                            tempSpacesToCheckNext.Add(superSpace);
+                        }
+                    }
                 }
 
                 spacesToCheckNext = tempSpacesToCheckNext;
@@ -218,24 +226,24 @@ public class AttackEnemiesEliteAbility : EliteAbilityData, IEliteAbility
         List<Space> spacesToCheckNext = new();
 
         //Check all 4 neighbors.
-        if(spaceToGetNeighborsFrom.NorthNeighbor != null && spacesAlreadyChecked.Contains(spaceToGetNeighborsFrom.NorthNeighbor))
+        if(spaceToGetNeighborsFrom.NorthNeighbor != null && !spacesAlreadyChecked.Contains(spaceToGetNeighborsFrom.NorthNeighbor))
         {
             spacesToCheckNext.Add(spaceToGetNeighborsFrom.NorthNeighbor);
         }
 
-        if (spaceToGetNeighborsFrom.SouthNeighbor != null && spacesAlreadyChecked.Contains(spaceToGetNeighborsFrom.SouthNeighbor))
+        if (spaceToGetNeighborsFrom.SouthNeighbor != null && !spacesAlreadyChecked.Contains(spaceToGetNeighborsFrom.SouthNeighbor))
         {
             spacesToCheckNext.Add(spaceToGetNeighborsFrom.SouthNeighbor);
         }
 
-        if (spaceToGetNeighborsFrom.EastNeighbor != null && spacesAlreadyChecked.Contains(spaceToGetNeighborsFrom.EastNeighbor))
+        if (spaceToGetNeighborsFrom.EastNeighbor != null && !spacesAlreadyChecked.Contains(spaceToGetNeighborsFrom.EastNeighbor))
         {
             spacesToCheckNext.Add(spaceToGetNeighborsFrom.EastNeighbor);
         }
 
-        if (spaceToGetNeighborsFrom.EastNeighbor != null && spacesAlreadyChecked.Contains(spaceToGetNeighborsFrom.EastNeighbor))
+        if (spaceToGetNeighborsFrom.WestNeighbor != null && !spacesAlreadyChecked.Contains(spaceToGetNeighborsFrom.WestNeighbor))
         {
-            spacesToCheckNext.Add(spaceToGetNeighborsFrom.EastNeighbor);
+            spacesToCheckNext.Add(spaceToGetNeighborsFrom.WestNeighbor);
         }
 
         return spacesToCheckNext;
