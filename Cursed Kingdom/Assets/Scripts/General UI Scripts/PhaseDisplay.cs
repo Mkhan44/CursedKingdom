@@ -26,6 +26,11 @@ public class PhaseDisplay : MonoBehaviour
         blockerPanel.SetActive(false);
     }
 
+    private void Update()
+    {
+        
+    }
+
     public void TurnOnDisplay(string textToDisplay, float timeToKeepDisplayOn = 1.0f)
     {
         if (fadeCoroutine != null)
@@ -58,6 +63,15 @@ public class PhaseDisplay : MonoBehaviour
 
         yield return new WaitForSeconds(timeToKeepDisplayOn);
         StartCoroutine(FadeOut(elapsedTime));
+    }
+
+    public void FadeEarly()
+    {
+        if(fadeCoroutine != null)
+        {
+            StopCoroutine(fadeCoroutine);
+            TurnOffDisplay();
+        }
     }
 
     public IEnumerator FadeOut(float fadeOutTime)
