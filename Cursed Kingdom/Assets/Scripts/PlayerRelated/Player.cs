@@ -915,7 +915,23 @@ public class Player : MonoBehaviour
 				CurseCardAnimationEffect();
 			}
 		}
+	}
 
+	public void DrawThenUseMovementCardImmediately()
+	{
+		gameplayManagerRef.ThisDeckManager.DrawCard(CardType.Movement, this);
+
+		//Might hafta turn this into another method and wait till an event is triggered to signify the draw being completed.
+		foreach (Card card in CardsInhand)
+		{
+			if(card is MovementCard)
+			{
+                MovementCard movementCard = (MovementCard)card;
+                movementCard.AttemptToMove(this);
+				gameplayManagerRef.UseMovementCardNoCardsInHandButton.gameObject.SetActive(false);
+				break;
+			}
+		}
 	}
 
 	public void DrawCards(List<Card> cards)

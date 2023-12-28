@@ -113,7 +113,6 @@ public class MovementCard : Card
             if (!handExpandUI.CurrentActiveTransform.IsExpanded)
             {
                 handExpandUI.ExpandHand(ThisCardType, GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>()));
-                
             }
             else
             {
@@ -170,53 +169,58 @@ public class MovementCard : Card
                 }
                 else
                 {
-                    if(TempCardValue > 0)
-                    {
-                        if(thePlayer.CanUseMovementCard())
-                        {
-                            thePlayer.UseMovementCard();
-                            GameplayManager.StartMove(TempCardValue);
-                            ResetMovementValue();
-                            if (!thePlayer.IsCursed)
-                            {
-                                DeactivateCurseEffect();
-                            }
-                        }
-                        else
-                        {
-                            DialogueBoxPopup.instance.ActivatePopupWithJustText($"You can't use anymore movement cards this turn.", 2.0f);
-                            GameplayManager.HandDisplayPanel.ShrinkHand();
-                            transform.localScale = OriginalSize;
-                            CardIsActiveHovered = false;
-                            return;
-                        }
-                        
-                    }
-                    else
-                    {
-                        if (thePlayer.CanUseMovementCard())
-                        {
-                            thePlayer.UseMovementCard();
-                            GameplayManager.StartMove(MovementCardValue);
-                        }
-                        else
-                        {
-                            DialogueBoxPopup.instance.ActivatePopupWithJustText($"You can't use anymore movement cards this turn.", 2.0f);
-                            GameplayManager.HandDisplayPanel.ShrinkHand();
-                            transform.localScale = OriginalSize;
-                            CardIsActiveHovered = false;
-                            return;
-                        }
-                    }
-
-                    thePlayer.DiscardFromHand(ThisCardType, this);
-
-                    GameplayManager.HandDisplayPanel.ShrinkHand();
-                    transform.localScale = OriginalSize;
-                    CardIsActiveHovered = false;
+                    AttemptToMove(thePlayer);
                 }
             }
         }
+    }
+
+    public void AttemptToMove(Player thePlayer)
+    {
+        if (TempCardValue > 0)
+        {
+            if (thePlayer.CanUseMovementCard())
+            {
+                thePlayer.UseMovementCard();
+                GameplayManager.StartMove(TempCardValue);
+                ResetMovementValue();
+                if (!thePlayer.IsCursed)
+                {
+                    DeactivateCurseEffect();
+                }
+            }
+            else
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"You can't use anymore movement cards this turn.", 2.0f);
+                GameplayManager.HandDisplayPanel.ShrinkHand();
+                transform.localScale = OriginalSize;
+                CardIsActiveHovered = false;
+                return;
+            }
+
+        }
+        else
+        {
+            if (thePlayer.CanUseMovementCard())
+            {
+                thePlayer.UseMovementCard();
+                GameplayManager.StartMove(MovementCardValue);
+            }
+            else
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"You can't use anymore movement cards this turn.", 2.0f);
+                GameplayManager.HandDisplayPanel.ShrinkHand();
+                transform.localScale = OriginalSize;
+                CardIsActiveHovered = false;
+                return;
+            }
+        }
+
+        thePlayer.DiscardFromHand(ThisCardType, this);
+
+        GameplayManager.HandDisplayPanel.ShrinkHand();
+        transform.localScale = OriginalSize;
+        CardIsActiveHovered = false;
     }
 
     public override void SelectForUse()

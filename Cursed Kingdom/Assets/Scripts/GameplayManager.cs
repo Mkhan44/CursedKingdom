@@ -51,6 +51,7 @@ public class GameplayManager : MonoBehaviour
 	[SerializeField] private GameObject useSelectedCardsPanel;
 	[SerializeField] private TextMeshProUGUI useSelectedCardsText;
 	[SerializeField] private Button useSelectedCardsButton;
+	[SerializeField] private Button useMovementCardNoCardsInHandButton;
 
 	//Gameboard Data
 	[SerializeField] private TopDownMapDisplay topDownMapDisplay;
@@ -107,6 +108,7 @@ public class GameplayManager : MonoBehaviour
 	public GameObject UseSelectedCardsPanel { get => useSelectedCardsPanel; set => useSelectedCardsPanel = value; }
 	public TextMeshProUGUI UseSelectedCardsText { get => useSelectedCardsText; set => useSelectedCardsText = value; }
 	public Button UseSelectedCardsButton { get => useSelectedCardsButton; set => useSelectedCardsButton = value; }
+    public Button UseMovementCardNoCardsInHandButton { get => useMovementCardNoCardsInHandButton; set => useMovementCardNoCardsInHandButton = value; }
 	public Button UseAbilityButton { get => useAbilityButton; set => useAbilityButton = value; }
 	public Button UseEliteAbilityButton { get => useEliteAbilityButton; set => useEliteAbilityButton = value; }
 	public List<PlayerInfoDisplay> PlayerInfoDisplays { get => playerInfoDisplays; set => playerInfoDisplays = value; }
@@ -114,7 +116,7 @@ public class GameplayManager : MonoBehaviour
 	public TopDownMapDisplay TopDownMapDisplay { get => topDownMapDisplay; set => topDownMapDisplay = value; }
 	public SpaceArtworkPopupDisplay SpaceArtworkPopupDisplay { get => spaceArtworkPopupDisplay; set => spaceArtworkPopupDisplay = value; }
 
-	private void Start()
+    private void Start()
 	{
 		FPSCounter();
 
