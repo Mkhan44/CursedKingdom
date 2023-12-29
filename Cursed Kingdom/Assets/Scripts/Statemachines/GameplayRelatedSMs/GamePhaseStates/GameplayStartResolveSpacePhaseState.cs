@@ -27,30 +27,20 @@ public class GameplayStartResolveSpacePhaseState : BaseState
         PhaseDisplay.instance.TurnOnDisplay("Resolve start space effects phase!", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += AttemptToActivateSpaceEffects;
         SubscribeToPlayerEvents();
+		gameplayPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand();
+		currentPlayer.HideHand();
 	}
 
 	public override void UpdateLogic()
 	{
 		base.UpdateLogic();
-		//if (!startedHandlingPlayerSpaceStartEffects)
-		//{
-		//	if(DoesSpaceHaveStartSpaceEffects())
-		//	{
-		//		HandleStartOfTurnSpaceEffects();
-		//		startedHandlingPlayerSpaceStartEffects = true;
-		//	}
-		//	else
-		//	{
-		//		gameplayPhaseSM.ChangeState(gameplayPhaseSM.gameplayMovementPhaseState);
-		//	}
-			
-		//}
 	}
 
 	public void AttemptToActivateSpaceEffects()
 	{
         if (DoesSpaceHaveStartSpaceEffects())
         {
+            currentPlayer.ShowHand();
             HandleStartOfTurnSpaceEffects();
             startedHandlingPlayerSpaceStartEffects = true;
         }

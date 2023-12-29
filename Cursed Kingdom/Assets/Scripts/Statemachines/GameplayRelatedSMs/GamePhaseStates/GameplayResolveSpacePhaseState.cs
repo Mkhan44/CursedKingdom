@@ -25,7 +25,9 @@ public class GameplayResolveSpacePhaseState : BaseState
 		isResolvingSpaceEffect = false;
         PhaseDisplay.instance.TurnOnDisplay("Resolve space effects phase!", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += StartResolvingSpaceEffects;
-	}
+        gameplayPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand();
+        currentPlayer.HideHand();
+    }
 
 	public override void UpdateLogic()
 	{
@@ -39,6 +41,7 @@ public class GameplayResolveSpacePhaseState : BaseState
             isResolvingSpaceEffect = true;
             currentPlayer.CurrentSpacePlayerIsOn.StartCoroutine(currentPlayer.CurrentSpacePlayerIsOn.PlaySpaceInfoDisplayAnimationUI(currentPlayer));
             gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.TurnOnDisplay(currentPlayer.CurrentSpacePlayerIsOn, currentPlayer);
+            currentPlayer.ShowHand();
         }
     }
 

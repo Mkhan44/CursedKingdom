@@ -26,7 +26,8 @@ public class GameplayMovementPhaseState : BaseState
 		playerStartedMoving = false;
 		playerWentToZeroCards = false;
         PhaseDisplay.instance.TurnOnDisplay("Movement phase!", 1.5f);
-	}
+        currentPlayer.ShowHand();
+    }
 
 	public override void UpdateLogic()
 	{

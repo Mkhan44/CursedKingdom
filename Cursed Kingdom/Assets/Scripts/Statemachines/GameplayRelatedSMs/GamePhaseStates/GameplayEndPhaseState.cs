@@ -25,12 +25,13 @@ public class GameplayEndPhaseState : BaseState
         endingTurn = false;
         PhaseDisplay.instance.TurnOnDisplay("End phase!", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += Logic;
+        gameplayPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand(false);
+        currentPlayer.HideHand();
     }
 
     public override void UpdateLogic()
     {
         base.UpdateLogic();
-        
     }
 
     public void Logic()

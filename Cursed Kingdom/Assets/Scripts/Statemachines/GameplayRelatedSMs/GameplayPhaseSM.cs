@@ -46,6 +46,7 @@ public class GameplayPhaseSM : BukuStateMachine
 
         BaseState stateToChangeTo = (BaseState)objects[0];
 
+        gameplayManager.HandDisplayPanel.ShrinkHand(false);
         ChangeState(stateToChangeTo);
     }
 

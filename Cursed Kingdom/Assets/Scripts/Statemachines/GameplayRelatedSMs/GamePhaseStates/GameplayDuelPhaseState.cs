@@ -20,6 +20,8 @@ public class GameplayDuelPhaseState : BaseState
         base.Enter();
         PhaseDisplay.instance.TurnOnDisplay("Duel phase!", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += Logic;
+        gameplayPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand(false);
+        gameplayPhaseSM.gameplayManager.GetCurrentPlayer().HideHand();
     }
 
     public override void UpdateLogic()
