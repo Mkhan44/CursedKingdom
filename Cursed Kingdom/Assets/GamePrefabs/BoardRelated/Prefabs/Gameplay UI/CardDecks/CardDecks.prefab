@@ -31,7 +31,6 @@ RectTransform:
   - {fileID: 6382942460433139746}
   - {fileID: 2709183541919622975}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -72,7 +71,6 @@ RectTransform:
   m_Children:
   - {fileID: 7808904584833666973}
   m_Father: {fileID: 3239977797835648140}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -111,7 +109,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!95 &6048532059354064958
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -128,7 +126,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!225 &2737827598803271665
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -189,7 +188,6 @@ RectTransform:
   m_Children:
   - {fileID: 8837984984524850187}
   m_Father: {fileID: 3239977797835648140}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -228,7 +226,7 @@ MonoBehaviour:
       m_Calls: []
 --- !u!95 &4021975654409141427
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -245,7 +243,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!225 &322225621589780727
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -277,6 +276,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6382942460433139746}
     m_Modifications:
     - target: {fileID: 6527761739746551688, guid: c86243e3b387db4418f60aecaa752851, type: 3}
@@ -284,8 +284,16 @@ PrefabInstance:
       value: MovementDeck
       objectReference: {fileID: 0}
     - target: {fileID: 6527761739746551691, guid: c86243e3b387db4418f60aecaa752851, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527761739746551691, guid: c86243e3b387db4418f60aecaa752851, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6527761739746551691, guid: c86243e3b387db4418f60aecaa752851, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6527761739746551691, guid: c86243e3b387db4418f60aecaa752851, type: 3}
       propertyPath: m_SizeDelta.x
@@ -312,6 +320,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c86243e3b387db4418f60aecaa752851, type: 3}
 --- !u!224 &8837984984524850187 stripped
 RectTransform:
@@ -323,11 +334,20 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2709183541919622975}
     m_Modifications:
     - target: {fileID: 2789945615250263884, guid: 0fe9bd272cb283449ba90aadd8051e81, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2789945615250263884, guid: 0fe9bd272cb283449ba90aadd8051e81, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2789945615250263884, guid: 0fe9bd272cb283449ba90aadd8051e81, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2789945615250263884, guid: 0fe9bd272cb283449ba90aadd8051e81, type: 3}
       propertyPath: m_SizeDelta.x
@@ -358,6 +378,9 @@ PrefabInstance:
       value: SupportDeck
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fe9bd272cb283449ba90aadd8051e81, type: 3}
 --- !u!224 &7808904584833666973 stripped
 RectTransform:
