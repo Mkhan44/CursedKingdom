@@ -19,9 +19,14 @@ public class MovementCardBoardBuffEffect : SupportCardEffectData, ISupportEffect
     public int NumMovementIncrease { get => numMovementIncrease; set => numMovementIncrease = value; }
     public bool BuffAllCards { get => buffAllCards; set => buffAllCards = value; }
 
+    //Might want an event to be triggered so we can do an animation. This would be something like "FinishedManipulatingCardValue..."
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
         //If BuffAllCards != true ....Need to let player choose which card to apply the buff to.
+        if(BuffAllCards)
+        {
+            playerReference.BoostAllMovementCardValuesInHand(numMovementIncrease);
+        }
     }
 }
 

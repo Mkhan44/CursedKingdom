@@ -12,9 +12,11 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
 
     [SerializeField] private bool isACost;
     [SerializeField] private bool isElemental;
+    [SerializeField] private bool isReaction;
 
     public bool IsACost { get => isACost; set => isACost = value; }
     public bool IsElemental { get => isElemental; set => isElemental = value; }
+    public bool IsReaction { get => isReaction; set => isReaction = value; }
 
     public virtual void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {

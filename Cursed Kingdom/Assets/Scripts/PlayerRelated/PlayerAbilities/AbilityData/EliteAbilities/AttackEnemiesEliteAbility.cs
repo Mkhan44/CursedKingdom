@@ -47,7 +47,7 @@ public class AttackEnemiesEliteAbility : EliteAbilityData, IEliteAbility
         {
             if(CardTypeToDiscard == Card.CardType.Movement)
             {
-                if(playerReference.MovementCardsInHand >= NumCardsToDiscard)
+                if(playerReference.MovementCardsInHandCount >= NumCardsToDiscard)
                 {
                     canCostBePaid = true;
                 }
@@ -58,7 +58,7 @@ public class AttackEnemiesEliteAbility : EliteAbilityData, IEliteAbility
             }
             else if(CardTypeToDiscard == Card.CardType.Support)
             {
-                if(playerReference.SupportCardsInHand >= NumCardsToDiscard)
+                if(playerReference.SupportCardsInHandCount >= NumCardsToDiscard)
                 {
                     canCostBePaid = true;
                 }

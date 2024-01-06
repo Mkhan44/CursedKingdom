@@ -13,5 +13,5 @@ public class MovementCardData : CardData
     [SerializeField] [Range(1,10)]private int movementValue = 1;
 
 
-    public int MovementValue { get => movementValue; set => movementValue = value; }
+    public int MovementValue { get => movementValue; }
 }

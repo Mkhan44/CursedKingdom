@@ -45,8 +45,8 @@ public class Player : MonoBehaviour
 	[SerializeField] private int currentHealth;
 	[SerializeField] private int currentLevel;
 	[SerializeField] private int spacesLeftToMove;
-	[SerializeField] private int movementCardsInHand;
-	[SerializeField] private int supportCardsInHand;
+	[SerializeField] private int movementCardsInHandCount;
+	[SerializeField] private int supportCardsInHandCount;
 	[SerializeField] private int maxHandSize;
 	[SerializeField] private int cardsLeftToDiscard;
 	[SerializeField] private CardType validCardTypesToDiscard;
@@ -76,6 +76,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private SupportCardEffectData currentSupportCardEffectTohandle;
 	[SerializeField] private List<SupportCardEffectData> tempSupportCardEffectsToHandle;
 	[SerializeField] private bool isHandlingSupportCardEffects;
+	[SerializeField] private SupportCard currentSupportCardInUse;
 
 	//Status Effects
 	[SerializeField] private bool isPoisoned;
@@ -117,8 +118,8 @@ public class Player : MonoBehaviour
     public bool IsChoosingDirection { get => isChoosingDirection; set => isChoosingDirection = value; }
     public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
 	public int SpacesLeftToMove { get => spacesLeftToMove; set => spacesLeftToMove = value; }
-	public int MovementCardsInHand { get => movementCardsInHand; set => movementCardsInHand = value; }
-	public int SupportCardsInHand { get => supportCardsInHand; set => supportCardsInHand = value; }
+	public int MovementCardsInHandCount { get => movementCardsInHandCount; set => movementCardsInHandCount = value; }
+	public int SupportCardsInHandCount { get => supportCardsInHandCount; set => supportCardsInHandCount = value; }
 	public int MaxHandSize { get => maxHandSize; set => maxHandSize = value; }
 	public int CardsLeftToDiscard { get => cardsLeftToDiscard; set => cardsLeftToDiscard = value; }
 	public CardType ValidCardTypesToDiscard { get => validCardTypesToDiscard; set => validCardTypesToDiscard = value; }
@@ -136,6 +137,7 @@ public class Player : MonoBehaviour
 	public bool IsHandlingSpaceEffects { get => isHandlingSpaceEffects; set => isHandlingSpaceEffects = value; }
 	public Queue<SupportCardEffectData> SupportCardEffectsToHandle { get => supportCardEffectsToHandle; set => supportCardEffectsToHandle = value; }
 	public bool IsHandlingSupportCardEffects { get => isHandlingSupportCardEffects; set => isHandlingSupportCardEffects = value; }
+    public SupportCard CurrentSupportCardInUse { get => currentSupportCardInUse; set => currentSupportCardInUse = value; }
 	public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
 	public bool IsCursed { get => isCursed; set => isCursed = value; }
 	public bool IsDefeated { get => isDefeated; set => isDefeated = value; }
@@ -222,7 +224,6 @@ public class Player : MonoBehaviour
 	public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
 	public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
 	public Animator Animator { get => animator; set => animator = value; }
-
 
     public void InitializePlayer(ClassData data)
 	{
@@ -655,7 +656,7 @@ public class Player : MonoBehaviour
 			{
 				if (player != this)
 				{
-					if (player.MovementCardsInHand < numCardsToTakeFromOpponent)
+					if (player.MovementCardsInHandCount < numCardsToTakeFromOpponent)
 					{
 						canTake = false;
 						break;
@@ -670,7 +671,7 @@ public class Player : MonoBehaviour
 				if (player != this)
 				{
 
-					if (player.SupportCardsInHand < numCardsToTakeFromOpponent)
+					if (player.SupportCardsInHandCount < numCardsToTakeFromOpponent)
 					{
 						canTake = false;
 						break;
@@ -740,7 +741,7 @@ public class Player : MonoBehaviour
 		{
 			if (cardTypeToDiscard == CardType.Movement)
 			{
-				int cardToTakeIndex = Random.Range(0, playerToAttack.MovementCardsInHand);
+				int cardToTakeIndex = Random.Range(0, playerToAttack.MovementCardsInHandCount);
 				List<MovementCard> movementCardsInHand = new List<MovementCard>();
 
 				foreach (Card card in playerToAttack.CardsInhand)
@@ -758,7 +759,7 @@ public class Player : MonoBehaviour
 			}
 			if (cardTypeToDiscard == CardType.Support)
 			{
-				int cardToTakeIndex = Random.Range(0, playerToAttack.SupportCardsInHand);
+				int cardToTakeIndex = Random.Range(0, playerToAttack.SupportCardsInHandCount);
 				List<SupportCard> supportCardsInHand = new List<SupportCard>();
 
 				foreach (Card card in playerToAttack.CardsInhand)
@@ -790,7 +791,7 @@ public class Player : MonoBehaviour
 		{
 			if (cardTypeToTakeFromOpponent == CardType.Movement)
 			{
-				int cardToTakeIndex = Random.Range(0, playerToAttack.MovementCardsInHand);
+				int cardToTakeIndex = Random.Range(0, playerToAttack.MovementCardsInHandCount);
 				List<MovementCard> movementCardsInHand = new List<MovementCard>();
 
 				foreach (Card card in playerToAttack.CardsInhand)
@@ -810,7 +811,7 @@ public class Player : MonoBehaviour
 			}
 			if (cardTypeToTakeFromOpponent == CardType.Support)
 			{
-				int cardToTakeIndex = Random.Range(0, playerToAttack.SupportCardsInHand);
+				int cardToTakeIndex = Random.Range(0, playerToAttack.SupportCardsInHandCount);
 				List<SupportCard> supportCardsInHand = new List<SupportCard>();
 
 				foreach (Card card in playerToAttack.CardsInhand)
@@ -845,14 +846,28 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	#endregion
+    #endregion
 
-	#endregion
+    #endregion
 
-	#region CardsInHandMethods
+    #region Check for special support card negation
+
+	public void CheckIfNextPlayerCanNegate()
+	{
+
+	}
+
+	public void TargetThisPlayerForAttack()
+	{
+
+	}
+
+    #endregion
+
+    #region CardsInHandMethods
 
 
-	public void SelectCardTypeToDrawPopup(int numCardsToDraw)
+    public void SelectCardTypeToDrawPopup(int numCardsToDraw)
 	{
 		List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
 
@@ -911,7 +926,7 @@ public class Player : MonoBehaviour
 			MovementCard tempMovementCard = (MovementCard)card;
 			if(tempMovementCard != null)
 			{
-				tempMovementCard.ChangeMovementValue(true);
+				tempMovementCard.ManipulateMovementValue(true);
 				CurseCardAnimationEffect();
 			}
 		}
@@ -960,7 +975,7 @@ public class Player : MonoBehaviour
 					MovementCard tempMovementCard = (MovementCard)card;
 					if (tempMovementCard != null)
 					{
-						tempMovementCard.ChangeMovementValue(true);
+						tempMovementCard.ManipulateMovementValue(true);
 						CurseCardAnimationEffect();
 					}
 				}
@@ -1046,7 +1061,7 @@ public class Player : MonoBehaviour
 		{
 			case CardType.Movement:
 				{
-					if(!(MovementCardsInHand < numToDiscard))
+					if(!(MovementCardsInHandCount < numToDiscard))
 					{
 						hasEnough = true;
 					}
@@ -1054,7 +1069,7 @@ public class Player : MonoBehaviour
 				}
 			case CardType.Support:
 				{
-					if (!(SupportCardsInHand < numToDiscard))
+					if (!(SupportCardsInHandCount < numToDiscard))
 					{
 						hasEnough = true;
 					}
@@ -1408,40 +1423,78 @@ public class Player : MonoBehaviour
 
 	public void SetMovementCardsInHand()
 	{
-		MovementCardsInHand = 0;
-		foreach (Card card in CardsInhand)
-		{
-			if(card is MovementCard)
-			{
-				card.gameObject.transform.SetParent(MovementCardsInHandHolderPanel.transform);
-				MovementCardsInHand++;
-			}
-		}
+		MovementCardsInHandCount = 0;
+        List<MovementCard> movementCardsInHand = new();
+        movementCardsInHand = GetMovementCardInHand();
+        if (movementCardsInHand.Count != 0)
+        {
+            foreach (MovementCard card in movementCardsInHand)
+            {
+                card.gameObject.transform.SetParent(MovementCardsInHandHolderPanel.transform);
+            }
+        }
 
-		if(GameplayManagerRef is not null)
-		{
-			GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
-		}
-		
-	}
+        MovementCardsInHandCount = movementCardsInHand.Count;
+
+        if (GameplayManagerRef is not null)
+        {
+            GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
+        }
+
+    }
+
+	public List<MovementCard> GetMovementCardInHand()
+	{
+		List<MovementCard> movementCardsInHand = new();
+
+        foreach (Card card in CardsInhand)
+        {
+            MovementCard tempMovementCard = card as MovementCard;
+            if (tempMovementCard is MovementCard)
+            {
+				movementCardsInHand.Add(tempMovementCard);
+            }
+        }
+
+		return movementCardsInHand;
+    }
 
 	public void SetSupportCardsInHand()
 	{
-		SupportCardsInHand = 0;
-		foreach (Card card in CardsInhand)
+		SupportCardsInHandCount = 0;
+		List<SupportCard> supportCardsInHand = new();
+		supportCardsInHand = GetSupportCardsInHand();
+	    if(supportCardsInHand.Count != 0)
 		{
-			if (card is SupportCard)
+			foreach(SupportCard card in supportCardsInHand)
 			{
-				card.gameObject.transform.SetParent(SupportCardsInHandHolderPanel.transform);
-				SupportCardsInHand++;
-			}
+                card.gameObject.transform.SetParent(SupportCardsInHandHolderPanel.transform);
+            }
 		}
+
+		SupportCardsInHandCount = supportCardsInHand.Count;
 
 		if (GameplayManagerRef is not null)
 		{
 			GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
 		}
 	}
+
+	public List<SupportCard> GetSupportCardsInHand()
+	{
+        List<SupportCard> supportCardsInHand = new();
+
+        foreach (Card card in CardsInhand)
+        {
+            SupportCard tempSupportCard = card as SupportCard;
+            if (tempSupportCard is SupportCard)
+            {
+                supportCardsInHand.Add(tempSupportCard);
+            }
+        }
+
+        return supportCardsInHand;
+    }
 
 	#endregion
 
@@ -1817,8 +1870,9 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	//This can stack. Example: Cursed + also on a space that halves movement card values.
-	public void HalveAllMovementCardsInHand()
+    #region Manipulate card values in hand
+    //This can stack. Example: Cursed + also on a space that halves movement card values.
+    public void HalveAllMovementCardsInHand()
 	{
 		foreach (Card card in CardsInhand)
 		{
@@ -1826,15 +1880,41 @@ public class Player : MonoBehaviour
 
 			if (tempMovementCard != null)
 			{
-				tempMovementCard.ChangeMovementValue(true);
+				tempMovementCard.ManipulateMovementValue(true);
 				tempMovementCard.ActivateCurseEffect();
 			}
 		}
 	}
-	#endregion
 
-	#region SupportCardEffectHandlers
-	public void StartHandlingSupportCardEffects()
+    public void BoostAllMovementCardValuesInHand(int valueToBoostBy)
+    {
+        List<MovementCard> movementCardsInHand = new();
+        movementCardsInHand = GetMovementCardInHand();
+
+        foreach (MovementCard movementCard in movementCardsInHand)
+        {
+			movementCard.ManipulateMovementValue(false, true, valueToBoostBy);
+        }
+    }
+
+
+    public void RevertAllBoostedMovementCardValuesInHand()
+	{
+        List<MovementCard> movementCardsInHand = new();
+        movementCardsInHand = GetMovementCardInHand();
+
+		foreach(MovementCard movementCard in movementCardsInHand)
+		{
+			movementCard.RevertBoostedCardValue();
+		}
+    }
+
+    #endregion
+
+    #endregion
+
+    #region SupportCardEffectHandlers
+    public void StartHandlingSupportCardEffects()
 	{
 		IsHandlingSupportCardEffects = true;
 
@@ -1968,10 +2048,12 @@ public class Player : MonoBehaviour
 		IsHandlingEliteAbilityActivation = true;
 	}
 
-	#endregion
-	//Event triggers
+    #endregion
 
-	public void TurnIsCompleted()
+    #region Event Triggers
+    //Event triggers
+
+    public void TurnIsCompleted()
 	{
 		TurnHasEnded?.Invoke(this);
 	}
@@ -2025,6 +2107,7 @@ public class Player : MonoBehaviour
 		FinishedHandlingCurrentSpaceEffects?.Invoke(this);
 
     }
-	
-	#endregion
+    #endregion
+
+    #endregion
 }

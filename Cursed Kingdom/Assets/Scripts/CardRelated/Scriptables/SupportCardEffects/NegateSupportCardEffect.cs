@@ -10,7 +10,7 @@ using UnityEngine;
 /// This support card effect is used to negate the effect of a support card that was played.
 /// </summary>
 
-[CreateAssetMenu(fileName = "MoveBackwardsEffect", menuName = "Card Data/Support Card Effect Data/Move Backwards Effect", order = 0)]
+[CreateAssetMenu(fileName = "NegateSupportCardEffect", menuName = "Card Data/Support Card Effect Data/Negate Support Card Effect", order = 0)]
 public class NegateSupportCardEffect : SupportCardEffectData, ISupportEffect
 {
     [SerializeField] private bool requiresSingleTarget;
@@ -20,6 +20,7 @@ public class NegateSupportCardEffect : SupportCardEffectData, ISupportEffect
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
         //If RequiresSingleTarget is true, then only negate the effect if it targets 1 player. Otherwise, negate the effect regardless.
+
     }
 
 }

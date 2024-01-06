@@ -32,7 +32,7 @@ public class GameplayMovementPhaseState : BaseState
 	public override void UpdateLogic()
 	{
 		base.UpdateLogic();
-		if(!playerWentToZeroCards && currentPlayer.MovementCardsInHand == 0 && currentPlayer.NumMovementCardsUsedThisTurn == 0)
+		if(!playerWentToZeroCards && currentPlayer.MovementCardsInHandCount == 0 && currentPlayer.NumMovementCardsUsedThisTurn == 0)
 		{
 			currentPlayer.GameplayManagerRef.UseMovementCardNoCardsInHandButton.gameObject.SetActive(true);
 			currentPlayer.GameplayManagerRef.UseMovementCardNoCardsInHandButton.onClick.RemoveAllListeners();

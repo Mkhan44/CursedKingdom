@@ -27,10 +27,6 @@ public class PlayerCharacterMoveState : BaseState
 		playerCharacterSM.playerAnimator.SetBool(playerCharacterSM.ISMOVINGPARAMETER, true);
 	}
 
-	public override void Exit()
-	{
-
-	}
 
 	public override void UpdateLogic()
 	{
@@ -40,6 +36,11 @@ public class PlayerCharacterMoveState : BaseState
 			SetupMove(playerCharacterSM.player);
 		}
 	}
+	public override void Exit()
+	{
+		//Right now this only works for if we revert boosts after moving. When we handle duel stuff we'll hafta also do it there.
+		playerCharacterSM.player.RevertAllBoostedMovementCardValuesInHand();
+    }
 
 
 	//External methods

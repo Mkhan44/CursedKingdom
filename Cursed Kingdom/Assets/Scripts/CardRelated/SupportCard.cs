@@ -95,7 +95,7 @@ public class SupportCard : Card
 
         if (handExpandUI is not null)
         {
-            int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
+            Player currentPlayer = GameplayManager.GetCurrentPlayer();
             if (!handExpandUI.CurrentActiveTransform.IsExpanded)
             {
                 handExpandUI.ExpandHand(ThisCardType, GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>()));
@@ -111,14 +111,14 @@ public class SupportCard : Card
                 }
                 DeselectOtherSelectedCards();
 
-                if(GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard > 0 && !SelectedForDiscard && IsValidCardTypeToDiscard(GameplayManager.Players[indexOfCurrentPlayer]))
+                if(currentPlayer.CardsLeftToDiscard > 0 && !SelectedForDiscard && IsValidCardTypeToDiscard(currentPlayer))
                 {
                     SelectForDiscard();
                     return;
                 }
-                else if(GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard > 0 &&  !SelectedForDiscard && !IsValidCardTypeToDiscard(GameplayManager.Players[indexOfCurrentPlayer]))
+                else if(currentPlayer.CardsLeftToDiscard > 0 &&  !SelectedForDiscard && !IsValidCardTypeToDiscard(currentPlayer))
                 {
-                    Debug.LogWarning("Hey! You can't select this card to discard.");
+                    DialogueBoxPopup.instance.ActivatePopupWithJustText("You cannot select a support card to discard for this effect.", 2.0f);
                     return;
                 }
 
@@ -128,7 +128,7 @@ public class SupportCard : Card
                     return;
                 }
 
-                if (GameplayManager.Players[indexOfCurrentPlayer].MovementCardSelectedForUse)
+                if (currentPlayer.MovementCardSelectedForUse)
                 {
                     DialogueBoxPopup.instance.ActivatePopupWithJustText("You're currently selecting movement cards. Deselect all movement cards to select a support card.", 2.0f);
                     return;
@@ -141,18 +141,62 @@ public class SupportCard : Card
                 }
                 else
                 {
-                    if(!GameplayManager.Players[indexOfCurrentPlayer].CanUseSupportCard())
+                    if(!DebugModeSingleton.instance.IsDebugActive)
                     {
-                        if(GameplayManager.Players[indexOfCurrentPlayer])
-                        DialogueBoxPopup.instance.ActivatePopupWithJustText($"You have already used a support card this turn.", 2.0f);
-                        GameplayManager.HandDisplayPanel.ShrinkHand();
-                        transform.localScale = OriginalSize;
-                        CardIsActiveHovered = false;
-                        return;
+                        //Checking all different ways that we can invalidate using a support card.
+                        if (!currentPlayer.CanUseSupportCard())
+                        {
+                            DialogueBoxPopup.instance.ActivatePopupWithJustText($"You have already used a support card this turn.", 2.0f);
+                            GameplayManager.HandDisplayPanel.ShrinkHand();
+                            transform.localScale = OriginalSize;
+                            CardIsActiveHovered = false;
+                            return;
+                        }
+                        else if (GameplayManager.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayMovementPhaseState) && SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Duel)
+                        {
+                            DialogueBoxPopup.instance.ActivatePopupWithJustText($"You can only use this support card during duel phase!", 2.0f);
+                            GameplayManager.HandDisplayPanel.ShrinkHand();
+                            transform.localScale = OriginalSize;
+                            CardIsActiveHovered = false;
+                            return;
+                        }
+                        else if (GameplayManager.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayDuelPhaseState) && SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Movement)
+                        {
+                            DialogueBoxPopup.instance.ActivatePopupWithJustText($"You can only use this support card during movement phase!", 2.0f);
+                            GameplayManager.HandDisplayPanel.ShrinkHand();
+                            transform.localScale = OriginalSize;
+                            CardIsActiveHovered = false;
+                            return;
+                        }
+                        else if (SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Special)
+                        {
+                            bool isAReactionCard = false;
+                            foreach (SupportCardData.SupportCardEffect effect in SupportCardData.supportCardEffects)
+                            {
+                                if (effect.supportCardEffectData.IsReaction)
+                                {
+                                    isAReactionCard = true;
+                                }
+                            }
+
+                            if (isAReactionCard)
+                            {
+                                DialogueBoxPopup.instance.ActivatePopupWithJustText($"You can't use this card right now.", 2.0f);
+                                GameplayManager.HandDisplayPanel.ShrinkHand();
+                                transform.localScale = OriginalSize;
+                                CardIsActiveHovered = false;
+                                return;
+                            }
+                        }
                     }
+                    else
+                    {
+                        Debug.LogWarning("You are in debug mode and we are NOT checking for correct conditions to use a Support card.");
+                    }
+                    
 
                     bool canCostBePaid = false;
-                    ApplySupportCardEffects(GameplayManager.Players[indexOfCurrentPlayer], out canCostBePaid);
+                    ApplySupportCardEffects(currentPlayer, out canCostBePaid);
                     if (!canCostBePaid)
                     {
                         GameplayManager.HandDisplayPanel.ShrinkHand();
@@ -160,8 +204,9 @@ public class SupportCard : Card
                         CardIsActiveHovered = false;
                         return;
                     }
-                    GameplayManager.Players[indexOfCurrentPlayer].UseSupportCard();
-                    GameplayManager.Players[indexOfCurrentPlayer].DiscardFromHand(ThisCardType, this);
+                    currentPlayer.UseSupportCard();
+                    currentPlayer.CurrentSupportCardInUse = this;
+                    currentPlayer.DiscardFromHand(ThisCardType, this);
                     GameplayManager.HandDisplayPanel.ShrinkHand();
                     transform.localScale = OriginalSize;
                     CardIsActiveHovered = false;

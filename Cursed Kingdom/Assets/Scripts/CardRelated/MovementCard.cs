@@ -17,6 +17,8 @@ public class MovementCard : Card
     [SerializeField] private int movementCardValue;
     //Used for if we need to temporarily halve or increase a movement card's value while in the player's hand due to item being used or curse, etc.
     [SerializeField] private int tempCardValue;
+    [SerializeField] private int tempIncreaseValue;
+    [SerializeField] private int tempDecreaseValue;
 
     //References
     [SerializeField] private TextMeshProUGUI movementValueText;
@@ -24,6 +26,8 @@ public class MovementCard : Card
     public MovementCardData MovementCardData { get => movementCardData; set => movementCardData = value; }
     public int MovementCardValue { get => movementCardValue; set => movementCardValue = value; }
     public int TempCardValue { get => tempCardValue; set => tempCardValue = value; }
+    public int TempIncreaseValue { get => tempIncreaseValue; set => tempIncreaseValue = value; }
+    public int TempDecreaseValue { get => tempDecreaseValue; set => tempDecreaseValue = value; }
 
     private void Start()
     {
@@ -45,9 +49,11 @@ public class MovementCard : Card
         movementValueText.text = MovementCardValue.ToString();
     }
 
-    public void ChangeMovementValue(bool halfTheValue = false, bool increaseTheValue = false, int valueToIncreaseBy = 0)
+    public void ManipulateMovementValue(bool halfTheValue = false, bool increaseTheValue = false, int valueToIncreaseBy = 0)
     {
-        if(halfTheValue && increaseTheValue)
+        TempIncreaseValue += valueToIncreaseBy;
+
+        if (halfTheValue && increaseTheValue)
         {
             Debug.LogWarning("You're trying to both half and increase the value of the card!! We're not gonna change the value.");
             return;
@@ -73,6 +79,10 @@ public class MovementCard : Card
 
         if(increaseTheValue)
         {
+            if(TempCardValue == 0)
+            {
+                TempCardValue = MovementCardValue;
+            }
             TempCardValue += valueToIncreaseBy;
             movementValueText.text = TempCardValue.ToString();
             return;
@@ -82,20 +92,25 @@ public class MovementCard : Card
     public void ResetMovementValue()
     {
         movementValueText.text = MovementCardValue.ToString();
+        TempIncreaseValue = 0;
         TempCardValue = 0;
     }
 
-    public int MovementValueToUse()
+    public void RevertBoostedCardValue()
     {
-        if(TempCardValue > 0)
+        if(TempIncreaseValue == 0)
         {
-            return TempCardValue;
+            return;
         }
-        else
+
+        int revertedValue = TempCardValue - TempIncreaseValue;
+        if (revertedValue > 0)
         {
-            return MovementCardValue;
+            TempCardValue = revertedValue;
+            TempIncreaseValue = 0;
         }
     }
+
 
     public override void OnPointerClick(PointerEventData eventData)
     {

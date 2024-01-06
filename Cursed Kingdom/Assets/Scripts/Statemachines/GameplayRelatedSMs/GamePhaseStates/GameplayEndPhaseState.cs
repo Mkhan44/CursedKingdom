@@ -72,7 +72,10 @@ public class GameplayEndPhaseState : BaseState
         {
             currentPlayer.ResetSupportCardUsageCount();
             currentPlayer.ResetMovementCardUsageCount();
+
+            //Idk if we wanna do this here because if the player can view their hand on another player's turn it still needs to reflect.
             currentPlayer.ResetMovementCardsInHandValues();
+
             if (currentPlayer.IsCursed)
             {
                 currentPlayer.CurseEffect();

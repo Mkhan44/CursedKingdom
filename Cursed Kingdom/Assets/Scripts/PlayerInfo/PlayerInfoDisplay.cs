@@ -62,8 +62,8 @@ public class PlayerInfoDisplay : MonoBehaviour
         PlayerNameText.text = "TestUsername";
         PlayerClassText.text = playerRef.ClassData.classType.ToString();
         PlayerLevelText.text = "Level: " + playerRef.CurrentLevel.ToString();
-        PlayerMovementCardsInHandText.text = playerRef.MovementCardsInHand.ToString();
-        PlayerSupportCardsInHandText.text = playerRef.SupportCardsInHand.ToString();
+        PlayerMovementCardsInHandText.text = playerRef.MovementCardsInHandCount.ToString();
+        PlayerSupportCardsInHandText.text = playerRef.SupportCardsInHandCount.ToString();
         PlayerPortraitImage.sprite = playerRef.ClassData.defaultPortraitImage;
         CooldownText.text = string.Empty;
         CurseTurnsText.text = string.Empty;
@@ -118,8 +118,8 @@ public class PlayerInfoDisplay : MonoBehaviour
 
     public void UpdateCardTotals()
     {
-        PlayerMovementCardsInHandText.text = PlayerReference.MovementCardsInHand.ToString();
-        PlayerSupportCardsInHandText.text = PlayerReference.SupportCardsInHand.ToString();
+        PlayerMovementCardsInHandText.text = PlayerReference.MovementCardsInHandCount.ToString();
+        PlayerSupportCardsInHandText.text = PlayerReference.SupportCardsInHandCount.ToString();
     }
 
     public void UpdateLevel()
