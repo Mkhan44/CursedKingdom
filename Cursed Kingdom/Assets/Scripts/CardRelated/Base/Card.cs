@@ -82,11 +82,10 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     public virtual void SelectForUse()
     {
-        int indexOfCurrentPlayer;
         int numSelected;
         int maxNumPlayerCanSelect;
 
-        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        CheckAmountOfCardsPlayerHasSelected(out numSelected, out maxNumPlayerCanSelect);
 
         if (numSelected == maxNumPlayerCanSelect)
         {
@@ -98,33 +97,31 @@ public class Card : MonoBehaviour , IPointerClickHandler
         Color selectedColor = OriginalBackgroundGlowColor;
         selectedColor.a = 150;
         BackgroundSelectedGlow.color = selectedColor;
-        GameplayManager.Players[indexOfCurrentPlayer].SelectMultipleCardsToUse();
+        GameplayManager.GetCurrentPlayer().SelectMultipleCardsToUse();
     }
 
     public virtual void DeselectForUse()
     {
-        int indexOfCurrentPlayer;
         int numSelected;
         int maxNumPlayerCanSelect;
 
         SelectedForUse = false;
         BackgroundSelectedGlow.color = originalBackgroundGlowColor;
 
-        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        CheckAmountOfCardsPlayerHasSelected(out numSelected, out maxNumPlayerCanSelect);
         if (numSelected < 1)
         {
-            GameplayManager.Players[indexOfCurrentPlayer].MovementCardSelectedForUse = false;
-            GameplayManager.Players[indexOfCurrentPlayer].SupportCardSelectedForUse = false;
+            GameplayManager.GetCurrentPlayer().MovementCardSelectedForUse = false;
+            GameplayManager.GetCurrentPlayer().SupportCardSelectedForUse = false;
         }
     }
-    protected void CheckAmountOfCardsPlayerHasSelected(out int indexOfCurrentPlayer, out int numSelected, out int maxNumPlayerCanSelect)
+    protected void CheckAmountOfCardsPlayerHasSelected(out int numSelected, out int maxNumPlayerCanSelect)
     {
         //Check if Player has selected max they are allowed to, if they can't then don't select and make a popup.
-        indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
         numSelected = 0;
-        maxNumPlayerCanSelect = GameplayManager.Players[indexOfCurrentPlayer].MaxMovementCardsToUse + GameplayManager.Players[indexOfCurrentPlayer].ExtraMovementCardUses;
+        maxNumPlayerCanSelect = GameplayManager.GetCurrentPlayer().MaxMovementCardsToUse + GameplayManager.GetCurrentPlayer().ExtraMovementCardUses;
 
-        foreach (Card card in GameplayManager.Players[indexOfCurrentPlayer].CardsInhand)
+        foreach (Card card in GameplayManager.GetCurrentPlayer().CardsInhand)
         {
             if (card.SelectedForUse)
             {
@@ -141,15 +138,15 @@ public class Card : MonoBehaviour , IPointerClickHandler
         selectedColor.a = 150;
         BackgroundSelectedGlow.color = selectedColor;
         int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
-        GameplayManager.Players[indexOfCurrentPlayer].SelectCardForDiscard();
+        GameplayManager.GetCurrentPlayer().SelectCardForDiscard();
     }
 
     public virtual void DeselectForDiscard()
     {
         int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
-        if (GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard > 0)
+        if (GameplayManager.GetCurrentPlayer().CardsLeftToDiscard > 0)
         {
-            GameplayManager.Players[indexOfCurrentPlayer].CardsLeftToDiscard += 1;
+            GameplayManager.GetCurrentPlayer().CardsLeftToDiscard += 1;
         }
         
         selectedForDiscard = false;

@@ -10,9 +10,7 @@ using Cinemachine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 using TMPro;
-using Unity.VisualScripting;
 using System;
-using UnityEngine.XR;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -30,6 +28,7 @@ public class GameplayManager : MonoBehaviour
 	public GameObject boardPrefab;
 	public GameObject decksHolderPrefab;
 	public GameObject PlayerInfoCanvas;
+	public SpacesPlayerWillLandOnDisplay SpacesPlayerWillLandOnParent;
 	public Transform playerCharacter;
 	public bool isPlayerMoving = false;
 
@@ -238,10 +237,10 @@ public class GameplayManager : MonoBehaviour
 			camera.enabled = false;
 		}
 
-
 		HandDisplayPanel.gameObject.SetActive(true);
+		HandDisplayPanel.GameplayManagerRef = this;
 
-		currentActiveCamera.enabled = true;
+        currentActiveCamera.enabled = true;
 
 		boardManager.StartupSetupSpaces();
 
@@ -326,8 +325,6 @@ public class GameplayManager : MonoBehaviour
 		//Setup event subscriptions:
 		//playerTempReferencePlayer.TurnHasEnded += EndOfTurn;
 		spacesToMoveText.text = "Spaces left: 0";
-
-		
 
 		Players.Add(playerTempReferencePlayer);
 

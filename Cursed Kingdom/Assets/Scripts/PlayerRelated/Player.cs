@@ -45,6 +45,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private int currentHealth;
 	[SerializeField] private int currentLevel;
 	[SerializeField] private int spacesLeftToMove;
+	[SerializeField] private int currentSumOfSpacesToMove;
 	[SerializeField] private int movementCardsInHandCount;
 	[SerializeField] private int supportCardsInHandCount;
 	[SerializeField] private int maxHandSize;
@@ -118,7 +119,8 @@ public class Player : MonoBehaviour
     public bool IsChoosingDirection { get => isChoosingDirection; set => isChoosingDirection = value; }
     public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
 	public int SpacesLeftToMove { get => spacesLeftToMove; set => spacesLeftToMove = value; }
-	public int MovementCardsInHandCount { get => movementCardsInHandCount; set => movementCardsInHandCount = value; }
+    public int CurrentSumOfSpacesToMove { get => currentSumOfSpacesToMove; set => currentSumOfSpacesToMove = value; }
+    public int MovementCardsInHandCount { get => movementCardsInHandCount; set => movementCardsInHandCount = value; }
 	public int SupportCardsInHandCount { get => supportCardsInHandCount; set => supportCardsInHandCount = value; }
 	public int MaxHandSize { get => maxHandSize; set => maxHandSize = value; }
 	public int CardsLeftToDiscard { get => cardsLeftToDiscard; set => cardsLeftToDiscard = value; }
@@ -248,7 +250,8 @@ public class Player : MonoBehaviour
 		CurrentLevel = 1;
 		AbleToLevelUp = true;
 		SpacesLeftToMove = 0;
-		MaxHandSize = 6;
+		CurrentSumOfSpacesToMove = 0;
+        MaxHandSize = 6;
 		MaxSupportCardsToUse = ClassData.maxSupportCardsToUsePerTurn;
 		NumSupportCardsUsedThisTurn = 0;
 		MaxMovementCardsToUse = ClassData.maxMovementCardsToUsePerTurn;
@@ -1322,23 +1325,6 @@ public class Player : MonoBehaviour
 		GameplayManagerRef.UseSelectedCardsButton.onClick.RemoveAllListeners();
 		GameplayManagerRef.UseSelectedCardsButton.onClick.AddListener(UseMultipleCards);
 		List<Tuple<string, string, object>> insertedParams = new();
-
-		if (numSelected < maxNumPlayerCanSelect)
-		{
-			//insertedParams.Add(Tuple.Create<string, string, object>("Select more", nameof(SelectMoreCardsToUse), this));
-			//insertedParams.Add(Tuple.Create<string, string, object>("Use selected", nameof(UseMultipleCards), this));
-
-			//DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Do you want to select more cards to use? (Max {maxNumPlayerCanSelect})", insertedParams, null, 1, "Confirm Selection");
-			
-		}
-		else
-		{
-			//insertedParams.Add(Tuple.Create<string, string, object>("Yes", nameof(UseMultipleCards), this));
-			//insertedParams.Add(Tuple.Create<string, string, object>("No", nameof(DeselectAllSelectedCardsForUse), this));
-
-			//DialogueBoxPopup.instance.ActivatePopupWithButtonChoices("Are you sure you want to use the selected movement cards together?", insertedParams, null, 1, "Confirm Selection");
-		}
-
 	}
 
 	public IEnumerator SelectMoreCardsToUse()
@@ -1397,8 +1383,10 @@ public class Player : MonoBehaviour
 		SupportCardSelectedForUse = false;
 		GameplayManagerRef.UseSelectedCardsButton.onClick.RemoveAllListeners();
 		GameplayManagerRef.UseSelectedCardsPanel.SetActive(false);
+		GameplayManagerRef.SpacesPlayerWillLandOnParent.TurnOffDisplay();
 		GameplayManagerRef.HandDisplayPanel.ShrinkHand();
 		GameplayManagerRef.StartMove(totalToUse);
+		CurrentSumOfSpacesToMove = 0;
 		
 	}
 
@@ -1417,7 +1405,7 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		DialogueBoxPopup.instance.ActivatePopupWithJustText("Movement cards deselected.", 1f);
+		//DialogueBoxPopup.instance.ActivatePopupWithJustText("Movement cards deselected.", 1f);
 	}
 
 

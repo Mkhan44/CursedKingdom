@@ -20,11 +20,13 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
     [SerializeField] private RectTransform smallCardHolderPanelTransform;
     [SerializeField] private HandUITransform currentActiveTransform;
     [SerializeField] private Animator handUIControlPanelAnimator;
+    [SerializeField] private GameplayManager gameplayManagerRef;
 
     public List<HandUITransform> HandUITransforms { get => handUITransforms; set => handUITransforms = value; }
     public RectTransform SmallCardHolderPanelTransform { get => smallCardHolderPanelTransform; set => smallCardHolderPanelTransform = value; }
     public HandUITransform CurrentActiveTransform { get => currentActiveTransform; set => currentActiveTransform = value; }
     public Animator HandUIControlPanelAnimator { get => handUIControlPanelAnimator; set => handUIControlPanelAnimator = value; }
+    public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
 
     public void AddNewHandUI(RectTransform movementCardHolder, RectTransform supportCardHolder)
     {
@@ -69,7 +71,7 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
     }
 
 
-    public void ExpandHand(Card.CardType cardTypeToExpand, int playerIndex)
+    public void ExpandHand(Card.CardType cardTypeToExpand)
     {
 
         Vector2 smallCardHolderAnchorMaxTemp = SmallCardHolderPanelTransform.anchorMax;
@@ -87,10 +89,6 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
             {
                 CurrentActiveTransform.SupportAnimator.SetBool(hidden, true);
             }
-                
-            //CurrentActiveTransform.MovementCardsHolder.anchorMin = new Vector2(0, 0);
-            //CurrentActiveTransform.MovementCardsHolder.anchorMax = new Vector2(1, 1);
-            //CurrentActiveTransform.SupportCardsHolder.gameObject.SetActive(false);
         }
         else
         {
@@ -104,10 +102,6 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
             {
                 CurrentActiveTransform.SupportAnimator.SetBool(active, true);
             }
-            
-            //CurrentActiveTransform.SupportCardsHolder.anchorMin = new Vector2(0, 0);
-            //CurrentActiveTransform.SupportCardsHolder.anchorMax = new Vector2(1, 1);
-            //CurrentActiveTransform.MovementCardsHolder.gameObject.SetActive(false);
         }
 
         HandUIControlPanelAnimator.SetBool(menuPopup, true);
@@ -146,18 +140,6 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         {
             StartCoroutine(WaitForAnimation());
         }
-        //Vector2 smallCardHolderAnchorMaxTemp = SmallCardHolderPanelTransform.anchorMax;
-        //smallCardHolderAnchorMaxTemp.y = 0.4f;
-        //SmallCardHolderPanelTransform.anchorMax = smallCardHolderAnchorMaxTemp;
-        //CurrentActiveTransform.MovementCardsHolder.anchorMin = CurrentActiveTransform.MovementCardAnchorMinInitial;
-        //CurrentActiveTransform.MovementCardsHolder.anchorMax = CurrentActiveTransform.MovementCardAnchorMaxInitial;
-
-        //CurrentActiveTransform.MovementCardsHolder.gameObject.SetActive(true);
-        //CurrentActiveTransform.SupportCardsHolder.anchorMin = CurrentActiveTransform.SupportCardAnchorMinInitial;
-        //CurrentActiveTransform.SupportCardsHolder.anchorMax = CurrentActiveTransform.SupportCardAnchorMaxInitial;
-
-        //CurrentActiveTransform.SupportCardsHolder.gameObject.SetActive(true);
-
     }
 
     public IEnumerator WaitForAnimation(float waitTime = 0f)
@@ -180,11 +162,14 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         
     }
 
-
     public void OnPointerClick(PointerEventData eventData)
     {
         if (CurrentActiveTransform.IsExpanded)
         {
+            GameplayManagerRef.SpacesPlayerWillLandOnParent.TurnOffDisplay();
+            Player currentPlayer = GameplayManagerRef.GetCurrentPlayer();
+            currentPlayer.CurrentSumOfSpacesToMove = 0;
+            currentPlayer.StartCoroutine(currentPlayer.DeselectAllSelectedCardsForUse());
             ShrinkHand();
         }
     }
