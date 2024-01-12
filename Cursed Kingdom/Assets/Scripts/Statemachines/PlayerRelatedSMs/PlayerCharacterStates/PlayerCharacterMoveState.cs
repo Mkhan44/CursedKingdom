@@ -201,7 +201,8 @@ public class PlayerCharacterMoveState : BaseState
 		}
 
         playerToMove.GameplayManagerRef.HandDisplayPanel.gameObject.SetActive(false);
-	}
+		playerToMove.GameplayManagerRef.SpacesPlayerWillLandOnParent.TurnOnDisplay(playerToMove.GameplayManagerRef.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.FindValidSpaces(playerToMove, playerToMove.SpacesLeftToMove));
+    }
 
 	//Used when a direction is chosen. This function should be called by clicking a button.
 	public void ChooseDirection(Space targetSpace, Player playerReference, int spacesLeftToMove)
@@ -216,6 +217,7 @@ public class PlayerCharacterMoveState : BaseState
 			GameObject.Destroy(child.gameObject);
 		}
 
+		playerReference.GameplayManagerRef.SpacesPlayerWillLandOnParent.TurnOffDisplay();
         playerReference.GameplayManagerRef.HandDisplayPanel.gameObject.SetActive(true);
 	}
 

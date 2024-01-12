@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 using System.Net;
+using Unity.VisualScripting;
 
 public class MovementCard : Card
 {
@@ -123,11 +124,10 @@ public class MovementCard : Card
 
         if (handExpandUI is not null)
         {
-            int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
-            Player thePlayer = GameplayManager.Players[indexOfCurrentPlayer];
+            Player thePlayer = GameplayManager.GetCurrentPlayer();
             if (!handExpandUI.CurrentActiveTransform.IsExpanded)
             {
-                handExpandUI.ExpandHand(ThisCardType, GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>()));
+                handExpandUI.ExpandHand(ThisCardType);
             }
             else
             {
@@ -138,8 +138,10 @@ public class MovementCard : Card
                         return;
                     }
                 }
+                
                 DeselectOtherSelectedCards();
 
+                //DISCARDING CARDS
                 if (thePlayer.CardsLeftToDiscard > 0 && !SelectedForDiscard && IsValidCardTypeToDiscard(thePlayer))
                 {
                     SelectForDiscard();
@@ -147,7 +149,7 @@ public class MovementCard : Card
                 }
                 else if (thePlayer.CardsLeftToDiscard > 0 && !SelectedForDiscard && !IsValidCardTypeToDiscard(thePlayer))
                 {
-                    Debug.LogWarning("Hey! You can't select this card to discard.");
+                    DialogueBoxPopup.instance.ActivatePopupWithJustText("You cannot select a movement card to discard for this effect.", 2.0f);
                     return;
                 }
 
@@ -157,34 +159,55 @@ public class MovementCard : Card
                     return;
                 }
 
-                if (GameplayManager.Players[indexOfCurrentPlayer].SupportCardSelectedForUse)
+                if (GameplayManager.GetCurrentPlayer().SupportCardSelectedForUse)
                 {
                     DialogueBoxPopup.instance.ActivatePopupWithJustText("You're currently selecting support cards. Deselect all support cards to select a movement card.", 2.0f);
                     return;
                 }
+                //DISCARDING CARDS
 
+                //MULTIPLE MOVEMENT CARDS
                 int maxNumPlayerCanSelect = thePlayer.MaxMovementCardsToUse + thePlayer.ExtraMovementCardUses;
 
                 if (maxNumPlayerCanSelect > 1 && thePlayer.NumMovementCardsUsedThisTurn <= 1 && !SelectedForUse)
                 {
                     SelectForUse();
+                    GameplayManager.SpacesPlayerWillLandOnParent.TurnOnDisplay(GameplayManager.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.FindValidSpaces(thePlayer, thePlayer.CurrentSumOfSpacesToMove));
+
                     return;
                 }
 
                 if (SelectedForUse)
                 {
                     DeselectForUse();
+                    GameplayManager.SpacesPlayerWillLandOnParent.TurnOnDisplay(GameplayManager.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.FindValidSpaces(thePlayer, thePlayer.CurrentSumOfSpacesToMove));
+
                     return;
                 }
+                //MULTIPLE MOVEMENT CARDS
 
                 if (!CardIsActiveHovered)
                 {
                     CardIsActiveHovered = true;
                     StartCoroutine(HoverCardEffect());
+                    //Calculate spaces that are valid and display what space player may land on.
+                    thePlayer.CurrentSumOfSpacesToMove = 0;
+                    if (TempCardValue > 0)
+                    {
+                        thePlayer.CurrentSumOfSpacesToMove += TempCardValue;
+                    }
+                    else
+                    {
+                        thePlayer.CurrentSumOfSpacesToMove += MovementCardValue;
+                    }
+
+                    GameplayManager.SpacesPlayerWillLandOnParent.TurnOnDisplay(GameplayManager.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.FindValidSpaces(thePlayer, thePlayer.CurrentSumOfSpacesToMove));
                 }
                 else
                 {
                     AttemptToMove(thePlayer);
+                    thePlayer.CurrentSumOfSpacesToMove = 0;
+                    GameplayManager.SpacesPlayerWillLandOnParent.TurnOffDisplay();
                 }
             }
         }
@@ -212,7 +235,6 @@ public class MovementCard : Card
                 CardIsActiveHovered = false;
                 return;
             }
-
         }
         else
         {
@@ -232,7 +254,6 @@ public class MovementCard : Card
         }
 
         thePlayer.DiscardFromHand(ThisCardType, this);
-
         GameplayManager.HandDisplayPanel.ShrinkHand();
         transform.localScale = OriginalSize;
         CardIsActiveHovered = false;
@@ -241,23 +262,33 @@ public class MovementCard : Card
     public override void SelectForUse()
     {
         base.SelectForUse();
-        int indexOfCurrentPlayer;
         int numSelected;
         int maxNumPlayerCanSelect;
 
-        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
-        GameplayManager.Players[indexOfCurrentPlayer].MovementCardSelectedForUse = true;
+        CheckAmountOfCardsPlayerHasSelected(out numSelected, out maxNumPlayerCanSelect);
+        if(SelectedForUse)
+        {
+            if (TempCardValue > 0)
+            {
+                GameplayManager.GetCurrentPlayer().CurrentSumOfSpacesToMove += TempCardValue;
+            }
+            else
+            {
+                GameplayManager.GetCurrentPlayer().CurrentSumOfSpacesToMove += MovementCardValue;
+            }
+        }
+
+        GameplayManager.GetCurrentPlayer().MovementCardSelectedForUse = true;
     }
     public override void DeselectForUse()
     {
         base.DeselectForUse();
-        int indexOfCurrentPlayer;
         int numSelected;
         int maxNumPlayerCanSelect;
 
-        CheckAmountOfCardsPlayerHasSelected(out indexOfCurrentPlayer, out numSelected, out maxNumPlayerCanSelect);
+        CheckAmountOfCardsPlayerHasSelected(out numSelected, out maxNumPlayerCanSelect);
 
-        if (GameplayManager.Players[indexOfCurrentPlayer].ExtraMovementCardUses > 0)
+        if (GameplayManager.GetCurrentPlayer().ExtraMovementCardUses > 0)
         {
             if (!GameplayManager.UseSelectedCardsPanel.activeInHierarchy)
             {
@@ -265,7 +296,16 @@ public class MovementCard : Card
             }
             GameplayManager.UseSelectedCardsText.text = $"Selected cards: {numSelected}/{maxNumPlayerCanSelect}";
             GameplayManager.UseSelectedCardsButton.onClick.RemoveAllListeners();
-            GameplayManager.UseSelectedCardsButton.onClick.AddListener(GameplayManager.Players[indexOfCurrentPlayer].UseMultipleCards);
+            GameplayManager.UseSelectedCardsButton.onClick.AddListener(GameplayManager.GetCurrentPlayer().UseMultipleCards);
+
+            if (TempCardValue > 0)
+            {
+                GameplayManager.GetCurrentPlayer().CurrentSumOfSpacesToMove -= TempCardValue;
+            }
+            else
+            {
+                GameplayManager.GetCurrentPlayer().CurrentSumOfSpacesToMove -= MovementCardValue;
+            }
         }
     }
 

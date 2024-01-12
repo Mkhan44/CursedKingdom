@@ -123,7 +123,7 @@ public class Space : MonoBehaviour
 
         if (playerReference is not null)
         {
-            if (playerReference.PreviousSpacePlayerWasOn is null)
+            if (playerReference.PreviousSpacePlayerWasOn is null && playerReference.IsMoving && spaceData.DecreasesSpacesToMove)
             {
                 playerReference.PreviousSpacePlayerWasOn = this;
             }
@@ -218,7 +218,7 @@ public class Space : MonoBehaviour
     public void SpaceTravelSetup()
     {
         SetSpaceNeighbors();
-        GetValidDirections();
+        SetValidDirections();
     }
 
 
@@ -729,7 +729,7 @@ public class Space : MonoBehaviour
     }
 
     //Which directions should the player be able to travel from this space?
-    private void GetValidDirections()
+    private void SetValidDirections()
     {
         Direction direction;
 

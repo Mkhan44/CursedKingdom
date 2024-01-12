@@ -98,7 +98,7 @@ public class SupportCard : Card
             Player currentPlayer = GameplayManager.GetCurrentPlayer();
             if (!handExpandUI.CurrentActiveTransform.IsExpanded)
             {
-                handExpandUI.ExpandHand(ThisCardType, GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>()));
+                handExpandUI.ExpandHand(ThisCardType);
             }
             else
             {
