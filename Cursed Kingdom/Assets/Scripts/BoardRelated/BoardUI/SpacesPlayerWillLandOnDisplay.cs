@@ -12,6 +12,8 @@ public class SpacesPlayerWillLandOnDisplay : MonoBehaviour
     public GameObject elementPrefab;
     public GameObject contentArea;
     public TextMeshProUGUI mainText;
+    [Tooltip("The child number of the gameobject (starting at 0) that the space artwork image is located in.")]
+    [SerializeField] public int spaceArtworkChildNumber;
 
     private void Start()
     {
@@ -45,8 +47,8 @@ public class SpacesPlayerWillLandOnDisplay : MonoBehaviour
         foreach (Space space in spacesPlayerCanLandOn)
         {
             GameObject newElement = Instantiate(elementPrefab, contentArea.transform);
-            TextMeshProUGUI spaceName = newElement.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-            Image spaceImage = newElement.transform.GetChild(1).GetComponent<Image>();
+            TextMeshProUGUI spaceName = newElement.transform.GetComponentInChildren<TextMeshProUGUI>();
+            Image spaceImage = newElement.transform.GetChild(spaceArtworkChildNumber).GetComponent<Image>();
             spaceName.text = space.name;
             spaceImage.sprite = space.spaceData.spaceSprite;
         }
