@@ -16,5 +16,8 @@ public class BlockElementalEffect : SupportCardEffectData, ISupportEffect
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
         //Block the incoming damage of an elemental effect card.
+
+        //Maybe play some animation before just going right into completing the effect??
+        base.CompletedEffect(playerReference);
     }
 }

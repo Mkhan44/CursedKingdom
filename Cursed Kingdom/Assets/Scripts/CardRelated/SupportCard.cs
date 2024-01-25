@@ -193,26 +193,37 @@ public class SupportCard : Card
                     {
                         Debug.LogWarning("You are in debug mode and we are NOT checking for correct conditions to use a Support card.");
                     }
-                    
 
-                    bool canCostBePaid = false;
-                    ApplySupportCardEffects(currentPlayer, out canCostBePaid);
-                    if (!canCostBePaid)
-                    {
-                        GameplayManager.HandDisplayPanel.ShrinkHand();
-                        transform.localScale = OriginalSize;
-                        CardIsActiveHovered = false;
-                        return;
-                    }
-                    currentPlayer.UseSupportCard();
-                    currentPlayer.CurrentSupportCardInUse = this;
-                    currentPlayer.DiscardFromHand(ThisCardType, this);
-                    GameplayManager.HandDisplayPanel.ShrinkHand();
-                    transform.localScale = OriginalSize;
-                    CardIsActiveHovered = false;
+
+                    AttemptToUseSupportCard(currentPlayer);
                 }
             }
         }
+    }
+
+    public void AttemptToUseSupportCard(Player playerUsingCard, bool isCurrentPlayer = true)
+    {
+        bool canCostBePaid = false;
+        ApplySupportCardEffects(playerUsingCard, out canCostBePaid);
+        if (!canCostBePaid)
+        {
+            GameplayManager.HandDisplayPanel.ShrinkHand();
+            transform.localScale = OriginalSize;
+            CardIsActiveHovered = false;
+            return;
+        }
+        playerUsingCard.UseSupportCard();
+        playerUsingCard.CurrentSupportCardInUse = this;
+        playerUsingCard.DiscardFromHand(ThisCardType, this);
+
+        if(!isCurrentPlayer)
+        {
+            return;
+        }
+
+        GameplayManager.HandDisplayPanel.ShrinkHand();
+        transform.localScale = OriginalSize;
+        CardIsActiveHovered = false;
     }
 
     public override void SelectForUse()

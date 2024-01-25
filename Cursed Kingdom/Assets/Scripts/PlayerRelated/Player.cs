@@ -477,11 +477,78 @@ public class Player : MonoBehaviour
         DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams, 1, "Attack");
     }
 
-	/// <summary>
-	/// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict, bool isElemental
-	/// </summary>
-	/// <returns></returns>
-	public IEnumerator SelectPlayerToAttackDamage(List<object> objects)
+    public void ActivatePlayerBlockElementalDamageSelectionPopup(Player targetedPlayer, int damageToPotentiallytake, List<SupportCard> elementalBlockSupportCards)
+    {
+		//Move the camera to the targeted Player. Once they select a choice, move the camera back to the current Player. Moving the camera back will be in the coroutine most likely.
+
+		//Camera code
+		//alksdfja
+
+        List<Tuple<string, string, object, List<object>>> insertedParams = new();
+
+        List<object> paramsList = new();
+        paramsList.Add(targetedPlayer);
+        paramsList.Add(damageToPotentiallytake);
+        paramsList.Add(elementalBlockSupportCards);
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Yes", nameof(UseSupportCardToBlockElementalDamage), this, paramsList));
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToBlockElementalDamage), this, paramsList));
+
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a support card that can block {damageToPotentiallytake} incoming elemental damage. Do you wish to use it??", insertedParams, 1, "Reaction");
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player targetedPlayer, int DamageToPotentiallyTake, List<SupportCard> elementalBlockSupportCards
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+    public IEnumerator UseSupportCardToBlockElementalDamage(List<object> objects)
+	{
+		yield return null;
+		Player targetedPlayer = (Player)objects[0];
+		int damageToPotentiallytake = (int)objects[1];
+        List<SupportCard> elementalBlockSupportCards = (List<SupportCard>)objects[2];
+
+		//Use the first card in the list.
+		if(elementalBlockSupportCards.Count > 0)
+		{
+			elementalBlockSupportCards[0].AttemptToUseSupportCard(targetedPlayer, false);
+		}
+
+		Debug.Log("BLOCKED ELEMENTAL ATTACK!");
+
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        {
+            CompletedAttackingEffect();
+        }
+
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player targetedPlayer, int DamageToPotentiallyTake, List<SupportCard> elementalBlockSupportCards
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+    public IEnumerator DontUseSupportCardToBlockElementalDamage(List<object> objects)
+	{
+		yield return null;
+
+        Player targetedPlayer = (Player)objects[0];
+        int damageToPotentiallytake = (int)objects[1];
+        List<SupportCard> elementalBlockSupportCards = (List<SupportCard>)objects[2];
+
+		targetedPlayer.TakeDamage(damageToPotentiallytake);
+
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        {
+            CompletedAttackingEffect();
+        }
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict, bool isElemental
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SelectPlayerToAttackDamage(List<object> objects)
 	{
 		yield return null;
 		Player playerTarget = objects[0] as Player;
@@ -495,7 +562,23 @@ public class Player : MonoBehaviour
 				if(IsHandlingSupportCardEffects && isElemental)
 				{
 					//Allow target player to respond with elemental barrier if they have it.
-					playerTarget.TakeDamage(damageToTake);
+					if(CheckIfOtherPlayersCanReact().Count > 0)
+					{
+						List<SupportCard> supportCardsToBlockWith = GetSupportCardsPlayerCanBlockElementalDamageWith(playerTarget);
+						if(supportCardsToBlockWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse)
+						{
+							ActivatePlayerBlockElementalDamageSelectionPopup(playerTarget, damageToTake, supportCardsToBlockWith);
+                            yield break;
+                        }
+						else
+						{
+                            playerTarget.TakeDamage(damageToTake);
+                        }   
+					}
+					else
+					{
+                        playerTarget.TakeDamage(damageToTake);
+                    }
 				}
 				else
 				{
@@ -855,10 +938,79 @@ public class Player : MonoBehaviour
 
     #region Check for special support card negation
 
-	public void CheckIfNextPlayerCanNegate()
+	
+	public List<Player> CheckIfOtherPlayersCanNegate()
 	{
+		List<Player> playersThatCanNegate = new();
+		foreach(Player player in GameplayManagerRef.Players)
+		{
+			if(player != this)
+			{
+				foreach(SupportCard supportCard in player.GetSupportCardsInHand())
+				{
+					
+				}
+			}
+		}
 
+		return playersThatCanNegate;
 	}
+
+	/// <summary>
+	/// Check if Player that is targetted can react with a support card that blocks elemental damage.
+	/// </summary>
+	/// <param name="player"></param>
+	/// <returns></returns>
+	public List<SupportCard> GetSupportCardsPlayerCanBlockElementalDamageWith(Player player)
+	{
+		List<SupportCard> supportCardsToBlockWith = new();
+
+        foreach (SupportCard supportCard in player.GetSupportCardsInHand())
+        {
+            foreach (SupportCardData.SupportCardEffect supportCardEffect in supportCard.SupportCardData.supportCardEffects)
+            {
+                if (supportCardEffect.supportCardEffectData.GetType() == typeof(BlockElementalEffect))
+                {
+					supportCardsToBlockWith.Add(supportCard);
+                    break;
+                }	
+            }
+        }
+
+		return supportCardsToBlockWith;
+    }
+
+	public List<Player> CheckIfOtherPlayersCanReact()
+	{
+        List<Player> playersThatCanBlock = new();
+        foreach (Player player in GameplayManagerRef.Players)
+        {
+            if (player != this)
+            {
+                foreach (SupportCard supportCard in player.GetSupportCardsInHand())
+                {
+					foreach(SupportCardData.SupportCardEffect supportCardEffect in supportCard.SupportCardData.supportCardEffects)
+					{
+						if(supportCardEffect.supportCardEffectData.IsReaction)
+						{
+							playersThatCanBlock.Add(player);
+							break;
+						}
+						if(playersThatCanBlock.Contains(player))
+						{
+							break;
+						}
+					}
+                    if (playersThatCanBlock.Contains(player))
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return playersThatCanBlock;
+    }
 
 	public void TargetThisPlayerForAttack()
 	{
