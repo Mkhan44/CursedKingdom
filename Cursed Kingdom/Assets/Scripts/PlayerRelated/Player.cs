@@ -394,6 +394,12 @@ public class Player : MonoBehaviour
 			{
                 if (!playerTarget.IsPoisoned && !playerTarget.IsCursed)
                 {
+					List<SupportCard> supportCardsToBlockWith = GetSupportCardsPlayerCanBlockPoisonWith(playerTarget);
+					if(supportCardsToBlockWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse)
+					{
+						ActivatePlayerBlockPoisonSelectionPopup(playerTarget, supportCardsToBlockWith, statusDuration);
+						yield break;
+					}
                     playerTarget.PoisonPlayer(statusDuration);
                     playerTarget.WasAfflictedWithStatusThisTurn = false;
                 }
@@ -493,7 +499,27 @@ public class Player : MonoBehaviour
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Yes", nameof(UseSupportCardToBlockElementalDamage), this, paramsList));
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToBlockElementalDamage), this, paramsList));
 
-        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a support card that can block {damageToPotentiallytake} incoming elemental damage. Do you wish to use it??", insertedParams, 1, "Reaction");
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a support card that can block {damageToPotentiallytake} incoming elemental damage. Do you wish to use it?", insertedParams, 1, "Reaction");
+    }
+
+	public void ActivatePlayerBlockPoisonSelectionPopup(Player targetedPlayer, List<SupportCard> poisonBlockSupportCards, int turnsToBePoisoned)
+	{
+
+        // Move the camera to the targeted Player. Once they select a choice, move the camera back to the current Player. Moving the camera back will be in the coroutine most likely.
+
+        //Camera code
+        //alksdfja
+
+        List<Tuple<string, string, object, List<object>>> insertedParams = new();
+
+        List<object> paramsList = new();
+        paramsList.Add(targetedPlayer);
+        paramsList.Add(poisonBlockSupportCards);
+        paramsList.Add(turnsToBePoisoned);
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Yes", nameof(UseSupportCardToBlockPoison), this, paramsList));
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToBlockPoison), this, paramsList));
+
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a support card that can prevent you from being poisoned for {turnsToBePoisoned} turn(s). Do you wish to use it?", insertedParams, 1, "Reaction");
     }
 
     /// <summary>
@@ -514,7 +540,6 @@ public class Player : MonoBehaviour
 			elementalBlockSupportCards[0].AttemptToUseSupportCard(targetedPlayer, false);
 		}
 
-		Debug.Log("BLOCKED ELEMENTAL ATTACK!");
 
         if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
         {
@@ -537,6 +562,46 @@ public class Player : MonoBehaviour
         List<SupportCard> elementalBlockSupportCards = (List<SupportCard>)objects[2];
 
 		targetedPlayer.TakeDamage(damageToPotentiallytake);
+
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        {
+            CompletedAttackingEffect();
+        }
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player targetedPlayer, List<SupportCard> poisonBlockSupportCards, int turnsToBePoisoned
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+    public IEnumerator UseSupportCardToBlockPoison(List<object> objects) 
+	{
+        yield return null;
+
+        Player targetedPlayer = (Player)objects[0];
+        List<SupportCard> elementalBlockSupportCards = (List<SupportCard>)objects[1];
+        int turnsToBePoisoned = (int)objects[2];
+
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        {
+            CompletedAttackingEffect();
+        }
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player targetedPlayer, List<SupportCard> poisonBlockSupportCards, int turnsToBePoisoned
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+    public IEnumerator DontUseSupportCardToBlockPoison(List<object> objects)
+    {
+        yield return null;
+
+        Player targetedPlayer = (Player)objects[0];
+        List<SupportCard> elementalBlockSupportCards = (List<SupportCard>)objects[1];
+        int turnsToBePoisoned = (int)objects[2];
+
+		targetedPlayer.PoisonPlayer(turnsToBePoisoned);
 
         if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
         {
@@ -570,11 +635,8 @@ public class Player : MonoBehaviour
 							ActivatePlayerBlockElementalDamageSelectionPopup(playerTarget, damageToTake, supportCardsToBlockWith);
                             yield break;
                         }
-						else
-						{
-                            playerTarget.TakeDamage(damageToTake);
-                        }   
-					}
+                        playerTarget.TakeDamage(damageToTake);
+                    }
 					else
 					{
                         playerTarget.TakeDamage(damageToTake);
@@ -957,7 +1019,7 @@ public class Player : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Check if Player that is targetted can react with a support card that blocks elemental damage.
+	/// Check if Player that is targeted can react with a support card that blocks elemental damage.
 	/// </summary>
 	/// <param name="player"></param>
 	/// <returns></returns>
@@ -978,6 +1040,30 @@ public class Player : MonoBehaviour
         }
 
 		return supportCardsToBlockWith;
+    }
+
+	/// <summary>
+	/// Check if Player that is targeted can react with a support card that blocks being poisoned.
+	/// </summary>
+	/// <param name="player"></param>
+	/// <returns></returns>
+	public List<SupportCard> GetSupportCardsPlayerCanBlockPoisonWith(Player player)
+	{
+        List<SupportCard> supportCardsToBlockWith = new();
+
+        foreach (SupportCard supportCard in player.GetSupportCardsInHand())
+        {
+            foreach (SupportCardData.SupportCardEffect supportCardEffect in supportCard.SupportCardData.supportCardEffects)
+            {
+                if (supportCardEffect.supportCardEffectData.GetType() == typeof(BlockPoisonEffect))
+                {
+                    supportCardsToBlockWith.Add(supportCard);
+                    break;
+                }
+            }
+        }
+
+        return supportCardsToBlockWith;
     }
 
 	public List<Player> CheckIfOtherPlayersCanReact()
@@ -1937,12 +2023,6 @@ public class Player : MonoBehaviour
 		FinishedHandlingSpaceEffects();
 
 		IsDefeated = true;
-		//int indexOfCurrentPlayer = GameplayManagerRef.Players.IndexOf(GameplayManagerRef.playerCharacter.GetComponent<Player>());
-		
-		//if (GameplayManagerRef.Players[indexOfCurrentPlayer] == this)
-		//{
-		//    GameplayManagerRef.EndOfTurn(this);
-		//}
 	}
 
 	#endregion
