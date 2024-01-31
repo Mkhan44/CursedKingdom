@@ -49,9 +49,21 @@ public class SpacesPlayerWillLandOnDisplay : MonoBehaviour
             GameObject newElement = Instantiate(elementPrefab, contentArea.transform);
             TextMeshProUGUI spaceName = newElement.transform.GetComponentInChildren<TextMeshProUGUI>();
             Image spaceImage = newElement.transform.GetChild(spaceArtworkChildNumber).GetComponent<Image>();
+            Button spaceButton = newElement.transform.GetChild(spaceArtworkChildNumber).GetComponent<Button>();
+            spaceButton.onClick.AddListener(() => ChangeCameraFocus(space));
             spaceName.text = space.name;
             spaceImage.sprite = space.spaceData.spaceSprite;
         }
+    }
+
+    public void ChangeCameraFocus(Space spaceToFocusOn)
+    {
+        if (!spaceToFocusOn.gameplayManagerRef.cinemachineVirtualCameras[2].enabled)
+        {
+            spaceToFocusOn.gameplayManagerRef.ToggleGroundMapCamera();
+        }
+
+        spaceToFocusOn.gameplayManagerRef.mapManager.ChangeCurrentHighlightedSpaceGroundView(spaceToFocusOn.gameplayManagerRef.cinemachineVirtualCameras[2], spaceToFocusOn);
     }
 
     public void RefreshElements()
