@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
 	public event Action<Player> DoneActivatingAbilityEffect;
 	public event Action<Player> DoneActivatingEliteAbilityEffect;
 	public event Action<Player> StatusEffectUpdateCompleted;
+	public event Action<Player> HasBeenDefeated;
 
 	//Events End
 
@@ -275,11 +276,14 @@ public class Player : MonoBehaviour
 		SpaceEffectsToHandle = new();
 		tempSpaceEffectsToHandle = new();
 		isHandlingSpaceEffects = false;
-		GameplayManagerRef.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += ApplyCurrentSpaceEffects;
 
-		//DEBUG
-	   // UseEliteAbility();
-	}
+		//Subscriptions
+		GameplayManagerRef.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += ApplyCurrentSpaceEffects;
+        HasBeenDefeated += GameplayManagerRef.CheckIfAllPlayersButOneDefeated;
+
+        //DEBUG
+        // UseEliteAbility();
+    }
 
 	public void DebugTheSpace()
 	{
@@ -1951,7 +1955,10 @@ public class Player : MonoBehaviour
 
 	private void PoisonEffectPriv()
 	{
-		TakeDamage(1);
+		if(CurrentHealth > 1)
+		{
+            TakeDamage(1);
+        }
 		//Play poison animation particle effect or something before player takes damage.
 	}
 
@@ -2023,7 +2030,9 @@ public class Player : MonoBehaviour
 		FinishedHandlingSpaceEffects();
 
 		IsDefeated = true;
-	}
+		HasBeenDefeatedEvent();
+
+    }
 
 	#endregion
 
@@ -2326,6 +2335,11 @@ public class Player : MonoBehaviour
 	{
 		FinishedHandlingCurrentSpaceEffects?.Invoke(this);
 
+    }
+
+	public void HasBeenDefeatedEvent()
+	{
+		HasBeenDefeated?.Invoke(this);
     }
     #endregion
 

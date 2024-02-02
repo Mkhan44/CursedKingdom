@@ -90,23 +90,23 @@ public class GameplayEndPhaseState : BaseState
         Player currentNonDefeatedPlayer = currentPlayer;
 
 
-        foreach (Player checkIfDefeatedPlayer in gameplayPhaseSM.gameplayManager.Players)
-        {
-            if (checkIfDefeatedPlayer.IsDefeated)
-            {
-                numPlayersDefeated++;
-            }
-            else
-            {
-                currentNonDefeatedPlayer = checkIfDefeatedPlayer;
-            }
-        }
+        //foreach (Player checkIfDefeatedPlayer in gameplayPhaseSM.gameplayManager.Players)
+        //{
+        //    if (checkIfDefeatedPlayer.IsDefeated)
+        //    {
+        //        numPlayersDefeated++;
+        //    }
+        //    else
+        //    {
+        //        currentNonDefeatedPlayer = checkIfDefeatedPlayer;
+        //    }
+        //}
 
-        if (numPlayersDefeated == gameplayPhaseSM.gameplayManager.Players.Count - 1)
-        {
-            gameplayPhaseSM.gameplayManager.Victory(currentNonDefeatedPlayer);
-            return;
-        }
+        //if (numPlayersDefeated == gameplayPhaseSM.gameplayManager.Players.Count - 1)
+        //{
+        //    gameplayPhaseSM.gameplayManager.Victory(currentNonDefeatedPlayer);
+        //    return;
+        //}
 
         currentPlayer.UpdateStatusEffectCount();
         currentPlayer.UpdateCooldownStatus();

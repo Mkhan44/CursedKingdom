@@ -16,6 +16,8 @@ public class GameplayManager : MonoBehaviour
 {
 	public event Action<KeyCode> MoveHighlightedSpaceIconGroundView;
 	public event Action<KeyCode> MoveHighlightedSpaceIconOverheadView;
+	//event if all players die
+	public event Action<Player> AllPlayersDefeated;
 	
 	private GameplayPhaseSM  gameplayPhaseStatemachineRef;
 
@@ -588,12 +590,69 @@ public class GameplayManager : MonoBehaviour
 		return isDefeated;
 	}
 
-	public void Victory(Player playerWhoWins)
+	public void CheckIfAllPlayersButOneDefeated(Player playerThatWasJustDefeated)
+	{
+		int numPlayersDefeated = 0;
+		Player nonDefeatedPlayer = null;
+
+		foreach(Player player in Players)
+		{
+			if(player.IsDefeated)
+			{
+				numPlayersDefeated++;
+			}
+			else
+			{
+                nonDefeatedPlayer = player;
+            }
+		}
+
+		Debug.Log($"Num players defeated is: {numPlayersDefeated}");
+		if(numPlayersDefeated < Players.Count - 1)
+		{
+			return;
+        }
+
+        AllPlayersDefeated?.Invoke(nonDefeatedPlayer);
+		playerCharacter = nonDefeatedPlayer.GetComponent<Transform>();
+        gameplayPhaseStatemachineRef.ChangeState(gameplayPhaseStatemachineRef.gameplayVictoryPhaseState);
+    }
+
+    public void Victory(Player playerWhoWins)
 	{
 		playerCharacter = Players[Players.IndexOf(playerWhoWins)].GetComponent<Transform>();
 		cinemachineVirtualCameras[0].LookAt = playerCharacter;
 		cinemachineVirtualCameras[0].Follow = playerCharacter;
-		DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"Congratulations, player: {playerWhoWins.playerIDIntVal} wins!", "Yay!");
+		ActivatePopupAtVictoryScreen();
+
+    }
+
+	public void ActivatePopupAtVictoryScreen()
+	{
+        List<Tuple<string, string, object, List<object>>> insertedParams = new();
+
+        List<object> paramsList = new();
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Restart", nameof(RestartGame), this, paramsList));
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Quit", nameof(CloseGame), this, paramsList));
+
+		DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Congratulations! Player {GetCurrentPlayer().playerIDIntVal} is the winner!", insertedParams, headerText: "Victory!");
+
+    }
+
+	public IEnumerator RestartGame()
+	{
+		DebugModeSingleton.instance.ReloadScene();
+		yield return null;
+	}
+
+	public IEnumerator CloseGame()
+	{
+		Application.Quit();
+#if UNITY_EDITOR
+        //Stop playing the scene
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        yield return null;
 	}
 
 

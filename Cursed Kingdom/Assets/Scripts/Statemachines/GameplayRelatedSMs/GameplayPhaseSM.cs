@@ -16,7 +16,10 @@ public class GameplayPhaseSM : BukuStateMachine
 	public GameplayResolveSpacePhaseState gameplayResolveSpacePhaseState;
 	public GameplayEndPhaseState gameplayEndPhaseState;
 
-	public GameplayManager gameplayManager;
+	//Victory has happened
+	public GameplayVictoryPhaseState gameplayVictoryPhaseState;
+
+    public GameplayManager gameplayManager;
 
 	private void Awake()
 	{
@@ -26,8 +29,9 @@ public class GameplayPhaseSM : BukuStateMachine
 		gameplayDuelPhaseState = new GameplayDuelPhaseState(this);
 		gameplayResolveSpacePhaseState = new GameplayResolveSpacePhaseState(this);
 		gameplayEndPhaseState = new GameplayEndPhaseState(this);
-		
-		gameplayManager = GetComponent<GameplayManager>();
+        gameplayVictoryPhaseState = new GameplayVictoryPhaseState(this);
+
+        gameplayManager = GetComponent<GameplayManager>();
 
 	}
 
