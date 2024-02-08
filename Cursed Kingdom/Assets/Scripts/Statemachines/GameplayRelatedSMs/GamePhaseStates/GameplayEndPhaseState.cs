@@ -63,15 +63,24 @@ public class GameplayEndPhaseState : BaseState
 
     private void HandleEndOfTurnEffects()
     {
-        //THIS DOESN'T WAIT FOR ALL END PHASE EFFS TO HAPPEN BEFORE ENDING THE TURN...MIGHT BE AN ISSUE.
-        currentPlayer.ApplyCurrentSpaceEffects(currentPlayer);
-
-        gameplayPhaseSM.gameplayManager.ThisDeckManager.DrawCard(Card.CardType.Movement, currentPlayer);
+        if(!currentPlayer.IsDefeated)
+        {
+            gameplayPhaseSM.gameplayManager.ThisDeckManager.DrawCard(Card.CardType.Movement, currentPlayer);
+            //THIS DOESN'T WAIT FOR ALL END PHASE EFFS TO HAPPEN BEFORE ENDING THE TURN...MIGHT BE AN ISSUE.
+            currentPlayer.ApplyCurrentSpaceEffects(currentPlayer);
+        }
 
         if (!currentPlayer.IsMoving && !currentPlayer.MaxHandSizeExceeded())
         {
-            currentPlayer.ResetSupportCardUsageCount();
-            currentPlayer.ResetMovementCardUsageCount();
+            //Reset all player usage counts.
+            foreach(Player player in gameplayPhaseSM.gameplayManager.Players)
+            {
+                if(!player.IsDefeated)
+                {
+                    player.ResetSupportCardUsageCount();
+                    player.ResetMovementCardUsageCount();
+                }
+            }
 
             //Idk if we wanna do this here because if the player can view their hand on another player's turn it still needs to reflect.
             currentPlayer.ResetMovementCardsInHandValues();
@@ -88,25 +97,6 @@ public class GameplayEndPhaseState : BaseState
     {
         int numPlayersDefeated = 0;
         Player currentNonDefeatedPlayer = currentPlayer;
-
-
-        //foreach (Player checkIfDefeatedPlayer in gameplayPhaseSM.gameplayManager.Players)
-        //{
-        //    if (checkIfDefeatedPlayer.IsDefeated)
-        //    {
-        //        numPlayersDefeated++;
-        //    }
-        //    else
-        //    {
-        //        currentNonDefeatedPlayer = checkIfDefeatedPlayer;
-        //    }
-        //}
-
-        //if (numPlayersDefeated == gameplayPhaseSM.gameplayManager.Players.Count - 1)
-        //{
-        //    gameplayPhaseSM.gameplayManager.Victory(currentNonDefeatedPlayer);
-        //    return;
-        //}
 
         currentPlayer.UpdateStatusEffectCount();
         currentPlayer.UpdateCooldownStatus();
