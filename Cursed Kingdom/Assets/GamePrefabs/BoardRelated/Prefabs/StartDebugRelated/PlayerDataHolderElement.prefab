@@ -200,7 +200,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -847,7 +847,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1073,7 +1073,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28.3
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2612,7 +2612,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18.45
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2748,7 +2748,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28.3
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5021,7 +5021,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.05
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7811,6 +7811,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1851141166541286969}
   - component: {fileID: 2598068931535352708}
+  - component: {fileID: 7645123645395404147}
   - component: {fileID: 797614797133348691}
   - component: {fileID: 5759739645703591514}
   m_Layer: 5
@@ -7860,6 +7861,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8679012584963948134}
   m_CullTransparentMesh: 1
+--- !u!114 &7645123645395404147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8679012584963948134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90327db492dec6b418d2deb898985078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  classDropdown: {fileID: 2316057726387458502}
+  healthOverrideDropdown: {fileID: 6903471659669449697}
+  startSpaceDropdown: {fileID: 8087860856705402412}
+  levelOverrideDropdown: {fileID: 7793206114733929897}
+  movementCardsInHandOverrideDropdown: {fileID: 998700317551096003}
+  supportCardsInHandOverrideDropdown: {fileID: 6336720193729294105}
 --- !u!114 &797614797133348691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8002,7 +8021,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
