@@ -9,12 +9,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DebugStartData", menuName = "Debug /Start Data", order = 0)]
 public class DebugStartData : ScriptableObject
 {
-
+    [System.Serializable]
     public class PlayerDebugData
     {
         public ClassData.ClassType typeOfClass;
         [Range(0,15)] public int startingHealthOverride = 0;
-        public string startingSpaceOverride = "";
+        public string startingSpaceNameOverride = "";
         [Range(0, 5)] public int startingLevelOverride = 0;
         [Range(0, 5)] public int movementCardsToStartWithOverride = 0;
         [Range(0, 5)] public int supportCardsToStartWithOverride = 0;
@@ -23,7 +23,7 @@ public class DebugStartData : ScriptableObject
         {
             typeOfClass = ClassData.ClassType.Magician;
             startingHealthOverride = 0;
-            startingSpaceOverride = "none";
+            startingSpaceNameOverride = "No override";
             startingLevelOverride = 0;
             movementCardsToStartWithOverride = 0;
             supportCardsToStartWithOverride = 0;
@@ -31,5 +31,6 @@ public class DebugStartData : ScriptableObject
 
     }
 
+    [Range(2, 4)] public int numberOfPlayersToUse = 2;
     public List<PlayerDebugData> playerDebugDatas = new();
 }
