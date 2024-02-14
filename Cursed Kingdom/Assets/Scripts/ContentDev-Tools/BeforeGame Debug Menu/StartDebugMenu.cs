@@ -7,10 +7,16 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class StartDebugMenu : MonoBehaviour
 {
+    public event Action CheckIfPanelShouldTurnOn;
+
     public static StartDebugMenu instance;
+    public bool useScriptable;
+    public bool turnOffPanel;
+    public CanvasGroup canvasGroup;
 
     //Prefab to spawn in per player.
     public GameObject debugPlayerElementPrefab;
@@ -24,7 +30,7 @@ public class StartDebugMenu : MonoBehaviour
     public TMP_Dropdown currentlySelectedStartDataDropdown;
     public TMP_InputField newStartDataInputField;
     public Button createNewStartDataButton;
-    public Button saveSettingsButton;
+    public Button useDefaultSettingsButton;
     public Button startGameButton;
     public TextMeshProUGUI tipsText;
     public GameplayManager gameplayManager;
@@ -38,13 +44,51 @@ public class StartDebugMenu : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(transform.parent.gameObject);
+            useScriptable = false;
+            CheckIfPanelShouldTurnOn += CheckIfPanelShouldTurnOnOnRestart;
+            startGameButton.onClick.AddListener(StartGame);
+            useDefaultSettingsButton.onClick.AddListener(UseDefaultSettings);
             SetupData();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         else
         {
-            Destroy(this);
+            Destroy(transform.parent.gameObject);
         }
+    }
+
+    private void CheckIfPanelShouldTurnOnOnRestart()
+    {
+        if(turnOffPanel)
+        {
+            TurnOffPanel();
+        }
+    }
+
+    public void TurnOffPanel()
+    {
+        canvasGroup.alpha = 0.0f;
+        canvasGroup.blocksRaycasts = false;
+        canvasGroup.interactable = false;
+    }
+
+    public void StartGame()
+    {
+        turnOffPanel = true;
+        useScriptable = true;
+        TurnOffPanel();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        CheckIfPanelShouldTurnOn?.Invoke();
+    }
+
+    public void UseDefaultSettings()
+    {
+        turnOffPanel = true;
+        useScriptable = false;
+        TurnOffPanel();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        CheckIfPanelShouldTurnOn?.Invoke();
     }
 
     //This will also need to be called everytime the scene is restarted because we'll need to get the next instance of the gameplayManager!!!!

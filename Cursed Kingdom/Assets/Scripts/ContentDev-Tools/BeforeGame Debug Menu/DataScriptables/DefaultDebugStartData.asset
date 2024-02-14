@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11a3c7d4b1a1c54a9098bed642c73e6, type: 3}
   m_Name: DefaultDebugStartData
   m_EditorClassIdentifier: 
-  numberOfPlayersToUse: 3
+  numberOfPlayersToUse: 4
   playerDebugDatas:
   - typeOfClass: 0
     startingHealthOverride: 0
@@ -27,11 +27,11 @@ MonoBehaviour:
     movementCardsToStartWithOverride: 0
     supportCardsToStartWithOverride: 0
   - typeOfClass: 2
-    startingHealthOverride: 3
+    startingHealthOverride: 0
     startingSpaceNameOverride: No override
-    startingLevelOverride: 1
-    movementCardsToStartWithOverride: 3
-    supportCardsToStartWithOverride: 1
+    startingLevelOverride: 0
+    movementCardsToStartWithOverride: 0
+    supportCardsToStartWithOverride: 0
   - typeOfClass: 3
     startingHealthOverride: 0
     startingSpaceNameOverride: No override

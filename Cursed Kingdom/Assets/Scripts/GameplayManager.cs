@@ -89,7 +89,7 @@ public class GameplayManager : MonoBehaviour
 	private float[] frameDeltaTimeArray;
 	public TextMeshProUGUI spacesToMoveText;
 	public GameObject debugMessagePanel;
-	public bool spawnSameSpotDebug;
+	public bool useStartDebugMenu;
 	[Range(1,4)] public int numPlayersToStartWith = 1;
 
 	//Properties
@@ -121,6 +121,11 @@ public class GameplayManager : MonoBehaviour
 	{
 		FPSCounter();
 
+		if(!useStartDebugMenu && StartDebugMenu.instance != null)
+		{
+            StartDebugMenu.instance.TurnOffPanel();
+        }
+
 		mapManager = GetComponent<MapManager>();
 		playerMovementManager = GetComponent<PlayerMovementManager>();
 		gameplayPhaseStatemachineRef = GetComponent<GameplayPhaseSM>();
@@ -134,8 +139,6 @@ public class GameplayManager : MonoBehaviour
 		ThisDeckManager.CreateDeck();
 
 		//Deck related
-
-
 
 		GameObject boardHolder;
 		if (boardPrefab == null)
@@ -165,67 +168,11 @@ public class GameplayManager : MonoBehaviour
 			}
 		}
 
-		List<GameObject> tempPlayerReferences = new();
-		ThisDeckManager.ShuffleDeck(Card.CardType.Movement);
-		ThisDeckManager.ShuffleDeck(Card.CardType.Support);
+        ThisDeckManager.ShuffleDeck(Card.CardType.Movement);
+        ThisDeckManager.ShuffleDeck(Card.CardType.Support);
 
-
-		//Spawn in the players.
-		for (int i = 0; i <numPlayersToStartWith; i++)
-		{
-			tempPlayerReferences.Add(SpawnPlayersStart(classdatas[i]));
-		}
-
-
-		if (Players.Count > 1)
-		{
-			//Assuming Player canvas is already setup. We will need to change this to be more dynamic.
-			int childNum = 0;
-			foreach (Transform child in PlayerInfoCanvas.transform)
-			{
-				if(childNum + 1 > Players.Count)
-				{
-					break;
-				}
-				PlayerInfoDisplay tempPlayerInfoDisp = child.GetComponent<PlayerInfoDisplay>();
-				if (tempPlayerInfoDisp is not null)
-				{
-					PlayerInfoDisplays.Add(tempPlayerInfoDisp);
-					tempPlayerInfoDisp.SetupPlayerInfo(Players[childNum]);
-					childNum++;
-				}
-			}
-		}
-		//for debug purposes with only 1 player.
-		else
-		{
-			PlayerInfoDisplay tempPlayerInfoDisp = PlayerInfoCanvas.transform.GetChild(1).GetComponent<PlayerInfoDisplay>();
-			PlayerInfoDisplays.Add(tempPlayerInfoDisp);
-			tempPlayerInfoDisp.SetupPlayerInfo(Players[0]);
-		}
-
-
-
-		playerCharacter = tempPlayerReferences[0].transform;
-
-		//DEBUG.
-		Players[0].ShowHand();
-		if (Players[0].ClassData.abilityData.CanBeManuallyActivated)
-		{
-			UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(true);
-			UseAbilityButton.onClick.RemoveAllListeners();
-			UseAbilityButton.onClick.AddListener(Players[0].UseAbility);
-		}
-		else
-		{
-			UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(false);
-		}
-
-		//No player should start at level 5.
-		UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
-
-		HandDisplayPanel.SetCurrentActiveHandUI(0);
-		//DEBUG.
+        //Spawn in the players!
+        GetPlayerStatsFromDebug();
 
 		cinemachineVirtualCameras[0].LookAt = playerCharacter;
 		cinemachineVirtualCameras[0].Follow = playerCharacter;
@@ -267,23 +214,183 @@ public class GameplayManager : MonoBehaviour
 		//CardTest();
 	}
 
+	public void GetPlayerStatsFromDebug()
+	{
+		if(StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable)
+		{
+            List<GameObject> tempPlayerReferences = new();
+            //Spawn in the players.
+            for (int i = 0; i < StartDebugMenu.instance.currentlySelectedStartData.numberOfPlayersToUse; i++)
+            {
 
-	private GameObject SpawnPlayersStart(ClassData playerClass)
+				ClassData.ClassType classType = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[i].typeOfClass;
+				switch(classType)
+				{
+					case ClassData.ClassType.Magician:
+						{
+                            tempPlayerReferences.Add(SpawnPlayersStart(classdatas[0], i));
+                            break;
+						}
+                    case ClassData.ClassType.Thief:
+                        {
+                            tempPlayerReferences.Add(SpawnPlayersStart(classdatas[1], i));
+                            break;
+                        }
+                    case ClassData.ClassType.Warrior:
+                        {
+                            tempPlayerReferences.Add(SpawnPlayersStart(classdatas[2], i));
+                            break;
+                        }
+                    case ClassData.ClassType.Archer:
+                        {
+                            tempPlayerReferences.Add(SpawnPlayersStart(classdatas[3], i));
+                            break;
+                        }
+                }
+            }
+
+
+            if (Players.Count > 1)
+            {
+                //Assuming Player canvas is already setup. We will need to change this to be more dynamic.
+                int childNum = 0;
+                foreach (Transform child in PlayerInfoCanvas.transform)
+                {
+                    if (childNum + 1 > Players.Count)
+                    {
+                        break;
+                    }
+                    PlayerInfoDisplay tempPlayerInfoDisp = child.GetComponent<PlayerInfoDisplay>();
+                    if (tempPlayerInfoDisp is not null)
+                    {
+                        PlayerInfoDisplays.Add(tempPlayerInfoDisp);
+                        tempPlayerInfoDisp.SetupPlayerInfo(Players[childNum]);
+                        childNum++;
+                    }
+                }
+            }
+            //for debug purposes with only 1 player.
+            else
+            {
+                PlayerInfoDisplay tempPlayerInfoDisp = PlayerInfoCanvas.transform.GetChild(1).GetComponent<PlayerInfoDisplay>();
+                PlayerInfoDisplays.Add(tempPlayerInfoDisp);
+                tempPlayerInfoDisp.SetupPlayerInfo(Players[0]);
+            }
+
+
+
+            playerCharacter = tempPlayerReferences[0].transform;
+
+            //DEBUG.
+            Players[0].ShowHand();
+            if (Players[0].ClassData.abilityData.CanBeManuallyActivated)
+            {
+                UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(true);
+                UseAbilityButton.onClick.RemoveAllListeners();
+                UseAbilityButton.onClick.AddListener(Players[0].UseAbility);
+            }
+            else
+            {
+                UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(false);
+            }
+
+            //No player should start at level 5.
+            UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
+
+            HandDisplayPanel.SetCurrentActiveHandUI(0);
+            //DEBUG.
+        }
+        else
+		{
+            List<GameObject> tempPlayerReferences = new();
+            //Spawn in the players.
+            for (int i = 0; i < numPlayersToStartWith; i++)
+            {
+                tempPlayerReferences.Add(SpawnPlayersStart(classdatas[i]));
+            }
+
+
+            if (Players.Count > 1)
+            {
+                //Assuming Player canvas is already setup. We will need to change this to be more dynamic.
+                int childNum = 0;
+                foreach (Transform child in PlayerInfoCanvas.transform)
+                {
+                    if (childNum + 1 > Players.Count)
+                    {
+                        break;
+                    }
+                    PlayerInfoDisplay tempPlayerInfoDisp = child.GetComponent<PlayerInfoDisplay>();
+                    if (tempPlayerInfoDisp is not null)
+                    {
+                        PlayerInfoDisplays.Add(tempPlayerInfoDisp);
+                        tempPlayerInfoDisp.SetupPlayerInfo(Players[childNum]);
+                        childNum++;
+                    }
+                }
+            }
+            //for debug purposes with only 1 player.
+            else
+            {
+                PlayerInfoDisplay tempPlayerInfoDisp = PlayerInfoCanvas.transform.GetChild(1).GetComponent<PlayerInfoDisplay>();
+                PlayerInfoDisplays.Add(tempPlayerInfoDisp);
+                tempPlayerInfoDisp.SetupPlayerInfo(Players[0]);
+            }
+
+
+
+            playerCharacter = tempPlayerReferences[0].transform;
+
+            //DEBUG.
+            Players[0].ShowHand();
+            if (Players[0].ClassData.abilityData.CanBeManuallyActivated)
+            {
+                UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(true);
+                UseAbilityButton.onClick.RemoveAllListeners();
+                UseAbilityButton.onClick.AddListener(Players[0].UseAbility);
+            }
+            else
+            {
+                UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(false);
+            }
+
+            //No player should start at level 5.
+            UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
+
+            HandDisplayPanel.SetCurrentActiveHandUI(0);
+            //DEBUG.
+        }
+    }
+
+
+	private GameObject SpawnPlayersStart(ClassData playerClass, int playerNum = 0)
 	{
 		//Spawn player.
-		GameObject playerTempReference;
-		int spaceToSpawnPlayer;
-		if (!spawnSameSpotDebug)
+		GameObject playerTempReference = null;
+		int spaceToSpawnPlayer = -1;
+
+		if(StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable)
 		{
-			spaceToSpawnPlayer = Random.Range(0, spaces.Count - 1);
-			playerTempReference = Instantiate(playerPrefab, spaces[spaceToSpawnPlayer].spawnPoint);
-		}
+			foreach(Space spaceToTry in spaces)
+			{
+				if (StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingSpaceNameOverride == spaceToTry.spaceData.spaceName)
+				{
+					spaceToSpawnPlayer = spaces.IndexOf(spaceToTry);
+                    playerTempReference = Instantiate(playerPrefab, spaces[spaceToSpawnPlayer].spawnPoint);
+                }
+			}
+			if(spaceToSpawnPlayer == -1)
+			{
+                spaceToSpawnPlayer = 0;
+                playerTempReference = Instantiate(playerPrefab, spaces[spaceToSpawnPlayer].spawnPoint);
+                Debug.LogWarning($"We couldn't match a space with the debug start scriptable space! Could possibly not be overriding anything.");
+            }
+        }
 		else
 		{
-			spaceToSpawnPlayer = 0;
-			playerTempReference = Instantiate(playerPrefab, spaces[spaceToSpawnPlayer].spawnPoint);
-		}
-		
+            spaceToSpawnPlayer = 0;
+            playerTempReference = Instantiate(playerPrefab, spaces[spaceToSpawnPlayer].spawnPoint);
+        }
 
 		playerTempReference.transform.parent = null;
 		playerTempReference.transform.localScale = playerPrefab.transform.localScale;
@@ -315,9 +422,36 @@ public class GameplayManager : MonoBehaviour
 		
 		//1st 5 cards in player's hand.
 		playerTempReferencePlayer.GameplayManagerRef = this;
-		playerTempReferencePlayer.InitializePlayer();
-		ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReferencePlayer, 3);
-		ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReferencePlayer, 2);
+		playerTempReferencePlayer.InitializePlayer(playerNum);
+
+		if (StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable)
+		{
+			int numMovementCardsToDraw = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride;
+			int numSupportCardsToDraw = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].supportCardsToStartWithOverride;
+
+			if(numMovementCardsToDraw > 0)
+			{
+                ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReferencePlayer, numMovementCardsToDraw);
+            }
+			else
+			{
+                ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReferencePlayer, 3);
+            }
+
+            if (numSupportCardsToDraw > 0)
+            {
+                ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReferencePlayer, numSupportCardsToDraw);
+            }
+            else
+            {
+                ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReferencePlayer, 2);
+            }
+		}
+		else
+		{
+            ThisDeckManager.DrawCards(Card.CardType.Movement, playerTempReferencePlayer, 3);
+            ThisDeckManager.DrawCards(Card.CardType.Support, playerTempReferencePlayer, 2);
+        }
 		playerTempReferencePlayer.SetSupportCardsInHand();
 		playerTempReferencePlayer.SetMovementCardsInHand();
 		playerTempReferencePlayer.HideHand();

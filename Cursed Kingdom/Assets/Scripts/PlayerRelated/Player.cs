@@ -237,22 +237,50 @@ public class Player : MonoBehaviour
 	}
 
 	//Debug version where we hardcode the class.
-	public void InitializePlayer()
+	public void InitializePlayer(int playerNum = 0)
 	{
-		SetupPlayerInfo();
+		SetupPlayerInfo(playerNum);
 		// Debug.Log($"Player info: \n health = {CurrentHealth}, level = {CurrentLevel}, \n description: {data.description}");
 	}
 
-	private void SetupPlayerInfo()
+	private void SetupPlayerInfo(int playerNum = 0)
 	{
 		StateMachineRef = GetComponent<PlayerCharacterSM>();
-		MaxHealth = ClassData.startingHealth;
+		if (StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable && StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingHealthOverride > 0)
+		{
+			MaxHealth = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingHealthOverride;
+        }
+		else
+		{
+            MaxHealth = ClassData.startingHealth;
+        }
+        
 		CurrentHealth = maxHealth;
-		CurrentLevel = 1;
+
+        if (StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable && StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride > 1)
+        {
+            CurrentLevel = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride;
+        }
+        else
+        {
+            CurrentLevel = 1;
+        }
+        
 		AbleToLevelUp = true;
 		SpacesLeftToMove = 0;
 		CurrentSumOfSpacesToMove = 0;
-        MaxHandSize = 6;
+
+        if (StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable && StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride +
+            StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride > 6)
+        {
+			MaxHandSize = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride +
+			StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride;
+        }
+		else
+		{
+            MaxHandSize = 6;
+        }
+        
 		MaxSupportCardsToUse = ClassData.maxSupportCardsToUsePerTurn;
 		NumSupportCardsUsedThisTurn = 0;
 		MaxMovementCardsToUse = ClassData.maxMovementCardsToUsePerTurn;

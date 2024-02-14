@@ -58,6 +58,7 @@ MonoBehaviour:
   boardPrefab: {fileID: 6953770271459722323, guid: 49b3a25a452187b4582aa06b3eb51613, type: 3}
   decksHolderPrefab: {fileID: 726965400988219405, guid: 59acc5b444f480846930ad04f57230ba, type: 3}
   PlayerInfoCanvas: {fileID: 0}
+  SpacesPlayerWillLandOnParent: {fileID: 0}
   playerCharacter: {fileID: 0}
   isPlayerMoving: 0
   playerMovementManager: {fileID: 0}
@@ -65,7 +66,6 @@ MonoBehaviour:
   directionChoiceButtonHolder: {fileID: 0}
   moveButtonPrefab: {fileID: 3210510977898461855, guid: ffa6bcaf5d39d8a4fa397c3ebcf2537f, type: 3}
   raycastLength: 2
-  currentGameplayState: 0
   thisDeckManager: {fileID: 0}
   movementCardPrefab: {fileID: 8549054513579610354, guid: 5f5e3d4fbf94ee743a753bc6cda8a507, type: 3}
   supportCardPrefab: {fileID: 959177630722259936, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
@@ -76,6 +76,7 @@ MonoBehaviour:
   useSelectedCardsPanel: {fileID: 0}
   useSelectedCardsText: {fileID: 0}
   useSelectedCardsButton: {fileID: 0}
+  useMovementCardNoCardsInHandButton: {fileID: 0}
   topDownMapDisplay: {fileID: 0}
   spaceArtworkPopupDisplay: {fileID: 0}
   handDisplayPanel: {fileID: 0}
@@ -84,10 +85,10 @@ MonoBehaviour:
   players: []
   playerInfoDisplays: []
   classdatas:
-  - {fileID: 11400000, guid: 2201c247b05ec524598b195c9934e69f, type: 2}
   - {fileID: 11400000, guid: 2081031c2ab5d734784cfeaa196551f4, type: 2}
   - {fileID: 11400000, guid: 36314dd781939014dace6307901964a3, type: 2}
   - {fileID: 11400000, guid: 01ef463ee796e8d439421c8b849493e9, type: 2}
+  - {fileID: 11400000, guid: 2201c247b05ec524598b195c9934e69f, type: 2}
   spaceDatasTest:
   - {fileID: 11400000, guid: 2e324dd6a150bcc4abb4704354556dfa, type: 2}
   - {fileID: 11400000, guid: 13de77643623dbe4c937fbda1ac9bf47, type: 2}
@@ -102,7 +103,7 @@ MonoBehaviour:
   fpsCap: 60
   spacesToMoveText: {fileID: 0}
   debugMessagePanel: {fileID: 0}
-  spawnSameSpotDebug: 0
+  useStartDebugMenu: 0
   numPlayersToStartWith: 4
 --- !u!114 &711935881092096548
 MonoBehaviour:
