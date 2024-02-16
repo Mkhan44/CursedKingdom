@@ -26,10 +26,6 @@ public class PhaseDisplay : MonoBehaviour
         blockerPanel.SetActive(false);
     }
 
-    private void Update()
-    {
-        
-    }
 
     public void TurnOnDisplay(string textToDisplay, float timeToKeepDisplayOn = 1.0f)
     {

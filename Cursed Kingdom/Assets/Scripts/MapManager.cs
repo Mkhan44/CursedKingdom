@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
 {
@@ -16,9 +17,12 @@ public class MapManager : MonoBehaviour
     [SerializeField] private bool isViewingMapGround;
     [SerializeField] private bool spaceIsHighlighted;
 
+    [SerializeField] private GameObject mobileMapControlsPanel; 
+
     public bool IsViewingMapOverhead { get => isViewingMapOverhead; set => isViewingMapOverhead = value; }
     public bool IsViewingMapGround { get => isViewingMapGround; set => isViewingMapGround = value; }
     public bool SpaceIsHighlighted { get => spaceIsHighlighted; set => spaceIsHighlighted = value; }
+    public GameObject MobileMapControlsPanel { get => mobileMapControlsPanel; set => mobileMapControlsPanel = value; }
 
     private void Start()
     {
@@ -128,6 +132,51 @@ public class MapManager : MonoBehaviour
         //gameplayManager.TopDownMapDisplay.CloseMapDisplayPanel();
     }
     #endregion
+
+    public void MoveMapViewButton(string direction)
+    {
+        string readDirection = direction.ToLower();
+
+        string up = "up";
+        string down = "down";
+        string left = "left";
+        string right = "right";
+
+        if (isViewingMapGround || IsViewingMapOverhead)
+        {
+            if (readDirection == up)
+            {
+                if (currentHighlightedSpace.NorthNeighbor != null)
+                {
+                    ChangeCurrentHighlightedSpaceGroundView(gameplayManager.currentActiveCamera, currentHighlightedSpace.NorthNeighbor);
+                }
+            }
+
+            if (readDirection == down)
+            {
+                if (currentHighlightedSpace.SouthNeighbor != null)
+                {
+                    ChangeCurrentHighlightedSpaceGroundView(gameplayManager.currentActiveCamera, currentHighlightedSpace.SouthNeighbor);
+                }
+            }
+
+            if (readDirection == right)
+            {
+                if (currentHighlightedSpace.EastNeighbor != null)
+                {
+                    ChangeCurrentHighlightedSpaceGroundView(gameplayManager.currentActiveCamera, currentHighlightedSpace.EastNeighbor);
+                }
+            }
+
+            if (readDirection == left)
+            {
+                if (currentHighlightedSpace.WestNeighbor != null)
+                {
+                    ChangeCurrentHighlightedSpaceGroundView(gameplayManager.currentActiveCamera, currentHighlightedSpace.WestNeighbor);
+                }
+            }
+        }
+    }
 
     #region Event Handlers
     private void MoveGroundView(KeyCode keyCodePressed)

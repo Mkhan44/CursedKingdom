@@ -15,6 +15,7 @@ public class DebugModeSingleton : MonoBehaviour
     [SerializeField] private GameplayManager gameplayManager;
     [SerializeField] private GameObject debugUIPanel;
     [SerializeField] private TextMeshProUGUI debugButtonToggleText;
+    [SerializeField] private TextMeshProUGUI debugStartScreenToggleText;
     [SerializeField] private TMP_Dropdown movementOverrideDropdown;
     [SerializeField] private TMP_Dropdown spaceLandedOverrideDropdown;
     [SerializeField] private TMP_Dropdown supportCardOverrideDropdown;
@@ -43,6 +44,17 @@ public class DebugModeSingleton : MonoBehaviour
     private void Start()
     {
         gameplayManager = GameObject.Find("Game Manager").GetComponent<GameplayManager>();
+        if(gameplayManager != null)
+        {
+            if (gameplayManager.useStartDebugMenu)
+            {
+                debugStartScreenToggleText.text = "StartDebugMenu: ON";
+            }
+            else
+            {
+                debugStartScreenToggleText.text = "StartDebugMenu: OFF";
+            }
+        }
     }
     public void ToggleDebugMode()
     {
@@ -57,6 +69,20 @@ public class DebugModeSingleton : MonoBehaviour
             debugUIPanel.SetActive(true);
             debugButtonToggleText.text = "DEBUG MODE: ON";
             isDebugActive = true;
+        }
+    }
+
+    public void ToggleStartDebugScreenUseOnRestart()
+    {
+        if(gameplayManager.useStartDebugMenu)
+        {
+            gameplayManager.useStartDebugMenu = false;
+            debugStartScreenToggleText.text = "StartDebugMenu: OFF";
+        }
+        else
+        {
+            gameplayManager.useStartDebugMenu = false;
+            debugStartScreenToggleText.text = "StartDebugMenu: ON";
         }
     }
 
