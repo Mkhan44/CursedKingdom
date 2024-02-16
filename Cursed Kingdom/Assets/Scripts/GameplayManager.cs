@@ -629,13 +629,16 @@ public class GameplayManager : MonoBehaviour
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
 			mapManager.ActivateHighlightOverheadView(Players[indexOfPlayer].CurrentSpacePlayerIsOn);
 			currentActiveCameraIndex++;
-		}
+			mapManager.MobileMapControlsPanel.SetActive(true);
+
+        }
 		else
 		{
 			currentActiveCameraIndex = 0;
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
 			mapManager.DisableCurrentHighlightedSpaceOverheadView(players[indexOfPlayer].CurrentSpacePlayerIsOn);
-		}
+            mapManager.MobileMapControlsPanel.SetActive(false);
+        }
 
 		currentActiveCamera.enabled = true;
 	}
@@ -655,13 +658,15 @@ public class GameplayManager : MonoBehaviour
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
 			mapManager.SetupGroundViewCamera(currentActiveCamera, Players[indexOfPlayer].CurrentSpacePlayerIsOn);
 			currentActiveCameraIndex++;
-		}
+            mapManager.MobileMapControlsPanel.SetActive(true);
+        }
 		else
 		{
 			currentActiveCameraIndex = 0;
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
 			mapManager.DisableHighlightedSpaceGroundView(players[indexOfPlayer].CurrentSpacePlayerIsOn);
-		}
+            mapManager.MobileMapControlsPanel.SetActive(false);
+        }
 
 		currentActiveCamera.enabled = true;
 	}
