@@ -22,7 +22,15 @@ public class LevelUpSpace : SpaceEffectData, ISpaceEffect
     {
         if(playerReference.AbleToLevelUp && playerReference.ClassData.classType == ClassTypeNeeded)
         {
-            playerReference.LevelUp(levelsToIncrease);
+            if(playerReference.AbleToLevelUp)
+            {
+                playerReference.LevelUp(levelsToIncrease);
+                playerReference.AbleToLevelUp = false;
+            }
+            else
+            {
+                Debug.Log("Can't level up! Unable to level up yet.");
+            }
             Debug.Log($"Landed on: {this.name} space and level should be increased by: {LevelsToIncrease} and health recovered by: {NumHealthToRecover}");
         }
         base.LandedOnEffect(playerReference);

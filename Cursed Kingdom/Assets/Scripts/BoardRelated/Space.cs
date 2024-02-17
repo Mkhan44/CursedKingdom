@@ -74,49 +74,7 @@ public class Space : MonoBehaviour
         gameplayManagerRef = GameObject.Find("Game Manager").GetComponent<GameplayManager>(); 
     }
 
-    //public void CollisionEntry(Collision collision)
-    //{
-    //    //Debug.Log($"The: {collision.gameObject.name} just touched the {this.name}!");
-
-    //    Player playerReference = collision.gameObject.GetComponent<Player>();
-
-    //    if (playerReference != null)
-    //    {
-    //        if (playerReference.PreviousSpacePlayerWasOn is null)
-    //        {
-    //            playerReference.PreviousSpacePlayerWasOn = this;
-    //           // Debug.Log($"Previous space was null, assigning current space as previous space.");
-    //        }
-    //        playerReference.CurrentSpacePlayerIsOn = this;
-    //    }
-    //    else
-    //    {
-    //        Debug.LogWarning("playerReference is null!");
-    //    }
-    //}
-
-    //public void CollisionStay(Collision collision)
-    //{
-    //    Player playerReference = collision.gameObject.GetComponent<Player>();
-
-    //    if (playerReference != null)
-    //    {
-    //        if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving)
-    //        {
-    //            playerReference.IsMoving = false;
-    //            // Debug.Log($"Player landed on space: {spaceData.spaceName}");
-    //            StartCoroutine(PlaySpaceInfoDisplayAnimationUI(playerReference));
-    //            gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
-    //           // ApplyLandedOnSpaceEffects(playerReference);
-    //            playerReference.CurrentSpacePlayerIsOn = this;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        Debug.LogWarning("playerReference is null STAY!");
-    //    }
-    //}
-
+    
     public void TriggerEnter(Collider collider)
     {
         Player playerReference = collider.gameObject.GetComponent<Player>();
@@ -130,7 +88,17 @@ public class Space : MonoBehaviour
             playerReference.CurrentSpacePlayerIsOn = this;
             if(this.spaceData.PassingOverSpaceEffect && playerReference.IsMoving)
             {
-                //ApplyLandedOnSpaceEffects(playerReference);
+                if (playerReference.AbleToLevelUp)
+                {
+                    foreach (SpaceData.SpaceEffect spaceEffect in spaceData.spaceEffects)
+                    {
+                        if (spaceEffect.spaceEffectData.GetType() == typeof(LevelUpSpace))
+                        {
+                            //Should only be 1 but this is still hardcoded so no.
+                            spaceEffect.spaceEffectData.LandedOnEffect(playerReference);
+                        }
+                    }
+                }
             }
         }
         else
@@ -147,10 +115,6 @@ public class Space : MonoBehaviour
             if (playerReference.SpacesLeftToMove < 1 && playerReference.IsMoving && gameplayManagerRef.playerCharacter.GetComponent<Player>() == playerReference && !haveSeparatedPlayersAlready)
             {
                 playerReference.IsMoving = false;
-                // Debug.Log($"Player landed on space: {spaceData.spaceName}");
-                //StartCoroutine(PlaySpaceInfoDisplayAnimationUI(playerReference));
-                //gameplayManagerRef.SpaceArtworkPopupDisplay.TurnOnDisplay(this, playerReference);
-               // ApplyLandedOnSpaceEffects(playerReference);
                 playerReference.CurrentSpacePlayerIsOn = this;
             }
         }
@@ -165,6 +129,17 @@ public class Space : MonoBehaviour
         if(playersOnThisSpace.Count > 0)
         {
             Player playerLeaving = collider.gameObject.GetComponent<Player>();
+
+            if(!playerLeaving.AbleToLevelUp)
+            {
+                foreach (SpaceData.SpaceEffect spaceEffect in spaceData.spaceEffects)
+                {
+                    if (spaceEffect.spaceEffectData.GetType() == typeof(LevelUpSpace))
+                    {
+                        playerLeaving.AbleToLevelUp = true;
+                    }
+                }
+            }
             
             haveSeparatedPlayersAlready = true;
             if (playersOnThisSpace.Contains(playerLeaving))
@@ -420,6 +395,12 @@ public class Space : MonoBehaviour
         {
             spaceData = cachedSpaceData;
         }
+    }
+
+    //Apply space effects when the Player passes over the space.
+    public void ApplyPassingOverSpaceEffects(Player player)
+    {
+
     }
 
     //Apply all space effects at the end of the Player's turn. Before Status effects are applied.
