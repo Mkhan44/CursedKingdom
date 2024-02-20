@@ -26,6 +26,16 @@ public class CanvasResolution : MonoBehaviour
         setInfo();
     }
 
+    private void LateUpdate()
+    {
+
+        if (GetCurrentScreenReso().x != resoX || GetCurrentScreenReso().y != resoY)
+        {
+            setInfo();
+        }
+        
+    }
+
 
     private void setInfo()
     {
@@ -37,15 +47,26 @@ public class CanvasResolution : MonoBehaviour
         return;
 #endif
         */
-        resoX = (float)Screen.currentResolution.width;
-        resoY = (float)Screen.currentResolution.height;
+        Vector2 currentScreenReso = GetCurrentScreenReso();
+        resoX = currentScreenReso.x;
+        resoY = currentScreenReso.y;
 
         can.referenceResolution = new Vector2(resoX, resoY);
+    }
+
+    private void ApplySafeZone()
+    {
+
     }
 
     public Vector2 getReferenceReso()
     {
         return can.referenceResolution;
+    }
+
+    public Vector2 GetCurrentScreenReso()
+    {
+        return new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
     }
 
 }

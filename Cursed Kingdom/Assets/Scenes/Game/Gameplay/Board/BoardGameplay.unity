@@ -2003,7 +2003,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2567285720081007278, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 673.27655
+      value: 772.656
       objectReference: {fileID: 0}
     - target: {fileID: 2567285720081007278, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2032,6 +2032,10 @@ PrefabInstance:
     - target: {fileID: 2854327574013637604, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3065073761727648339, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+      propertyPath: isIphone
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3243665338097570603, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2211,7 +2215,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4573234100213797042, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 673.27655
+      value: 772.656
       objectReference: {fileID: 0}
     - target: {fileID: 4573234100213797042, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2449,6 +2453,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 6939106221628907373, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.50878906
+      objectReference: {fileID: 0}
     - target: {fileID: 7016170668354411726, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2616,7 +2624,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5034642293403635660, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1144067163}
   m_SourcePrefab: {fileID: 100100000, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
 --- !u!114 &481225216 stripped
 MonoBehaviour:
@@ -4738,6 +4749,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1140911315}
   m_CullTransparentMesh: 1
+--- !u!1 &1144067157 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5034642293403635660, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1144067163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144067157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f89a41c7ef34674cb93030178a4d083, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isIphone: 1
+  isStage: 0
+  mainCam: {fileID: 0}
 --- !u!1 &1145299673
 GameObject:
   m_ObjectHideFlags: 0
