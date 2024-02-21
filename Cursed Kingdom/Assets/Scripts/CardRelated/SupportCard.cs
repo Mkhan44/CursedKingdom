@@ -104,7 +104,7 @@ public class SupportCard : Card
             {
                 if (ParentAnimator != null)
                 {
-                    if (ParentAnimator.GetBool(hidden))
+                    if (ParentAnimator.GetBool(ISHIDDEN))
                     {
                         return;
                     }

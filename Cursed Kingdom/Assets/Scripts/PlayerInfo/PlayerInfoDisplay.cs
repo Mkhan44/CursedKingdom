@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class PlayerInfoDisplay : MonoBehaviour
 {
     private const string ISPOISONED = "isPoisoned";
+    private const string ISCURSED = "isCursed";
 
     [Header("References")]
     [SerializeField] private TextMeshProUGUI playerClassText;
@@ -136,12 +137,14 @@ public class PlayerInfoDisplay : MonoBehaviour
                 CurseImage.color = curseElement.ActiveColor;
                 PoisonImage.color = poisonElement.InactiveColor;
                 CurseTurnsText.text = PlayerReference.CurseDuration.ToString();
+                animator.SetBool(ISCURSED, true);
             }
             else
             {
                 CurseImage.color = curseElement.InactiveColor;
                 PoisonImage.color = poisonElement.InactiveColor;
                 CurseTurnsText.text = string.Empty;
+                animator.SetBool(ISCURSED, false);
             }
             
             return;
