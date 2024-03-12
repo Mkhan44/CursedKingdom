@@ -336,17 +336,22 @@ public class Player : MonoBehaviour
 				GameplayManagerRef.UseEliteAbilityButton.onClick.AddListener(UseEliteAbility);
 			}
 		}
-
-		HandleLevelUp();
-		AbleToLevelUp = false;
-
-		GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
+		else
+		{
+            HandleLevelUp();
+            AbleToLevelUp = false;
+            GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
+        }
 
 	}
 
 	public void HandleLevelUp()
 	{
-		GameplayManagerRef.UpdatePlayerLevel(this);
+        MaxHealth += 1;
+        GameplayManagerRef.UpdatePlayerMaxHealth(this);
+        RecoverHealth(1);
+        MaxHandSize += 1;
+        GameplayManagerRef.UpdatePlayerLevel(this);
 		GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
 	}
 

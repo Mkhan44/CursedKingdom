@@ -596,9 +596,19 @@ public class GameplayManager : MonoBehaviour
 
 		if (playerNum is not -1)
 		{
-			PlayerInfoDisplays[playerNum].UpdatePlayerHealth();
+			PlayerInfoDisplays[playerNum].UpdatePlayerCurrentHealth();
 		}
 	}
+
+	public void UpdatePlayerMaxHealth(Player playerRef)
+	{
+        int playerNum = GetCurrentPlayerIndex(playerRef);
+
+        if (playerNum is not -1)
+        {
+            PlayerInfoDisplays[playerNum].UpdatePlayerMaxHealth(playerRef);
+        }
+    }
 
 	public void UpdatePlayerCooldownText(Player playerRef)
 	{
