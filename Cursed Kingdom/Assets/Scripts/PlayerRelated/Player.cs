@@ -423,8 +423,8 @@ public class Player : MonoBehaviour
 			{
 				if(!playerTarget.IsPoisoned && !playerTarget.IsCursed)
 				{
-					playerTarget.CursePlayer(statusDuration);
-                    playerTarget.WasAfflictedWithStatusThisTurn = false;
+					StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, playerTarget, statusType, statusDuration));
+					yield break;
                 }
 			}
 			else
@@ -437,8 +437,8 @@ public class Player : MonoBehaviour
 						ActivatePlayerBlockPoisonSelectionPopup(playerTarget, supportCardsToBlockWith, statusDuration);
 						yield break;
 					}
-                    playerTarget.PoisonPlayer(statusDuration);
-                    playerTarget.WasAfflictedWithStatusThisTurn = false;
+                    StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, playerTarget, statusType, statusDuration));
+                    yield break;
                 }
             }
         }
@@ -672,16 +672,20 @@ public class Player : MonoBehaviour
 							ActivatePlayerBlockElementalDamageSelectionPopup(playerTarget, damageToTake, supportCardsToBlockWith);
                             yield break;
                         }
-                        playerTarget.TakeDamage(damageToTake);
+
+						StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
+						yield break;
                     }
 					else
 					{
-                        playerTarget.TakeDamage(damageToTake);
+                        StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
+                        yield break;
                     }
 				}
 				else
 				{
-					playerTarget.TakeDamage(damageToTake);
+                    StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
+                    yield break;
 				}
 
 				
@@ -713,7 +717,8 @@ public class Player : MonoBehaviour
         {
             if (damageToTake > 0)
             {
-                playerTarget.TakeDamage(damageToTake);
+                StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
+				yield break;
             }
         }
         else
