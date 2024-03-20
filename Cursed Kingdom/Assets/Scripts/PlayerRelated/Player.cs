@@ -336,17 +336,22 @@ public class Player : MonoBehaviour
 				GameplayManagerRef.UseEliteAbilityButton.onClick.AddListener(UseEliteAbility);
 			}
 		}
-
-		HandleLevelUp();
-		AbleToLevelUp = false;
-
-		GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
+		else
+		{
+            HandleLevelUp();
+            AbleToLevelUp = false;
+            GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
+        }
 
 	}
 
 	public void HandleLevelUp()
 	{
-		GameplayManagerRef.UpdatePlayerLevel(this);
+        MaxHealth += 1;
+        GameplayManagerRef.UpdatePlayerMaxHealth(this);
+        RecoverHealth(1);
+        MaxHandSize += 1;
+        GameplayManagerRef.UpdatePlayerLevel(this);
 		GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
 	}
 
@@ -418,8 +423,8 @@ public class Player : MonoBehaviour
 			{
 				if(!playerTarget.IsPoisoned && !playerTarget.IsCursed)
 				{
-					playerTarget.CursePlayer(statusDuration);
-                    playerTarget.WasAfflictedWithStatusThisTurn = false;
+					StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, playerTarget, statusType, statusDuration));
+					yield break;
                 }
 			}
 			else
@@ -432,8 +437,8 @@ public class Player : MonoBehaviour
 						ActivatePlayerBlockPoisonSelectionPopup(playerTarget, supportCardsToBlockWith, statusDuration);
 						yield break;
 					}
-                    playerTarget.PoisonPlayer(statusDuration);
-                    playerTarget.WasAfflictedWithStatusThisTurn = false;
+                    StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, playerTarget, statusType, statusDuration));
+                    yield break;
                 }
             }
         }
@@ -667,16 +672,20 @@ public class Player : MonoBehaviour
 							ActivatePlayerBlockElementalDamageSelectionPopup(playerTarget, damageToTake, supportCardsToBlockWith);
                             yield break;
                         }
-                        playerTarget.TakeDamage(damageToTake);
+
+						StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
+						yield break;
                     }
 					else
 					{
-                        playerTarget.TakeDamage(damageToTake);
+                        StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
+                        yield break;
                     }
 				}
 				else
 				{
-					playerTarget.TakeDamage(damageToTake);
+                    StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
+                    yield break;
 				}
 
 				
@@ -708,7 +717,8 @@ public class Player : MonoBehaviour
         {
             if (damageToTake > 0)
             {
-                playerTarget.TakeDamage(damageToTake);
+                StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
+				yield break;
             }
         }
         else

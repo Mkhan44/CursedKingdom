@@ -86,6 +86,12 @@ public class MovementCard : Card
             }
             TempCardValue += valueToIncreaseBy;
             movementValueText.text = TempCardValue.ToString();
+
+            if(TempCardValue > MovementCardValue)
+            {
+                ActivateBoostedEffect();
+            }
+            
             return;
         }
     }
@@ -109,6 +115,7 @@ public class MovementCard : Card
         {
             TempCardValue = revertedValue;
             TempIncreaseValue = 0;
+            DeactivateBoostedEffect();
         }
     }
 
@@ -133,7 +140,7 @@ public class MovementCard : Card
             {
                 if(ParentAnimator != null)
                 {
-                    if(ParentAnimator.GetBool(hidden))
+                    if(ParentAnimator.GetBool(ISHIDDEN))
                     {
                         return;
                     }
@@ -221,6 +228,10 @@ public class MovementCard : Card
             {
                 thePlayer.UseMovementCard();
                 GameplayManager.StartMove(TempCardValue);
+                if(TempCardValue > MovementCardValue)
+                {
+                    DeactivateBoostedEffect();
+                }
                 ResetMovementValue();
                 if (!thePlayer.IsCursed)
                 {
@@ -321,16 +332,34 @@ public class MovementCard : Card
     }
 
 
-    #region Status Effects
+    #region Status Effects/Buffs
     public override void ActivateCurseEffect()
     {
-        TextureAnimator.SetBool(isCursed, true);
+        TextureAnimator.SetBool(ISCURSED, true);
     }
 
     public override void DeactivateCurseEffect()
     {
-        TextureAnimator.SetBool(isCursed, false);
+        TextureAnimator.SetBool(ISCURSED, false);
     }
+
+    public override void ActivateBoostedEffect()
+    {
+        TextureAnimator.SetBool(ISBOOSTED, true);
+    }
+
+    public override void DeactivateBoostedEffect()
+    {
+        TextureAnimator.SetBool(ISBOOSTED, false);
+    }
+
+    public override void TurnOffAllEffects()
+    {
+        TextureAnimator.SetBool(ISCURSED, false);
+        TextureAnimator.SetBool(ISBOOSTED, false);
+    }
+
+
 
     #endregion
 }

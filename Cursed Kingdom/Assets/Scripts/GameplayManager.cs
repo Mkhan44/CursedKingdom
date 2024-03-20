@@ -74,6 +74,8 @@ public class GameplayManager : MonoBehaviour
 	public MapManager mapManager;
 	public BoardManager boardManager;
 
+	//Cameras
+	[SerializeField] private GameplayCameraManager gameplayCameraManagerRef;
 	private CinemachineVirtualCamera cinemachineVirtualCamera;
 
 	public CinemachineVirtualCamera currentActiveCamera;
@@ -116,6 +118,7 @@ public class GameplayManager : MonoBehaviour
 	public PlayerHandDisplayUI HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
 	public TopDownMapDisplay TopDownMapDisplay { get => topDownMapDisplay; set => topDownMapDisplay = value; }
 	public SpaceArtworkPopupDisplay SpaceArtworkPopupDisplay { get => spaceArtworkPopupDisplay; set => spaceArtworkPopupDisplay = value; }
+    public GameplayCameraManager GameplayCameraManagerRef { get => gameplayCameraManagerRef; set => gameplayCameraManagerRef = value; }
 
     private void Start()
 	{
@@ -174,7 +177,8 @@ public class GameplayManager : MonoBehaviour
         //Spawn in the players!
         GetPlayerStatsFromDebug();
 
-		cinemachineVirtualCameras[0].LookAt = playerCharacter;
+		GameplayCameraManagerRef = GameObject.Find("Camera Manager").GetComponent<GameplayCameraManager>();
+        cinemachineVirtualCameras[0].LookAt = playerCharacter;
 		cinemachineVirtualCameras[0].Follow = playerCharacter;
 
 		cinemachineVirtualCameras[1].LookAt = spaces[spaces.Count - 1].gameObject.transform;
@@ -596,9 +600,19 @@ public class GameplayManager : MonoBehaviour
 
 		if (playerNum is not -1)
 		{
-			PlayerInfoDisplays[playerNum].UpdatePlayerHealth();
+			PlayerInfoDisplays[playerNum].UpdatePlayerCurrentHealth();
 		}
 	}
+
+	public void UpdatePlayerMaxHealth(Player playerRef)
+	{
+        int playerNum = GetCurrentPlayerIndex(playerRef);
+
+        if (playerNum is not -1)
+        {
+            PlayerInfoDisplays[playerNum].UpdatePlayerMaxHealth(playerRef);
+        }
+    }
 
 	public void UpdatePlayerCooldownText(Player playerRef)
 	{

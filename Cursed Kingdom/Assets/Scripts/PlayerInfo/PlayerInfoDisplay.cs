@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class PlayerInfoDisplay : MonoBehaviour
 {
     private const string ISPOISONED = "isPoisoned";
+    private const string ISCURSED = "isCursed";
 
     [Header("References")]
     [SerializeField] private TextMeshProUGUI playerClassText;
@@ -78,26 +79,7 @@ public class PlayerInfoDisplay : MonoBehaviour
         CurseImage.color = curseElement.InactiveColor;
         PoisonImage.color = poisonElement.InactiveColor;
 
-        if(HeartsHolder.transform.childCount < playerRef.MaxHealth)
-        {
-            for(int i = 0; i < playerRef.MaxHealth; i++)
-            {
-                GameObject tempObj = Instantiate(HeartPrefab, HeartsHolder.transform);
-                Image image = tempObj.GetComponent<Image>();
-                if(heartElement != null)
-                {
-                    image.sprite = heartElement.ActiveSprite;
-                }
-            }
-        }
-
-        foreach (Transform child in HeartsHolder.transform)
-        {
-            Hearts.Add(child.GetComponent<Image>());
-        }
-
-        UpdatePlayerHealth();
-        
+        UpdatePlayerMaxHealth(playerRef);
     }
 
     private PlayerInfoIconPreset.InfoIconElement GrabPresetElementFromSingleton(PlayerInfoIconPreset.InfoIconElement.InfoIconType infoIconTypeToFind)
@@ -136,12 +118,14 @@ public class PlayerInfoDisplay : MonoBehaviour
                 CurseImage.color = curseElement.ActiveColor;
                 PoisonImage.color = poisonElement.InactiveColor;
                 CurseTurnsText.text = PlayerReference.CurseDuration.ToString();
+                animator.SetBool(ISCURSED, true);
             }
             else
             {
                 CurseImage.color = curseElement.InactiveColor;
                 PoisonImage.color = poisonElement.InactiveColor;
                 CurseTurnsText.text = string.Empty;
+                animator.SetBool(ISCURSED, false);
             }
             
             return;
@@ -170,7 +154,7 @@ public class PlayerInfoDisplay : MonoBehaviour
         Debug.LogWarning("Couldn't update status effect!");
     }
 
-    public void UpdatePlayerHealth()
+    public void UpdatePlayerCurrentHealth()
     {
         int numActiveHearts = 0;
         foreach(Image image in Hearts)
@@ -187,6 +171,32 @@ public class PlayerInfoDisplay : MonoBehaviour
             }
             
         }
+    }
+
+    public void UpdatePlayerMaxHealth(Player playerRef)
+    {
+        Hearts.Clear();
+        //Reset the hearts based on the Player's max health.
+        foreach (Transform child in HeartsHolder.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        if (HeartsHolder.transform.childCount < playerRef.MaxHealth)
+        {
+            for (int i = 0; i < playerRef.MaxHealth; i++)
+            {
+                GameObject tempObj = Instantiate(HeartPrefab, HeartsHolder.transform);
+                Image image = tempObj.GetComponent<Image>();
+                if (heartElement != null)
+                {
+                    image.sprite = heartElement.ActiveSprite;
+                }
+                Hearts.Add(tempObj.GetComponent<Image>());
+            }
+        }
+
+        UpdatePlayerCurrentHealth();
     }
 
     public void UpdateCooldownText()

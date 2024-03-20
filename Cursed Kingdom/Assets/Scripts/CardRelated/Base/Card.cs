@@ -10,10 +10,11 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour , IPointerClickHandler
 {
-    protected const string hidden = "IsHidden";
+    protected const string ISHIDDEN = "IsHidden";
 
     //Animation string parameters
-    protected const string isCursed = "isCursed";
+    protected const string ISCURSED = "isCursed";
+    protected const string ISBOOSTED = "isBoosted";
     public enum CardType 
     {
         Movement,
@@ -211,7 +212,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
         yield return null;
     }
 
-    #region Status Effects
+    #region Status Effects/Buffs
     public virtual void ActivateCurseEffect()
     {
         
@@ -222,6 +223,20 @@ public class Card : MonoBehaviour , IPointerClickHandler
 
     }
 
+    public virtual void ActivateBoostedEffect()
+    {
+
+    }
+
+    public virtual void DeactivateBoostedEffect()
+    {
+
+    }
+
+    public virtual void TurnOffAllEffects()
+    {
+
+    }
     #endregion
 
     public virtual void OnPointerClick(PointerEventData eventData)

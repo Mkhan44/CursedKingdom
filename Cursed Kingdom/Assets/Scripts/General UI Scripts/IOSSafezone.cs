@@ -29,16 +29,15 @@ public class IOSSafezone : MonoBehaviour
 
     private void Awake()
     {
-        Application.targetFrameRate = 60;
     }
     private void Start()
     {
         if (isIphone)
         {
             // mainCam.orthographicSize = 6f;
+            parentRectTransform = this.GetComponent<RectTransform>();
+            YoutubeSafeArea(Screen.safeArea);
         }
-        parentRectTransform = this.GetComponentInParent<RectTransform>();
-
     }
 
     private void Update()
@@ -50,7 +49,7 @@ public class IOSSafezone : MonoBehaviour
             {
                 if (lastSafeArea != Screen.safeArea)
                 {
-                    ApplySafeArea();
+                   // ApplySafeArea();
                 }
             }
 
@@ -81,5 +80,19 @@ public class IOSSafezone : MonoBehaviour
         lastSafeArea = Screen.safeArea;
 
         //Debug.Log("Safe area is: " + lastSafeArea);
+    }
+
+    private void YoutubeSafeArea(Rect safeArea)
+    {
+        Vector2 anchorMin = safeArea.position;
+        Vector2 anchorMax = safeArea.position + safeArea.size;
+
+        anchorMin.x /= Screen.width;
+        anchorMin.y /= Screen.height;
+        anchorMax.x /= Screen.width;
+        anchorMax.y /= Screen.height;
+
+        parentRectTransform.anchorMin = anchorMin;
+        parentRectTransform.anchorMax = anchorMax;
     }
 }
