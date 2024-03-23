@@ -19,6 +19,11 @@ public class NegateSupportCardEffect : SupportCardEffectData, ISupportEffect
 
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
+        SupportCard cardUsed = (SupportCard)cardPlayed;
+        if (cardUsed != null)
+        {
+            supportCardThatWasJustUsed = cardUsed;
+        }
         //If RequiresSingleTarget is true, then only negate the effect if it targets 1 player. Otherwise, negate the effect regardless.
 
     }

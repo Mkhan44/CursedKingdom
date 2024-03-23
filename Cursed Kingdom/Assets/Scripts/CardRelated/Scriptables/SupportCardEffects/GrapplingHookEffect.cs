@@ -16,6 +16,14 @@ public class GrapplingHookEffect : SupportCardEffectData, ISupportEffect
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
         //Takes card that was played, adds to the player's hand.
+        if(playerReference.GameplayManagerRef.CurrentSupportCardBeingUsed != null)
+        {
+            playerReference.DrawCard(playerReference.GameplayManagerRef.CurrentSupportCardBeingUsed);
+            Debug.Log($"Player {playerReference.playerIDIntVal} just stole {playerReference.GameplayManagerRef.CurrentSupportCardBeingUsed.SupportCardData.CardTitle} !");
+            playerReference.GameplayManagerRef.CurrentSupportCardBeingUsed = null;
+        }
+
+        base.EffectOfCard(playerReference, cardPlayed);
     }
 
 }

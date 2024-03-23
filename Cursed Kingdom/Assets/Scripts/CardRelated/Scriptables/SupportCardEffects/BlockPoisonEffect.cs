@@ -15,6 +15,7 @@ public class BlockPoisonEffect : SupportCardEffectData, ISupportEffect
 {
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
+        base.EffectOfCard(playerReference, cardPlayed);
         //If the player would be poisoned from an effect, essentially don't update the turns they're poisoned for since it shouldn't have any effect.
     }
 
