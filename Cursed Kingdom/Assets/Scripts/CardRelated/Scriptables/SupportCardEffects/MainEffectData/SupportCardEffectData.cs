@@ -8,11 +8,12 @@ using UnityEngine;
 
 public class SupportCardEffectData : ScriptableObject , ISupportEffect
 {
-    public event Action SupportCardEffectCompleted;
+    public event Action<SupportCard> SupportCardEffectCompleted;
 
     [SerializeField] private bool isACost;
     [SerializeField] private bool isElemental;
     [SerializeField] private bool isReaction;
+    protected SupportCard supportCardThatWasJustUsed;
 
     public bool IsACost { get => isACost; set => isACost = value; }
     public bool IsElemental { get => isElemental; set => isElemental = value; }
@@ -20,6 +21,11 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
 
     public virtual void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
+        SupportCard cardUsed = (SupportCard)cardPlayed;
+        if (cardUsed != null) 
+        {
+            supportCardThatWasJustUsed = cardUsed;
+        }
         //Usually called after the effect has been completed.
         CompletedEffect(playerReference);
     }
@@ -40,7 +46,7 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
 
     public virtual void CompletedEffect(Player playerReference)
     {
-        SupportCardEffectCompleted?.Invoke();
+        SupportCardEffectCompleted?.Invoke(supportCardThatWasJustUsed);
     }
 
     protected virtual void UpdateEffectDescription()

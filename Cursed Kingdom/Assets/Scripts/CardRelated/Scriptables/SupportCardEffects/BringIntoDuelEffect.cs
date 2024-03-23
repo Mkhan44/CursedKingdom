@@ -15,7 +15,11 @@ public class BringIntoDuelEffect : SupportCardEffectData, ISupportEffect
 {
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
-
+        SupportCard cardUsed = (SupportCard)cardPlayed;
+        if (cardUsed != null)
+        {
+            supportCardThatWasJustUsed = cardUsed;
+        }
     }
 }
 

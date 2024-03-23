@@ -31,6 +31,11 @@ public class PoisonEffect : SupportCardEffectData, ISupportEffect
 
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
+        SupportCard cardUsed = (SupportCard)cardPlayed;
+        if (cardUsed != null)
+        {
+            supportCardThatWasJustUsed = cardUsed;
+        }
         //If player is already cursed do nothing. Otherwise, add to their curse turn count.
         //If 'PoisonImmediately' is true, poison as soon as the card is used. Otherwise don't poison until after the current turn ends. this usually isn't true for duel related effects.
 

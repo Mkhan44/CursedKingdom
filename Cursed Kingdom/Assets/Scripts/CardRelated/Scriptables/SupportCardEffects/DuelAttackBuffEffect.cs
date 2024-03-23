@@ -22,5 +22,10 @@ public class DuelAttackBuffEffect : SupportCardEffectData, ISupportEffect
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
         //If BuffAllCards != true ....Need to let player choose which card to apply the buff to.
+        SupportCard cardUsed = (SupportCard)cardPlayed;
+        if (cardUsed != null)
+        {
+            supportCardThatWasJustUsed = cardUsed;
+        }
     }
 }

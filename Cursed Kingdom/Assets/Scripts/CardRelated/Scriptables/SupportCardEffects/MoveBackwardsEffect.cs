@@ -21,6 +21,11 @@ public class MoveBackwardsEffect : SupportCardEffectData, ISupportEffect
 
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
+        SupportCard cardUsed = (SupportCard)cardPlayed;
+        if (cardUsed != null)
+        {
+            supportCardThatWasJustUsed = cardUsed;
+        }
         //If needToWinDuel == true ...Must win the duel for this effect to activate it. Maybe add it to a queue?
     }
 

@@ -194,7 +194,16 @@ public class SupportCard : Card
                         Debug.LogWarning("You are in debug mode and we are NOT checking for correct conditions to use a Support card.");
                     }
 
+                    List<Player> playersThatCanNegate = new();
+                    playersThatCanNegate = currentPlayer.CheckIfOtherPlayersCanNegate();
 
+                    if (playersThatCanNegate.Count > 0)
+                    {
+                        List<SupportCard> supportCards = currentPlayer.GetSupportCardsPlayersCanNegateSupportCardEffectsWith(currentPlayer);
+                        //Need this to be dynamic so that if Player 1 says no, Player 2 has a chance to respond etc.
+                        currentPlayer.ActivatePlayerNegateSupportCardPopup(playersThatCanNegate[0], supportCards, this, currentPlayer);
+                        return;
+                    }
                     AttemptToUseSupportCard(currentPlayer);
                 }
             }
@@ -291,8 +300,6 @@ public class SupportCard : Card
             Debug.LogWarning("Hey, no support effects on this card currently!");
         }
 
-
-
         
         for (int i = 0; i < SupportCardData.supportCardEffects.Count; i++)
         {
@@ -333,7 +340,8 @@ public class SupportCard : Card
             }
             //Whatever we already had from passing over effects + the new effects.
             player.SupportCardEffectsToHandle = supportCardEffectsForPlayerToHandle;
-            player.StartHandlingSupportCardEffects();
+            player.StartHandlingSupportCardEffects(this);
+            player.GameplayManagerRef.OnPlayerUsedASupportCard(this);
         }
 
 

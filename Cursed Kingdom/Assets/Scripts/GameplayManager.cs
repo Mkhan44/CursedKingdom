@@ -16,6 +16,7 @@ public class GameplayManager : MonoBehaviour
 {
 	public event Action<KeyCode> MoveHighlightedSpaceIconGroundView;
 	public event Action<KeyCode> MoveHighlightedSpaceIconOverheadView;
+	public event Action<SupportCard> CurrentSupportCardThatWasJustUsed;
 	//event if all players die
 	public event Action<Player> AllPlayersDefeated;
 	
@@ -53,6 +54,9 @@ public class GameplayManager : MonoBehaviour
 	[SerializeField] private TextMeshProUGUI useSelectedCardsText;
 	[SerializeField] private Button useSelectedCardsButton;
 	[SerializeField] private Button useMovementCardNoCardsInHandButton;
+
+	//Support card usage.
+	[SerializeField] private SupportCard currentSupportCardBeingUsed;
 
 	//Gameboard Data
 	[SerializeField] private TopDownMapDisplay topDownMapDisplay;
@@ -109,6 +113,7 @@ public class GameplayManager : MonoBehaviour
 	public GameObject MovementCardDiscardPileHolder { get => movementCardDiscardPileHolder; set => movementCardDiscardPileHolder = value; }
 	public GameObject SupportCardDiscardPileHolder { get => supportCardDiscardPileHolder; set => supportCardDiscardPileHolder = value; }
 	public GameObject UseSelectedCardsPanel { get => useSelectedCardsPanel; set => useSelectedCardsPanel = value; }
+    public SupportCard CurrentSupportCardBeingUsed { get => currentSupportCardBeingUsed; set => currentSupportCardBeingUsed = value; }
 	public TextMeshProUGUI UseSelectedCardsText { get => useSelectedCardsText; set => useSelectedCardsText = value; }
 	public Button UseSelectedCardsButton { get => useSelectedCardsButton; set => useSelectedCardsButton = value; }
     public Button UseMovementCardNoCardsInHandButton { get => useMovementCardNoCardsInHandButton; set => useMovementCardNoCardsInHandButton = value; }
@@ -806,6 +811,13 @@ public class GameplayManager : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
         yield return null;
+	}
+
+	//Event trigger
+	public void OnPlayerUsedASupportCard(SupportCard supportCardUsed)
+	{
+		CurrentSupportCardThatWasJustUsed?.Invoke(supportCardUsed);
+		CurrentSupportCardBeingUsed = supportCardUsed;
 	}
 
 

@@ -27,6 +27,12 @@ public class DrainHealthEffect : SupportCardEffectData, ISupportEffect
 
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
+
+        SupportCard cardUsed = (SupportCard)cardPlayed;
+        if (cardUsed != null)
+        {
+            supportCardThatWasJustUsed = cardUsed;
+        }
         //If AttackAllPlayers = true, player gains the health from all targets and they all lose that same amount.
 
         if (AttackAllPlayers)

@@ -520,6 +520,7 @@ public class Player : MonoBehaviour
         DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams, 1, "Attack");
     }
 
+    #region BLOCK EFFECT POPUPS
     public void ActivatePlayerBlockElementalDamageSelectionPopup(Player targetedPlayer, int damageToPotentiallytake, List<SupportCard> elementalBlockSupportCards)
     {
 		//Move the camera to the targeted Player. Once they select a choice, move the camera back to the current Player. Moving the camera back will be in the coroutine most likely.
@@ -557,6 +558,134 @@ public class Player : MonoBehaviour
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToBlockPoison), this, paramsList));
 
         DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a support card that can prevent you from being poisoned for {turnsToBePoisoned} turn(s). Do you wish to use it?", insertedParams, 1, "Reaction");
+    }
+
+	public void ActivatePlayerNegateSupportCardPopup(Player targetedPlayer, List<SupportCard> negateSupportCards, SupportCard supportCardTryingToBeUsed, Player playerAttemptingToUseSupportCard)
+	{
+        // Move the camera to the targeted Player. Once they select a choice, move the camera back to the current Player. Moving the camera back will be in the coroutine most likely.
+
+        //Camera code
+        //alksdfja
+
+        List<Tuple<string, string, object, List<object>>> insertedParams = new();
+
+        List<object> paramsList = new();
+        paramsList.Add(targetedPlayer);
+        paramsList.Add(negateSupportCards);
+        paramsList.Add(supportCardTryingToBeUsed);
+		paramsList.Add(playerAttemptingToUseSupportCard);
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Yes", nameof(UseSupportCardToNegateSupportCard), this, paramsList));
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToNegateSupportCard), this, paramsList));
+
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a support card that can negate the {supportCardTryingToBeUsed.SupportCardData.CardTitle} support card. Do you wish to negate it?", insertedParams, 1, "Reaction");
+    }
+
+    public void ActivatePlayerStealSupportCardPopup(Player targetedPlayer, List<SupportCard> stealSupportCards, SupportCard supportCardTryingToBeUsed, Player playerAttemptingToUseSupportCard)
+    {
+        // Move the camera to the targeted Player. Once they select a choice, move the camera back to the current Player. Moving the camera back will be in the coroutine most likely.
+
+        //Camera code
+        //alksdfja
+
+        List<Tuple<string, string, object, List<object>>> insertedParams = new();
+
+        List<object> paramsList = new();
+        paramsList.Add(targetedPlayer);
+        paramsList.Add(stealSupportCards);
+        paramsList.Add(supportCardTryingToBeUsed);
+        paramsList.Add(playerAttemptingToUseSupportCard);
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Yes", nameof(UseSupportCardToStealSupportCard), this, paramsList));
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToStealSupportCard), this, paramsList));
+
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a {stealSupportCards[0].SupportCardData.CardTitle} card that can steal the {supportCardTryingToBeUsed.SupportCardData.CardTitle} support card. Do you wish to negate it?", insertedParams, 1, "Reaction");
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player targetedPlayer, List<SupportCard> stealSupportCards, SupportCard supportCardTryingToBeUsed, Player playerAttemptingToUseSupportCard
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+    public IEnumerator UseSupportCardToStealSupportCard(List<object> objects)
+    {
+        yield return null;
+        Player targetedPlayer = (Player)objects[0];
+        List<SupportCard> stealSupportCards = (List<SupportCard>)objects[1];
+        SupportCard supportCardTryingToBeUsed = (SupportCard)objects[2];
+        Player playerAttemptingToUseSupportCard = (Player)objects[3];
+
+        //Use the first card in the list.
+        if (stealSupportCards.Count > 0)
+        {
+            stealSupportCards[0].AttemptToUseSupportCard(targetedPlayer, false);
+          //  GameplayManagerRef.CurrentSupportCardBeingUsed = null;
+        }
+
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player targetedPlayer, List<SupportCard> stealSupportCards, SupportCard supportCardTryingToBeUsed, Player playerAttemptingToUseSupportCard
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+    public IEnumerator DontUseSupportCardToStealSupportCard(List<object> objects)
+    {
+        yield return null;
+        Player targetedPlayer = (Player)objects[0];
+        List<SupportCard> stealSupportCards = (List<SupportCard>)objects[1];
+        SupportCard supportCardTryingToBeUsed = (SupportCard)objects[2];
+        Player playerAttemptingToUseSupportCard = (Player)objects[3];
+    }
+
+
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player targetedPlayer, List<SupportCard> negateSupportCards, SupportCard supportCardTryingToBeUsed, Player playerAttemptingToUseSupportCard
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+    public IEnumerator UseSupportCardToNegateSupportCard(List<object> objects)
+	{
+		yield return null;
+        Player targetedPlayer = (Player)objects[0];
+        List<SupportCard> negateBlockSupportCards = (List<SupportCard>)objects[1];
+		SupportCard supportCardTryingToBeUsed = (SupportCard)objects[2];
+		Player playerAttemptingToUseSupportCard = (Player)objects[3];
+
+        //Use the first card in the list.
+        if (negateBlockSupportCards.Count > 0)
+        {
+            playerAttemptingToUseSupportCard.UseSupportCard();
+            playerAttemptingToUseSupportCard.DiscardFromHand(Card.CardType.Support, supportCardTryingToBeUsed);
+			GameplayManagerRef.OnPlayerUsedASupportCard(supportCardTryingToBeUsed);
+            //In here, we pass in the support card that is BEING NEGATED (supportcardtryingtobeused). This way if it's a grappling hook it can get that support card.
+            negateBlockSupportCards[0].AttemptToUseSupportCard(targetedPlayer, false);
+			GameplayManagerRef.CurrentSupportCardBeingUsed = null;
+        }
+
+
+	
+
+		//This needs to be something more generic to essentially say whatever is the CURRENT support card being used is done being used. Maybe call it's completed effect?
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        {
+            CompletedAttackingEffect();
+        }
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player targetedPlayer, List<SupportCard> negateSupportCards, SupportCard supportCardTryingToBeUsed, Player playerAttemptingToUseSupportCard
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+    public IEnumerator DontUseSupportCardToNegateSupportCard(List<object> objects)
+    {
+        yield return null;
+        Player targetedPlayer = (Player)objects[0];
+        List<SupportCard> negateBlockSupportCards = (List<SupportCard>)objects[1];
+        SupportCard supportCardTryingToBeUsed = (SupportCard)objects[2];
+        Player playerAttemptingToUseSupportCard = (Player)objects[3];
+
+        supportCardTryingToBeUsed.AttemptToUseSupportCard(playerAttemptingToUseSupportCard, false);
     }
 
     /// <summary>
@@ -645,6 +774,8 @@ public class Player : MonoBehaviour
             CompletedAttackingEffect();
         }
     }
+
+    #endregion
 
     /// <summary>
     /// Takes in a list of objects in this order: Player playerToAttack, int DamageToInflict, bool isElemental
@@ -1042,7 +1173,10 @@ public class Player : MonoBehaviour
 
     #region Check for special support card negation
 
-	
+	/// <summary>
+	/// For negation effects like smoke bomb.
+	/// </summary>
+	/// <returns></returns>
 	public List<Player> CheckIfOtherPlayersCanNegate()
 	{
 		List<Player> playersThatCanNegate = new();
@@ -1052,13 +1186,56 @@ public class Player : MonoBehaviour
 			{
 				foreach(SupportCard supportCard in player.GetSupportCardsInHand())
 				{
-					
+					foreach(SupportCardData.SupportCardEffect effect in supportCard.SupportCardData.supportCardEffects)
+					{
+						if(effect.supportCardEffectData.GetType() == typeof(NegateSupportCardEffect))
+						{
+							playersThatCanNegate.Add(player);
+							break;
+						}
+					}
+					if(playersThatCanNegate.Contains(player))
+					{
+						break;
+					}
 				}
 			}
 		}
 
 		return playersThatCanNegate;
-	}
+    }
+
+	/// <summary>
+	/// For grappling hoook effect.
+	/// </summary>
+	/// <returns></returns>
+	public List<Player> CheckIfOtherPlayersCanSteal()
+	{
+        List<Player> playersThatCanNegate = new();
+        foreach (Player player in GameplayManagerRef.Players)
+        {
+            if (player != this)
+            {
+                foreach (SupportCard supportCard in player.GetSupportCardsInHand())
+                {
+                    foreach (SupportCardData.SupportCardEffect effect in supportCard.SupportCardData.supportCardEffects)
+                    {
+                        if (effect.supportCardEffectData.GetType() == typeof(GrapplingHookEffect))
+                        {
+                            playersThatCanNegate.Add(player);
+                            break;
+                        }
+                    }
+                    if (playersThatCanNegate.Contains(player))
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return playersThatCanNegate;
+    }
 
 	/// <summary>
 	/// Check if Player that is targeted can react with a support card that blocks elemental damage.
@@ -1106,6 +1283,54 @@ public class Player : MonoBehaviour
         }
 
         return supportCardsToBlockWith;
+    }
+
+    /// <summary>
+    /// Check if Players can react with a support card that negates another support card.
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public List<SupportCard> GetSupportCardsPlayersCanNegateSupportCardEffectsWith(Player player)
+	{
+        List<SupportCard> supportCardsToNegateWith = new();
+
+        foreach (SupportCard supportCard in player.GetSupportCardsInHand())
+        {
+            foreach (SupportCardData.SupportCardEffect supportCardEffect in supportCard.SupportCardData.supportCardEffects)
+            {
+                if (supportCardEffect.supportCardEffectData.GetType() == typeof(NegateSupportCardEffect))
+                {
+                    supportCardsToNegateWith.Add(supportCard);
+                    break;
+                }
+            }
+        }
+
+        return supportCardsToNegateWith;
+    }
+
+    /// <summary>
+    /// Check if Players can react with a support card that steals another support card.
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public List<SupportCard> GetSupportCardsPlayersCanStealSupportCardsWith(Player player)
+	{
+        List<SupportCard> supportCardsToStealWith = new();
+
+        foreach (SupportCard supportCard in player.GetSupportCardsInHand())
+        {
+            foreach (SupportCardData.SupportCardEffect supportCardEffect in supportCard.SupportCardData.supportCardEffects)
+            {
+                if (supportCardEffect.supportCardEffectData.GetType() == typeof(GrapplingHookEffect))
+                {
+                    supportCardsToStealWith.Add(supportCard);
+                    break;
+                }
+            }
+        }
+
+        return supportCardsToStealWith;
     }
 
 	public List<Player> CheckIfOtherPlayersCanReact()
@@ -2181,7 +2406,7 @@ public class Player : MonoBehaviour
     #endregion
 
     #region SupportCardEffectHandlers
-    public void StartHandlingSupportCardEffects()
+    public void StartHandlingSupportCardEffects(SupportCard supportCardBeingUsed)
 	{
 		IsHandlingSupportCardEffects = true;
 
@@ -2190,12 +2415,11 @@ public class Player : MonoBehaviour
 			supportCardEffect.SupportCardEffectCompleted += ExecuteNextSupportCardEffect;
 			tempSupportCardEffectsToHandle.Add(supportCardEffect);
 		}
-		ExecuteNextSupportCardEffect();
+		ExecuteNextSupportCardEffect(supportCardBeingUsed);
 	}
 
 	public void FinishedHandlingSupportCardEffects()
 	{
-
 		foreach (SupportCardEffectData supportCardEffect in tempSupportCardEffectsToHandle)
 		{
 			supportCardEffect.SupportCardEffectCompleted -= ExecuteNextSupportCardEffect;
@@ -2206,10 +2430,39 @@ public class Player : MonoBehaviour
 		currentSupportCardEffectTohandle = null;
 		IsHandlingSupportCardEffects = false;
 
+        List<Player> playersThatCanSteal = new();
+        playersThatCanSteal = CheckIfOtherPlayersCanSteal();
+
+        if (playersThatCanSteal.Count > 0)
+        {
+            List<SupportCard> supportCards = GetSupportCardsPlayersCanStealSupportCardsWith(playersThatCanSteal[0]);
+			bool wasCardUsedAGrapplingHook = false;
+
+			if(GameplayManagerRef.CurrentSupportCardBeingUsed != null)
+			{
+                foreach (SupportCardData.SupportCardEffect effect in GameplayManagerRef.CurrentSupportCardBeingUsed.SupportCardData.supportCardEffects)
+                {
+                    if (effect.GetType() == typeof(GrapplingHookEffect))
+                    {
+                        wasCardUsedAGrapplingHook = true;
+                        break;
+                    }
+                }
+
+                if (wasCardUsedAGrapplingHook)
+                {
+                    return;
+                }
+                //Need this to be dynamic so that if Player 1 says no, Player 2 has a chance to respond etc.
+                ActivatePlayerStealSupportCardPopup(playersThatCanSteal[0], supportCards, GameplayManagerRef.CurrentSupportCardBeingUsed, this);
+            }
+			
+        }
+
 		//We'll need to up the counter of the amount of Support cards the user has used this turn here.
 	}
 
-	private void ExecuteNextSupportCardEffect()
+	private void ExecuteNextSupportCardEffect(SupportCard supportCardBeingUsed)
 	{
 		if (supportCardEffectsToHandle.Count > 0)
 		{

@@ -2,6 +2,7 @@
 //All code is written by me (Above name) unless otherwise stated via comments below.
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,10 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour , IPointerClickHandler
 {
+    //Events
+
+    public event Action<SupportCard> CardEffectWasNegated;
+
     protected const string ISHIDDEN = "IsHidden";
 
     //Animation string parameters

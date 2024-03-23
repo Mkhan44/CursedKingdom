@@ -22,8 +22,13 @@ public class MovementCardBoardBuffEffect : SupportCardEffectData, ISupportEffect
     //Might want an event to be triggered so we can do an animation. This would be something like "FinishedManipulatingCardValue..."
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
+        SupportCard cardUsed = (SupportCard)cardPlayed;
+        if (cardUsed != null)
+        {
+            supportCardThatWasJustUsed = cardUsed;
+        }
         //If BuffAllCards != true ....Need to let player choose which card to apply the buff to.
-        if(BuffAllCards)
+        if (BuffAllCards)
         {
             playerReference.BoostAllMovementCardValuesInHand(numMovementIncrease);
         }
