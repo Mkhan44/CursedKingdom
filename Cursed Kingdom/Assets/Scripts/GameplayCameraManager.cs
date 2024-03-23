@@ -60,6 +60,7 @@ public class GameplayCameraManager : MonoBehaviour
 
         //Player cam zoom in.
         CurrentPlayerFollowVirtualCam.m_Lens.FieldOfView = CurrentPlayerCamZoomFOV;
+        currentPlayer.HideHand();
         //Wait for about half a second.
       //  yield return new WaitForSeconds(0.5f);
 
@@ -83,6 +84,7 @@ public class GameplayCameraManager : MonoBehaviour
         //Player cam return to original zoom.
         CurrentPlayerFollowVirtualCam.m_Lens.FieldOfView = CurrentPlayerCamStartingFOV;
         TurnOffVirtualCutInCamera();
+        currentPlayer.ShowHand();
 
         //yield return new WaitForSeconds(0.3f);
         //End
@@ -98,6 +100,7 @@ public class GameplayCameraManager : MonoBehaviour
 
         //Player cam zoom in.
         CurrentPlayerFollowVirtualCam.m_Lens.FieldOfView = CurrentPlayerCamZoomFOV;
+        currentPlayer.HideHand();
         //Wait for about half a second.
         //  yield return new WaitForSeconds(0.5f);
 
@@ -132,6 +135,7 @@ public class GameplayCameraManager : MonoBehaviour
         //Player cam return to original zoom.
         CurrentPlayerFollowVirtualCam.m_Lens.FieldOfView = CurrentPlayerCamStartingFOV;
         TurnOffVirtualCutInCamera();
+        currentPlayer.ShowHand();
 
         //yield return new WaitForSeconds(0.3f);
         //End

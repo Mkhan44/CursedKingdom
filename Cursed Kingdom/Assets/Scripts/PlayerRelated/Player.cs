@@ -597,7 +597,7 @@ public class Player : MonoBehaviour
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Yes", nameof(UseSupportCardToStealSupportCard), this, paramsList));
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToStealSupportCard), this, paramsList));
 
-        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a {stealSupportCards[0].SupportCardData.CardTitle} card that can steal the {supportCardTryingToBeUsed.SupportCardData.CardTitle} support card. Do you wish to negate it?", insertedParams, 1, "Reaction");
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a {stealSupportCards[0].SupportCardData.CardTitle} card that can steal the {supportCardTryingToBeUsed.SupportCardData.CardTitle} support card. Do you wish to take it?", insertedParams, 1, "Reaction");
     }
 
     /// <summary>
@@ -646,24 +646,21 @@ public class Player : MonoBehaviour
     public IEnumerator UseSupportCardToNegateSupportCard(List<object> objects)
 	{
 		yield return null;
-        Player targetedPlayer = (Player)objects[0];
-        List<SupportCard> negateBlockSupportCards = (List<SupportCard>)objects[1];
+        Player playerThatCanNegate = (Player)objects[0];
+        List<SupportCard> negateSupportCards = (List<SupportCard>)objects[1];
 		SupportCard supportCardTryingToBeUsed = (SupportCard)objects[2];
 		Player playerAttemptingToUseSupportCard = (Player)objects[3];
 
         //Use the first card in the list.
-        if (negateBlockSupportCards.Count > 0)
+        if (negateSupportCards.Count > 0)
         {
             playerAttemptingToUseSupportCard.UseSupportCard();
             playerAttemptingToUseSupportCard.DiscardFromHand(Card.CardType.Support, supportCardTryingToBeUsed);
 			GameplayManagerRef.OnPlayerUsedASupportCard(supportCardTryingToBeUsed);
-            //In here, we pass in the support card that is BEING NEGATED (supportcardtryingtobeused). This way if it's a grappling hook it can get that support card.
-            negateBlockSupportCards[0].AttemptToUseSupportCard(targetedPlayer, false);
+            //In here, we pass in the support card that is BEING NEGATED (supportcardtryingtobeused).
+            negateSupportCards[0].AttemptToUseSupportCard(playerThatCanNegate, false);
 			GameplayManagerRef.CurrentSupportCardBeingUsed = null;
         }
-
-
-	
 
 		//This needs to be something more generic to essentially say whatever is the CURRENT support card being used is done being used. Maybe call it's completed effect?
         if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
