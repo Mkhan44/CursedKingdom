@@ -7,7 +7,7 @@ AnimationClip:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: thiefnegative
-  serializedVersion: 6
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,7 +18,8 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
       value: {fileID: 1042823819, guid: 10b34c8fc5a143644bce1faed58012f2, type: 3}
     - time: 0.1
@@ -34,9 +35,10 @@ AnimationClip:
     - time: 0.6
       value: {fileID: -1139956669, guid: 10b34c8fc5a143644bce1faed58012f2, type: 3}
     attribute: m_Sprite
-    path: 
+    path: PlayerSprite
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 10
   m_WrapMode: 0
   m_Bounds:
@@ -45,12 +47,14 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 0
+      path: 533382794
       attribute: 0
       script: {fileID: 0}
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: 1042823819, guid: 10b34c8fc5a143644bce1faed58012f2, type: 3}
     - {fileID: -1523665554, guid: 10b34c8fc5a143644bce1faed58012f2, type: 3}
