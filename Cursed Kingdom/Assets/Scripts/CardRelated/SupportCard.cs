@@ -195,7 +195,7 @@ public class SupportCard : Card
                     }
 
                     List<Player> playersThatCanNegate = new();
-                    playersThatCanNegate = currentPlayer.CheckIfOtherPlayersCanNegate();
+                    playersThatCanNegate = currentPlayer.CheckIfOtherPlayersCanNegateWithoutSingleTarget();
 
                     if (playersThatCanNegate.Count > 0)
                     {

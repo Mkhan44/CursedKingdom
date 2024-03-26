@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private List<SupportCardEffectData> tempSupportCardEffectsToHandle;
 	[SerializeField] private bool isHandlingSupportCardEffects;
 	[SerializeField] private SupportCard currentSupportCardInUse;
+	[SerializeField] private bool triedToNegateCurrentSupportCard;
 
 	//Status Effects
 	[SerializeField] private bool isPoisoned;
@@ -141,6 +142,7 @@ public class Player : MonoBehaviour
 	public Queue<SupportCardEffectData> SupportCardEffectsToHandle { get => supportCardEffectsToHandle; set => supportCardEffectsToHandle = value; }
 	public bool IsHandlingSupportCardEffects { get => isHandlingSupportCardEffects; set => isHandlingSupportCardEffects = value; }
     public SupportCard CurrentSupportCardInUse { get => currentSupportCardInUse; set => currentSupportCardInUse = value; }
+    public bool TriedToNegateCurrentSupportCard { get => triedToNegateCurrentSupportCard; set => triedToNegateCurrentSupportCard = value; }
 	public bool IsPoisoned { get => isPoisoned; set => isPoisoned = value; }
 	public bool IsCursed { get => isCursed; set => isCursed = value; }
 	public bool IsDefeated { get => isDefeated; set => isDefeated = value; }
@@ -304,9 +306,10 @@ public class Player : MonoBehaviour
 		SpaceEffectsToHandle = new();
 		tempSpaceEffectsToHandle = new();
 		isHandlingSpaceEffects = false;
+		TriedToNegateCurrentSupportCard = false;
 
-		//Subscriptions
-		GameplayManagerRef.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += ApplyCurrentSpaceEffects;
+        //Subscriptions
+        GameplayManagerRef.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += ApplyCurrentSpaceEffects;
         HasBeenDefeated += GameplayManagerRef.CheckIfAllPlayersButOneDefeated;
 
         //DEBUG
@@ -437,6 +440,15 @@ public class Player : MonoBehaviour
 						ActivatePlayerBlockPoisonSelectionPopup(playerTarget, supportCardsToBlockWith, statusDuration);
 						yield break;
 					}
+
+					List<SupportCard> supportCardsToNegateWith = GetSupportCardsPlayersCanNegateSupportCardEffectsWith(playerTarget);
+                    if (supportCardsToNegateWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse && !TriedToNegateCurrentSupportCard)
+                    {
+						TriedToNegateCurrentSupportCard = true;
+                        ActivatePlayerNegateSupportCardPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
+                        yield break;
+                    }
+
                     StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, playerTarget, statusType, statusDuration));
                     yield break;
                 }
@@ -655,7 +667,7 @@ public class Player : MonoBehaviour
         if (negateSupportCards.Count > 0)
         {
             playerAttemptingToUseSupportCard.UseSupportCard();
-            playerAttemptingToUseSupportCard.DiscardFromHand(Card.CardType.Support, supportCardTryingToBeUsed);
+          //  playerAttemptingToUseSupportCard.DiscardFromHand(Card.CardType.Support, supportCardTryingToBeUsed);
 			GameplayManagerRef.OnPlayerUsedASupportCard(supportCardTryingToBeUsed);
             //In here, we pass in the support card that is BEING NEGATED (supportcardtryingtobeused).
             negateSupportCards[0].AttemptToUseSupportCard(playerThatCanNegate, false);
@@ -681,6 +693,8 @@ public class Player : MonoBehaviour
         List<SupportCard> negateBlockSupportCards = (List<SupportCard>)objects[1];
         SupportCard supportCardTryingToBeUsed = (SupportCard)objects[2];
         Player playerAttemptingToUseSupportCard = (Player)objects[3];
+
+		TriedToNegateCurrentSupportCard = true;
 
         supportCardTryingToBeUsed.AttemptToUseSupportCard(playerAttemptingToUseSupportCard, false);
     }
@@ -801,7 +815,15 @@ public class Player : MonoBehaviour
                             yield break;
                         }
 
-						StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
+                        List<SupportCard> supportCardsToNegateWith = GetSupportCardsPlayersCanNegateSupportCardEffectsWith(playerTarget);
+                        if (supportCardsToNegateWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse && !TriedToNegateCurrentSupportCard)
+                        {
+							TriedToNegateCurrentSupportCard = true;
+                            ActivatePlayerNegateSupportCardPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
+                            yield break;
+                        }
+
+                        StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
 						yield break;
                     }
 					else
@@ -810,6 +832,19 @@ public class Player : MonoBehaviour
                         yield break;
                     }
 				}
+				else if(CheckIfOtherPlayersCanReact().Count > 0)
+				{
+                    List<SupportCard> supportCardsToNegateWith = GetSupportCardsPlayersCanNegateSupportCardEffectsWith(playerTarget);
+                    if (supportCardsToNegateWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse && !TriedToNegateCurrentSupportCard)
+                    {
+                        TriedToNegateCurrentSupportCard = true;
+                        ActivatePlayerNegateSupportCardPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
+                        yield break;
+                    }
+
+                    StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
+                    yield break;
+                }
 				else
 				{
                     StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, playerTarget, damageToTake));
@@ -1174,7 +1209,7 @@ public class Player : MonoBehaviour
 	/// For negation effects like smoke bomb.
 	/// </summary>
 	/// <returns></returns>
-	public List<Player> CheckIfOtherPlayersCanNegate()
+	public List<Player> CheckIfOtherPlayersCanNegateWithoutSingleTarget()
 	{
 		List<Player> playersThatCanNegate = new();
 		foreach(Player player in GameplayManagerRef.Players)
@@ -1187,8 +1222,12 @@ public class Player : MonoBehaviour
 					{
 						if(effect.supportCardEffectData.GetType() == typeof(NegateSupportCardEffect))
 						{
-							playersThatCanNegate.Add(player);
-							break;
+							NegateSupportCardEffect negateSupportCardEffect = (NegateSupportCardEffect)effect.supportCardEffectData;
+							if(!negateSupportCardEffect.RequiresSingleTarget)
+							{
+                                playersThatCanNegate.Add(player);
+                                break;
+                            }
 						}
 					}
 					if(playersThatCanNegate.Contains(player))
@@ -2426,6 +2465,7 @@ public class Player : MonoBehaviour
 		tempSupportCardEffectsToHandle.Clear();
 		currentSupportCardEffectTohandle = null;
 		IsHandlingSupportCardEffects = false;
+		TriedToNegateCurrentSupportCard = false;
 
         List<Player> playersThatCanSteal = new();
         playersThatCanSteal = CheckIfOtherPlayersCanSteal();
