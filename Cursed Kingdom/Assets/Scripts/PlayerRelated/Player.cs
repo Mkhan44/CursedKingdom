@@ -1201,15 +1201,276 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    #region TakeCardsFromOpponentsSupportEffect
+
+    public void ActivateChoosePlayerToTakeCardsFromSupportSelectionPopup(int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent)
+    {
+        List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+
+
+        foreach (Player player in GameplayManagerRef.Players)
+        {
+            if (!player.IsDefeated && player != this)
+            {
+                if(cardTypeToTakeFromOpponent == CardType.Movement && player.MovementCardsInHandCount < numCardsToTakeFromOpponent)
+				{
+					continue;
+				}
+                else if (cardTypeToTakeFromOpponent == CardType.Support && player.SupportCardsInHandCount < numCardsToTakeFromOpponent)
+                {
+                    continue;
+                }
+				else if(cardTypeToTakeFromOpponent == CardType.Both && player.CardsInhand.Count < numCardsToTakeFromOpponent)
+				{
+					continue;
+				}
+                List<object> paramsList = new();
+                paramsList.Add(player);
+                paramsList.Add(numCardsToDiscard);
+                paramsList.Add(cardTypeToDiscard);
+                paramsList.Add(numCardsToTakeFromOpponent);
+                paramsList.Add(cardTypeToTakeFromOpponent);
+
+                insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(AfterSelectingPlayerToTakeCardsFromSupport), this, paramsList));
+            }
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to take cards from.", insertedParams, 1, "Attack");
+    }
+
+	/// <summary>
+	/// Activate this popup to discard cards before taking them. This popup should display each of the Player's valid cards they can discard.
+	/// </summary>
+	/// <param name="numCardsToDiscard"></param>
+	/// <param name="cardTypeToDiscard"></param>
+	/// <param name="numCardsToTakeFromOpponent"></param>
+	/// <param name="cardTypeToTakeFromOpponent"></param>
+    public void ActivateChooseCardsToDiscardFromSupportSelectionPopup(Player playerTarget, int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent)
+	{
+        List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+
+
+        foreach (Player player in GameplayManagerRef.Players)
+        {
+            if (!player.IsDefeated && player == this)
+            {
+				if(cardTypeToDiscard == CardType.Movement && player.MovementCardsInHandCount >= numCardsToDiscard)
+				{
+					foreach(MovementCard movementCard in player.GetMovementCardsInHand())
+					{
+                        List<object> paramsList = new();
+                        paramsList.Add(playerTarget);
+                        paramsList.Add(numCardsToDiscard);
+                        paramsList.Add(cardTypeToDiscard);
+                        paramsList.Add(numCardsToTakeFromOpponent);
+                        paramsList.Add(cardTypeToTakeFromOpponent);
+						paramsList.Add(movementCard);
+
+                        insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(movementCard.CardArtworkImage.sprite, nameof(SelectCardsToDiscardBeforeTaking), this, paramsList));
+                    }
+				}
+                else if (cardTypeToDiscard == CardType.Support && player.SupportCardsInHandCount >= numCardsToDiscard)
+                {
+                    foreach (SupportCard supportCard in player.GetSupportCardsInHand())
+                    {
+                        List<object> paramsList = new();
+                        paramsList.Add(playerTarget);
+                        paramsList.Add(numCardsToDiscard);
+                        paramsList.Add(cardTypeToDiscard);
+                        paramsList.Add(numCardsToTakeFromOpponent);
+                        paramsList.Add(cardTypeToTakeFromOpponent);
+						paramsList.Add(supportCard);
+
+                        insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(supportCard.CardArtworkImage.sprite, nameof(SelectCardsToDiscardBeforeTaking), this, paramsList));
+                    }
+                }
+				else
+				{
+                    foreach (Card card in player.CardsInhand)
+                    {
+                        List<object> paramsList = new();
+                        paramsList.Add(playerTarget);
+                        paramsList.Add(numCardsToDiscard);
+                        paramsList.Add(cardTypeToDiscard);
+                        paramsList.Add(numCardsToTakeFromOpponent);
+                        paramsList.Add(cardTypeToTakeFromOpponent);
+						paramsList.Add(card);
+
+                        insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(card.CardArtworkImage.sprite, nameof(SelectCardsToDiscardBeforeTaking), this, paramsList));
+                    }
+                }
+            }
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the card(s) you wish to discard.", insertedParams, numCardsToDiscard, "Discard");
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player playerToAttack, int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent, Card cardSelected
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator AfterSelectingPlayerToTakeCardsFromSupport(List<object> objects)
+	{
+        yield return null;
+        Player playerToAttack = (Player)objects[0];
+        int numCardsToDiscard = (int)objects[1];
+        CardType cardTypeToDiscard = (CardType)objects[2];
+        int numCardsToTakeFromOpponent = (int)objects[3];
+        CardType cardTypeToTakeFromOpponent = (CardType)objects[4];
+
+		ActivateChooseCardsToDiscardFromSupportSelectionPopup(playerToAttack, numCardsToDiscard, cardTypeToDiscard, numCardsToTakeFromOpponent, cardTypeToTakeFromOpponent);
+    }
+
+    /// <summary>
+    /// Activate this popup to take cards from the opponent's hand. This popup should display each of the Player's valid cards they can discard.
+    /// </summary>
+    /// <param name="numCardsToTakeFromOpponent"></param>
+    /// <param name="cardTypeToTakeFromOpponent"></param>
+    public void ActivateChooseCardsToTakeFromSupportSelectionPopup(Player playerTarget, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent)
+    {
+        List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+
+
+        foreach (Player player in GameplayManagerRef.Players)
+        {
+            if (!player.IsDefeated && player == playerTarget)
+            {
+                if (cardTypeToTakeFromOpponent == CardType.Movement && player.MovementCardsInHandCount >= numCardsToTakeFromOpponent)
+                {
+                    foreach (MovementCard movementCard in player.GetMovementCardsInHand())
+                    {
+                        List<object> paramsList = new();
+                        paramsList.Add(player);
+                        paramsList.Add(numCardsToTakeFromOpponent);
+                        paramsList.Add(cardTypeToTakeFromOpponent);
+                        paramsList.Add(movementCard);
+
+                        insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(movementCard.CardArtworkImage.sprite, nameof(SelectCardsToTakeFromOpponentSupport), this, paramsList));
+                    }
+                }
+                else if (cardTypeToTakeFromOpponent == CardType.Support && player.SupportCardsInHandCount >= numCardsToTakeFromOpponent)
+                {
+                    foreach (SupportCard supportCard in player.GetSupportCardsInHand())
+                    {
+                        List<object> paramsList = new();
+                        paramsList.Add(player);
+                        paramsList.Add(numCardsToTakeFromOpponent);
+                        paramsList.Add(cardTypeToTakeFromOpponent);
+                        paramsList.Add(supportCard);
+
+                        insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(supportCard.CardArtworkImage.sprite, nameof(SelectCardsToTakeFromOpponentSupport), this, paramsList));
+                    }
+                }
+                else
+                {
+                    foreach (Card card in player.CardsInhand)
+                    {
+                        List<object> paramsList = new();
+                        paramsList.Add(player);
+                        paramsList.Add(numCardsToTakeFromOpponent);
+                        paramsList.Add(cardTypeToTakeFromOpponent);
+                        paramsList.Add(card);
+
+                        insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(card.CardArtworkImage.sprite, nameof(SelectCardsToTakeFromOpponentSupport), this, paramsList));
+                    }
+                }
+            }
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Select the card(s) you wish to take from player {playerTarget.playerIDIntVal}.", insertedParams, numCardsToTakeFromOpponent, "Attack");
+    }
+
+
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player playerToAttack, int numCardsToDiscard, Card.CardType cardTypeToDiscard, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent, Card cardSelected
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SelectCardsToDiscardBeforeTaking(List<object> objects)
+    {
+        yield return null;
+        Player playerToAttack = (Player)objects[0];
+        int numCardsToDiscard = (int)objects[1];
+        Card.CardType cardTypeToDiscard = (Card.CardType)objects[2];
+        int numCardsToTakeFromOpponent = (int)objects[3];
+        Card.CardType cardTypeToTakeFromOpponent = (Card.CardType)objects[4];
+		Card cardToDiscard = (Card)objects[5];
+
+		//Discard the card that is needed for cost.
+        if(cardToDiscard.ThisCardType == CardType.Movement)
+		{
+			MovementCard movementCard = cardToDiscard as MovementCard; 
+			if(movementCard != null)
+			{
+				DiscardFromHand(CardType.Movement, movementCard);
+			}
+		}
+		else if(cardToDiscard.ThisCardType == CardType.Support)
+		{
+            SupportCard supportCard = cardToDiscard as SupportCard;
+            if (supportCard != null)
+            {
+                DiscardFromHand(CardType.Support, supportCard);
+            }
+        }
+
+		//Call popup method for Player to now take card from opponent.
+		ActivateChooseCardsToTakeFromSupportSelectionPopup(playerToAttack, numCardsToTakeFromOpponent, cardTypeToTakeFromOpponent);
+
+    }
+
+    /// <summary>
+    /// Takes in a list of objects in this order: Player playerToAttack, int numCardsToTakeFromOpponent, Card.CardType cardTypeToTakeFromOpponent, Card cardSelectedToTake
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator SelectCardsToTakeFromOpponentSupport(List<object> objects)
+    {
+        yield return null;
+        Player playerToAttack = (Player)objects[0];
+		int numCardsToTakeFromOpponent = (int)objects[1];
+		CardType cardTypeToTake = (CardType)objects[2];
+		Card cardSelectedToTake = (Card)objects[3];
+
+        //Take the card that was selected by the attacking player.
+        if (cardSelectedToTake.ThisCardType == CardType.Movement)
+        {
+            MovementCard movementCard = cardSelectedToTake as MovementCard;
+            if (movementCard != null)
+            {
+                playerToAttack.DiscardFromHand(CardType.Movement, movementCard);
+				DrawCard(movementCard);
+				StartCoroutine(movementCard.LeaveCardEffect());
+            }
+        }
+        else if (cardSelectedToTake.ThisCardType == CardType.Support)
+        {
+            SupportCard supportCard = cardSelectedToTake as SupportCard;
+            if (supportCard != null)
+            {
+                playerToAttack.DiscardFromHand(CardType.Support, supportCard);
+				DrawCard(supportCard);
+                StartCoroutine(supportCard.LeaveCardEffect());
+            }
+        }
+
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        {
+            CompletedAttackingEffect();
+        }
+    }
+
+
+    #endregion
+
     #endregion
 
     #region Check for special support card negation
 
-	/// <summary>
-	/// For negation effects like smoke bomb.
-	/// </summary>
-	/// <returns></returns>
-	public List<Player> CheckIfOtherPlayersCanNegateWithoutSingleTarget()
+    /// <summary>
+    /// For negation effects like smoke bomb.
+    /// </summary>
+    /// <returns></returns>
+    public List<Player> CheckIfOtherPlayersCanNegateWithoutSingleTarget()
 	{
 		List<Player> playersThatCanNegate = new();
 		foreach(Player player in GameplayManagerRef.Players)
@@ -1954,7 +2215,7 @@ public class Player : MonoBehaviour
 	{
 		MovementCardsInHandCount = 0;
         List<MovementCard> movementCardsInHand = new();
-        movementCardsInHand = GetMovementCardInHand();
+        movementCardsInHand = GetMovementCardsInHand();
         if (movementCardsInHand.Count != 0)
         {
             foreach (MovementCard card in movementCardsInHand)
@@ -1972,7 +2233,7 @@ public class Player : MonoBehaviour
 
     }
 
-	public List<MovementCard> GetMovementCardInHand()
+	public List<MovementCard> GetMovementCardsInHand()
 	{
 		List<MovementCard> movementCardsInHand = new();
 
@@ -2417,7 +2678,7 @@ public class Player : MonoBehaviour
     public void BoostAllMovementCardValuesInHand(int valueToBoostBy)
     {
         List<MovementCard> movementCardsInHand = new();
-        movementCardsInHand = GetMovementCardInHand();
+        movementCardsInHand = GetMovementCardsInHand();
 
         foreach (MovementCard movementCard in movementCardsInHand)
         {
@@ -2429,7 +2690,7 @@ public class Player : MonoBehaviour
     public void RevertAllBoostedMovementCardValuesInHand()
 	{
         List<MovementCard> movementCardsInHand = new();
-        movementCardsInHand = GetMovementCardInHand();
+        movementCardsInHand = GetMovementCardsInHand();
 
 		foreach(MovementCard movementCard in movementCardsInHand)
 		{
