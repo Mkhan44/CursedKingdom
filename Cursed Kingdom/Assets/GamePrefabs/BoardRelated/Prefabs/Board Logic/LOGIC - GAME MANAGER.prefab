@@ -77,6 +77,7 @@ MonoBehaviour:
   useSelectedCardsText: {fileID: 0}
   useSelectedCardsButton: {fileID: 0}
   useMovementCardNoCardsInHandButton: {fileID: 0}
+  currentSupportCardBeingUsed: {fileID: 0}
   topDownMapDisplay: {fileID: 0}
   spaceArtworkPopupDisplay: {fileID: 0}
   handDisplayPanel: {fileID: 0}
@@ -274,5 +275,11 @@ MonoBehaviour:
   cutInCameraDisplayRawImage: {fileID: 0}
   currentPlayerCamStartingFOV: 45
   currentPlayerCamZoomFOV: 25
-  timeToWaitForCutInCamToPopup: 0.8
+  timeToWaitForCastingPlayerToBeginCasting: 0.8
+  timeToWaitForCutInCamToPopup: 0.5
+  timeToWaitAfterCutInCamPopupBeforePlayerHurtAnimationPlays: 0.8
   timeToWaitForCutInCamToGoAway: 2
+  playerCastParticle: {fileID: 253499273931824997, guid: 3290b42addd0b2c4a8bf0adf68f6fe76, type: 3}
+  playerAttackedParticle: {fileID: 2582558451138268823, guid: 236cc1f180c56e24997be7dd63a3c60f, type: 3}
+  playerCursedParticle: {fileID: 7365846537626113981, guid: 0c48416b1d8b1694fa17a5efdce69bfd, type: 3}
+  playerPoisonedParticle: {fileID: 3705821951006958306, guid: ae97874bde319f34a8f860a779e760f9, type: 3}

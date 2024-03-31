@@ -37,9 +37,12 @@ public class Player : MonoBehaviour
 	//Consts
 	[SerializeField] public const string NEGATIVEEFFECT = "NegativeEffect";
 	[SerializeField] public const string POSITIVEEFFECT = "PositiveEffect";
-	
-	//State machine related
-	private PlayerCharacterSM stateMachineRef;
+	[SerializeField] public const string ISCASTING = "IsCasting";
+	[SerializeField] public const string ISHURT = "IsHurt";
+	[SerializeField] public const string ISMOVING = "IsMoving";
+
+    //State machine related
+    private PlayerCharacterSM stateMachineRef;
 
 	//Properties
 	[SerializeField] private int maxHealth;
@@ -738,12 +741,7 @@ public class Player : MonoBehaviour
         int damageToPotentiallytake = (int)objects[1];
         List<SupportCard> elementalBlockSupportCards = (List<SupportCard>)objects[2];
 
-		targetedPlayer.TakeDamage(damageToPotentiallytake);
-
-        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
-        {
-            CompletedAttackingEffect();
-        }
+		StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.DamageOpponentCutInPopup(this, targetedPlayer, damageToPotentiallytake));
     }
 
     /// <summary>
@@ -778,12 +776,7 @@ public class Player : MonoBehaviour
         List<SupportCard> elementalBlockSupportCards = (List<SupportCard>)objects[1];
         int turnsToBePoisoned = (int)objects[2];
 
-		targetedPlayer.PoisonPlayer(turnsToBePoisoned);
-
-        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
-        {
-            CompletedAttackingEffect();
-        }
+        StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, targetedPlayer, "poison", turnsToBePoisoned));
     }
 
     #endregion
