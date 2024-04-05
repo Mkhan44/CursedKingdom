@@ -4193,6 +4193,14 @@ PrefabInstance:
       propertyPath: currentPlayerFollowVirtualCam
       value: 
       objectReference: {fileID: 387828857}
+    - target: {fileID: 8064765353983661877, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: currentPlayerFollowVirtualCamAnimator
+      value: 
+      objectReference: {fileID: 987503862}
+    - target: {fileID: 8064765353983661877, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: cutInCameraPlayerFollowVirtualCamAnimator
+      value: 
+      objectReference: {fileID: 1503016902}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4209,6 +4217,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a01e0f8c17dbb5c4c8759cb52d84259e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &987503862 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 967366968501264295, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
+  m_PrefabInstance: {fileID: 920733139}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &996563987 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e2fbb5a614e49ab4e851bffb328e4f06, type: 3}
@@ -5695,6 +5708,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1857363069}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1503016902 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 967366968501264295, guid: 4a22d0943ab3739458224783c2be0488, type: 3}
+  m_PrefabInstance: {fileID: 183312912}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1509010570
 PrefabInstance:
   m_ObjectHideFlags: 0

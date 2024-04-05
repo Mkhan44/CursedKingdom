@@ -11,7 +11,9 @@ public class GameplayCameraManager : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera cutInPlayerCam;
     [SerializeField] private CinemachineVirtualCamera currentPlayerFollowVirtualCam;
+    [SerializeField] private Animator currentPlayerFollowVirtualCamAnimator;
     [SerializeField] private Camera cutInCamera;
+    [SerializeField] private Animator cutInCameraPlayerFollowVirtualCamAnimator;
     [SerializeField] private RawImage cutInCameraDisplayRawImage;
 
     [Header("Values to change at runtime")]
@@ -30,6 +32,8 @@ public class GameplayCameraManager : MonoBehaviour
 
     public CinemachineVirtualCamera CutInPlayerCam { get => cutInPlayerCam; set => cutInPlayerCam = value; }
     public CinemachineVirtualCamera CurrentPlayerFollowVirtualCam { get => currentPlayerFollowVirtualCam; set => currentPlayerFollowVirtualCam = value; }
+    public Animator CurrentPlayerFollowVirtualCamAnimator { get => currentPlayerFollowVirtualCamAnimator; set => currentPlayerFollowVirtualCamAnimator = value; }
+    public Animator CutInCameraPlayerFollowVirtualCamAnimator { get => cutInCameraPlayerFollowVirtualCamAnimator; set => cutInCameraPlayerFollowVirtualCamAnimator = value; }
     public Camera CutInCamera { get => cutInCamera; set => cutInCamera = value; }
     public RawImage CutInCameraDisplayRawImage { get => cutInCameraDisplayRawImage; set => cutInCameraDisplayRawImage = value; }
     public float CurrentPlayerCamStartingFOV { get => currentPlayerCamStartingFOV; set => currentPlayerCamStartingFOV = value; }
@@ -53,6 +57,7 @@ public class GameplayCameraManager : MonoBehaviour
         CutInPlayerCam.enabled = true;
         CutInCamera.enabled = true;
         CutInCameraDisplayRawImage.enabled = true;
+        CutInCameraPlayerFollowVirtualCamAnimator.SetBool("ZoomIn", true);
     }
 
     public void TurnOffVirtualCutInCamera()
@@ -68,19 +73,42 @@ public class GameplayCameraManager : MonoBehaviour
         CutInPlayerCam.Follow = lookAtAndFollowTransform;
     }
 
+    public void SpawnCastParticle(Player currentPlayer, out GameObject particle)
+    {
+        particle = Instantiate(PlayerCastParticle, currentPlayer.transform);
+    }
+    public void SpawnAttackParticle(string typeOfParticle, Player targetPlayer, out GameObject particle)
+    {
+        particle = null;
+        if(typeOfParticle.ToLower() == "attack")
+        {
+            particle = Instantiate(PlayerAttackedParticle, targetPlayer.transform);
+        }
+        else if(typeOfParticle.ToLower() == "poison")
+        {
+            particle = Instantiate(PlayerPoisonedParticle, targetPlayer.transform);
+        }
+        else if (typeOfParticle.ToLower() == "curse")
+        {
+            particle = Instantiate(PlayerCursedParticle, targetPlayer.transform);
+        }
+    }
+
     public IEnumerator DamageOpponentCutInPopup(Player currentPlayer, Player targetPlayer, int damageToGive)
     {
-        yield return null;
-
         //Player cam zoom in.
-        CurrentPlayerFollowVirtualCam.m_Lens.FieldOfView = CurrentPlayerCamZoomFOV;
+        CurrentPlayerFollowVirtualCamAnimator.SetBool("ZoomIn", true);
+
         currentPlayer.HideHand();
         yield return new WaitForSeconds(TimeToWaitForCastingPlayerToBeginCasting);
-        GameObject castParticle = Instantiate(PlayerCastParticle, currentPlayer.transform);
+        GameObject castParticle;
+        SpawnCastParticle(currentPlayer, out castParticle);
+        
+
         currentPlayer.Animator.SetBool(Player.ISCASTING, true);
         float castAnimationTime = 0;
-        
-        foreach(AnimationClip animationClip in currentPlayer.Animator.runtimeAnimatorController.animationClips)
+
+        foreach (AnimationClip animationClip in currentPlayer.Animator.runtimeAnimatorController.animationClips)
         {
             if (animationClip.name.ToLower() == currentPlayer.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name)
             {
@@ -92,8 +120,6 @@ public class GameplayCameraManager : MonoBehaviour
         //wait for about 5 frames.
         yield return new WaitForSeconds(timeToWaitForCutInCamToPopup);
 
-        
-
         //Turn on camera.
         TurnOnVirtualCutInCamera();
         ChangeVirtualCutInCameraTarget(targetPlayer.transform);
@@ -101,12 +127,18 @@ public class GameplayCameraManager : MonoBehaviour
         //Delay a bit to give some visual on the Targetplayer and establish they are being targeted.
         yield return new WaitForSeconds(TimeToWaitAfterCutInCamPopupBeforePlayerHurtAnimationPlays);
 
-        GameObject attackParticle = Instantiate(PlayerAttackedParticle, targetPlayer.transform);
+        GameObject attackParticle;
+        SpawnAttackParticle("attack", targetPlayer, out attackParticle);
+
+
+        //Play opponent hurt animation.
+        targetPlayer.TakeDamage(damageToGive);
+
         targetPlayer.Animator.SetBool(Player.ISHURT, true);
         float hurtAnimationTime = 0f;
         foreach (AnimationClip animationClip in targetPlayer.Animator.runtimeAnimatorController.animationClips)
         {
-            if (animationClip.name.ToLower() == "thiefcast")
+            if (animationClip.name.ToLower() == "thiefhurt")
             {
                 hurtAnimationTime = animationClip.length;
             }
@@ -114,15 +146,24 @@ public class GameplayCameraManager : MonoBehaviour
         //Wait for animation of virtual camera coming on.
 
         yield return new WaitForSeconds(hurtAnimationTime);
-        //Play opponent hurt animation.
-        targetPlayer.TakeDamage(damageToGive);
 
-        
+
         //Wait for 1-2 seconds.
         yield return new WaitForSeconds(TimeToWaitForCutInCamToGoAway);
+        CutInCameraPlayerFollowVirtualCamAnimator.SetBool("ZoomIn", false);
 
+        float camAnimationTime = 0f;
+        foreach (AnimationClip animationClip in CutInCameraPlayerFollowVirtualCamAnimator.runtimeAnimatorController.animationClips)
+        {
+            if (animationClip.name.ToLower() == "zoomout")
+            {
+                camAnimationTime = animationClip.length;
+            }
+        }
+
+        yield return new WaitForSeconds(camAnimationTime);
         //Player cam return to original zoom.
-        CurrentPlayerFollowVirtualCam.m_Lens.FieldOfView = CurrentPlayerCamStartingFOV;
+        CurrentPlayerFollowVirtualCamAnimator.SetBool("ZoomIn", false);
         TurnOffVirtualCutInCamera();
         currentPlayer.ShowHand();
         currentPlayer.Animator.SetBool(Player.ISCASTING, false);
@@ -140,13 +181,15 @@ public class GameplayCameraManager : MonoBehaviour
 
     public IEnumerator StatusEffectOpponentCutInPopup(Player currentPlayer, Player targetPlayer, string typeOfStatusEffect, int statusDuration)
     {
-        yield return null;
-
         //Player cam zoom in.
-        CurrentPlayerFollowVirtualCam.m_Lens.FieldOfView = CurrentPlayerCamZoomFOV;
+        CurrentPlayerFollowVirtualCamAnimator.SetBool("ZoomIn", true);
+
         currentPlayer.HideHand();
         yield return new WaitForSeconds(TimeToWaitForCastingPlayerToBeginCasting);
-        GameObject castParticle = Instantiate(PlayerCastParticle, currentPlayer.transform);
+        GameObject castParticle;
+        SpawnCastParticle(currentPlayer, out castParticle);
+
+
         currentPlayer.Animator.SetBool(Player.ISCASTING, true);
         float castAnimationTime = 0;
 
@@ -162,25 +205,15 @@ public class GameplayCameraManager : MonoBehaviour
         //wait for about 5 frames.
         yield return new WaitForSeconds(timeToWaitForCutInCamToPopup);
 
-
-
         //Turn on camera.
         TurnOnVirtualCutInCamera();
         ChangeVirtualCutInCameraTarget(targetPlayer.transform);
 
         //Delay a bit to give some visual on the Targetplayer and establish they are being targeted.
         yield return new WaitForSeconds(TimeToWaitAfterCutInCamPopupBeforePlayerHurtAnimationPlays);
+
         GameObject attackParticle = null;
-
-        if (typeOfStatusEffect == "curse")
-        {
-            attackParticle = Instantiate(PlayerCursedParticle, targetPlayer.transform);
-
-        }
-        else
-        {
-            attackParticle = Instantiate(PlayerPoisonedParticle, targetPlayer.transform);
-        }
+        SpawnAttackParticle(typeOfStatusEffect, targetPlayer, out attackParticle);
 
         
         targetPlayer.Animator.SetBool(Player.ISHURT, true);
@@ -211,9 +244,20 @@ public class GameplayCameraManager : MonoBehaviour
 
         //Wait for 1-2 seconds.
         yield return new WaitForSeconds(TimeToWaitForCutInCamToGoAway);
+        CutInCameraPlayerFollowVirtualCamAnimator.SetBool("ZoomIn", false);
 
+        float camAnimationTime = 0f;
+        foreach (AnimationClip animationClip in CutInCameraPlayerFollowVirtualCamAnimator.runtimeAnimatorController.animationClips)
+        {
+            if (animationClip.name.ToLower() == "zoomout")
+            {
+                camAnimationTime = animationClip.length;
+            }
+        }
+
+        yield return new WaitForSeconds(camAnimationTime);
         //Player cam return to original zoom.
-        CurrentPlayerFollowVirtualCam.m_Lens.FieldOfView = CurrentPlayerCamStartingFOV;
+        CurrentPlayerFollowVirtualCamAnimator.SetBool("ZoomIn", false);
         TurnOffVirtualCutInCamera();
         currentPlayer.ShowHand();
         currentPlayer.Animator.SetBool(Player.ISCASTING, false);
