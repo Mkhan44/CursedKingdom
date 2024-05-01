@@ -20,7 +20,9 @@ public class GameplayManager : MonoBehaviour
 	//event if all players die
 	public event Action<Player> AllPlayersDefeated;
 	
+	//State machines
 	private GameplayPhaseSM  gameplayPhaseStatemachineRef;
+	private DuelPhaseSM duelPhaseSM;
 
 	public GameObject cardToSpawn;
 	public List<Space> spaces;
@@ -101,7 +103,9 @@ public class GameplayManager : MonoBehaviour
 	//Properties
 	public List<Player> Players { get => players; set => players = value; }
 	
+	//State machines
 	public GameplayPhaseSM GameplayPhaseStatemachineRef {get => gameplayPhaseStatemachineRef; set => gameplayPhaseStatemachineRef = value;}
+    public DuelPhaseSM DuelPhaseSM { get => duelPhaseSM; set => duelPhaseSM = value; }
 
 
 	//Deck related

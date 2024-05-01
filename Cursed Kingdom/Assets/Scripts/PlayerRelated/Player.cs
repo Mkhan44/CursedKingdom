@@ -107,7 +107,9 @@ public class Player : MonoBehaviour
 	[SerializeField] private ClassData classData;
 	[SerializeField] private Space currentSpacePlayerIsOn;
 	[SerializeField] private Space previousSpacePlayerWasOn;
-	
+
+	//Duel related
+	[SerializeField] private int rangeOfSpacesToLookForDuelOpponents;
 
 	//References
 	[SerializeField] private GameplayManager gameplayManagerRef;
@@ -228,10 +230,16 @@ public class Player : MonoBehaviour
 		} 
 	}
 
-	public Space PreviousSpacePlayerWasOn { get => previousSpacePlayerWasOn; set => previousSpacePlayerWasOn = value; }
+    //Duel related
+    public int RangeOfSpacesToLookForDuelOpponents { get => rangeOfSpacesToLookForDuelOpponents; set => rangeOfSpacesToLookForDuelOpponents = value; }
+
+	//References
+    public Space PreviousSpacePlayerWasOn { get => previousSpacePlayerWasOn; set => previousSpacePlayerWasOn = value; }
 	public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
 	public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
 	public Animator Animator { get => animator; set => animator = value; }
+
+	
 
     public void InitializePlayer(ClassData data)
 	{
@@ -310,6 +318,9 @@ public class Player : MonoBehaviour
 		tempSpaceEffectsToHandle = new();
 		isHandlingSpaceEffects = false;
 		TriedToNegateCurrentSupportCard = false;
+
+		//Duel related
+		RangeOfSpacesToLookForDuelOpponents = 3;
 
         //Subscriptions
         GameplayManagerRef.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += ApplyCurrentSpaceEffects;

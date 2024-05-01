@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 711935881092096550}
   - component: {fileID: 7166908049358683936}
   - component: {fileID: 1447546788679460028}
+  - component: {fileID: 748826715669862664}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -192,6 +193,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameplayManager: {fileID: 711935881092096549}
+--- !u!114 &748826715669862664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711935881092096547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d1aaab64feb5224bbae51cfeb6b4742, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameplayManager: {fileID: 711935881092096549}
 --- !u!1 &711935881242953987
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,7 +285,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cutInPlayerCam: {fileID: 0}
   currentPlayerFollowVirtualCam: {fileID: 0}
+  currentPlayerFollowVirtualCamAnimator: {fileID: 0}
   cutInCamera: {fileID: 0}
+  cutInCameraPlayerFollowVirtualCamAnimator: {fileID: 0}
   cutInCameraDisplayRawImage: {fileID: 0}
   currentPlayerCamStartingFOV: 45
   currentPlayerCamZoomFOV: 25
