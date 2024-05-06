@@ -22,7 +22,7 @@ public class GameplayManager : MonoBehaviour
 	
 	//State machines
 	private GameplayPhaseSM  gameplayPhaseStatemachineRef;
-	private DuelPhaseSM duelPhaseSM;
+	private DuelPhaseSM duelPhaseSMRef;
 
 	public GameObject cardToSpawn;
 	public List<Space> spaces;
@@ -105,7 +105,7 @@ public class GameplayManager : MonoBehaviour
 	
 	//State machines
 	public GameplayPhaseSM GameplayPhaseStatemachineRef {get => gameplayPhaseStatemachineRef; set => gameplayPhaseStatemachineRef = value;}
-    public DuelPhaseSM DuelPhaseSM { get => duelPhaseSM; set => duelPhaseSM = value; }
+    public DuelPhaseSM DuelPhaseSMRef { get => duelPhaseSMRef; set => duelPhaseSMRef = value; }
 
 
 	//Deck related
@@ -141,10 +141,12 @@ public class GameplayManager : MonoBehaviour
 		mapManager = GetComponent<MapManager>();
 		playerMovementManager = GetComponent<PlayerMovementManager>();
 		gameplayPhaseStatemachineRef = GetComponent<GameplayPhaseSM>();
+		DuelPhaseSMRef = GetComponent<DuelPhaseSM>();
 
 
-		//Deck related
-		ThisDeckManager = GetComponent<DeckManager>();
+
+        //Deck related
+        ThisDeckManager = GetComponent<DeckManager>();
 		UseSelectedCardsPanel.SetActive(false);
 
 		//Get a list of movement cards, pass them in.

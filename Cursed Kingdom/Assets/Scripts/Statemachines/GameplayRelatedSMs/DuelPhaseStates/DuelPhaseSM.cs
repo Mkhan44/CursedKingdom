@@ -13,7 +13,12 @@ public class DuelPhaseSM : BukuStateMachine
 	//Default
 	public DuelNotDuelingPhaseState duelNotDuelingPhaseState;
 
-	public DuelStartPhaseState duelStartPhase;
+	public DuelStartPhaseState duelStartPhaseState;
+	public DuelMovementCardPhaseState duelMovementCardPhaseState;
+	public DuelSupportCardPhaseState duelSupportCardPhaseState;
+	public DuelMovementResolutionPhaseState duelMovementResolutionPhaseState;
+	public DuelSupportResolutionPhaseState duelSupportResolutionPhaseState;
+	public DuelResultPhaseState DuelResultPhaseState;
 
 	public GameplayManager gameplayManager;
 
@@ -29,12 +34,21 @@ public class DuelPhaseSM : BukuStateMachine
 	public Player CurrentPlayerBeingHandled { get => currentPlayerBeingHandled; set => currentPlayerBeingHandled = value; }
 	private void Awake()
 	{
-		gameplayManager = GetComponent<GameplayManager>();
+		duelNotDuelingPhaseState = new DuelNotDuelingPhaseState(this);
+        duelStartPhaseState = new DuelStartPhaseState(this);
+        duelMovementCardPhaseState = new DuelMovementCardPhaseState(this);
+        duelSupportCardPhaseState = new DuelSupportCardPhaseState(this);
+        duelMovementResolutionPhaseState = new DuelMovementResolutionPhaseState(this);
+        duelSupportResolutionPhaseState = new DuelSupportResolutionPhaseState(this);
+        DuelResultPhaseState = new DuelResultPhaseState(this);
+
+        gameplayManager = GetComponent<GameplayManager>();
 	}
 
 	protected override BaseState GetInitialState()
 	{
-		return duelNotDuelingPhaseState;
+		PlayersInCurrentDuel = new();
+        return duelNotDuelingPhaseState;
 	}
 
 }

@@ -18,6 +18,8 @@ public class DuelStartPhaseState : BaseState
     public override void Enter()
     {
         base.Enter();
+        //Play animation to enter into the duel state.
+
     }
 
     public override void UpdateLogic()
@@ -28,6 +30,15 @@ public class DuelStartPhaseState : BaseState
     public override void Exit()
     {
         base.Exit();
+    }
+
+
+    /// <summary>
+    /// Sorts the players in the duel to be the current player followed by other players in the current turn order.
+    /// </summary>
+    private void SortPlayersInDuel()
+    {
+
     }
 
 }

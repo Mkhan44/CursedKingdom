@@ -1,6 +1,7 @@
 //Code written by Mohamed Riaz Khan of BukuGames.
 //All code is written by me (Above name) unless otherwise stated via comments below.
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -55,7 +56,8 @@ public class GameplayMovementPhaseState : BaseState
             if(playersToDuel.Count > 1)
             {
                 //Popup
-                DialogueBoxPopup.instance.ActivatePopupWithConfirmation($"We found {playersToDuel.Count - 1} other players to duel with!");
+                ActivatePopupForDuelNotDuel(playersToDuel);
+
                 //Debug.Log($"We found {playersToDuel.Count - 1} players to duel with!");
             }
             //No opponents in range: Skip duel phase.
@@ -73,6 +75,20 @@ public class GameplayMovementPhaseState : BaseState
         checkedForDuelOpponents = false;
 
     }
+
+    public void ActivatePopupForDuelNotDuel(List<Player> playersToDuelAgainst)
+    {
+        List<Tuple<string,string, object, List<object>>> insertedParams = new();
+        List<object> paramsList = new();
+        insertedParams.Add(Tuple.Create<string,string, object, List<object>>("Yes", nameof(gameplayPhaseSM.GoToDuelState), gameplayPhaseSM, paramsList));
+
+        paramsList.Add(playersToDuelAgainst);
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(gameplayPhaseSM.GoToSpaceResolutionState), gameplayPhaseSM, paramsList));
+
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Do you wish to duel? There are {playersToDuelAgainst.Count - 1} opponents to duel against.", insertedParams, 1, "Duel selection");
+    }
+
+    
 
     public List<Player> FindPlayersInDuelRange(Player playerReference, int rangeOfSpacesToLook = 3)
     {
@@ -98,9 +114,42 @@ public class GameplayMovementPhaseState : BaseState
 
                 foreach(Player playerOnSpace in space.playersOnThisSpace)
                 {
-                    if(playerOnSpace != currentPlayer && !playersInDuelRange.Contains(playerOnSpace))
+                    if (playerOnSpace != currentPlayer && !playersInDuelRange.Contains(playerOnSpace))
                     {
-                        playersInDuelRange.Add(playerOnSpace);
+                        if (playersInDuelRange.Count == 0)
+                        {
+                            playersInDuelRange.Add(playerOnSpace);
+                            continue;
+                        }
+
+                        Debug.Log($"Current list of players in the duel list after before new one are:");
+                        foreach (Player playerCheck in playersInDuelRange)
+                        {
+                            Debug.Log($"Player: {playerCheck.playerIDIntVal}");
+                        }
+
+                        //If the Player we want to add goes first in the turn order; insert them before the final player.
+                        if (gameplayPhaseSM.gameplayManager.Players.IndexOf(playerOnSpace) < gameplayPhaseSM.gameplayManager.Players.IndexOf(playersInDuelRange[playersInDuelRange.Count - 1]))
+                        {
+                            if (playersInDuelRange.Count == 1)
+                            {
+                                playersInDuelRange.Insert(0, playerOnSpace);
+                            }
+                            else
+                            {
+                                playersInDuelRange.Insert(playersInDuelRange.Count - 1, playerOnSpace);
+                            }
+                        }
+                        else
+                        {
+                            playersInDuelRange.Add(playerOnSpace);
+                        }
+
+                        Debug.Log($"Current list of players in the duel list after inserting new one are:");
+                        foreach (Player playerCheck in playersInDuelRange)
+                        {
+                            Debug.Log($"Player: {playerCheck.playerIDIntVal}");
+                        }
                     }
                 }
                 

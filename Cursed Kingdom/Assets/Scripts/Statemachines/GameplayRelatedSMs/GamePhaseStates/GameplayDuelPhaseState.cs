@@ -38,6 +38,6 @@ public class GameplayDuelPhaseState : BaseState
 
     public void Logic()
     {
-        gameplayPhaseSM.ChangeState(gameplayPhaseSM.gameplayEndPhaseState);
+        gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.ChangeState(gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.duelStartPhaseState);
     }
 }
