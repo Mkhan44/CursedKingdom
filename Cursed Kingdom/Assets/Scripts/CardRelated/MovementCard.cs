@@ -208,13 +208,32 @@ public class MovementCard : Card
                         thePlayer.CurrentSumOfSpacesToMove += MovementCardValue;
                     }
 
-                    GameplayManager.SpacesPlayerWillLandOnParent.TurnOnDisplay(GameplayManager.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.FindValidSpaces(thePlayer, thePlayer.CurrentSumOfSpacesToMove));
+                    if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelMovementCardPhaseState) && GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelSupportCardPhaseState))
+                    {
+                        GameplayManager.SpacesPlayerWillLandOnParent.TurnOnDisplay(GameplayManager.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.FindValidSpaces(thePlayer, thePlayer.CurrentSumOfSpacesToMove));
+                    }
                 }
                 else
                 {
-                    AttemptToMove(thePlayer);
-                    thePlayer.CurrentSumOfSpacesToMove = 0;
-                    GameplayManager.SpacesPlayerWillLandOnParent.TurnOffDisplay();
+                    if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelMovementCardPhaseState) && GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelSupportCardPhaseState))
+                    {
+                        AttemptToMove(thePlayer);
+                        thePlayer.CurrentSumOfSpacesToMove = 0;
+                        GameplayManager.SpacesPlayerWillLandOnParent.TurnOffDisplay();
+                    }
+                    //Might hafta check if the Player we are is the same as the current player being handled in the duelPhaseSM.
+                    else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
+                    {
+                        Debug.Log("Nice we are able to select a movement card!");
+                        List<MovementCard> movementCards = new List<MovementCard>();
+                        movementCards.Add(this);
+                        GameplayManager.DuelPhaseSMRef.duelMovementCardPhaseState.MovementCardSelected(movementCards);
+                    }
+                    else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
+                    {
+                        DialogueBoxPopup.instance.ActivatePopupWithJustText("You can only select a support card.", 2.0f);
+                    }
+                    
                 }
             }
         }

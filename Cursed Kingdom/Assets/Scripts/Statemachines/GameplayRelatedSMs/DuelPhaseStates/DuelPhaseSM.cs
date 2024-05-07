@@ -27,11 +27,11 @@ public class DuelPhaseSM : BukuStateMachine
 	//THIS LIST should be in the order of: Player who initiated the duel followed by turn order of other players. If someone comes in via unwillful warp, 
 	//they become the last player in the list.
 	private List<Tuple<Player, List<MovementCard>, List<SupportCard>>> playersInCurrentDuel;
-	private Player currentPlayerBeingHandled;
+	private Tuple<Player, List<MovementCard>, List<SupportCard>> currentPlayerBeingHandled;
 
 	public List<Tuple<Player, List<MovementCard>, List<SupportCard>>> PlayersInCurrentDuel { get => playersInCurrentDuel; set => playersInCurrentDuel = value; }
 	
-	public Player CurrentPlayerBeingHandled { get => currentPlayerBeingHandled; set => currentPlayerBeingHandled = value; }
+	public Tuple<Player, List<MovementCard>, List<SupportCard>> CurrentPlayerBeingHandled { get => currentPlayerBeingHandled; set => currentPlayerBeingHandled = value; }
 	private void Awake()
 	{
 		duelNotDuelingPhaseState = new DuelNotDuelingPhaseState(this);

@@ -18,6 +18,8 @@ public class DuelStartPhaseState : BaseState
     public override void Enter()
     {
         base.Enter();
+        PhaseDisplay.instance.TurnOnDisplay("Duel!", 1.5f);
+        PhaseDisplay.instance.displayTimeCompleted += Logic;
         //Play animation to enter into the duel state.
 
     }
@@ -32,13 +34,11 @@ public class DuelStartPhaseState : BaseState
         base.Exit();
     }
 
-
-    /// <summary>
-    /// Sorts the players in the duel to be the current player followed by other players in the current turn order.
-    /// </summary>
-    private void SortPlayersInDuel()
+    private void Logic()
     {
-
+        PhaseDisplay.instance.displayTimeCompleted -= Logic;
+        duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[0];
+        duelPhaseSM.ChangeState(duelPhaseSM.duelMovementCardPhaseState);
     }
 
 }
