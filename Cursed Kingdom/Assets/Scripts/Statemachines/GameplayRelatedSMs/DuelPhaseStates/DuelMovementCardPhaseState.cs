@@ -36,13 +36,17 @@ public class DuelMovementCardPhaseState : BaseState
 
 	public void MovementCardSelected(List<MovementCard> movementCards)
 	{
+		DialogueBoxPopup.instance.DeactivatePopup();
+		duelPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand();
 		duelPhaseSM.CurrentPlayerBeingHandled.Item1.HideHand();
 
         Tuple<Player, List<MovementCard>, List<SupportCard>> movementCardTuple = new Tuple<Player, List<MovementCard>, List<SupportCard>>(duelPhaseSM.CurrentPlayerBeingHandled.Item1, movementCards, duelPhaseSM.CurrentPlayerBeingHandled.Item3);
 		int index = duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled);
 
 		duelPhaseSM.PlayersInCurrentDuel[index] = movementCardTuple;
-		Debug.Log($"{duelPhaseSM.PlayersInCurrentDuel[index].Item2.Count} Are the amount of movement cards that Player {duelPhaseSM.PlayersInCurrentDuel[index].Item1.playerIDIntVal} has selected for the duel.");
+		duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[index];
+        Debug.Log($"{duelPhaseSM.PlayersInCurrentDuel[index].Item2.Count} Are the amount of movement cards that Player {duelPhaseSM.PlayersInCurrentDuel[index].Item1.playerIDIntVal} has selected for the duel.");
+		duelPhaseSM.ChangeState(duelPhaseSM.duelSupportCardPhaseState);
 	}
 	private void Logic()
 	{
@@ -53,7 +57,7 @@ public class DuelMovementCardPhaseState : BaseState
 		}
 		else
 		{
-            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Please select a movement card to use for the duel.", 0, "Card selection");
+            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please select a movement card to use for the duel.", 0, "Card selection");
             duelPhaseSM.CurrentPlayerBeingHandled.Item1.ShowHand();
         }
 		

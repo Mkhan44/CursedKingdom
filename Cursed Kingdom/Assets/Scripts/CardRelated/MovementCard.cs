@@ -224,7 +224,6 @@ public class MovementCard : Card
                     //Might hafta check if the Player we are is the same as the current player being handled in the duelPhaseSM.
                     else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
                     {
-                        Debug.Log("Nice we are able to select a movement card!");
                         List<MovementCard> movementCards = new List<MovementCard>();
                         movementCards.Add(this);
                         GameplayManager.DuelPhaseSMRef.duelMovementCardPhaseState.MovementCardSelected(movementCards);

@@ -50,8 +50,11 @@ public class GameplayMovementPhaseState : BaseState
             checkedForDuelOpponents = true;
             //Check if there are any players within range of the Player who's turn it is. If there is at least 1 player, popup a box asking them if they want to duel. Yes = duel phase No = resolve space phase
             List<Player> playersToDuel = new List<Player>();
-            playersToDuel.Add(currentPlayer);
-            playersToDuel.AddRange(FindPlayersInDuelRange(currentPlayer,currentPlayer.RangeOfSpacesToLookForDuelOpponents));
+            if (!currentPlayer.CurrentSpacePlayerIsOn.spaceData.IsNonDuelSpace)
+            {
+                playersToDuel.Add(currentPlayer);
+                playersToDuel.AddRange(FindPlayersInDuelRange(currentPlayer, currentPlayer.RangeOfSpacesToLookForDuelOpponents));
+            }
 
             if(playersToDuel.Count > 1)
             {
@@ -111,48 +114,37 @@ public class GameplayMovementPhaseState : BaseState
             spacesJustChecked.Clear();
             foreach (Space space in spacesToCheckNext)
             {
-
-                foreach(Player playerOnSpace in space.playersOnThisSpace)
+                if (!space.spaceData.IsNonDuelSpace)
                 {
-                    if (playerOnSpace != currentPlayer && !playersInDuelRange.Contains(playerOnSpace))
+                    foreach (Player playerOnSpace in space.playersOnThisSpace)
                     {
-                        if (playersInDuelRange.Count == 0)
+                        if (playerOnSpace != currentPlayer && !playersInDuelRange.Contains(playerOnSpace))
                         {
-                            playersInDuelRange.Add(playerOnSpace);
-                            continue;
-                        }
-
-                        Debug.Log($"Current list of players in the duel list after before new one are:");
-                        foreach (Player playerCheck in playersInDuelRange)
-                        {
-                            Debug.Log($"Player: {playerCheck.playerIDIntVal}");
-                        }
-
-                        //If the Player we want to add goes first in the turn order; insert them before the final player.
-                        if (gameplayPhaseSM.gameplayManager.Players.IndexOf(playerOnSpace) < gameplayPhaseSM.gameplayManager.Players.IndexOf(playersInDuelRange[playersInDuelRange.Count - 1]))
-                        {
-                            if (playersInDuelRange.Count == 1)
+                            if (playersInDuelRange.Count == 0)
                             {
-                                playersInDuelRange.Insert(0, playerOnSpace);
+                                playersInDuelRange.Add(playerOnSpace);
+                                continue;
+                            }
+
+                            //If the Player we want to add goes first in the turn order; insert them before the final player.
+                            if (gameplayPhaseSM.gameplayManager.Players.IndexOf(playerOnSpace) < gameplayPhaseSM.gameplayManager.Players.IndexOf(playersInDuelRange[playersInDuelRange.Count - 1]))
+                            {
+                                if (playersInDuelRange.Count == 1)
+                                {
+                                    playersInDuelRange.Insert(0, playerOnSpace);
+                                }
+                                else
+                                {
+                                    playersInDuelRange.Insert(playersInDuelRange.Count - 1, playerOnSpace);
+                                }
                             }
                             else
                             {
-                                playersInDuelRange.Insert(playersInDuelRange.Count - 1, playerOnSpace);
+                                playersInDuelRange.Add(playerOnSpace);
                             }
-                        }
-                        else
-                        {
-                            playersInDuelRange.Add(playerOnSpace);
-                        }
-
-                        Debug.Log($"Current list of players in the duel list after inserting new one are:");
-                        foreach (Player playerCheck in playersInDuelRange)
-                        {
-                            Debug.Log($"Player: {playerCheck.playerIDIntVal}");
                         }
                     }
                 }
-                
 
                 if (!spacesAlreadyChecked.Contains(space))
                 {

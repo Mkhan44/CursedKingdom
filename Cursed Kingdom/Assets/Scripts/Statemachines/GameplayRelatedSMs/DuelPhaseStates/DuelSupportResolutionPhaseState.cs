@@ -19,9 +19,16 @@ public class DuelSupportResolutionPhaseState : BaseState
 	{
 		//Check which player we are in the duelPhaseSM Players list.
 		base.Enter();
-	}
+        PhaseDisplay.instance.TurnOnDisplay($"Resolve support cards", 1.5f);
+        PhaseDisplay.instance.displayTimeCompleted += Logic;
+    }
 
-	public override void UpdateLogic()
+    private void Logic()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void UpdateLogic()
 	{
 		base.UpdateLogic();
 	}

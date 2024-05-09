@@ -16,8 +16,8 @@ public class DuelPhaseSM : BukuStateMachine
 	public DuelStartPhaseState duelStartPhaseState;
 	public DuelMovementCardPhaseState duelMovementCardPhaseState;
 	public DuelSupportCardPhaseState duelSupportCardPhaseState;
-	public DuelMovementResolutionPhaseState duelMovementResolutionPhaseState;
 	public DuelSupportResolutionPhaseState duelSupportResolutionPhaseState;
+	public DuelMovementResolutionPhaseState duelMovementResolutionPhaseState;
 	public DuelResultPhaseState DuelResultPhaseState;
 
 	public GameplayManager gameplayManager;
@@ -38,8 +38,8 @@ public class DuelPhaseSM : BukuStateMachine
         duelStartPhaseState = new DuelStartPhaseState(this);
         duelMovementCardPhaseState = new DuelMovementCardPhaseState(this);
         duelSupportCardPhaseState = new DuelSupportCardPhaseState(this);
-        duelMovementResolutionPhaseState = new DuelMovementResolutionPhaseState(this);
         duelSupportResolutionPhaseState = new DuelSupportResolutionPhaseState(this);
+        duelMovementResolutionPhaseState = new DuelMovementResolutionPhaseState(this);
         DuelResultPhaseState = new DuelResultPhaseState(this);
 
         gameplayManager = GetComponent<GameplayManager>();
@@ -50,5 +50,11 @@ public class DuelPhaseSM : BukuStateMachine
 		PlayersInCurrentDuel = new();
         return duelNotDuelingPhaseState;
 	}
+
+	public IEnumerator ChooseNoSupportCardToUseInDuel()
+	{
+		yield return null;
+		duelSupportCardPhaseState.SupportCardNotSelected();
+    }
 
 }
