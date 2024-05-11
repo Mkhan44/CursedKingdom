@@ -1,6 +1,7 @@
 //Code written by Mohamed Riaz Khan of BukuGames.
 //All code is written by me (Above name) unless otherwise stated via comments below.
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,5 +54,29 @@ public class GameplayPhaseSM : BukuStateMachine
         gameplayManager.HandDisplayPanel.ShrinkHand(false);
         ChangeState(stateToChangeTo);
     }
+
+    /// <summary>
+    /// For entering dueling state from end of Movement phase. Takes in a list of objects where object 0 is a List<Player> of playersInTheDuel.
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+    public IEnumerator GoToDuelState(List<object> objects)
+    {
+        List<Player> playersInTheDuel = (List<Player>)objects[0];
+
+        ChangeState(gameplayDuelPhaseState);
+        foreach (Player player in playersInTheDuel)
+        {
+            gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel.Add(new Tuple<Player, List<MovementCard>, List<SupportCard>>(player, new(), new()));
+        }
+        yield return null;
+    }
+
+    public IEnumerator GoToSpaceResolutionState()
+    {
+        ChangeState(gameplayResolveSpacePhaseState);
+        yield return null;
+    }
+
 
 }

@@ -65,6 +65,6 @@ public class GameplayResolveSpacePhaseState : BaseState
 	}
 	private void FinishedResolvingSpaceEffects(Player player)
 	{
-		gameplayPhaseSM.ChangeState(gameplayPhaseSM.gameplayDuelPhaseState);
+		gameplayPhaseSM.ChangeState(gameplayPhaseSM.gameplayEndPhaseState);
 	}
 }

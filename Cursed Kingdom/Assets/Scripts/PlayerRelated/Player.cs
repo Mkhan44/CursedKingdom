@@ -107,7 +107,9 @@ public class Player : MonoBehaviour
 	[SerializeField] private ClassData classData;
 	[SerializeField] private Space currentSpacePlayerIsOn;
 	[SerializeField] private Space previousSpacePlayerWasOn;
-	
+
+	//Duel related
+	[SerializeField] private int rangeOfSpacesToLookForDuelOpponents;
 
 	//References
 	[SerializeField] private GameplayManager gameplayManagerRef;
@@ -228,10 +230,16 @@ public class Player : MonoBehaviour
 		} 
 	}
 
-	public Space PreviousSpacePlayerWasOn { get => previousSpacePlayerWasOn; set => previousSpacePlayerWasOn = value; }
+    //Duel related
+    public int RangeOfSpacesToLookForDuelOpponents { get => rangeOfSpacesToLookForDuelOpponents; set => rangeOfSpacesToLookForDuelOpponents = value; }
+
+	//References
+    public Space PreviousSpacePlayerWasOn { get => previousSpacePlayerWasOn; set => previousSpacePlayerWasOn = value; }
 	public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
 	public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
 	public Animator Animator { get => animator; set => animator = value; }
+
+	
 
     public void InitializePlayer(ClassData data)
 	{
@@ -264,7 +272,12 @@ public class Player : MonoBehaviour
 
         if (StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable && StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride > 1)
         {
-            CurrentLevel = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride;
+			if(StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride > 1)
+			{
+				LevelUp(StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride);
+            }
+			//Loop through levelups for whatever level we are at. So do a for loop if override = 5 as if player passed level up space 4 times.
+			
         }
         else
         {
@@ -311,6 +324,9 @@ public class Player : MonoBehaviour
 		isHandlingSpaceEffects = false;
 		TriedToNegateCurrentSupportCard = false;
 
+		//Duel related
+		RangeOfSpacesToLookForDuelOpponents = 3;
+
         //Subscriptions
         GameplayManagerRef.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += ApplyCurrentSpaceEffects;
         HasBeenDefeated += GameplayManagerRef.CheckIfAllPlayersButOneDefeated;
@@ -326,8 +342,13 @@ public class Player : MonoBehaviour
 
 	public void LevelUp(int levelsToIncrease)
 	{
-		CurrentLevel += levelsToIncrease;
-		if(CurrentLevel > 5) 
+		for(int i = 0; i < levelsToIncrease; i++)
+		{
+            HandleLevelUp();
+        }
+		
+        AbleToLevelUp = false;
+		if(CurrentLevel >= 5) 
 		{
 			CurrentLevel = 5;
 			CanUseEliteAbility = true;
@@ -342,23 +363,25 @@ public class Player : MonoBehaviour
 				GameplayManagerRef.UseEliteAbilityButton.onClick.AddListener(UseEliteAbility);
 			}
 		}
-		else
-		{
-            HandleLevelUp();
-            AbleToLevelUp = false;
-            GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
-        }
-
-	}
+        GameplayManagerRef.UpdatePlayerLevel(this);
+    }
 
 	public void HandleLevelUp()
 	{
-        MaxHealth += 1;
-        GameplayManagerRef.UpdatePlayerMaxHealth(this);
-        RecoverHealth(1);
-        MaxHandSize += 1;
-        GameplayManagerRef.UpdatePlayerLevel(this);
-		GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
+		if (CurrentLevel < 5)
+		{
+            MaxHealth += 1;
+            GameplayManagerRef.UpdatePlayerMaxHealth(this);
+            RecoverHealth(1);
+            MaxHandSize += 1;
+            GameplayManagerRef.UpdatePlayerInfoUICardCount(this);
+        }
+		else
+		{
+            RecoverHealth(1);
+        }
+		CurrentLevel++;
+        
 	}
 
 	//DEBUG
@@ -570,6 +593,7 @@ public class Player : MonoBehaviour
         paramsList.Add(poisonBlockSupportCards);
         paramsList.Add(turnsToBePoisoned);
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Yes", nameof(UseSupportCardToBlockPoison), this, paramsList));
+		//NEED TO BE CAREFUL IF THIS IS A SPACE WE DON'T WANT THIS TO TRIGGER THE ANIMATION!!!!
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToBlockPoison), this, paramsList));
 
         DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a support card that can prevent you from being poisoned for {turnsToBePoisoned} turn(s). Do you wish to use it?", insertedParams, 1, "Reaction");
@@ -2841,7 +2865,7 @@ public class Player : MonoBehaviour
 
 		if (ClassData.eliteAbilityData != null)
 		{
-			if(!ClassData.eliteAbilityData.CanCostBePaid(this))
+			if(ClassData.eliteAbilityData.HasACost && !ClassData.eliteAbilityData.CanCostBePaid(this))
 			{
 				return;
 			}

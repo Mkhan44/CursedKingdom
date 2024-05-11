@@ -33,11 +33,11 @@ public class GameplayDuelPhaseState : BaseState
     public override void Exit()
     {
         base.Exit();
-        PhaseDisplay.instance.displayTimeCompleted -= Logic;
     }
 
     public void Logic()
     {
-        gameplayPhaseSM.ChangeState(gameplayPhaseSM.gameplayEndPhaseState);
+        gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.ChangeState(gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.duelStartPhaseState);
+        PhaseDisplay.instance.displayTimeCompleted -= Logic;
     }
 }

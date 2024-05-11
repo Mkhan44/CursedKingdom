@@ -20,7 +20,9 @@ public class GameplayManager : MonoBehaviour
 	//event if all players die
 	public event Action<Player> AllPlayersDefeated;
 	
+	//State machines
 	private GameplayPhaseSM  gameplayPhaseStatemachineRef;
+	private DuelPhaseSM duelPhaseSMRef;
 
 	public GameObject cardToSpawn;
 	public List<Space> spaces;
@@ -101,7 +103,9 @@ public class GameplayManager : MonoBehaviour
 	//Properties
 	public List<Player> Players { get => players; set => players = value; }
 	
+	//State machines
 	public GameplayPhaseSM GameplayPhaseStatemachineRef {get => gameplayPhaseStatemachineRef; set => gameplayPhaseStatemachineRef = value;}
+    public DuelPhaseSM DuelPhaseSMRef { get => duelPhaseSMRef; set => duelPhaseSMRef = value; }
 
 
 	//Deck related
@@ -137,10 +141,12 @@ public class GameplayManager : MonoBehaviour
 		mapManager = GetComponent<MapManager>();
 		playerMovementManager = GetComponent<PlayerMovementManager>();
 		gameplayPhaseStatemachineRef = GetComponent<GameplayPhaseSM>();
+		DuelPhaseSMRef = GetComponent<DuelPhaseSM>();
 
 
-		//Deck related
-		ThisDeckManager = GetComponent<DeckManager>();
+
+        //Deck related
+        ThisDeckManager = GetComponent<DeckManager>();
 		UseSelectedCardsPanel.SetActive(false);
 
 		//Get a list of movement cards, pass them in.
