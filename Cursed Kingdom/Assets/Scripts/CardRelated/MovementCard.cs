@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using System.Net;
 using Unity.VisualScripting;
+using System;
 
 public class MovementCard : Card
 {
@@ -231,11 +232,26 @@ public class MovementCard : Card
                     else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
                     {
                         DialogueBoxPopup.instance.ActivatePopupWithJustText("You can only select a support card.", 2.0f);
+
+                        StartCoroutine(WaitAfterPopupOfSupportDuel());
                     }
                     
                 }
             }
         }
+    }
+
+    //THIS IS TEMPORARY, NEED TO REMOVE THIS AND MAKE IT BETTER.
+    public IEnumerator WaitAfterPopupOfSupportDuel()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        List<Tuple<string, string, object, List<object>>> insertedParams = new();
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Don't use a support card", nameof(GameplayManager.DuelPhaseSMRef.ChooseNoSupportCardToUseInDuel), GameplayManager.DuelPhaseSMRef, new List<object>()));
+
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please choose a support card if you wish to use one in the duel.", insertedParams, 1, "Card selection", false);
+
+        GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.ShowHand();
     }
 
     public void AttemptToMove(Player thePlayer)

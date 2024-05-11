@@ -10,6 +10,7 @@ public class DuelSupportResolutionPhaseState : BaseState
 {
 	DuelPhaseSM duelPhaseSM;
 	private const string stateName = "DuelSupportResolutionPhaseState";
+	private SupportCard currentSupportCardWeAreHandling = new();
 	public DuelSupportResolutionPhaseState(DuelPhaseSM stateMachine) : base(stateName, stateMachine)
 	{
 		duelPhaseSM = stateMachine as DuelPhaseSM;
@@ -23,10 +24,41 @@ public class DuelSupportResolutionPhaseState : BaseState
         PhaseDisplay.instance.displayTimeCompleted += Logic;
     }
 
-    private void Logic()
+    public void Logic()
     {
-        throw new NotImplementedException();
+		if(duelPhaseSM.CurrentPlayerBeingHandled.Item3.Count > 0)
+		{
+			DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.Item1.playerIDIntVal} used {duelPhaseSM.CurrentPlayerBeingHandled.Item3[0].SupportCardData.name}", 0, "Support card resolution");
+			currentSupportCardWeAreHandling = duelPhaseSM.CurrentPlayerBeingHandled.Item3[0];
+
+			//Will need to make this work for all effects. Maybe have something on this that kicks off after all effects are completed?
+			currentSupportCardWeAreHandling.SupportCardData.supportCardEffects[0].supportCardEffectData.SupportCardEffectCompleted += AfterSupportCardEffectIsDone;
+			currentSupportCardWeAreHandling.SupportCardData.supportCardEffects[0].supportCardEffectData.EffectOfCard(duelPhaseSM.CurrentPlayerBeingHandled);
+        }
+		else
+		{
+            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.Item1.playerIDIntVal} did not use a support card", 0, "Support card resolution");
+
+            AfterSupportCardEffectIsDone();
+		}
+
+		//Will need to loop through each support card: Use each.
+
     }
+
+	public void AfterSupportCardEffectIsDone(SupportCard supportCardUsed = null)
+	{
+		if(currentSupportCardWeAreHandling != null)
+		{
+            currentSupportCardWeAreHandling.SupportCardData.supportCardEffects[0].supportCardEffectData.SupportCardEffectCompleted -= AfterSupportCardEffectIsDone;
+            currentSupportCardWeAreHandling = null;
+        }
+
+		duelPhaseSM.StartCoroutine(duelPhaseSM.TestingTimeBetweenPopups());
+
+    }
+
+	
 
     public override void UpdateLogic()
 	{

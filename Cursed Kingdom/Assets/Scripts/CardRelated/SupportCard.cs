@@ -219,11 +219,20 @@ public class SupportCard : Card
                     else if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
                     {
                         DialogueBoxPopup.instance.ActivatePopupWithJustText("You can only select a movement card.", 2.0f);
+                        StartCoroutine(WaitAfterPopupOfMovementDuel());
                     }
                     
                 }
             }
         }
+    }
+
+    public IEnumerator WaitAfterPopupOfMovementDuel()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please select a movement card to use for the duel.", 0, "Card selection");
+        GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.ShowHand();
     }
 
     public void AttemptToUseSupportCard(Player playerUsingCard, bool isCurrentPlayer = true)

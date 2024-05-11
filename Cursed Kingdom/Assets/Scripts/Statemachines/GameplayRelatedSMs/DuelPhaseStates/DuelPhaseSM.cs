@@ -57,4 +57,28 @@ public class DuelPhaseSM : BukuStateMachine
 		duelSupportCardPhaseState.SupportCardNotSelected();
     }
 
+    public IEnumerator TestingTimeBetweenPopups()
+    {
+        yield return new WaitForSeconds(2.5f);
+
+        DialogueBoxPopup.instance.DeactivatePopup();
+
+        int indexOfCurrentPlayerBeingHandled = PlayersInCurrentDuel.IndexOf(CurrentPlayerBeingHandled);
+
+
+        if (indexOfCurrentPlayerBeingHandled != PlayersInCurrentDuel.Count - 1)
+        {
+            //Shouldn't ever go out of bounds.
+            CurrentPlayerBeingHandled = PlayersInCurrentDuel[indexOfCurrentPlayerBeingHandled + 1];
+            duelSupportResolutionPhaseState.Logic();
+        }
+        //We're at the final player. Reset back to the first player who initiated the duel and move onto Movementcard resolution phase.
+        else
+        {
+            CurrentPlayerBeingHandled = PlayersInCurrentDuel[0];
+            ChangeState(duelMovementResolutionPhaseState);
+            Debug.Log("We are entering movement resolution phase.");
+        }
+    }
+
 }

@@ -70,6 +70,7 @@ public class DuelSupportCardPhaseState : BaseState
         if (duelPhaseSM.PlayersInCurrentDuel[duelPhaseSM.PlayersInCurrentDuel.Count-1] == duelPhaseSM.CurrentPlayerBeingHandled)
         {
             duelPhaseSM.gameplayManager.HandDisplayPanel.SetCurrentActiveHandUI(duelPhaseSM.gameplayManager.Players.IndexOf(duelPhaseSM.PlayersInCurrentDuel[0].Item1));
+            duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[0];
             duelPhaseSM.ChangeState(duelPhaseSM.duelSupportResolutionPhaseState);
             Debug.Log("We reached the final player. Moving into resolution state for support cards.");
         }
