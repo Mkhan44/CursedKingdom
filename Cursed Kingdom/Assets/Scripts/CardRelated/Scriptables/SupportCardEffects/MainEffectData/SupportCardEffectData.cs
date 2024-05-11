@@ -13,11 +13,13 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
     [SerializeField] private bool isACost;
     [SerializeField] private bool isElemental;
     [SerializeField] private bool isReaction;
+    [SerializeField] private bool isAfterDuelIEffect;
     protected SupportCard supportCardThatWasJustUsed;
 
     public bool IsACost { get => isACost; set => isACost = value; }
     public bool IsElemental { get => isElemental; set => isElemental = value; }
     public bool IsReaction { get => isReaction; set => isReaction = value; }
+    public bool IsAfterDuelIEffect { get => isAfterDuelIEffect; set => isAfterDuelIEffect = value; }
 
     public virtual void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
@@ -30,6 +32,16 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
         CompletedEffect(playerReference);
     }
 
+    public void EffectOfCard(Tuple<Player, List<MovementCard>, List<SupportCard>> playerDuelTuple, Card cardPlayed = null)
+    {
+        SupportCard cardUsed = (SupportCard)cardPlayed;
+        if (cardUsed != null)
+        {
+            supportCardThatWasJustUsed = cardUsed;
+        }
+        //Usually called after the effect has been completed.
+        CompletedEffect(playerDuelTuple.Item1);
+    }
     public virtual void StartOfTurnEffect(Player playerReference)
     {
 
@@ -53,4 +65,5 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
     {
 
     }
+
 }

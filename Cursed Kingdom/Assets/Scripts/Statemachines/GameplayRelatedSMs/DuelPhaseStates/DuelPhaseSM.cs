@@ -16,8 +16,8 @@ public class DuelPhaseSM : BukuStateMachine
 	public DuelStartPhaseState duelStartPhaseState;
 	public DuelMovementCardPhaseState duelMovementCardPhaseState;
 	public DuelSupportCardPhaseState duelSupportCardPhaseState;
-	public DuelMovementResolutionPhaseState duelMovementResolutionPhaseState;
 	public DuelSupportResolutionPhaseState duelSupportResolutionPhaseState;
+	public DuelMovementResolutionPhaseState duelMovementResolutionPhaseState;
 	public DuelResultPhaseState DuelResultPhaseState;
 
 	public GameplayManager gameplayManager;
@@ -27,19 +27,19 @@ public class DuelPhaseSM : BukuStateMachine
 	//THIS LIST should be in the order of: Player who initiated the duel followed by turn order of other players. If someone comes in via unwillful warp, 
 	//they become the last player in the list.
 	private List<Tuple<Player, List<MovementCard>, List<SupportCard>>> playersInCurrentDuel;
-	private Player currentPlayerBeingHandled;
+	private Tuple<Player, List<MovementCard>, List<SupportCard>> currentPlayerBeingHandled;
 
 	public List<Tuple<Player, List<MovementCard>, List<SupportCard>>> PlayersInCurrentDuel { get => playersInCurrentDuel; set => playersInCurrentDuel = value; }
 	
-	public Player CurrentPlayerBeingHandled { get => currentPlayerBeingHandled; set => currentPlayerBeingHandled = value; }
+	public Tuple<Player, List<MovementCard>, List<SupportCard>> CurrentPlayerBeingHandled { get => currentPlayerBeingHandled; set => currentPlayerBeingHandled = value; }
 	private void Awake()
 	{
 		duelNotDuelingPhaseState = new DuelNotDuelingPhaseState(this);
         duelStartPhaseState = new DuelStartPhaseState(this);
         duelMovementCardPhaseState = new DuelMovementCardPhaseState(this);
         duelSupportCardPhaseState = new DuelSupportCardPhaseState(this);
-        duelMovementResolutionPhaseState = new DuelMovementResolutionPhaseState(this);
         duelSupportResolutionPhaseState = new DuelSupportResolutionPhaseState(this);
+        duelMovementResolutionPhaseState = new DuelMovementResolutionPhaseState(this);
         DuelResultPhaseState = new DuelResultPhaseState(this);
 
         gameplayManager = GetComponent<GameplayManager>();
@@ -50,5 +50,35 @@ public class DuelPhaseSM : BukuStateMachine
 		PlayersInCurrentDuel = new();
         return duelNotDuelingPhaseState;
 	}
+
+	public IEnumerator ChooseNoSupportCardToUseInDuel()
+	{
+		yield return null;
+		duelSupportCardPhaseState.SupportCardNotSelected();
+    }
+
+    public IEnumerator TestingTimeBetweenPopups()
+    {
+        yield return new WaitForSeconds(2.5f);
+
+        DialogueBoxPopup.instance.DeactivatePopup();
+
+        int indexOfCurrentPlayerBeingHandled = PlayersInCurrentDuel.IndexOf(CurrentPlayerBeingHandled);
+
+
+        if (indexOfCurrentPlayerBeingHandled != PlayersInCurrentDuel.Count - 1)
+        {
+            //Shouldn't ever go out of bounds.
+            CurrentPlayerBeingHandled = PlayersInCurrentDuel[indexOfCurrentPlayerBeingHandled + 1];
+            duelSupportResolutionPhaseState.Logic();
+        }
+        //We're at the final player. Reset back to the first player who initiated the duel and move onto Movementcard resolution phase.
+        else
+        {
+            CurrentPlayerBeingHandled = PlayersInCurrentDuel[0];
+            ChangeState(duelMovementResolutionPhaseState);
+            Debug.Log("We are entering movement resolution phase.");
+        }
+    }
 
 }

@@ -41,6 +41,7 @@ public class SpaceData : ScriptableObject
 
     public bool PassingOverSpaceEffect { get => passingOverSpaceEffect; set => passingOverSpaceEffect = value; }
     public bool IsMandatory { get => isMandatory; set => isMandatory = value; }
+    public bool IsNonDuelSpace { get => isNonDuelSpace; set => isNonDuelSpace = value; }
     public bool IsNegative { get => isNegative; set => isNegative = value; }
     public bool DecreasesSpacesToMove { get => decreasesSpacesToMove; set => decreasesSpacesToMove = value; }
 

@@ -204,10 +204,35 @@ public class SupportCard : Card
                         currentPlayer.ActivatePlayerNegateSupportCardPopup(playersThatCanNegate[0], supportCards, this, currentPlayer);
                         return;
                     }
-                    AttemptToUseSupportCard(currentPlayer);
+
+                    if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelMovementCardPhaseState) && GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelSupportCardPhaseState))
+                    {
+                        AttemptToUseSupportCard(currentPlayer);
+                    }
+                    //Might hafta check if the Player we are is the same as the current player being handled in the duelPhaseSM.
+                    else if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
+                    {
+                        List<SupportCard> supportCards = new List<SupportCard>();
+                        supportCards.Add(this);
+                        GameplayManager.DuelPhaseSMRef.duelSupportCardPhaseState.SupportCardSelected(supportCards);
+                    }
+                    else if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
+                    {
+                        DialogueBoxPopup.instance.ActivatePopupWithJustText("You can only select a movement card.", 2.0f);
+                        StartCoroutine(WaitAfterPopupOfMovementDuel());
+                    }
+                    
                 }
             }
         }
+    }
+
+    public IEnumerator WaitAfterPopupOfMovementDuel()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please select a movement card to use for the duel.", 0, "Card selection");
+        GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.ShowHand();
     }
 
     public void AttemptToUseSupportCard(Player playerUsingCard, bool isCurrentPlayer = true)

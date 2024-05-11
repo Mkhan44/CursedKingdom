@@ -27,5 +27,6 @@ public class DuelResultPhaseState : BaseState
     public override void Exit()
     {
         base.Exit();
+        //Make sure to loop through all the participants of the duel and have them discard the cards that were used during the duel. We don't want to discard until this point.
     }
 }

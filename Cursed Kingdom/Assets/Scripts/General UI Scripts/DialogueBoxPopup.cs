@@ -68,7 +68,6 @@ public class DialogueBoxPopup : MonoBehaviour
         ImageLayoutParent.SetActive(false);
         ButtonLayoutParent.SetActive(false);
 
-        blockerPanel.GetComponent<Image>().raycastTarget = true;
         dialogueAnimator.SetBool(dialogueAnimBool, true);
         //blockerPanel.SetActive(true);
         blockerPanelImage.raycastTarget = false;
@@ -97,7 +96,7 @@ public class DialogueBoxPopup : MonoBehaviour
     /// <param name="closeButtonText">The text to display on the button. Defaults to "Okay" if not specified.</param>
     /// <param name="headerText">Text that appears at the top of the textbox. If no text is given it will just say "Notice"</param>
 
-    public void ActivatePopupWithConfirmation(string textToDisplay, string closeButtonText = "Okay", string headerText = "Notice")
+    public void ActivatePopupWithConfirmation(string textToDisplay, string closeButtonText = "Okay", string headerText = "Notice", bool isBlockerPanelOn = true)
     {
         if(isActive)
         {
@@ -107,16 +106,14 @@ public class DialogueBoxPopup : MonoBehaviour
         displayText.text = textToDisplay;
         headerNoticeText.text = headerText;
         ImageLayoutParent.SetActive(false);
-        blockerPanelImage.raycastTarget = true;
+        blockerPanelImage.raycastTarget = isBlockerPanelOn;
 
         GameObject buttonInstanceFinal = Instantiate(buttonPrefab, ButtonLayoutParent.transform);
         buttonInstanceFinal.GetComponent<Button>().onClick.AddListener(DeactivatePopup);
         buttonInstanceFinal.GetComponent<Button>().onClick.AddListener(chooseOption);
         buttonInstanceFinal.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = closeButtonText;
 
-        blockerPanel.GetComponent<Image>().raycastTarget = true;
         dialogueAnimator.SetBool(dialogueAnimBool, true);
-        //blockerPanel.SetActive(true);
         isActive = true;
     }
 
@@ -129,7 +126,7 @@ public class DialogueBoxPopup : MonoBehaviour
     /// T4 is a list of method parameters to be used within the method that is called. This can be empty if the method has no parameters.</param>
     /// <param name="numChoicesThatCanBeSelected">The number of choices that can be selected before all methods are executed.</param>
     /// <param name="headerText">Text that appears at the top of the textbox. If no text is given it will just say "Notice"</param>
-    public void ActivatePopupWithImageChoices(string textToDisplay, List<Tuple<Sprite, string, object, List<object>>> imageSetupParams, int numChoicesThatCanBeSelected = 1, string headerText = "Notice")
+    public void ActivatePopupWithImageChoices(string textToDisplay, List<Tuple<Sprite, string, object, List<object>>> imageSetupParams, int numChoicesThatCanBeSelected = 1, string headerText = "Notice", bool isBlockerPanelOn = true)
     {
         if (isActive)
         {
@@ -140,7 +137,7 @@ public class DialogueBoxPopup : MonoBehaviour
         displayText.text = textToDisplay;
         headerNoticeText.text = headerText;
         ButtonLayoutParent.SetActive(false);
-        blockerPanelImage.raycastTarget = true;
+        blockerPanelImage.raycastTarget = isBlockerPanelOn;
 
         for(int i = 0; i < imageSetupParams.Count; i++)
         {
@@ -165,9 +162,7 @@ public class DialogueBoxPopup : MonoBehaviour
         }
 
 
-        blockerPanel.GetComponent<Image>().raycastTarget = true;
         dialogueAnimator.SetBool(dialogueAnimBool, true);
-        //blockerPanel.SetActive(true);
         isActive = true;
     }
     /// <summary>
@@ -179,7 +174,7 @@ public class DialogueBoxPopup : MonoBehaviour
     /// <param name="methodParams">A list of objects that are used as parameters for the method in the Tuple. These MUST match valid parameters and order does matter.</param>
     /// <param name="numChoicesThatCanBeSelected">The number of choices that can be selected before all methods are executed.</param>
     /// <param name="headerText">Text that appears at the top of the textbox. If no text is given it will just say "Notice"</param>
-    public void ActivatePopupWithButtonChoices(string textToDisplay, List<Tuple<string, string, object, List<object> >> buttonSetupParams, int numChoicesThatCanBeSelected = 1, string headerText = "Notice")
+    public void ActivatePopupWithButtonChoices(string textToDisplay, List<Tuple<string, string, object, List<object> >> buttonSetupParams, int numChoicesThatCanBeSelected = 1, string headerText = "Notice", bool isBlockerPanelOn = true)
     {
         if (isActive)
         {
@@ -190,6 +185,7 @@ public class DialogueBoxPopup : MonoBehaviour
         displayText.text = textToDisplay;
         headerNoticeText.text = headerText;
         ImageLayoutParent.SetActive(false);
+        blockerPanelImage.raycastTarget = isBlockerPanelOn;
 
         for (int i = 0; i < buttonSetupParams.Count; i++)
         {
@@ -213,9 +209,7 @@ public class DialogueBoxPopup : MonoBehaviour
             theButton.onClick.AddListener(chooseOption);
         }
 
-        blockerPanel.GetComponent<Image>().raycastTarget = true;
         dialogueAnimator.SetBool(dialogueAnimBool, true);
-        //blockerPanel.SetActive(true);
         isActive = true;
     }
 
