@@ -231,6 +231,10 @@ public class MovementCard : Card
                     }
                     else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
                     {
+                        GameplayManager.HandDisplayPanel.ShrinkHand();
+                        transform.localScale = OriginalSize;
+                        CardIsActiveHovered = false;
+
                         DialogueBoxPopup.instance.ActivatePopupWithJustText("You can only select a support card.", 2.0f);
 
                         StartCoroutine(WaitAfterPopupOfSupportDuel());

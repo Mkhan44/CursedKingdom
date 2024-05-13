@@ -2,6 +2,7 @@
 //All code is written by me (Above name) unless otherwise stated via comments below.
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -150,6 +151,10 @@ public class SupportCard : Card
                             GameplayManager.HandDisplayPanel.ShrinkHand();
                             transform.localScale = OriginalSize;
                             CardIsActiveHovered = false;
+                            if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
+                            {
+                                StartCoroutine(WaitAfterPopupOfWrongSupportTypeDuel());
+                            }
                             return;
                         }
                         else if (GameplayManager.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayMovementPhaseState) && SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Duel)
@@ -166,6 +171,16 @@ public class SupportCard : Card
                             GameplayManager.HandDisplayPanel.ShrinkHand();
                             transform.localScale = OriginalSize;
                             CardIsActiveHovered = false;
+                            if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
+                            {
+                                StartCoroutine(WaitAfterPopupOfWrongSupportTypeDuel());
+                            }
+                            else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
+                            {
+                                StartCoroutine(WaitAfterPopupOfMovementDuel());
+                            }
+
+
                             return;
                         }
                         else if (SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Special)
@@ -185,6 +200,16 @@ public class SupportCard : Card
                                 GameplayManager.HandDisplayPanel.ShrinkHand();
                                 transform.localScale = OriginalSize;
                                 CardIsActiveHovered = false;
+
+                                if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
+                                {
+                                    StartCoroutine(WaitAfterPopupOfMovementDuel());
+                                }
+                                else if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
+                                {
+                                    StartCoroutine(WaitAfterPopupOfMovementDuel());
+                                }
+
                                 return;
                             }
                         }
@@ -218,6 +243,10 @@ public class SupportCard : Card
                     }
                     else if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
                     {
+                        GameplayManager.HandDisplayPanel.ShrinkHand();
+                        transform.localScale = OriginalSize;
+                        CardIsActiveHovered = false;
+
                         DialogueBoxPopup.instance.ActivatePopupWithJustText("You can only select a movement card.", 2.0f);
                         StartCoroutine(WaitAfterPopupOfMovementDuel());
                     }
@@ -232,6 +261,18 @@ public class SupportCard : Card
         yield return new WaitForSeconds(2.0f);
 
         DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please select a movement card to use for the duel.", 0, "Card selection");
+        GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.ShowHand();
+    }
+
+    public IEnumerator WaitAfterPopupOfWrongSupportTypeDuel()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        List<Tuple<string, string, object, List<object>>> insertedParams = new();
+        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Don't use a support card", nameof(GameplayManager.DuelPhaseSMRef.ChooseNoSupportCardToUseInDuel), GameplayManager.DuelPhaseSMRef, new List<object>()));
+
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please choose a support card if you wish to use one in the duel.", insertedParams, 1, "Card selection", false);
+
         GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.ShowHand();
     }
 
