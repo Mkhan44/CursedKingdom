@@ -67,7 +67,7 @@ public class GameplayPhaseSM : BukuStateMachine
         ChangeState(gameplayDuelPhaseState);
         foreach (Player player in playersInTheDuel)
         {
-            gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel.Add(new Tuple<Player, List<MovementCard>, List<SupportCard>>(player, new(), new()));
+            gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel.Add(new DuelPlayerInformation(player));
         }
         yield return null;
     }

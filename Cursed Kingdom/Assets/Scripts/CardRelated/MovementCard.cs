@@ -253,9 +253,9 @@ public class MovementCard : Card
         List<Tuple<string, string, object, List<object>>> insertedParams = new();
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Don't use a support card", nameof(GameplayManager.DuelPhaseSMRef.ChooseNoSupportCardToUseInDuel), GameplayManager.DuelPhaseSMRef, new List<object>()));
 
-        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please choose a support card if you wish to use one in the duel.", insertedParams, 1, "Card selection", false);
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}: Please choose a support card if you wish to use one in the duel.", insertedParams, 1, "Card selection", false);
 
-        GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.ShowHand();
+        GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.ShowHand();
     }
 
     public void AttemptToMove(Player thePlayer)

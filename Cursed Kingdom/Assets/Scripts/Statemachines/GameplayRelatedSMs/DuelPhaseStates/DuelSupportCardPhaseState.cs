@@ -38,14 +38,13 @@ public class DuelSupportCardPhaseState : BaseState
     public void SupportCardSelected(List<SupportCard> supportCards)
     {
         duelPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand();
-        duelPhaseSM.CurrentPlayerBeingHandled.Item1.HideHand();
+        duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.HideHand();
 
-        Tuple<Player, List<MovementCard>, List<SupportCard>> supportCardTuple = new Tuple<Player, List<MovementCard>, List<SupportCard>>(duelPhaseSM.CurrentPlayerBeingHandled.Item1, duelPhaseSM.CurrentPlayerBeingHandled.Item2, supportCards);
         int index = duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled);
 
-        duelPhaseSM.PlayersInCurrentDuel[index] = supportCardTuple;
+        duelPhaseSM.PlayersInCurrentDuel[index].SelectedSupportCards = supportCards;
         duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[index];
-        Debug.Log($"{duelPhaseSM.PlayersInCurrentDuel[index].Item3.Count} Are the amount of support cards that Player {duelPhaseSM.PlayersInCurrentDuel[index].Item1.playerIDIntVal} has selected for the duel.");
+        Debug.Log($"{duelPhaseSM.PlayersInCurrentDuel[index].SelectedSupportCards.Count} Are the amount of support cards that Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected for the duel.");
 
         //Change to next player. if final player then move onto resolution.
         SwitchToNextPlayerInDuel();
@@ -57,7 +56,7 @@ public class DuelSupportCardPhaseState : BaseState
     public void SupportCardNotSelected()
     {
         duelPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand();
-        duelPhaseSM.CurrentPlayerBeingHandled.Item1.HideHand();
+        duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.HideHand();
         SwitchToNextPlayerInDuel();
     }
 
@@ -69,17 +68,17 @@ public class DuelSupportCardPhaseState : BaseState
         //We're at the last player. Move to the resolution phase.
         if (duelPhaseSM.PlayersInCurrentDuel[duelPhaseSM.PlayersInCurrentDuel.Count-1] == duelPhaseSM.CurrentPlayerBeingHandled)
         {
-            duelPhaseSM.gameplayManager.HandDisplayPanel.SetCurrentActiveHandUI(duelPhaseSM.gameplayManager.Players.IndexOf(duelPhaseSM.PlayersInCurrentDuel[0].Item1));
+            duelPhaseSM.gameplayManager.HandDisplayPanel.SetCurrentActiveHandUI(duelPhaseSM.gameplayManager.Players.IndexOf(duelPhaseSM.PlayersInCurrentDuel[0].PlayerInDuel));
             duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[0];
             duelPhaseSM.ChangeState(duelPhaseSM.duelSupportResolutionPhaseState);
             Debug.Log("We reached the final player. Moving into resolution state for support cards.");
         }
         else
         {
-            Debug.Log($"We finished handling player {duelPhaseSM.CurrentPlayerBeingHandled.Item1.playerIDIntVal}'s cards. Onto the next player.");
+            Debug.Log($"We finished handling player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}'s cards. Onto the next player.");
             duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[indexOfCurrentPlayer + 1];
 
-            duelPhaseSM.gameplayManager.HandDisplayPanel.SetCurrentActiveHandUI(duelPhaseSM.gameplayManager.Players.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled.Item1));
+            duelPhaseSM.gameplayManager.HandDisplayPanel.SetCurrentActiveHandUI(duelPhaseSM.gameplayManager.Players.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel));
             
             duelPhaseSM.ChangeState(duelPhaseSM.duelMovementCardPhaseState);
         }
@@ -90,7 +89,7 @@ public class DuelSupportCardPhaseState : BaseState
         PhaseDisplay.instance.displayTimeCompleted -= Logic;
         bool hasAtLeastOneDuelSupportCard = false;
 
-        foreach(SupportCard supportCard in duelPhaseSM.CurrentPlayerBeingHandled.Item1.GetSupportCardsInHand())
+        foreach(SupportCard supportCard in duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.GetSupportCardsInHand())
         {
             if(supportCard.SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Duel)
             {
@@ -98,7 +97,7 @@ public class DuelSupportCardPhaseState : BaseState
             }
         }
 
-        if (duelPhaseSM.CurrentPlayerBeingHandled.Item1.SupportCardsInHandCount == 0 || duelPhaseSM.CurrentPlayerBeingHandled.Item1.NumSupportCardsUsedThisTurn >= duelPhaseSM.CurrentPlayerBeingHandled.Item1.MaxSupportCardsToUse || !hasAtLeastOneDuelSupportCard) 
+        if (duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.SupportCardsInHandCount == 0 || duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.NumSupportCardsUsedThisTurn >= duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.MaxSupportCardsToUse || !hasAtLeastOneDuelSupportCard) 
         {
             //Skip this because they don't have any support cards to use or they've already used a support card this turn.
             SwitchToNextPlayerInDuel();
@@ -108,9 +107,9 @@ public class DuelSupportCardPhaseState : BaseState
             List<Tuple<string, string, object, List<object>>> insertedParams = new();
             insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Don't use a support card", nameof(duelPhaseSM.ChooseNoSupportCardToUseInDuel), duelPhaseSM, new List<object>()));
 
-            DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {duelPhaseSM.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please choose a support card if you wish to use one in the duel.",insertedParams, 1, "Card selection", false);
+            DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}: Please choose a support card if you wish to use one in the duel.",insertedParams, 1, "Card selection", false);
 
-            duelPhaseSM.CurrentPlayerBeingHandled.Item1.ShowHand();
+            duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.ShowHand();
         }
     }
 }

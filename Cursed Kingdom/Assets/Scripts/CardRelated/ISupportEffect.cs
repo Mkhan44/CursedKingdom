@@ -11,5 +11,5 @@ public interface ISupportEffect
 {
     public abstract void EffectOfCard(Player playerReference, Card cardPlayed = null);
 
-    public abstract void EffectOfCard(Tuple<Player, List<MovementCard>, List<SupportCard>> playerDuelTuple, Card cardPlayed = null);
+    public abstract void EffectOfCard(DuelPlayerInformation playerDuelInfo, Card cardPlayed = null);
 }

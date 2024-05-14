@@ -26,10 +26,11 @@ public class DuelSupportResolutionPhaseState : BaseState
 
     public void Logic()
     {
-		if(duelPhaseSM.CurrentPlayerBeingHandled.Item3.Count > 0)
+        PhaseDisplay.instance.displayTimeCompleted -= Logic;
+        if (duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards.Count > 0)
 		{
-			DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.Item1.playerIDIntVal} used {duelPhaseSM.CurrentPlayerBeingHandled.Item3[0].SupportCardData.name}", 0, "Support card resolution");
-			currentSupportCardWeAreHandling = duelPhaseSM.CurrentPlayerBeingHandled.Item3[0];
+			DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal} used {duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0].SupportCardData.name}", 0, "Support card resolution");
+			currentSupportCardWeAreHandling = duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0];
 
 			//Will need to make this work for all effects. Maybe have something on this that kicks off after all effects are completed?
 			currentSupportCardWeAreHandling.SupportCardData.supportCardEffects[0].supportCardEffectData.SupportCardEffectCompleted += AfterSupportCardEffectIsDone;
@@ -37,7 +38,7 @@ public class DuelSupportResolutionPhaseState : BaseState
         }
 		else
 		{
-            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.Item1.playerIDIntVal} did not use a support card", 0, "Support card resolution");
+            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal} did not use a support card", 0, "Support card resolution");
 
             AfterSupportCardEffectIsDone();
 		}
@@ -54,7 +55,7 @@ public class DuelSupportResolutionPhaseState : BaseState
             currentSupportCardWeAreHandling = null;
         }
 
-		duelPhaseSM.StartCoroutine(duelPhaseSM.TestingTimeBetweenPopups());
+		duelPhaseSM.StartCoroutine(duelPhaseSM.TestingTimeBetweenPopupsSupportCardResolution());
 
     }
 

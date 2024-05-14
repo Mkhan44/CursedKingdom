@@ -32,7 +32,7 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
         CompletedEffect(playerReference);
     }
 
-    public void EffectOfCard(Tuple<Player, List<MovementCard>, List<SupportCard>> playerDuelTuple, Card cardPlayed = null)
+    public void EffectOfCard(DuelPlayerInformation playerDuelInfo, Card cardPlayed = null)
     {
         SupportCard cardUsed = (SupportCard)cardPlayed;
         if (cardUsed != null)
@@ -40,7 +40,7 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
             supportCardThatWasJustUsed = cardUsed;
         }
         //Usually called after the effect has been completed.
-        CompletedEffect(playerDuelTuple.Item1);
+        CompletedEffect(playerDuelInfo.PlayerInDuel);
     }
     public virtual void StartOfTurnEffect(Player playerReference)
     {

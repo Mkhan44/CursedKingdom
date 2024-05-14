@@ -57,6 +57,9 @@ public class GameplayManager : MonoBehaviour
 	[SerializeField] private Button useSelectedCardsButton;
 	[SerializeField] private Button useMovementCardNoCardsInHandButton;
 
+	//Duel related
+	[SerializeField] private GameObject playerDuelPrefab;
+
 	//Support card usage.
 	[SerializeField] private SupportCard currentSupportCardBeingUsed;
 
@@ -107,9 +110,11 @@ public class GameplayManager : MonoBehaviour
 	public GameplayPhaseSM GameplayPhaseStatemachineRef {get => gameplayPhaseStatemachineRef; set => gameplayPhaseStatemachineRef = value;}
     public DuelPhaseSM DuelPhaseSMRef { get => duelPhaseSMRef; set => duelPhaseSMRef = value; }
 
+    //Duel related
+    public GameObject PlayerDuelPrefab { get => playerDuelPrefab; set => playerDuelPrefab = value; }
 
-	//Deck related
-	public DeckManager ThisDeckManager { get => thisDeckManager; set => thisDeckManager = value; }
+    //Deck related
+    public DeckManager ThisDeckManager { get => thisDeckManager; set => thisDeckManager = value; }
 	public GameObject MovementCardPrefab { get => movementCardPrefab; set => movementCardPrefab = value; }
 	public GameObject SupportCardPrefab { get => supportCardPrefab; set => supportCardPrefab = value; }
 	public GameObject MovementDeckCardHolder { get => movementDeckCardHolder; set => movementDeckCardHolder = value; }

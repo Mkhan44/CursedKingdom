@@ -260,8 +260,8 @@ public class SupportCard : Card
     {
         yield return new WaitForSeconds(2.0f);
 
-        DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please select a movement card to use for the duel.", 0, "Card selection");
-        GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.ShowHand();
+        DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}: Please select a movement card to use for the duel.", 0, "Card selection");
+        GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.ShowHand();
     }
 
     public IEnumerator WaitAfterPopupOfWrongSupportTypeDuel()
@@ -271,9 +271,9 @@ public class SupportCard : Card
         List<Tuple<string, string, object, List<object>>> insertedParams = new();
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Don't use a support card", nameof(GameplayManager.DuelPhaseSMRef.ChooseNoSupportCardToUseInDuel), GameplayManager.DuelPhaseSMRef, new List<object>()));
 
-        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please choose a support card if you wish to use one in the duel.", insertedParams, 1, "Card selection", false);
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}: Please choose a support card if you wish to use one in the duel.", insertedParams, 1, "Card selection", false);
 
-        GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.Item1.ShowHand();
+        GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.ShowHand();
     }
 
     public void AttemptToUseSupportCard(Player playerUsingCard, bool isCurrentPlayer = true)

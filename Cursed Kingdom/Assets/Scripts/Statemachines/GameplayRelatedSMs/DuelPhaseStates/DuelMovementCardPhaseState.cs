@@ -38,27 +38,26 @@ public class DuelMovementCardPhaseState : BaseState
 	{
 		DialogueBoxPopup.instance.DeactivatePopup();
 		duelPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand();
-		duelPhaseSM.CurrentPlayerBeingHandled.Item1.HideHand();
+		duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.HideHand();
 
-        Tuple<Player, List<MovementCard>, List<SupportCard>> movementCardTuple = new Tuple<Player, List<MovementCard>, List<SupportCard>>(duelPhaseSM.CurrentPlayerBeingHandled.Item1, movementCards, duelPhaseSM.CurrentPlayerBeingHandled.Item3);
 		int index = duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled);
 
-		duelPhaseSM.PlayersInCurrentDuel[index] = movementCardTuple;
+		duelPhaseSM.PlayersInCurrentDuel[index].SelectedMovementCards = movementCards;
 		duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[index];
-        Debug.Log($"{duelPhaseSM.PlayersInCurrentDuel[index].Item2.Count} Are the amount of movement cards that Player {duelPhaseSM.PlayersInCurrentDuel[index].Item1.playerIDIntVal} has selected for the duel.");
+        Debug.Log($"{duelPhaseSM.PlayersInCurrentDuel[index].SelectedMovementCards.Count} Are the amount of movement cards that Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected for the duel.");
 		duelPhaseSM.ChangeState(duelPhaseSM.duelSupportCardPhaseState);
 	}
 	private void Logic()
 	{
         PhaseDisplay.instance.displayTimeCompleted -= Logic;
-		if(duelPhaseSM.CurrentPlayerBeingHandled.Item1.MovementCardsInHandCount == 0)
+		if(duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.MovementCardsInHandCount == 0)
 		{
 			//Give them the next on in the deck. Do a popup. After popup is gone then move to support card phase.
 		}
 		else
 		{
-            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.Item1.playerIDIntVal}: Please select a movement card to use for the duel.", 0, "Card selection");
-            duelPhaseSM.CurrentPlayerBeingHandled.Item1.ShowHand();
+            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}: Please select a movement card to use for the duel.", 0, "Card selection");
+            duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.ShowHand();
         }
 		
     }
