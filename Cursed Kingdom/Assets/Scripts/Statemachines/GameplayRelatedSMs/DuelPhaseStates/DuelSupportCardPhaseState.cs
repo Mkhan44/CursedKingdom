@@ -44,7 +44,6 @@ public class DuelSupportCardPhaseState : BaseState
 
         duelPhaseSM.PlayersInCurrentDuel[index].SelectedSupportCards = supportCards;
         duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[index];
-        Debug.Log($"{duelPhaseSM.PlayersInCurrentDuel[index].SelectedSupportCards.Count} Are the amount of support cards that Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected for the duel.");
 
         //Change to next player. if final player then move onto resolution.
         SwitchToNextPlayerInDuel();
@@ -71,11 +70,9 @@ public class DuelSupportCardPhaseState : BaseState
             duelPhaseSM.gameplayManager.HandDisplayPanel.SetCurrentActiveHandUI(duelPhaseSM.gameplayManager.Players.IndexOf(duelPhaseSM.PlayersInCurrentDuel[0].PlayerInDuel));
             duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[0];
             duelPhaseSM.ChangeState(duelPhaseSM.duelSupportResolutionPhaseState);
-            Debug.Log("We reached the final player. Moving into resolution state for support cards.");
         }
         else
         {
-            Debug.Log($"We finished handling player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}'s cards. Onto the next player.");
             duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[indexOfCurrentPlayer + 1];
 
             duelPhaseSM.gameplayManager.HandDisplayPanel.SetCurrentActiveHandUI(duelPhaseSM.gameplayManager.Players.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel));

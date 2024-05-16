@@ -44,17 +44,17 @@ public class DuelMovementResolutionPhaseState : BaseState
 		if(duelPhaseSM.CurrentWinners.Count == 0)
 		{
             duelPhaseSM.CurrentWinners.Add(duelPhaseSM.CurrentPlayerBeingHandled);
-			currentHighestCardValue = duelPhaseSM.CurrentPlayerBeingHandled.SelectedMovementCards[0].MovementCardValue;
+			currentHighestCardValue = duelPhaseSM.CurrentPlayerBeingHandled.SelectedMovementCards[0].GetCurrentCardValue();
         }
 		else
 		{
-            if (duelPhaseSM.CurrentPlayerBeingHandled.SelectedMovementCards[0].MovementCardValue > currentHighestCardValue)
+            if (duelPhaseSM.CurrentPlayerBeingHandled.SelectedMovementCards[0].GetCurrentCardValue() > currentHighestCardValue)
             {
                 duelPhaseSM.CurrentWinners.Clear();
                 duelPhaseSM.CurrentWinners.Add(duelPhaseSM.CurrentPlayerBeingHandled);
-				currentHighestCardValue = duelPhaseSM.CurrentPlayerBeingHandled.SelectedMovementCards[0].MovementCardValue;
+				currentHighestCardValue = duelPhaseSM.CurrentPlayerBeingHandled.SelectedMovementCards[0].GetCurrentCardValue();
             }
-            else if (duelPhaseSM.CurrentPlayerBeingHandled.SelectedMovementCards[0].MovementCardValue == currentHighestCardValue)
+            else if (duelPhaseSM.CurrentPlayerBeingHandled.SelectedMovementCards[0].GetCurrentCardValue() == currentHighestCardValue)
             {
                 duelPhaseSM.CurrentWinners.Add(duelPhaseSM.CurrentPlayerBeingHandled);
             }

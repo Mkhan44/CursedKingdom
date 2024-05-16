@@ -28,4 +28,13 @@ public class DuelAttackBuffEffect : SupportCardEffectData, ISupportEffect
             supportCardThatWasJustUsed = cardUsed;
         }
     }
+
+    public override void EffectOfCard(DuelPlayerInformation duelPlayerInformation, Card cardPlayed = null)
+    {
+        foreach(MovementCard movementCard in duelPlayerInformation.SelectedMovementCards)
+        {
+            movementCard.ManipulateMovementValue(false, true, NumMovementIncrease);
+        }
+        base.EffectOfCard(duelPlayerInformation, cardPlayed);
+    }
 }

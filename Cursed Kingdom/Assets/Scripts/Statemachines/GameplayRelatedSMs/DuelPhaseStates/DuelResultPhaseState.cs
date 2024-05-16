@@ -30,16 +30,19 @@ public class DuelResultPhaseState : BaseState
         {
             if(duelPhaseSM.CurrentWinners.Count > 1)
             {
+                //It's a tie. Everyone takes 1 damage.
+                if (duelPhaseSM.CurrentWinners.Count == duelPhaseSM.PlayersInCurrentDuel.Count)
+                {
+                    playerInfo.PlayerInDuel.TakeDamage(1);
+                    continue;
+                }
+
                 bool foundMatch = false;
                 foreach (DuelPlayerInformation winnerInfo in duelPhaseSM.CurrentWinners)
                 {
                     if (playerInfo == winnerInfo)
                     {
                         foundMatch = true;
-                    }
-                    else
-                    {
-
                     }
                 }
                 //Means the player we are looking at was not in the list of Players that won. They lost the duel.
@@ -48,11 +51,6 @@ public class DuelResultPhaseState : BaseState
                     //Will be more dynamic based on things like if players deal more damage this duel or if that class takes more damage when losing a duel etc.
                     playerInfo.PlayerInDuel.TakeDamage(1);
                 }
-            }
-            //It's a tie. Everyone takes 1 damage.
-            else if(duelPhaseSM.CurrentWinners.Count == duelPhaseSM.PlayersInCurrentDuel.Count)
-            {
-                playerInfo.PlayerInDuel.TakeDamage(1);
             }
             //Count should only be 1 for winners list in this case.
             else
@@ -71,6 +69,7 @@ public class DuelResultPhaseState : BaseState
             for (int j = 0; j < playerInfo.SelectedMovementCards.Count; j++)
             {
                 int index = j;
+                playerInfo.SelectedMovementCards[j].ResetMovementValue();
                 playerInfo.PlayerInDuel.DiscardFromHand(playerInfo.SelectedMovementCards[index].ThisCardType, playerInfo.SelectedMovementCards[index]);
             }
 

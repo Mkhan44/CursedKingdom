@@ -120,6 +120,22 @@ public class MovementCard : Card
         }
     }
 
+    public int GetCurrentCardValue()
+    {
+        int currentCardValue = 0;
+
+        if(TempCardValue > 0)
+        {
+            currentCardValue = TempCardValue;
+        }
+        else
+        {
+            currentCardValue = MovementCardValue;
+        }
+
+        return currentCardValue;
+    }
+
 
     public override void OnPointerClick(PointerEventData eventData)
     {

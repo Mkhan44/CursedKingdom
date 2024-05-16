@@ -116,7 +116,14 @@ public class DuelPhaseSM : BukuStateMachine
 		else
 		{
 			CurrentPlayerBeingHandled = PlayersInCurrentDuel[0];
-			DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {CurrentWinners[0].PlayerInDuel.playerIDIntVal} wins the duel with a value of: {CurrentWinners[0].SelectedMovementCards[0].MovementCardValue}!");
+			if(CurrentWinners.Count > 1)
+			{
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"The duel is a tie. All players take 1 damage.");
+            }
+			else
+			{
+				DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {CurrentWinners[0].PlayerInDuel.playerIDIntVal} wins the duel with a value of: {CurrentWinners[0].SelectedMovementCards[0].GetCurrentCardValue()}!");
+			}
 
             ChangeState(DuelResultPhaseState);
 			Debug.Log("We finished showing all the movement cards.");

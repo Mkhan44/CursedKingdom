@@ -32,7 +32,7 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
         CompletedEffect(playerReference);
     }
 
-    public void EffectOfCard(DuelPlayerInformation playerDuelInfo, Card cardPlayed = null)
+    public virtual void EffectOfCard(DuelPlayerInformation playerDuelInfo, Card cardPlayed = null)
     {
         SupportCard cardUsed = (SupportCard)cardPlayed;
         if (cardUsed != null)
