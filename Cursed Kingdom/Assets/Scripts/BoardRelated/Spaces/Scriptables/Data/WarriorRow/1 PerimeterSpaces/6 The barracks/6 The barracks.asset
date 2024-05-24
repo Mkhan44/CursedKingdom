@@ -12,20 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 6 The barracks
   m_EditorClassIdentifier: 
-  afterDuelEffect: 0
-  onSpaceTurnStartEffect: 0
   passingOverSpaceEffect: 0
   isMandatory: 1
+  decreasesSpacesToMove: 1
   isNonDuelSpace: 1
   isNegative: 0
   spaceEffects:
   - spaceEffectData: {fileID: 11400000, guid: 09e74fb9b9653de458ce757927d12633, type: 2}
     spaceTypeStringHidden: RecoverHealthSpace
-  thisSpaceTypes: 0400000007000000
   spaceName: The Barracks
   spaceDescription: Recover 1 health. Players on this space cannot take part in a
     duel.
-  spaceSprite: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
+  spaceSprite: {fileID: 21300000, guid: 6d481e3969804f8479e398e9eb27466d, type: 3}
   spaceMaterials:
   - {fileID: 2100000, guid: aee1b16514deafc438f06e9e304393e3, type: 2}
   - {fileID: 2100000, guid: 72040ae4cb5eced4488b52b28d765df4, type: 2}
