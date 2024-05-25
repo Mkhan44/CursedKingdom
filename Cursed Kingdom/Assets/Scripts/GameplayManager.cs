@@ -59,6 +59,7 @@ public class GameplayManager : MonoBehaviour
 
 	//Duel related
 	[SerializeField] private GameObject playerDuelPrefab;
+	[SerializeField] public GameObject duelPlaneSpawnPointsParent;
 
 	//Support card usage.
 	[SerializeField] private SupportCard currentSupportCardBeingUsed;

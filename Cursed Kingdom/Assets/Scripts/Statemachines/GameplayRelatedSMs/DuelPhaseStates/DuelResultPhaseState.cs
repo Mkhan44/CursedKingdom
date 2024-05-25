@@ -20,6 +20,7 @@ public class DuelResultPhaseState : BaseState
         base.Enter();
         PhaseDisplay.instance.TurnOnDisplay($"Result phase", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += Logic;
+        duelPhaseSM.gameplayManager.GameplayCameraManagerRef.TurnOffVirtualDuelCamera();
     }
 
     private void Logic()

@@ -64,11 +64,12 @@ public class GameplayPhaseSM : BukuStateMachine
     {
         List<Player> playersInTheDuel = (List<Player>)objects[0];
 
-        ChangeState(gameplayDuelPhaseState);
         foreach (Player player in playersInTheDuel)
         {
             gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel.Add(new DuelPlayerInformation(player));
         }
+
+        ChangeState(gameplayDuelPhaseState);
         yield return null;
     }
 

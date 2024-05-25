@@ -11,8 +11,10 @@ public class GameplayCameraManager : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera cutInPlayerCam;
     [SerializeField] private CinemachineVirtualCamera currentPlayerFollowVirtualCam;
+    [SerializeField] private CinemachineVirtualCamera duelVirtualCamera;
     [SerializeField] private Animator currentPlayerFollowVirtualCamAnimator;
     [SerializeField] private Camera cutInCamera;
+    [SerializeField] private Camera duelCamera;
     [SerializeField] private Animator cutInCameraPlayerFollowVirtualCamAnimator;
     [SerializeField] private RawImage cutInCameraDisplayRawImage;
 
@@ -32,9 +34,11 @@ public class GameplayCameraManager : MonoBehaviour
 
     public CinemachineVirtualCamera CutInPlayerCam { get => cutInPlayerCam; set => cutInPlayerCam = value; }
     public CinemachineVirtualCamera CurrentPlayerFollowVirtualCam { get => currentPlayerFollowVirtualCam; set => currentPlayerFollowVirtualCam = value; }
+    public CinemachineVirtualCamera DuelVirtualCamera { get => duelVirtualCamera; set => duelVirtualCamera = value; }
     public Animator CurrentPlayerFollowVirtualCamAnimator { get => currentPlayerFollowVirtualCamAnimator; set => currentPlayerFollowVirtualCamAnimator = value; }
     public Animator CutInCameraPlayerFollowVirtualCamAnimator { get => cutInCameraPlayerFollowVirtualCamAnimator; set => cutInCameraPlayerFollowVirtualCamAnimator = value; }
     public Camera CutInCamera { get => cutInCamera; set => cutInCamera = value; }
+    public Camera DuelCamera { get => duelCamera; set => duelCamera = value; }
     public RawImage CutInCameraDisplayRawImage { get => cutInCameraDisplayRawImage; set => cutInCameraDisplayRawImage = value; }
     public float CurrentPlayerCamStartingFOV { get => currentPlayerCamStartingFOV; set => currentPlayerCamStartingFOV = value; }
     public float CurrentPlayerCamZoomFOV { get => currentPlayerCamZoomFOV; set => currentPlayerCamZoomFOV = value; }
@@ -71,6 +75,18 @@ public class GameplayCameraManager : MonoBehaviour
     {
         CutInPlayerCam.LookAt = lookAtAndFollowTransform;
         CutInPlayerCam.Follow = lookAtAndFollowTransform;
+    }
+
+    public void TurnOnVirtualDuelCamera()
+    {
+        duelVirtualCamera.enabled = true;
+        DuelCamera.enabled = true;
+    }
+
+    public void TurnOffVirtualDuelCamera()
+    {
+        duelVirtualCamera.enabled = false;
+        DuelCamera.enabled = false;
     }
 
     public void SpawnCastParticle(Player currentPlayer, out GameObject particle)

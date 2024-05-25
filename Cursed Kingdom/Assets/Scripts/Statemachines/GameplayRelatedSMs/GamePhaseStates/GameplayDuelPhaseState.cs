@@ -20,19 +20,40 @@ public class GameplayDuelPhaseState : BaseState
         base.Enter();
         PhaseDisplay.instance.TurnOnDisplay("Duel phase!", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += Logic;
+        SpawnInPlayerDuelPrefabs();
         gameplayPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand(false);
         gameplayPhaseSM.gameplayManager.GetCurrentPlayer().HideHand();
+        gameplayPhaseSM.gameplayManager.GameplayCameraManagerRef.TurnOnVirtualDuelCamera();
     }
 
     public override void UpdateLogic()
     {
         base.UpdateLogic();
-        
     }
 
     public override void Exit()
     {
         base.Exit();
+    }
+
+    public void SpawnInPlayerDuelPrefabs()
+    {
+        if(gameplayPhaseSM.gameplayManager.duelPlaneSpawnPointsParent != null)
+        {
+            int currentIndex = 0;
+            foreach(DuelPlayerInformation duelPlayerInformation in gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel)
+            {
+                GameObject newPlayerDuelPrefabObj;
+                //Don't spawn under the parent. Just use the parents' transform to spawn it into the world. Look at how we're spawning in the Players onto the board.
+                newPlayerDuelPrefabObj = Object.Instantiate(gameplayPhaseSM.gameplayManager.PlayerDuelPrefab, gameplayPhaseSM.gameplayManager.duelPlaneSpawnPointsParent.transform.GetChild(currentIndex), false);
+                newPlayerDuelPrefabObj.transform.parent = null;
+                newPlayerDuelPrefabObj.transform.localScale = gameplayPhaseSM.gameplayManager.PlayerDuelPrefab.transform.localScale;
+                newPlayerDuelPrefabObj.transform.position = gameplayPhaseSM.gameplayManager.duelPlaneSpawnPointsParent.transform.GetChild(currentIndex).position;
+
+                duelPlayerInformation.SetupPlayerDuelPrefabInstance(newPlayerDuelPrefabObj);
+                currentIndex++;
+            }
+        }
     }
 
     public void Logic()
