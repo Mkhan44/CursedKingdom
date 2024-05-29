@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2943159509085513111}
   - component: {fileID: 3138036820747389657}
-  m_Layer: 0
+  - component: {fileID: 7970566894039405545}
+  m_Layer: 8
   m_Name: Duel Cam Cinemachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,6 +73,27 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 2378432401364226800}
+--- !u!95 &7970566894039405545
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771773604792987562}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 05e67d6b78c7bdd44a75be23fa0a6e15, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5055638137072861431
 GameObject:
   m_ObjectHideFlags: 0
