@@ -225,52 +225,46 @@ public class MovementCard : Card
                         thePlayer.CurrentSumOfSpacesToMove += MovementCardValue;
                     }
 
-                    if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelMovementCardPhaseState) && GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelSupportCardPhaseState))
+                    if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelSelectCardsToUsePhaseState))
                     {
                         GameplayManager.SpacesPlayerWillLandOnParent.TurnOnDisplay(GameplayManager.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.FindValidSpaces(thePlayer, thePlayer.CurrentSumOfSpacesToMove));
                     }
                 }
                 else
                 {
-                    if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelMovementCardPhaseState) && GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelSupportCardPhaseState))
+                    if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelSelectCardsToUsePhaseState))
                     {
                         AttemptToMove(thePlayer);
                         thePlayer.CurrentSumOfSpacesToMove = 0;
                         GameplayManager.SpacesPlayerWillLandOnParent.TurnOffDisplay();
                     }
                     //Might hafta check if the Player we are is the same as the current player being handled in the duelPhaseSM.
-                    else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
+                    else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSelectCardsToUsePhaseState))
                     {
+                        if(GameplayManager.DuelPhaseSMRef.duelSelectCardsToUsePhaseState.SelectedMovementCard)
+                        {
+                            GameplayManager.HandDisplayPanel.ShrinkHand();
+                            transform.localScale = OriginalSize;
+                            CardIsActiveHovered = false;
+                            DialogueBoxPopup.instance.ActivatePopupWithJustText("You've already selected a movement card.", 2.0f);
+
+                            StartCoroutine(WaitAfterPopupOfMovementAlreadySelectedDuel());
+                            return;
+                        }
                         List<MovementCard> movementCards = new List<MovementCard>();
                         movementCards.Add(this);
-                        GameplayManager.DuelPhaseSMRef.duelMovementCardPhaseState.MovementCardSelected(movementCards);
+                        GameplayManager.DuelPhaseSMRef.duelSelectCardsToUsePhaseState.SelectMovementCard(movementCards);
                     }
-                    else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
-                    {
-                        GameplayManager.HandDisplayPanel.ShrinkHand();
-                        transform.localScale = OriginalSize;
-                        CardIsActiveHovered = false;
-
-                        DialogueBoxPopup.instance.ActivatePopupWithJustText("You can only select a support card.", 2.0f);
-
-                        StartCoroutine(WaitAfterPopupOfSupportDuel());
-                    }
-                    
                 }
             }
         }
     }
 
     //THIS IS TEMPORARY, NEED TO REMOVE THIS AND MAKE IT BETTER.
-    public IEnumerator WaitAfterPopupOfSupportDuel()
+    public IEnumerator WaitAfterPopupOfMovementAlreadySelectedDuel()
     {
         yield return new WaitForSeconds(2.0f);
-
-        List<Tuple<string, string, object, List<object>>> insertedParams = new();
-        insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Don't use a support card", nameof(GameplayManager.DuelPhaseSMRef.ChooseNoSupportCardToUseInDuel), GameplayManager.DuelPhaseSMRef, new List<object>()));
-
-        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}: Please choose a support card if you wish to use one in the duel.", insertedParams, 1, "Card selection", false);
-
+        DialogueBoxPopup.instance.DeactivatePopup();
         GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.ShowHand();
     }
 

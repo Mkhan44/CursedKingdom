@@ -1754,7 +1754,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	public void DrawThenUseMovementCardImmediately()
+	public void DrawThenUseMovementCardImmediatelyMovement()
 	{
 		gameplayManagerRef.ThisDeckManager.DrawCard(CardType.Movement, this);
 
@@ -1771,7 +1771,26 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	public void DrawCards(List<Card> cards)
+    public void DrawThenUseMovementCardImmediatelyDuel()
+    {
+        gameplayManagerRef.ThisDeckManager.DrawCard(CardType.Movement, this);
+
+        //Might hafta turn this into another method and wait till an event is triggered to signify the draw being completed.
+        foreach (Card card in CardsInhand)
+        {
+            if (card is MovementCard)
+            {
+                MovementCard movementCard = (MovementCard)card;
+                movementCard.AttemptToMove(this);
+
+				//Turn off button to 'deselect' a movement card since you don't have any in your hand. Might also need a bool or something to check that while this card is in our hand, we just drew it now.
+
+                break;
+            }
+        }
+    }
+
+    public void DrawCards(List<Card> cards)
 	{
 		foreach(Card card in cards)
 		{

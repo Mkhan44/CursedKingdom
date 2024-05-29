@@ -151,7 +151,7 @@ public class SupportCard : Card
                             GameplayManager.HandDisplayPanel.ShrinkHand();
                             transform.localScale = OriginalSize;
                             CardIsActiveHovered = false;
-                            if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
+                            if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSelectCardsToUsePhaseState))
                             {
                                 StartCoroutine(WaitAfterPopupOfWrongSupportTypeDuel());
                             }
@@ -171,13 +171,9 @@ public class SupportCard : Card
                             GameplayManager.HandDisplayPanel.ShrinkHand();
                             transform.localScale = OriginalSize;
                             CardIsActiveHovered = false;
-                            if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
+                            if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSelectCardsToUsePhaseState))
                             {
-                                StartCoroutine(WaitAfterPopupOfWrongSupportTypeDuel());
-                            }
-                            else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
-                            {
-                                StartCoroutine(WaitAfterPopupOfMovementDuel());
+                                StartCoroutine(WaitAfterPopupSupportCardsAlreadySelectedDuel());
                             }
 
 
@@ -201,13 +197,9 @@ public class SupportCard : Card
                                 transform.localScale = OriginalSize;
                                 CardIsActiveHovered = false;
 
-                                if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
+                                if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSelectCardsToUsePhaseState))
                                 {
-                                    StartCoroutine(WaitAfterPopupOfMovementDuel());
-                                }
-                                else if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
-                                {
-                                    StartCoroutine(WaitAfterPopupOfMovementDuel());
+                                    StartCoroutine(WaitAfterPopupSupportCardsAlreadySelectedDuel());
                                 }
 
                                 return;
@@ -230,25 +222,27 @@ public class SupportCard : Card
                         return;
                     }
 
-                    if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelMovementCardPhaseState) && GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelSupportCardPhaseState))
+                    if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() != typeof(DuelSelectCardsToUsePhaseState))
                     {
                         AttemptToUseSupportCard(currentPlayer);
                     }
                     //Might hafta check if the Player we are is the same as the current player being handled in the duelPhaseSM.
-                    else if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSupportCardPhaseState))
+                    else if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSelectCardsToUsePhaseState))
                     {
+                        if(GameplayManager.DuelPhaseSMRef.duelSelectCardsToUsePhaseState.SelectedSupportCard)
+                        {
+                            GameplayManager.HandDisplayPanel.ShrinkHand();
+                            transform.localScale = OriginalSize;
+                            CardIsActiveHovered = false;
+
+                            DialogueBoxPopup.instance.ActivatePopupWithJustText("You have already selected a support card.", 2.0f);
+                            StartCoroutine(WaitAfterPopupSupportCardsAlreadySelectedDuel());
+                            return;
+                        }
+
                         List<SupportCard> supportCards = new List<SupportCard>();
                         supportCards.Add(this);
-                        GameplayManager.DuelPhaseSMRef.duelSupportCardPhaseState.SupportCardSelected(supportCards);
-                    }
-                    else if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelMovementCardPhaseState))
-                    {
-                        GameplayManager.HandDisplayPanel.ShrinkHand();
-                        transform.localScale = OriginalSize;
-                        CardIsActiveHovered = false;
-
-                        DialogueBoxPopup.instance.ActivatePopupWithJustText("You can only select a movement card.", 2.0f);
-                        StartCoroutine(WaitAfterPopupOfMovementDuel());
+                        GameplayManager.DuelPhaseSMRef.duelSelectCardsToUsePhaseState.SelectSupportCard(supportCards);
                     }
                     
                 }
@@ -256,11 +250,10 @@ public class SupportCard : Card
         }
     }
 
-    public IEnumerator WaitAfterPopupOfMovementDuel()
+    public IEnumerator WaitAfterPopupSupportCardsAlreadySelectedDuel()
     {
         yield return new WaitForSeconds(2.0f);
-
-        DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}: Please select a movement card to use for the duel.", 0, "Card selection");
+        DialogueBoxPopup.instance.DeactivatePopup();
         GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.ShowHand();
     }
 

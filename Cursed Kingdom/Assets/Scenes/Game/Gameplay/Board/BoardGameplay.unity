@@ -1770,6 +1770,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438915763}
   m_CullTransparentMesh: 1
+--- !u!114 &459772744 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3231702640429850079, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &464274741 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6376376390711846307, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
@@ -2099,7 +2110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2567285720081007278, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 673.43567
+      value: 672.8232
       objectReference: {fileID: 0}
     - target: {fileID: 2567285720081007278, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2315,7 +2326,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4573234100213797042, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 673.43567
+      value: 672.8232
       objectReference: {fileID: 0}
     - target: {fileID: 4573234100213797042, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2556,6 +2567,10 @@ PrefabInstance:
     - target: {fileID: 6656913326217772500, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6689119815521424876, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+      propertyPath: m_Name
+      value: DuelUIHolder
       objectReference: {fileID: 0}
     - target: {fileID: 6939106221628907373, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -4189,6 +4204,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: LOGIC - GAME MANAGER
       objectReference: {fileID: 0}
+    - target: {fileID: 748826715669862664, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: duelUIHolder
+      value: 
+      objectReference: {fileID: 1628982098}
+    - target: {fileID: 748826715669862664, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: confirmChoicesButton
+      value: 
+      objectReference: {fileID: 1746975689}
+    - target: {fileID: 748826715669862664, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: supportCardsDeselectButton
+      value: 
+      objectReference: {fileID: 1881983717}
+    - target: {fileID: 748826715669862664, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: movementCardsDeselectButton
+      value: 
+      objectReference: {fileID: 459772744}
+    - target: {fileID: 7166908049358683936, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: supportDeckData
+      value: 
+      objectReference: {fileID: 11400000, guid: 2bae84df94682ec44b719baee4158d07, type: 2}
     - target: {fileID: 8064765353983661877, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: duelCamera
       value: 
@@ -6151,6 +6186,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1620076316}
   m_CullTransparentMesh: 1
+--- !u!1 &1628982098 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 771242680787928967, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1631619751
 GameObject:
   m_ObjectHideFlags: 0
@@ -6641,6 +6681,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1746975689 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8079061681431220177, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1777048612
 GameObject:
   m_ObjectHideFlags: 0
@@ -7053,6 +7104,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1881325773}
   m_CullTransparentMesh: 1
+--- !u!114 &1881983717 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5439557439013641327, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1924345510 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3331440175809519124, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}

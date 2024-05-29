@@ -38,7 +38,7 @@ public class DuelStartPhaseState : BaseState
     {
         PhaseDisplay.instance.displayTimeCompleted -= Logic;
         duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[0];
-        duelPhaseSM.ChangeState(duelPhaseSM.duelMovementCardPhaseState);
+        duelPhaseSM.ChangeState(duelPhaseSM.duelSelectCardsToUsePhaseState);
     }
 
 }

@@ -40,7 +40,7 @@ public class GameplayMovementPhaseState : BaseState
 		{
 			currentPlayer.GameplayManagerRef.UseMovementCardNoCardsInHandButton.gameObject.SetActive(true);
 			currentPlayer.GameplayManagerRef.UseMovementCardNoCardsInHandButton.onClick.RemoveAllListeners();
-			currentPlayer.GameplayManagerRef.UseMovementCardNoCardsInHandButton.onClick.AddListener(currentPlayer.DrawThenUseMovementCardImmediately);
+			currentPlayer.GameplayManagerRef.UseMovementCardNoCardsInHandButton.onClick.AddListener(currentPlayer.DrawThenUseMovementCardImmediatelyMovement);
 			playerWentToZeroCards = true;
         }
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DuelPhaseSM : BukuStateMachine
 {
@@ -14,8 +15,7 @@ public class DuelPhaseSM : BukuStateMachine
 	public DuelNotDuelingPhaseState duelNotDuelingPhaseState;
 
 	public DuelStartPhaseState duelStartPhaseState;
-	public DuelMovementCardPhaseState duelMovementCardPhaseState;
-	public DuelSupportCardPhaseState duelSupportCardPhaseState;
+	public DuelSelectCardsToUsePhaseState duelSelectCardsToUsePhaseState;
 	public DuelSupportResolutionPhaseState duelSupportResolutionPhaseState;
 	public DuelMovementResolutionPhaseState duelMovementResolutionPhaseState;
 	public DuelResultPhaseState DuelResultPhaseState;
@@ -31,6 +31,12 @@ public class DuelPhaseSM : BukuStateMachine
 	private DuelPlayerInformation currentPlayerBeingHandled;
     private List<DuelPlayerInformation> currentWinners;
 
+	//Testing button references. We should NOT have these here.
+	public GameObject duelUIHolder;
+	public Button movementCardsDeselectButton;
+	public Button supportCardsDeselectButton;
+	public Button confirmChoicesButton;
+
     public List<DuelPlayerInformation> PlayersInCurrentDuel { get => playersInCurrentDuel; set => playersInCurrentDuel = value; }
 	
 	public DuelPlayerInformation CurrentPlayerBeingHandled { get => currentPlayerBeingHandled; set => currentPlayerBeingHandled = value; }
@@ -40,15 +46,14 @@ public class DuelPhaseSM : BukuStateMachine
 	{
 		duelNotDuelingPhaseState = new DuelNotDuelingPhaseState(this);
 		duelStartPhaseState = new DuelStartPhaseState(this);
-		duelMovementCardPhaseState = new DuelMovementCardPhaseState(this);
-		duelSupportCardPhaseState = new DuelSupportCardPhaseState(this);
+		duelSelectCardsToUsePhaseState = new DuelSelectCardsToUsePhaseState(this);
 		duelSupportResolutionPhaseState = new DuelSupportResolutionPhaseState(this);
 		duelMovementResolutionPhaseState = new DuelMovementResolutionPhaseState(this);
 		DuelResultPhaseState = new DuelResultPhaseState(this);
 
 		gameplayManager = GetComponent<GameplayManager>();
 		CurrentWinners = new();
-
+		duelUIHolder.SetActive(false);
     }
 
 	protected override BaseState GetInitialState()
@@ -60,17 +65,22 @@ public class DuelPhaseSM : BukuStateMachine
 	//Cleanup should happen here post-duel.
 	public void ResetDuelParameters()
 	{
+		foreach(DuelPlayerInformation player in PlayersInCurrentDuel)
+		{
+			Destroy(player.PlayerDuelPrefabInstance);
+			player.PlayerDuelTransform = null;
+			player.PlayerDuelAnimator = null;
+		}
+
 		PlayersInCurrentDuel.Clear();
 		CurrentWinners.Clear();
 		CurrentPlayerBeingHandled = null;
 		DialogueBoxPopup.instance.DeactivatePopup();
-		//Despawn stuff that needs to be taken care of once the duel is over.
     }
 
 	public IEnumerator ChooseNoSupportCardToUseInDuel()
 	{
 		yield return null;
-		duelSupportCardPhaseState.SupportCardNotSelected();
 	}
 
 	public IEnumerator TestingTimeBetweenPopupsSupportCardResolution()
