@@ -241,7 +241,7 @@ public class MovementCard : Card
                     //Might hafta check if the Player we are is the same as the current player being handled in the duelPhaseSM.
                     else if(GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSelectCardsToUsePhaseState))
                     {
-                        if(GameplayManager.DuelPhaseSMRef.duelSelectCardsToUsePhaseState.SelectedMovementCard)
+                        if (GameplayManager.DuelPhaseSMRef.duelSelectCardsToUsePhaseState.SelectedMovementCard)
                         {
                             GameplayManager.HandDisplayPanel.ShrinkHand();
                             transform.localScale = OriginalSize;
@@ -251,13 +251,18 @@ public class MovementCard : Card
                             StartCoroutine(WaitAfterPopupOfMovementAlreadySelectedDuel());
                             return;
                         }
-                        List<MovementCard> movementCards = new List<MovementCard>();
-                        movementCards.Add(this);
-                        GameplayManager.DuelPhaseSMRef.duelSelectCardsToUsePhaseState.SelectMovementCard(movementCards);
+                        AddCardToSelectedCardsDuel();
                     }
                 }
             }
         }
+    }
+
+    public void AddCardToSelectedCardsDuel(bool wasJustDrawn = false)
+    {
+        List<MovementCard> movementCards = new List<MovementCard>();
+        movementCards.Add(this);
+        GameplayManager.DuelPhaseSMRef.duelSelectCardsToUsePhaseState.SelectMovementCard(movementCards, wasJustDrawn);
     }
 
     //THIS IS TEMPORARY, NEED TO REMOVE THIS AND MAKE IT BETTER.

@@ -1780,11 +1780,10 @@ public class Player : MonoBehaviour
         {
             if (card is MovementCard)
             {
+				//Dunno if we should curse this card if the Player is cursed since technically it's not a card from their hand...
                 MovementCard movementCard = (MovementCard)card;
-                movementCard.AttemptToMove(this);
-
-				//Turn off button to 'deselect' a movement card since you don't have any in your hand. Might also need a bool or something to check that while this card is in our hand, we just drew it now.
-
+				movementCard.AddCardToSelectedCardsDuel(true);
+				Debug.Log($"Didn't have a movement card so we will use the newly drawn one from the deck with a value of: {movementCard.MovementCardValue}");
                 break;
             }
         }

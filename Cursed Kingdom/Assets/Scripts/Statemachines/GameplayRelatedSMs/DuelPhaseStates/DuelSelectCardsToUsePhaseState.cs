@@ -72,7 +72,7 @@ public class DuelSelectCardsToUsePhaseState : BaseState
         ConfirmCardsSelectionButton.onClick.AddListener(ConfirmSelection);
     }
 
-	public void SelectMovementCard(List<MovementCard> movementCards)
+	public void SelectMovementCard(List<MovementCard> movementCards, bool wasForcedDrawDueToNotHavingMovementCardsInHand = false)
 	{
 		DialogueBoxPopup.instance.DeactivatePopup();
 		duelPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand();
@@ -82,7 +82,11 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 
 		//Check if we have reached the maximum amount of movement cards before turning this on.
 		SelectedMovementCard = true;
-		DeselectMovementCardsButton.interactable = true;
+		if(!wasForcedDrawDueToNotHavingMovementCardsInHand)
+		{
+            DeselectMovementCardsButton.interactable = true;
+        }
+		
         Debug.Log($"Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected at least 1 movement card for the duel.");
         /**
 		
@@ -155,7 +159,6 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 	public void ConfirmSelection()
 	{
 		ConfirmCardsSelection = true;
-
 		SwitchToNextPlayerInDuel();
 	}
 
@@ -189,8 +192,8 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 		if(duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.MovementCardsInHandCount == 0)
 		{
 			//Give them the next on in the deck. Do a popup. After popup is gone then move to support card phase.
-
-		}
+			duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.DrawThenUseMovementCardImmediatelyDuel();
+        }
 		else
 		{
 			//DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}: Please select cards to use for the duel.", 0, "Card selection");
