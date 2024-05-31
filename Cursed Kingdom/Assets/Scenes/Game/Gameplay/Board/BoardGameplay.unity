@@ -445,6 +445,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 713831223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &118167241 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1774342355159834897, guid: 60de0dc3c4a2af34d9d121cc2fbce1be, type: 3}
+  m_PrefabInstance: {fileID: 481225215}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &120769338
 GameObject:
   m_ObjectHideFlags: 0
@@ -4213,6 +4218,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1746975689}
     - target: {fileID: 748826715669862664, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
+      propertyPath: duelFadePanelAnimator
+      value: 
+      objectReference: {fileID: 118167241}
+    - target: {fileID: 748826715669862664, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: supportCardsDeselectButton
       value: 
       objectReference: {fileID: 1881983717}
@@ -4220,10 +4229,6 @@ PrefabInstance:
       propertyPath: movementCardsDeselectButton
       value: 
       objectReference: {fileID: 459772744}
-    - target: {fileID: 7166908049358683936, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
-      propertyPath: supportDeckData
-      value: 
-      objectReference: {fileID: 11400000, guid: 2bae84df94682ec44b719baee4158d07, type: 2}
     - target: {fileID: 8064765353983661877, guid: 15fd243fbb4bd6e40a7848367e4273cf, type: 3}
       propertyPath: duelCamera
       value: 

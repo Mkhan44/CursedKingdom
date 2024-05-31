@@ -80,6 +80,11 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 		int index = duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled);
 		duelPhaseSM.PlayersInCurrentDuel[index].SelectedMovementCards = movementCards;
 
+		foreach(MovementCard card in movementCards)
+		{
+			card.gameObject.SetActive(false);
+		}
+
 		//Check if we have reached the maximum amount of movement cards before turning this on.
 		SelectedMovementCard = true;
 		if(!wasForcedDrawDueToNotHavingMovementCardsInHand)
@@ -104,6 +109,8 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 		foreach(MovementCard selectedCard in duelPhaseSM.CurrentPlayerBeingHandled.SelectedMovementCards)
 		{
 			copiedMovementList.Add(selectedCard);
+			selectedCard.gameObject.SetActive(true);
+			selectedCard.DeselectCard();
         }
 
 
@@ -128,8 +135,13 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 		int index = duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled);
 		duelPhaseSM.PlayersInCurrentDuel[index].SelectedSupportCards = supportCards;
 
-		//Check if we have reached the maximum amount of support cards before turning this on.
-		SelectedSupportCard = true;
+        foreach (SupportCard card in supportCards)
+        {
+            card.gameObject.SetActive(false);
+        }
+
+        //Check if we have reached the maximum amount of support cards before turning this on.
+        SelectedSupportCard = true;
 		DeselectSupportCardsButton.interactable = true;
         Debug.Log($"Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected at least 1 support card for the duel.");
     }
@@ -142,6 +154,8 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 
         foreach (SupportCard selectedCard in duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards)
         {
+			selectedCard.gameObject.SetActive(true);
+            selectedCard.DeselectCard();
             copiedSupportList.Add(selectedCard);
         }
 

@@ -129,6 +129,7 @@ public class GameplayCameraManager : MonoBehaviour
             if (animationClip.name.ToLower() == currentPlayer.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name)
             {
                 castAnimationTime = animationClip.length;
+                break;
             }
         }
 
@@ -157,6 +158,7 @@ public class GameplayCameraManager : MonoBehaviour
             if (animationClip.name.ToLower() == "thiefhurt")
             {
                 hurtAnimationTime = animationClip.length;
+                break;
             }
         }
         //Wait for animation of virtual camera coming on.
@@ -174,6 +176,7 @@ public class GameplayCameraManager : MonoBehaviour
             if (animationClip.name.ToLower() == "zoomout")
             {
                 camAnimationTime = animationClip.length;
+                break;
             }
         }
 

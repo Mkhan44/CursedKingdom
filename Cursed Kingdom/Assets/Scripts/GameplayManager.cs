@@ -14,9 +14,13 @@ using System;
 
 public class GameplayManager : MonoBehaviour
 {
-	public event Action<KeyCode> MoveHighlightedSpaceIconGroundView;
+	//For fade panel.
+	public const string ISFADING = "IsFading";
+
+    public event Action<KeyCode> MoveHighlightedSpaceIconGroundView;
 	public event Action<KeyCode> MoveHighlightedSpaceIconOverheadView;
 	public event Action<SupportCard> CurrentSupportCardThatWasJustUsed;
+	
 	//event if all players die
 	public event Action<Player> AllPlayersDefeated;
 	

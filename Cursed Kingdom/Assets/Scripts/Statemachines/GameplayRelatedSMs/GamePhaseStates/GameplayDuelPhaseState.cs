@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class GameplayDuelPhaseState : BaseState
 {
-    GameplayPhaseSM gameplayPhaseSM;
+    private GameplayPhaseSM gameplayPhaseSM;
     private const string stateName = "GameplayDuelPhase";
     public GameplayDuelPhaseState(GameplayPhaseSM stateMachine) : base(stateName, stateMachine)
     {
@@ -20,10 +20,14 @@ public class GameplayDuelPhaseState : BaseState
         base.Enter();
         PhaseDisplay.instance.TurnOnDisplay("Duel phase!", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += Logic;
+        gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.FadePanelCompletedFadingDuel += TurnOnCameraAfterFade;
         SpawnInPlayerDuelPrefabs();
         gameplayPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand(false);
         gameplayPhaseSM.gameplayManager.GetCurrentPlayer().HideHand();
-        gameplayPhaseSM.gameplayManager.GameplayCameraManagerRef.TurnOnVirtualDuelCamera();
+        foreach(DuelPlayerInformation duelPlayerInformation in gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel)
+        {
+            gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.StartCoroutine(gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.CharacterDuelAnimationTransition(duelPlayerInformation));
+        }
     }
 
     public override void UpdateLogic()
@@ -51,6 +55,7 @@ public class GameplayDuelPhaseState : BaseState
                 newPlayerDuelPrefabObj.transform.position = gameplayPhaseSM.gameplayManager.duelPlaneSpawnPointsParent.transform.GetChild(currentIndex).position;
 
                 duelPlayerInformation.SetupPlayerDuelPrefabInstance(newPlayerDuelPrefabObj);
+                duelPlayerInformation.PlayerDuelAnimator.SetBool(Player.ISDUELINGIDLE, true);
                 currentIndex++;
             }
         }
@@ -60,5 +65,11 @@ public class GameplayDuelPhaseState : BaseState
     {
         gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.ChangeState(gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.duelStartPhaseState);
         PhaseDisplay.instance.displayTimeCompleted -= Logic;
+    }
+
+    public void TurnOnCameraAfterFade()
+    {
+        gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.FadePanelCompletedFadingDuel -= TurnOnCameraAfterFade;
+        gameplayPhaseSM.gameplayManager.GameplayCameraManagerRef.TurnOnVirtualDuelCamera();
     }
 }

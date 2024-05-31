@@ -9,10 +9,14 @@ using UnityEngine.UI;
 
 public class DuelPhaseSM : BukuStateMachine
 {
-	//States
-	
-	//Default
-	public DuelNotDuelingPhaseState duelNotDuelingPhaseState;
+
+    //Events
+
+    public event Action FadePanelCompletedFadingDuel;
+    //States
+
+    //Default
+    public DuelNotDuelingPhaseState duelNotDuelingPhaseState;
 
 	public DuelStartPhaseState duelStartPhaseState;
 	public DuelSelectCardsToUsePhaseState duelSelectCardsToUsePhaseState;
@@ -36,6 +40,7 @@ public class DuelPhaseSM : BukuStateMachine
 	public Button movementCardsDeselectButton;
 	public Button supportCardsDeselectButton;
 	public Button confirmChoicesButton;
+	public Animator duelFadePanelAnimator;
 
     public List<DuelPlayerInformation> PlayersInCurrentDuel { get => playersInCurrentDuel; set => playersInCurrentDuel = value; }
 	
@@ -65,17 +70,58 @@ public class DuelPhaseSM : BukuStateMachine
 	//Cleanup should happen here post-duel.
 	public void ResetDuelParameters()
 	{
-		foreach(DuelPlayerInformation player in PlayersInCurrentDuel)
+		foreach(DuelPlayerInformation duelPlayerInformation in PlayersInCurrentDuel)
 		{
-			Destroy(player.PlayerDuelPrefabInstance);
-			player.PlayerDuelTransform = null;
-			player.PlayerDuelAnimator = null;
+            Destroy(duelPlayerInformation.PlayerDuelPrefabInstance);
+			duelPlayerInformation.PlayerDuelTransform = null;
+			duelPlayerInformation.PlayerDuelAnimator = null;
 		}
 
 		PlayersInCurrentDuel.Clear();
 		CurrentWinners.Clear();
 		CurrentPlayerBeingHandled = null;
 		DialogueBoxPopup.instance.DeactivatePopup();
+    }
+
+	public IEnumerator FadePanelActivate()
+	{
+		duelFadePanelAnimator.SetBool(GameplayManager.ISFADING, value: true);
+		duelFadePanelAnimator.gameObject.GetComponent<Image>().raycastTarget = true;
+
+        float animationTime = 0f;
+        //FadePanelAnim
+        foreach (AnimationClip animationClip in duelFadePanelAnimator.runtimeAnimatorController.animationClips)
+        {
+            if (animationClip.name.ToLower() == "fadeoutpanelanim")
+            {
+                animationTime = animationClip.length;
+                break;
+            }
+        }
+        yield return new WaitForSeconds(animationTime);
+        FadePanelCompletedFadingDuel?.Invoke();
+        duelFadePanelAnimator.SetBool(GameplayManager.ISFADING, false);
+        duelFadePanelAnimator.gameObject.GetComponent<Image>().raycastTarget = false;
+    }
+
+	public IEnumerator CharacterDuelAnimationTransition(DuelPlayerInformation duelPlayerInformation)
+	{
+        duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, true);
+		float animationTime = 0f;
+
+		foreach(AnimationClip animationClip in duelPlayerInformation.PlayerInDuel.Animator.runtimeAnimatorController.animationClips)
+		{
+			if(animationClip.name.ToLower() == duelPlayerInformation.PlayerInDuel.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name)
+			{
+				animationTime = animationClip.length;
+				break;
+			}
+		}
+        
+		yield return new WaitForSeconds(animationTime);
+
+		StartCoroutine(FadePanelActivate());
+        //duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, false);
     }
 
 	public IEnumerator ChooseNoSupportCardToUseInDuel()
@@ -103,7 +149,6 @@ public class DuelPhaseSM : BukuStateMachine
 		{
 			CurrentPlayerBeingHandled = PlayersInCurrentDuel[0];
 			ChangeState(duelMovementResolutionPhaseState);
-			Debug.Log("We are entering movement resolution phase.");
 		}
 	}
 
@@ -136,7 +181,6 @@ public class DuelPhaseSM : BukuStateMachine
 			}
 
             ChangeState(DuelResultPhaseState);
-			Debug.Log("We finished showing all the movement cards.");
 		}
 	}
 

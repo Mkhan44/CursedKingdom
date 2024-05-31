@@ -19,7 +19,23 @@ public class DuelResultPhaseState : BaseState
     {
         base.Enter();
         PhaseDisplay.instance.TurnOnDisplay($"Result phase", 1.5f);
-        PhaseDisplay.instance.displayTimeCompleted += Logic;
+        //PhaseDisplay.instance.displayTimeCompleted += Logic;
+
+        foreach (DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
+        {
+            duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, false);
+        }
+
+        duelPhaseSM.FadePanelCompletedFadingDuel += TurnOffCameraAfterDuel;
+        duelPhaseSM.StartCoroutine(duelPhaseSM.FadePanelActivate());
+    }
+
+    public void TurnOffCameraAfterDuel()
+    {
+        Logic();
+        duelPhaseSM.FadePanelCompletedFadingDuel -= TurnOffCameraAfterDuel;
+        duelPhaseSM.ChangeState(duelPhaseSM.duelNotDuelingPhaseState);
+        duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.ChangeState(duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.gameplayResolveSpacePhaseState);
         duelPhaseSM.gameplayManager.GameplayCameraManagerRef.TurnOffVirtualDuelCamera();
     }
 
@@ -64,20 +80,20 @@ public class DuelResultPhaseState : BaseState
             for(int i = 0; i < playerInfo.SelectedSupportCards.Count; i++)
             {
                 int index = i;
+                playerInfo.SelectedSupportCards[index].gameObject.SetActive(true);
+                playerInfo.SelectedSupportCards[index].transform.localScale = playerInfo.SelectedSupportCards[index].OriginalSize;
                 playerInfo.PlayerInDuel.DiscardFromHand(playerInfo.SelectedSupportCards[index].ThisCardType, playerInfo.SelectedSupportCards[index]);
             }
 
             for (int j = 0; j < playerInfo.SelectedMovementCards.Count; j++)
             {
                 int index = j;
-                playerInfo.SelectedMovementCards[j].ResetMovementValue();
+                playerInfo.SelectedMovementCards[index].gameObject.SetActive(true);
+                playerInfo.SelectedMovementCards[index].transform.localScale = playerInfo.SelectedMovementCards[index].OriginalSize;
+                playerInfo.SelectedMovementCards[index].ResetMovementValue();
                 playerInfo.PlayerInDuel.DiscardFromHand(playerInfo.SelectedMovementCards[index].ThisCardType, playerInfo.SelectedMovementCards[index]);
             }
-
         }
-
-        duelPhaseSM.ChangeState(duelPhaseSM.duelNotDuelingPhaseState);
-        duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.ChangeState(duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.gameplayResolveSpacePhaseState);
     }
 
     public override void UpdateLogic()
