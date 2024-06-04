@@ -38,6 +38,8 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 		base.Enter();
 		PhaseDisplay.instance.TurnOnDisplay($"Select cards to duel with, Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}.", 1.5f);
 		PhaseDisplay.instance.displayTimeCompleted += Logic;
+		//Camera move based on index of current player +1 since it's 0 indexed..
+		
 	}
 
 	public override void UpdateLogic()
@@ -197,12 +199,18 @@ public class DuelSelectCardsToUsePhaseState : BaseState
             duelPhaseSM.gameplayManager.HandDisplayPanel.SetCurrentActiveHandUI(duelPhaseSM.gameplayManager.Players.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel));
             duelPhaseSM.ChangeState(duelPhaseSM.duelSelectCardsToUsePhaseState);
         }
+
+		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetInteger(GameplayCameraManager.ZOOMTOSPOTNUM, 0);
+        duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, true);
     }
 
 
     private void Logic()
 	{
-		PhaseDisplay.instance.displayTimeCompleted -= Logic;
+        duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, false);
+        duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetInteger(GameplayCameraManager.ZOOMTOSPOTNUM, (duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled) + 1));
+
+        PhaseDisplay.instance.displayTimeCompleted -= Logic;
 		if(duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.MovementCardsInHandCount == 0)
 		{
 			//Give them the next on in the deck. Do a popup. After popup is gone then move to support card phase.

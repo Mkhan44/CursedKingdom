@@ -2243,8 +2243,6 @@ public class Player : MonoBehaviour
 				card.DeselectForUse();
 			}
 		}
-
-		//DialogueBoxPopup.instance.ActivatePopupWithJustText("Movement cards deselected.", 1f);
 	}
 
 

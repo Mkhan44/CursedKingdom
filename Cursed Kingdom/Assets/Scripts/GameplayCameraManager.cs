@@ -9,9 +9,13 @@ using UnityEngine.UI;
 
 public class GameplayCameraManager : MonoBehaviour
 {
+    public const string ZOOMTOSPOTNUM = "zoomToSpotNum";
+    public const string ISGOINGBACKTODEFAULT = "isGoingBackToDefault";
+
     [SerializeField] private CinemachineVirtualCamera cutInPlayerCam;
     [SerializeField] private CinemachineVirtualCamera currentPlayerFollowVirtualCam;
     [SerializeField] private CinemachineVirtualCamera duelVirtualCamera;
+    [SerializeField] private Animator duelVirtualCameraAnimator;
     [SerializeField] private Animator currentPlayerFollowVirtualCamAnimator;
     [SerializeField] private Camera cutInCamera;
     [SerializeField] private Camera duelCamera;
@@ -35,6 +39,7 @@ public class GameplayCameraManager : MonoBehaviour
     public CinemachineVirtualCamera CutInPlayerCam { get => cutInPlayerCam; set => cutInPlayerCam = value; }
     public CinemachineVirtualCamera CurrentPlayerFollowVirtualCam { get => currentPlayerFollowVirtualCam; set => currentPlayerFollowVirtualCam = value; }
     public CinemachineVirtualCamera DuelVirtualCamera { get => duelVirtualCamera; set => duelVirtualCamera = value; }
+    public Animator DuelVirtualCameraAnimator { get => duelVirtualCameraAnimator; set => duelVirtualCameraAnimator = value; }
     public Animator CurrentPlayerFollowVirtualCamAnimator { get => currentPlayerFollowVirtualCamAnimator; set => currentPlayerFollowVirtualCamAnimator = value; }
     public Animator CutInCameraPlayerFollowVirtualCamAnimator { get => cutInCameraPlayerFollowVirtualCamAnimator; set => cutInCameraPlayerFollowVirtualCamAnimator = value; }
     public Camera CutInCamera { get => cutInCamera; set => cutInCamera = value; }
