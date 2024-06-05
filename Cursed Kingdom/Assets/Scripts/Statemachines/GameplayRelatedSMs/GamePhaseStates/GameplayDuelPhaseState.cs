@@ -24,10 +24,7 @@ public class GameplayDuelPhaseState : BaseState
         SpawnInPlayerDuelPrefabs();
         gameplayPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand(false);
         gameplayPhaseSM.gameplayManager.GetCurrentPlayer().HideHand();
-        foreach(DuelPlayerInformation duelPlayerInformation in gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel)
-        {
-            gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.StartCoroutine(gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.CharacterDuelAnimationTransition(duelPlayerInformation));
-        }
+        gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.StartCoroutine(gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.CharacterDuelAnimationTransition(gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel[0]));
     }
 
     public override void UpdateLogic()

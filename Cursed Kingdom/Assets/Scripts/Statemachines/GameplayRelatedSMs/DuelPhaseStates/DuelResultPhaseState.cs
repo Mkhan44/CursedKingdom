@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class DuelResultPhaseState : BaseState
@@ -20,23 +21,23 @@ public class DuelResultPhaseState : BaseState
         base.Enter();
         PhaseDisplay.instance.TurnOnDisplay($"Result phase", 1.5f);
         //PhaseDisplay.instance.displayTimeCompleted += Logic;
-
-        foreach (DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
-        {
-            duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, false);
-        }
-
         duelPhaseSM.FadePanelCompletedFadingDuel += TurnOffCameraAfterDuel;
         duelPhaseSM.StartCoroutine(duelPhaseSM.FadePanelActivate());
     }
 
-    public void TurnOffCameraAfterDuel()
+    public async void TurnOffCameraAfterDuel()
     {
-        Logic();
         duelPhaseSM.FadePanelCompletedFadingDuel -= TurnOffCameraAfterDuel;
+        duelPhaseSM.gameplayManager.GameplayCameraManagerRef.TurnOffVirtualDuelCamera();
+        DialogueBoxPopup.instance.DeactivatePopup();
+        await Task.Delay(1500);
+        foreach (DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
+        {
+            duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISDUELINGIDLE, false);
+        }
+        Logic();
         duelPhaseSM.ChangeState(duelPhaseSM.duelNotDuelingPhaseState);
         duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.ChangeState(duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.gameplayResolveSpacePhaseState);
-        duelPhaseSM.gameplayManager.GameplayCameraManagerRef.TurnOffVirtualDuelCamera();
     }
 
     private void Logic()

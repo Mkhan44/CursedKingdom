@@ -99,16 +99,23 @@ public class DuelPhaseSM : BukuStateMachine
             }
         }
         yield return new WaitForSeconds(animationTime);
-        FadePanelCompletedFadingDuel?.Invoke();
         duelFadePanelAnimator.SetBool(GameplayManager.ISFADING, false);
         duelFadePanelAnimator.gameObject.GetComponent<Image>().raycastTarget = false;
+        FadePanelCompletedFadingDuel?.Invoke();
     }
 
+	//Entering duel.
 	public IEnumerator CharacterDuelAnimationTransition(DuelPlayerInformation duelPlayerInformation)
 	{
-        duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, true);
+		foreach(DuelPlayerInformation playerInfo in PlayersInCurrentDuel)
+		{
+            playerInfo.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, true);
+        }
+        
 		float animationTime = 0f;
 
+		//This only works for 1 char atm. Need to do it for all players...
+		
 		foreach(AnimationClip animationClip in duelPlayerInformation.PlayerInDuel.Animator.runtimeAnimatorController.animationClips)
 		{
 			if(animationClip.name.ToLower() == duelPlayerInformation.PlayerInDuel.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name)
@@ -120,8 +127,27 @@ public class DuelPhaseSM : BukuStateMachine
         
 		yield return new WaitForSeconds(animationTime);
 
-		StartCoroutine(FadePanelActivate());
-        //duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, false);
+        foreach (DuelPlayerInformation playerInfo in PlayersInCurrentDuel)
+        {
+            playerInfo.PlayerInDuel.Animator.SetBool(Player.ISDUELINGIDLE, true);
+			yield return null;
+            playerInfo.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, false);
+        }
+
+        //IsDuelingIdle
+        foreach (AnimationClip animationClip in duelPlayerInformation.PlayerInDuel.Animator.runtimeAnimatorController.animationClips)
+        {
+            if (animationClip.name.ToLower() == duelPlayerInformation.PlayerInDuel.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name)
+            {
+                animationTime = animationClip.length;
+                break;
+            }
+        }
+
+        yield return new WaitForSeconds(animationTime);
+
+
+        StartCoroutine(FadePanelActivate());
     }
 
 	public IEnumerator ChooseNoSupportCardToUseInDuel()
