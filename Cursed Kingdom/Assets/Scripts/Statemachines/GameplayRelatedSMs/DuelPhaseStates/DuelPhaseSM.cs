@@ -10,13 +10,13 @@ using UnityEngine.UI;
 public class DuelPhaseSM : BukuStateMachine
 {
 
-    //Events
+	//Events
 
-    public event Action FadePanelCompletedFadingDuel;
-    //States
+	public event Action FadePanelCompletedFadingDuel;
+	//States
 
-    //Default
-    public DuelNotDuelingPhaseState duelNotDuelingPhaseState;
+	//Default
+	public DuelNotDuelingPhaseState duelNotDuelingPhaseState;
 
 	public DuelStartPhaseState duelStartPhaseState;
 	public DuelSelectCardsToUsePhaseState duelSelectCardsToUsePhaseState;
@@ -33,7 +33,7 @@ public class DuelPhaseSM : BukuStateMachine
 
 	private List<DuelPlayerInformation> playersInCurrentDuel;
 	private DuelPlayerInformation currentPlayerBeingHandled;
-    private List<DuelPlayerInformation> currentWinners;
+	private List<DuelPlayerInformation> currentWinners;
 
 	//Testing button references. We should NOT have these here.
 	public GameObject duelUIHolder;
@@ -41,13 +41,17 @@ public class DuelPhaseSM : BukuStateMachine
 	public Button supportCardsDeselectButton;
 	public Button confirmChoicesButton;
 	public Animator duelFadePanelAnimator;
+	public GameObject supportCardDuelPrefab;
+	public GameObject movementCardDuelPrefab;
+	public GameObject movementCardDuelHolderPrefab;
+	public GameObject supportCardDuelHolderPrefab;
 
-    public List<DuelPlayerInformation> PlayersInCurrentDuel { get => playersInCurrentDuel; set => playersInCurrentDuel = value; }
+	public List<DuelPlayerInformation> PlayersInCurrentDuel { get => playersInCurrentDuel; set => playersInCurrentDuel = value; }
 	
 	public DuelPlayerInformation CurrentPlayerBeingHandled { get => currentPlayerBeingHandled; set => currentPlayerBeingHandled = value; }
-    public List<DuelPlayerInformation> CurrentWinners { get => currentWinners; set => currentWinners = value; }
+	public List<DuelPlayerInformation> CurrentWinners { get => currentWinners; set => currentWinners = value; }
 
-    private void Awake()
+	private void Awake()
 	{
 		duelNotDuelingPhaseState = new DuelNotDuelingPhaseState(this);
 		duelStartPhaseState = new DuelStartPhaseState(this);
@@ -59,6 +63,8 @@ public class DuelPhaseSM : BukuStateMachine
 		gameplayManager = GetComponent<GameplayManager>();
 		CurrentWinners = new();
 		duelUIHolder.SetActive(false);
+		movementCardDuelHolderPrefab.SetActive(false);
+		supportCardDuelHolderPrefab.SetActive(false);
     }
 
 	protected override BaseState GetInitialState()
@@ -72,7 +78,7 @@ public class DuelPhaseSM : BukuStateMachine
 	{
 		foreach(DuelPlayerInformation duelPlayerInformation in PlayersInCurrentDuel)
 		{
-            Destroy(duelPlayerInformation.PlayerDuelPrefabInstance);
+			Destroy(duelPlayerInformation.PlayerDuelPrefabInstance);
 			duelPlayerInformation.PlayerDuelTransform = null;
 			duelPlayerInformation.PlayerDuelAnimator = null;
 		}
@@ -81,37 +87,37 @@ public class DuelPhaseSM : BukuStateMachine
 		CurrentWinners.Clear();
 		CurrentPlayerBeingHandled = null;
 		DialogueBoxPopup.instance.DeactivatePopup();
-    }
+	}
 
 	public IEnumerator FadePanelActivate()
 	{
 		duelFadePanelAnimator.SetBool(GameplayManager.ISFADING, value: true);
 		duelFadePanelAnimator.gameObject.GetComponent<Image>().raycastTarget = true;
 
-        float animationTime = 0f;
-        //FadePanelAnim
-        foreach (AnimationClip animationClip in duelFadePanelAnimator.runtimeAnimatorController.animationClips)
-        {
-            if (animationClip.name.ToLower() == "fadeoutpanelanim")
-            {
-                animationTime = animationClip.length;
-                break;
-            }
-        }
-        yield return new WaitForSeconds(animationTime);
-        duelFadePanelAnimator.SetBool(GameplayManager.ISFADING, false);
-        duelFadePanelAnimator.gameObject.GetComponent<Image>().raycastTarget = false;
-        FadePanelCompletedFadingDuel?.Invoke();
-    }
+		float animationTime = 0f;
+		//FadePanelAnim
+		foreach (AnimationClip animationClip in duelFadePanelAnimator.runtimeAnimatorController.animationClips)
+		{
+			if (animationClip.name.ToLower() == "fadeoutpanelanim")
+			{
+				animationTime = animationClip.length;
+				break;
+			}
+		}
+		yield return new WaitForSeconds(animationTime);
+		duelFadePanelAnimator.SetBool(GameplayManager.ISFADING, false);
+		duelFadePanelAnimator.gameObject.GetComponent<Image>().raycastTarget = false;
+		FadePanelCompletedFadingDuel?.Invoke();
+	}
 
 	//Entering duel.
 	public IEnumerator CharacterDuelAnimationTransition(DuelPlayerInformation duelPlayerInformation)
 	{
 		foreach(DuelPlayerInformation playerInfo in PlayersInCurrentDuel)
 		{
-            playerInfo.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, true);
-        }
-        
+			playerInfo.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, true);
+		}
+		
 		float animationTime = 0f;
 
 		//This only works for 1 char atm. Need to do it for all players...
@@ -124,31 +130,31 @@ public class DuelPhaseSM : BukuStateMachine
 				break;
 			}
 		}
-        
+		
 		yield return new WaitForSeconds(animationTime);
 
-        foreach (DuelPlayerInformation playerInfo in PlayersInCurrentDuel)
-        {
-            playerInfo.PlayerInDuel.Animator.SetBool(Player.ISDUELINGIDLE, true);
+		foreach (DuelPlayerInformation playerInfo in PlayersInCurrentDuel)
+		{
+			playerInfo.PlayerInDuel.Animator.SetBool(Player.ISDUELINGIDLE, true);
 			yield return null;
-            playerInfo.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, false);
-        }
+			playerInfo.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, false);
+		}
 
-        //IsDuelingIdle
-        foreach (AnimationClip animationClip in duelPlayerInformation.PlayerInDuel.Animator.runtimeAnimatorController.animationClips)
-        {
-            if (animationClip.name.ToLower() == duelPlayerInformation.PlayerInDuel.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name)
-            {
-                animationTime = animationClip.length;
-                break;
-            }
-        }
+		//IsDuelingIdle
+		foreach (AnimationClip animationClip in duelPlayerInformation.PlayerInDuel.Animator.runtimeAnimatorController.animationClips)
+		{
+			if (animationClip.name.ToLower() == duelPlayerInformation.PlayerInDuel.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name)
+			{
+				animationTime = animationClip.length;
+				break;
+			}
+		}
 
-        yield return new WaitForSeconds(animationTime);
+		yield return new WaitForSeconds(animationTime);
 
 
-        StartCoroutine(FadePanelActivate());
-    }
+		StartCoroutine(FadePanelActivate());
+	}
 
 	public IEnumerator ChooseNoSupportCardToUseInDuel()
 	{
@@ -199,14 +205,14 @@ public class DuelPhaseSM : BukuStateMachine
 			CurrentPlayerBeingHandled = PlayersInCurrentDuel[0];
 			if(CurrentWinners.Count > 1)
 			{
-                DialogueBoxPopup.instance.ActivatePopupWithJustText($"The duel is a tie. All players take 1 damage.");
-            }
+				DialogueBoxPopup.instance.ActivatePopupWithJustText($"The duel is a tie. All players take 1 damage.");
+			}
 			else
 			{
 				DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {CurrentWinners[0].PlayerInDuel.playerIDIntVal} wins the duel with a value of: {CurrentWinners[0].SelectedMovementCards[0].GetCurrentCardValue()}!");
 			}
 
-            ChangeState(DuelResultPhaseState);
+			ChangeState(DuelResultPhaseState);
 		}
 	}
 

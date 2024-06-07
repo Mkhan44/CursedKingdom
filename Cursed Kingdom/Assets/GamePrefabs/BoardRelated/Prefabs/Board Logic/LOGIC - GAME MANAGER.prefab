@@ -79,6 +79,7 @@ MonoBehaviour:
   useSelectedCardsButton: {fileID: 0}
   useMovementCardNoCardsInHandButton: {fileID: 0}
   playerDuelPrefab: {fileID: 6264876491439458418, guid: 1de3fd04c81517a418b9794c12ee2c14, type: 3}
+  duelPlaneSpawnPointsParent: {fileID: 0}
   currentSupportCardBeingUsed: {fileID: 0}
   topDownMapDisplay: {fileID: 0}
   spaceArtworkPopupDisplay: {fileID: 0}
@@ -207,6 +208,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameplayManager: {fileID: 711935881092096549}
+  duelUIHolder: {fileID: 0}
+  movementCardsDeselectButton: {fileID: 0}
+  supportCardsDeselectButton: {fileID: 0}
+  confirmChoicesButton: {fileID: 0}
+  duelFadePanelAnimator: {fileID: 0}
+  supportCardDuelPrefab: {fileID: 959177630722259936, guid: 65b5f94c42b7f784085299c5a9e57e98, type: 3}
+  movementCardDuelPrefab: {fileID: 8549054513579610354, guid: e30563a3279f6d34fb2f2da735e29c19, type: 3}
 --- !u!1 &711935881242953987
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,8 +294,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cutInPlayerCam: {fileID: 0}
   currentPlayerFollowVirtualCam: {fileID: 0}
+  duelVirtualCamera: {fileID: 0}
+  duelVirtualCameraAnimator: {fileID: 0}
   currentPlayerFollowVirtualCamAnimator: {fileID: 0}
   cutInCamera: {fileID: 0}
+  duelCamera: {fileID: 0}
   cutInCameraPlayerFollowVirtualCamAnimator: {fileID: 0}
   cutInCameraDisplayRawImage: {fileID: 0}
   currentPlayerCamStartingFOV: 45

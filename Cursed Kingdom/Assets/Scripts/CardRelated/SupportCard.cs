@@ -22,7 +22,7 @@ public class SupportCard : Card
 
     public TextMeshProUGUI DescriptionText { get => descriptionText; set => descriptionText = value; }
     public SupportCardData SupportCardData { get => supportCardData; set => supportCardData = value; }
-
+    public Image SupportCardTypeImage { get => supportCardTypeImage; set => supportCardTypeImage = value; }
 
     private void Start()
     {
@@ -69,7 +69,7 @@ public class SupportCard : Card
             iconTypeToCheck = SupportCardTypeIconPreset.SupportCardIconElement.SupportIconType.special;
         }
 
-        SetIconImage(iconTypeToCheck, supportCardTypeImage);
+        SetIconImage(iconTypeToCheck, SupportCardTypeImage);
 
     }
 
