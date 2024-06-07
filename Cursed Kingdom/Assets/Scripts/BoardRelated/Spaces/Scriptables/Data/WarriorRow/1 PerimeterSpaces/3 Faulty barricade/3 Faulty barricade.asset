@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 3 Faulty barricade
   m_EditorClassIdentifier: 
-  afterDuelEffect: 0
-  onSpaceTurnStartEffect: 0
   passingOverSpaceEffect: 0
   isMandatory: 1
+  decreasesSpacesToMove: 1
   isNonDuelSpace: 0
   isNegative: 1
   spaceEffects:
@@ -23,10 +22,9 @@ MonoBehaviour:
     spaceTypeStringHidden: LoseHealthSpace
   - spaceEffectData: {fileID: 11400000, guid: fa0ec8864bc80824faef144783a0f5f3, type: 2}
     spaceTypeStringHidden: DrawCardSpace
-  thisSpaceTypes: 0500000000000000
   spaceName: Faulty Barricade
   spaceDescription: Lose 2 health, then draw 1 movement card.
-  spaceSprite: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
+  spaceSprite: {fileID: 21300000, guid: 00a3220d18c12b244b3fd1dea0a03e32, type: 3}
   spaceMaterials:
   - {fileID: 2100000, guid: aee1b16514deafc438f06e9e304393e3, type: 2}
   - {fileID: 2100000, guid: 72040ae4cb5eced4488b52b28d765df4, type: 2}
