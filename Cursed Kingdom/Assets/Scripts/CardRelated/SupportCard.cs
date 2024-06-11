@@ -145,16 +145,20 @@ public class SupportCard : Card
                     if(!DebugModeSingleton.instance.IsDebugActive)
                     {
                         //Checking all different ways that we can invalidate using a support card.
-                        if (!currentPlayer.CanUseSupportCard())
+                        if (GameplayManager.GameplayPhaseStatemachineRef.GetCurrentState().GetType() != typeof(GameplayDuelPhaseState) && !currentPlayer.CanUseSupportCard())
                         {
                             DialogueBoxPopup.instance.ActivatePopupWithJustText($"You have already used a support card this turn.", 2.0f);
                             GameplayManager.HandDisplayPanel.ShrinkHand();
                             transform.localScale = OriginalSize;
                             CardIsActiveHovered = false;
-                            if (GameplayManager.DuelPhaseSMRef.GetCurrentState().GetType() == typeof(DuelSelectCardsToUsePhaseState))
-                            {
-                                StartCoroutine(WaitAfterPopupOfWrongSupportTypeDuel());
-                            }
+                            return;
+                        }
+                        else if(GameplayManager.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayDuelPhaseState) && !GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.CanUseSupportCard())
+                        {
+                            DialogueBoxPopup.instance.ActivatePopupWithJustText($"You have already used a support card this turn.", 2.0f);
+                            GameplayManager.HandDisplayPanel.ShrinkHand();
+                            transform.localScale = OriginalSize;
+                            CardIsActiveHovered = false;
                             return;
                         }
                         else if (GameplayManager.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayMovementPhaseState) && SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Duel)
@@ -175,8 +179,6 @@ public class SupportCard : Card
                             {
                                 StartCoroutine(WaitAfterPopupSupportCardsAlreadySelectedDuel());
                             }
-
-
                             return;
                         }
                         else if (SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Special)
@@ -256,7 +258,7 @@ public class SupportCard : Card
         DialogueBoxPopup.instance.DeactivatePopup();
         GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.ShowHand();
     }
-
+    [Obsolete("We don't use this anymore since we select movement and support cards at the same time...Might delete but keep for now.")]
     public IEnumerator WaitAfterPopupOfWrongSupportTypeDuel()
     {
         yield return new WaitForSeconds(2.0f);
