@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
 	[SerializeField] public const string ISMOVING = "IsMoving";
 	[SerializeField] public const string ISTRANSITIONINGTODUEL = "IsTransitioningToDuel";
     [SerializeField] public const string ISDUELINGIDLE = "IsDuelingIdle";
+	[SerializeField] public const string ISIDLE = "IsIdle";
 
     //State machine related
     private PlayerCharacterSM stateMachineRef;

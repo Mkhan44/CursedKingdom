@@ -62,4 +62,9 @@ public class DuelMovementResolutionPhaseState : BaseState
 
 		duelPhaseSM.StartCoroutine(duelPhaseSM.TestingTimeBetweenPopupsMovementCardResolution());
 	}
+
+	public void EnterResultPhase()
+	{
+        duelPhaseSM.ChangeState(duelPhaseSM.DuelResultPhaseState);
+    }
 }

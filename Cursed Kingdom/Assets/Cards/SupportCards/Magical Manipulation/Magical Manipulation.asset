@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c465ab46e455f844b3734b01e62cb14, type: 3}
+  m_Name: Magical Manipulation
+  m_EditorClassIdentifier: 
+  cardTitle: Magical Manipulation
+  cardArtwork: {fileID: 0}
+  supportCardEffects:
+  - supportCardEffectData: {fileID: 11400000, guid: eb8278d7a6cd76f44bb25977feac31c4, type: 2}
+    supportTypeStringHidden: ShuffleSelectedMovementCardsDuelEffect
+  thisSupportCardType: 1
+  cardDescription: Shuffle all movement cards that were selected for this duel and
+    redistribute them. (The same cards can be obtained.)

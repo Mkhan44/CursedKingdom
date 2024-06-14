@@ -244,7 +244,9 @@ public class GameplayCameraManager : MonoBehaviour
         float hurtAnimationTime = 0f;
         foreach (AnimationClip animationClip in targetPlayer.Animator.runtimeAnimatorController.animationClips)
         {
-            if (animationClip.name.ToLower() == "thiefcast")
+            //Why am I doing 'cast' here again? Don't we want 'hurt'...? Gotta test
+            string animationNameToSearchFor = animationClip.name.ToLower();
+            if (animationNameToSearchFor.EndsWith("cast"))
             {
                 hurtAnimationTime = animationClip.length;
             }
