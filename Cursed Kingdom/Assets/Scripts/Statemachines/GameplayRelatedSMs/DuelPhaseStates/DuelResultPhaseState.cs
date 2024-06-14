@@ -22,20 +22,22 @@ public class DuelResultPhaseState : BaseState
         PhaseDisplay.instance.TurnOnDisplay($"Result phase", 1.5f);
         //PhaseDisplay.instance.displayTimeCompleted += Logic;
         duelPhaseSM.FadePanelCompletedFadingDuel += TurnOffCameraAfterDuel;
-        duelPhaseSM.StartCoroutine(duelPhaseSM.FadePanelActivate());
+        duelPhaseSM.StartCoroutine(duelPhaseSM.FadePanelActivate(0.5f));
     }
 
     public async void TurnOffCameraAfterDuel()
     {
         duelPhaseSM.FadePanelCompletedFadingDuel -= TurnOffCameraAfterDuel;
         duelPhaseSM.gameplayManager.GameplayCameraManagerRef.TurnOffVirtualDuelCamera();
-        DialogueBoxPopup.instance.DeactivatePopup();
         await Task.Delay(1500);
         foreach (DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
         {
             duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISDUELINGIDLE, false);
+            duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISIDLE, true);
         }
         Logic();
+
+        //Do any effects that we need to after a duel is over. Then change state. For now this is fine.
         duelPhaseSM.ChangeState(duelPhaseSM.duelNotDuelingPhaseState);
         duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.ChangeState(duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.gameplayResolveSpacePhaseState);
     }

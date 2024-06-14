@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,8 +90,9 @@ public class DuelPhaseSM : BukuStateMachine
 		DialogueBoxPopup.instance.DeactivatePopup();
 	}
 
-	public IEnumerator FadePanelActivate()
+	public IEnumerator FadePanelActivate(float delay = 0f)
 	{
+		yield return new WaitForSeconds(delay);
 		duelFadePanelAnimator.SetBool(GameplayManager.ISFADING, value: true);
 		duelFadePanelAnimator.gameObject.GetComponent<Image>().raycastTarget = true;
 
@@ -113,19 +115,16 @@ public class DuelPhaseSM : BukuStateMachine
 	//Entering duel.
 	public IEnumerator CharacterDuelAnimationTransition(DuelPlayerInformation duelPlayerInformation)
 	{
-		foreach(DuelPlayerInformation playerInfo in PlayersInCurrentDuel)
-		{
-			playerInfo.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, true);
-		}
-		
-		float animationTime = 0f;
+        duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, true);
 
+		float animationTime = 0f;
 		//This only works for 1 char atm. Need to do it for all players...
-		
+		//Fixed..? TEST.
 		foreach(AnimationClip animationClip in duelPlayerInformation.PlayerInDuel.Animator.runtimeAnimatorController.animationClips)
 		{
-			if(animationClip.name.ToLower() == duelPlayerInformation.PlayerInDuel.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name)
-			{
+            string animationNameToSearchFor = animationClip.name.ToLower();
+            if (animationNameToSearchFor.EndsWith("battletransition"))
+            {
 				animationTime = animationClip.length;
 				break;
 			}
@@ -133,17 +132,16 @@ public class DuelPhaseSM : BukuStateMachine
 		
 		yield return new WaitForSeconds(animationTime);
 
-		foreach (DuelPlayerInformation playerInfo in PlayersInCurrentDuel)
-		{
-			playerInfo.PlayerInDuel.Animator.SetBool(Player.ISDUELINGIDLE, true);
-			yield return null;
-			playerInfo.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, false);
-		}
-
+        duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISDUELINGIDLE, true);
+        duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISIDLE, false);
+		yield return null;
+        duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, false);
+		
 		//IsDuelingIdle
 		foreach (AnimationClip animationClip in duelPlayerInformation.PlayerInDuel.Animator.runtimeAnimatorController.animationClips)
 		{
-			if (animationClip.name.ToLower() == duelPlayerInformation.PlayerInDuel.Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name)
+            string animationNameToSearchFor = animationClip.name.ToLower();
+            if (animationNameToSearchFor.EndsWith("battlestance"))
 			{
 				animationTime = animationClip.length;
 				break;
@@ -152,8 +150,10 @@ public class DuelPhaseSM : BukuStateMachine
 
 		yield return new WaitForSeconds(animationTime);
 
-
-		StartCoroutine(FadePanelActivate());
+        if (PlayersInCurrentDuel.Last() == duelPlayerInformation)
+        {
+            StartCoroutine(FadePanelActivate());
+        }
 	}
 
 	public IEnumerator ChooseNoSupportCardToUseInDuel()
@@ -202,18 +202,85 @@ public class DuelPhaseSM : BukuStateMachine
 		//We're at the final player.
 		else
 		{
-			CurrentPlayerBeingHandled = PlayersInCurrentDuel[0];
-			if(CurrentWinners.Count > 1)
-			{
-				DialogueBoxPopup.instance.ActivatePopupWithJustText($"The duel is a tie. All players take 1 damage.");
-			}
-			else
-			{
-				DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {CurrentWinners[0].PlayerInDuel.playerIDIntVal} wins the duel with a value of: {CurrentWinners[0].SelectedMovementCards[0].GetCurrentCardValue()}!");
-			}
-
-			ChangeState(DuelResultPhaseState);
+            //play animation of all players attacking
+            foreach (DuelPlayerInformation playerInfo in PlayersInCurrentDuel)
+            {
+				StartCoroutine(PlayerEndOfDuelAnimations(playerInfo));
+            }
 		}
 	}
+
+	public IEnumerator PlayerEndOfDuelAnimations(DuelPlayerInformation duelPlayerInformation)
+	{
+        duelPlayerInformation.PlayerDuelAnimator.SetBool(Player.ISCASTING, true);
+
+        float animationTime = 0f;
+
+        foreach (AnimationClip animationClip in duelPlayerInformation.PlayerDuelAnimator.runtimeAnimatorController.animationClips)
+        {
+			string animationNameToSearchFor = animationClip.name.ToLower();
+            if (animationNameToSearchFor.EndsWith("cast"))
+            {
+                animationTime = animationClip.length;
+                break;
+            }
+        }
+
+		yield return new WaitForSeconds(animationTime + 0.8f);
+
+        duelPlayerInformation.PlayerDuelAnimator.SetBool(Player.ISCASTING, false);
+
+		bool wasAWinner = false;
+
+		//Need a condition for tie here if we're gonna have a neutral animation I think.
+        if (CurrentWinners.Contains(duelPlayerInformation) && CurrentWinners.Count == 1)
+		{
+			wasAWinner = true;
+            duelPlayerInformation.PlayerDuelAnimator.SetBool(Player.POSITIVEEFFECT, true);
+        }
+		else
+		{
+            duelPlayerInformation.PlayerDuelAnimator.SetBool(Player.NEGATIVEEFFECT, true);
+        }
+
+        foreach (AnimationClip animationClip in duelPlayerInformation.PlayerDuelAnimator.runtimeAnimatorController.animationClips)
+        {
+            string animationNameToSearchFor = animationClip.name.ToLower();
+			if (animationNameToSearchFor.EndsWith("positive") || animationNameToSearchFor.EndsWith("negative"))
+            {
+                animationTime = animationClip.length;
+                break;
+            }
+        }
+
+        yield return new WaitForSeconds(animationTime + 0.8f);
+
+		if(wasAWinner)
+		{
+            duelPlayerInformation.PlayerDuelAnimator.SetBool(Player.POSITIVEEFFECT, false);
+        }
+		else
+		{
+            duelPlayerInformation.PlayerDuelAnimator.SetBool(Player.NEGATIVEEFFECT, false);
+        }
+
+		//We need to rework this as right now there is no way to guarantee that the final player has the longest animations.
+		if(PlayersInCurrentDuel.Last() == duelPlayerInformation)
+		{
+            CurrentPlayerBeingHandled = PlayersInCurrentDuel[0];
+            if (CurrentWinners.Count > 1)
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"The duel is a tie. All players take 1 damage.");
+            }
+            else
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {CurrentWinners[0].PlayerInDuel.playerIDIntVal} wins the duel with a value of: {CurrentWinners[0].SelectedMovementCards[0].GetCurrentCardValue()}!");
+            }
+
+			yield return new WaitForSeconds(2.5f);
+			DialogueBoxPopup.instance.DeactivatePopup();
+            duelMovementResolutionPhaseState.EnterResultPhase();
+        }
+    }
 
 }

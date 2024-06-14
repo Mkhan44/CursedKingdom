@@ -24,7 +24,10 @@ public class GameplayDuelPhaseState : BaseState
         SpawnInPlayerDuelPrefabs();
         gameplayPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand(false);
         gameplayPhaseSM.gameplayManager.GetCurrentPlayer().HideHand();
-        gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.StartCoroutine(gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.CharacterDuelAnimationTransition(gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel[0]));
+        foreach(DuelPlayerInformation duelPlayerInformation in gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel)
+        {
+            gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.StartCoroutine(gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.CharacterDuelAnimationTransition(duelPlayerInformation));
+        }
     }
 
     public override void UpdateLogic()
@@ -53,6 +56,7 @@ public class GameplayDuelPhaseState : BaseState
 
                 duelPlayerInformation.SetupPlayerDuelPrefabInstance(newPlayerDuelPrefabObj);
                 duelPlayerInformation.PlayerDuelAnimator.SetBool(Player.ISDUELINGIDLE, true);
+                duelPlayerInformation.PlayerDuelAnimator.SetBool(Player.ISIDLE, false);
                 currentIndex++;
             }
         }

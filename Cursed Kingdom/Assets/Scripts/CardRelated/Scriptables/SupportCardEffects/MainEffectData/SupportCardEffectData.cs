@@ -14,12 +14,15 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
     [SerializeField] private bool isElemental;
     [SerializeField] private bool isReaction;
     [SerializeField] private bool isAfterDuelIEffect;
+    //Used when we want this to always activate first before anything else.
+    [SerializeField] private bool hasPriorityInDuel;
     protected SupportCard supportCardThatWasJustUsed;
 
     public bool IsACost { get => isACost; set => isACost = value; }
     public bool IsElemental { get => isElemental; set => isElemental = value; }
     public bool IsReaction { get => isReaction; set => isReaction = value; }
     public bool IsAfterDuelIEffect { get => isAfterDuelIEffect; set => isAfterDuelIEffect = value; }
+    public bool HasPriorityInDuel { get => hasPriorityInDuel; set => hasPriorityInDuel = value; }
 
     public virtual void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
