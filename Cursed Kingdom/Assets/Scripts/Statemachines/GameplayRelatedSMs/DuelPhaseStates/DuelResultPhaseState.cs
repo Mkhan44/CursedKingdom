@@ -20,35 +20,26 @@ public class DuelResultPhaseState : BaseState
     {
         base.Enter();
         PhaseDisplay.instance.TurnOnDisplay($"Result phase", 1.5f);
-        //PhaseDisplay.instance.displayTimeCompleted += Logic;
         duelPhaseSM.FadePanelCompletedFadingDuel += TurnOffCameraAfterDuel;
         duelPhaseSM.StartCoroutine(duelPhaseSM.FadePanelActivate(0.5f));
     }
 
-    public async void TurnOffCameraAfterDuel()
+    public void TurnOffCameraAfterDuel()
     {
         duelPhaseSM.FadePanelCompletedFadingDuel -= TurnOffCameraAfterDuel;
         duelPhaseSM.gameplayManager.GameplayCameraManagerRef.TurnOffVirtualDuelCamera();
-        await Task.Delay(1500);
+
         foreach (DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
         {
-            duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISDUELINGIDLE, false);
-            duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISIDLE, true);
+            duelPhaseSM.StartCoroutine(duelPhaseSM.EndOfDuelResultAnimation(duelPlayerInformation));
         }
-        Logic();
-
-        //Do any effects that we need to after a duel is over. Then change state. For now this is fine.
-        duelPhaseSM.ChangeState(duelPhaseSM.duelNotDuelingPhaseState);
-        duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.ChangeState(duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.gameplayResolveSpacePhaseState);
     }
 
-    private void Logic()
+    public void DamageResults()
     {
-        PhaseDisplay.instance.displayTimeCompleted -= Logic;
-
-        foreach(DuelPlayerInformation playerInfo in duelPhaseSM.PlayersInCurrentDuel)
+        foreach (DuelPlayerInformation playerInfo in duelPhaseSM.PlayersInCurrentDuel)
         {
-            if(duelPhaseSM.CurrentWinners.Count > 1)
+            if (duelPhaseSM.CurrentWinners.Count > 1)
             {
                 //It's a tie. Everyone takes 1 damage.
                 if (duelPhaseSM.CurrentWinners.Count == duelPhaseSM.PlayersInCurrentDuel.Count)
@@ -75,12 +66,12 @@ public class DuelResultPhaseState : BaseState
             //Count should only be 1 for winners list in this case.
             else
             {
-                if(playerInfo != duelPhaseSM.CurrentWinners[0])
+                if (playerInfo != duelPhaseSM.CurrentWinners[0])
                 {
                     playerInfo.PlayerInDuel.TakeDamage(1);
                 }
             }
-            for(int i = 0; i < playerInfo.SelectedSupportCards.Count; i++)
+            for (int i = 0; i < playerInfo.SelectedSupportCards.Count; i++)
             {
                 int index = i;
                 playerInfo.SelectedSupportCards[index].gameObject.SetActive(true);
