@@ -90,6 +90,29 @@ public class DuelPhaseSM : BukuStateMachine
 		DialogueBoxPopup.instance.DeactivatePopup();
 	}
 
+	public void EnableAbilityButtons()
+	{
+        Player currentPlayer = gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel[0].PlayerInDuel;
+
+        if (!currentPlayer.IsOnCooldown && currentPlayer.ClassData.abilityData.CanBeManuallyActivated)
+        {
+            gameplayManager.UseAbilityButton.transform.parent.gameObject.SetActive(true);
+        }
+        else
+        {
+            gameplayManager.UseAbilityButton.transform.parent.gameObject.SetActive(false);
+        }
+
+        if (currentPlayer.CanUseEliteAbility && currentPlayer.ClassData.eliteAbilityData.CanBeManuallyActivated)
+        {
+            gameplayManager.UseEliteAbilityButton.transform.parent.gameObject.SetActive(true);
+        }
+        else
+        {
+            gameplayManager.UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
+        }
+    }
+
 	public IEnumerator FadePanelActivate(float delay = 0f)
 	{
 		yield return new WaitForSeconds(delay);

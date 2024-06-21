@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c465ab46e455f844b3734b01e62cb14, type: 3}
-  m_Name: Stand Off
+  m_Name: Ailment Severity
   m_EditorClassIdentifier: 
-  cardTitle: Stand Off
+  cardTitle: Ailment Severity
   cardArtwork: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
   supportCardEffects:
-  - supportCardEffectData: {fileID: 11400000, guid: 22f8af47d2d538346a8f3f620a01ccf7, type: 2}
-    supportTypeStringHidden: SwapMovementCardWithOpponentEffect
+  - supportCardEffectData: {fileID: 11400000, guid: a35f36db9d105c7478d751e1d6950d64, type: 2}
+    supportTypeStringHidden: ExtraDamageWithStatusEffect
   thisSupportCardType: 1
-  cardDescription: You can only use this card if you have 1 opponent in the current
-    duel. Swap 1 movement card that was used (random if multiple movement cards were
-    used) with your opponent and that becomes your movement card for this duel.
+  cardDescription: 'If you win this duel: The loser(s) take extra damage equal to
+    their current status effect duration. (A maximum of 3 extra damage can be taken
+    this way.)'

@@ -354,7 +354,7 @@ public class MovementCard : Card
 
         if (GameplayManager.GetCurrentPlayer().ExtraMovementCardUses > 0)
         {
-            if (!GameplayManager.UseSelectedCardsPanel.activeInHierarchy)
+            if (GameplayManager.GameplayPhaseStatemachineRef.GetCurrentState() != GameplayManager.GameplayPhaseStatemachineRef.gameplayDuelPhaseState && !GameplayManager.UseSelectedCardsPanel.activeInHierarchy)
             {
                 GameplayManager.UseSelectedCardsPanel.SetActive(true);
             }

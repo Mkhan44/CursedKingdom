@@ -33,8 +33,25 @@ public class DuelSupportResolutionPhaseState : BaseState
 			currentSupportCardWeAreHandling = duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0];
 
 			//Will need to make this work for all effects. Maybe have something on this that kicks off after all effects are completed?
-			currentSupportCardWeAreHandling.SupportCardData.supportCardEffects[0].supportCardEffectData.SupportCardEffectCompleted += AfterSupportCardEffectIsDone;
-			currentSupportCardWeAreHandling.SupportCardData.supportCardEffects[0].supportCardEffectData.EffectOfCard(duelPhaseSM.CurrentPlayerBeingHandled);
+
+			foreach(SupportCardData.SupportCardEffect supportCardEffect in currentSupportCardWeAreHandling.SupportCardData.supportCardEffects)
+			{
+
+				if(supportCardEffect.supportCardEffectData.IsAfterDuelEffect || supportCardEffect.supportCardEffectData.IsDuringDuelDamageCalc)
+				{
+					//Do nothing we don't want to handle these until after the duel is over.
+					if(currentSupportCardWeAreHandling.SupportCardData.supportCardEffects.Count == 1)
+					{
+						AfterSupportCardEffectIsDone();
+					}
+				}
+				else
+				{
+                    supportCardEffect.supportCardEffectData.SupportCardEffectCompleted += AfterSupportCardEffectIsDone;
+                    supportCardEffect.supportCardEffectData.EffectOfCard(duelPhaseSM.CurrentPlayerBeingHandled);
+                }
+            }
+			
         }
 		else
 		{
@@ -51,7 +68,10 @@ public class DuelSupportResolutionPhaseState : BaseState
 	{
 		if(currentSupportCardWeAreHandling != null)
 		{
-            currentSupportCardWeAreHandling.SupportCardData.supportCardEffects[0].supportCardEffectData.SupportCardEffectCompleted -= AfterSupportCardEffectIsDone;
+            foreach (SupportCardData.SupportCardEffect supportCardEffect in currentSupportCardWeAreHandling.SupportCardData.supportCardEffects)
+            {
+                supportCardEffect.supportCardEffectData.SupportCardEffectCompleted -= AfterSupportCardEffectIsDone;
+            }
             currentSupportCardWeAreHandling = null;
         }
 

@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c35484b72394dc3448088dd8adbb3db5, type: 3}
-  m_Name: MoveBackwardsEffect
+  m_Script: {fileID: 11500000, guid: 049709cece1542f4cab0236959e3b72b, type: 3}
+  m_Name: ExtraDamageWithStatusEffect
   m_EditorClassIdentifier: 
   isACost: 0
   isElemental: 0
   isReaction: 0
-  isAfterDuelEffect: 1
-  isDuringDuelDamageCalc: 0
+  isAfterDuelEffect: 0
+  isDuringDuelDamageCalc: 1
   hasPriorityInDuel: 0
-  numSpacesToMoveBack: 1
-  needToWinDuel: 1
+  numExtraDamageBasedOnStatusEffect: 0

@@ -37,40 +37,66 @@ public class DuelResultPhaseState : BaseState
 
     public void DamageResults()
     {
+        bool firstTimeThroughLoop = false;
         foreach (DuelPlayerInformation playerInfo in duelPhaseSM.PlayersInCurrentDuel)
         {
+            playerInfo.DamageToTake += 1;
+            //It's a tie. Everyone takes 1 damage.
             if (duelPhaseSM.CurrentWinners.Count > 1)
             {
-                //It's a tie. Everyone takes 1 damage.
-                if (duelPhaseSM.CurrentWinners.Count == duelPhaseSM.PlayersInCurrentDuel.Count)
-                {
-                    playerInfo.PlayerInDuel.TakeDamage(1);
-                    continue;
-                }
+                playerInfo.PlayerInDuel.TakeDamage(playerInfo.DamageToTake);
+                continue;
 
-                bool foundMatch = false;
-                foreach (DuelPlayerInformation winnerInfo in duelPhaseSM.CurrentWinners)
-                {
-                    if (playerInfo == winnerInfo)
-                    {
-                        foundMatch = true;
-                    }
-                }
-                //Means the player we are looking at was not in the list of Players that won. They lost the duel.
-                if (!foundMatch)
-                {
-                    //Will be more dynamic based on things like if players deal more damage this duel or if that class takes more damage when losing a duel etc.
-                    playerInfo.PlayerInDuel.TakeDamage(1);
-                }
+                //if (duelPhaseSM.CurrentWinners.Count == duelPhaseSM.PlayersInCurrentDuel.Count)
+                //{
+                    
+                //}
+
+                //bool foundMatch = false;
+                //foreach (DuelPlayerInformation winnerInfo in duelPhaseSM.CurrentWinners)
+                //{
+                //    if (playerInfo == winnerInfo)
+                //    {
+                //        foundMatch = true;
+                //    }
+                //}
+                ////Means the player we are looking at was not in the list of Players that won. They lost the duel.
+                //if (!foundMatch)
+                //{
+                //    //Will be more dynamic based on things like if players deal more damage this duel or if that class takes more damage when losing a duel etc.
+                //    playerInfo.PlayerInDuel.TakeDamage(damageToDeal);
+                //}
             }
             //Count should only be 1 for winners list in this case.
             else
             {
+                //Add damage modifiers for anything that happens during damage calculation....Also too many foreach loops here >.> Might just do this before we even go through any characters? Idk yet.
+                if(!firstTimeThroughLoop)
+                {
+                    foreach(SupportCard supportCard in duelPhaseSM.CurrentWinners[0].SelectedSupportCards)
+                    {
+                        foreach(SupportCardData.SupportCardEffect supportCardEffect in supportCard.SupportCardData.supportCardEffects)
+                        {
+                            if (supportCardEffect.supportCardEffectData.IsDuringDuelDamageCalc)
+                            {
+                                foreach (DuelPlayerInformation duelPlayerInfo in duelPhaseSM.PlayersInCurrentDuel)
+                                {
+                                    supportCardEffect.supportCardEffectData.EffectOfCard(duelPlayerInfo, supportCard);
+                                }
+                            }
+                        }
+                    }
+
+                    firstTimeThroughLoop = true;
+                }
+
                 if (playerInfo != duelPhaseSM.CurrentWinners[0])
                 {
-                    playerInfo.PlayerInDuel.TakeDamage(1);
+                    playerInfo.PlayerInDuel.TakeDamage(playerInfo.DamageToTake);
                 }
             }
+
+            //We'll need to resolve end of duel movement cards before discarding them here.
             for (int i = 0; i < playerInfo.SelectedSupportCards.Count; i++)
             {
                 int index = i;
@@ -98,6 +124,7 @@ public class DuelResultPhaseState : BaseState
     public override void Exit()
     {
         base.Exit();
+        duelPhaseSM.EnableAbilityButtons();
         duelPhaseSM.ResetDuelParameters();
     }
 }

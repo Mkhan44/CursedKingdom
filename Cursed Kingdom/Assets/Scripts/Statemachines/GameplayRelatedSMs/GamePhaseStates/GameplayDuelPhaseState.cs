@@ -22,6 +22,7 @@ public class GameplayDuelPhaseState : BaseState
         PhaseDisplay.instance.displayTimeCompleted += Logic;
         gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.FadePanelCompletedFadingDuel += TurnOnCameraAfterFade;
         SpawnInPlayerDuelPrefabs();
+        DisableAbilityButtonsOnEnter();
         gameplayPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand(false);
         gameplayPhaseSM.gameplayManager.GetCurrentPlayer().HideHand();
         foreach(DuelPlayerInformation duelPlayerInformation in gameplayPhaseSM.gameplayManager.DuelPhaseSMRef.PlayersInCurrentDuel)
@@ -60,6 +61,12 @@ public class GameplayDuelPhaseState : BaseState
                 currentIndex++;
             }
         }
+    }
+
+    public void DisableAbilityButtonsOnEnter()
+    {
+        gameplayPhaseSM.gameplayManager.UseAbilityButton.transform.parent.gameObject.SetActive(false);
+        gameplayPhaseSM.gameplayManager.UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
     }
 
     public void Logic()

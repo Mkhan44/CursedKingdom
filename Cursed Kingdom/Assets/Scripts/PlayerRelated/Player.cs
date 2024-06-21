@@ -2156,7 +2156,7 @@ public class Player : MonoBehaviour
 			}
 		}
 
-		if(!GameplayManagerRef.UseSelectedCardsPanel.activeInHierarchy)
+		if(gameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState() != gameplayManagerRef.GameplayPhaseStatemachineRef.gameplayDuelPhaseState && !GameplayManagerRef.UseSelectedCardsPanel.activeInHierarchy)
 		{
 			GameplayManagerRef.UseSelectedCardsPanel.SetActive(true);
 		}
