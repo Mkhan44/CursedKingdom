@@ -17,6 +17,8 @@ MonoBehaviour:
   - {fileID: 4982451447369573504}
   - {fileID: 6277228158648827728}
   - {fileID: 9150781520267022996}
+  - {fileID: 9099708784516173240}
+  - {fileID: 4990349684424811823}
 --- !u!114 &1308299000601989455
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -73,6 +75,25 @@ MonoBehaviour:
   saturation:
     m_OverrideState: 1
     m_Value: 3
+--- !u!114 &4990349684424811823
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 221518ef91623a7438a71fef23660601, type: 3}
+  m_Name: WhiteBalance
+  m_EditorClassIdentifier: 
+  active: 1
+  temperature:
+    m_OverrideState: 1
+    m_Value: 37.7
+  tint:
+    m_OverrideState: 1
+    m_Value: 0
 --- !u!114 &6277228158648827728
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -85,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   skipIterations:
     m_OverrideState: 0
     m_Value: 1
@@ -120,6 +141,34 @@ MonoBehaviour:
   dirtIntensity:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &9099708784516173240
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899c54efeace73346a0a16faa3afe726, type: 3}
+  m_Name: Vignette
+  m_EditorClassIdentifier: 
+  active: 1
+  color:
+    m_OverrideState: 1
+    m_Value: {r: 0.41509432, g: 0.41509432, b: 0.41509432, a: 1}
+  center:
+    m_OverrideState: 1
+    m_Value: {x: 0.5, y: 0.5}
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.33
+  smoothness:
+    m_OverrideState: 1
+    m_Value: 0.394
+  rounded:
+    m_OverrideState: 1
+    m_Value: 0
 --- !u!114 &9150781520267022996
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -150,13 +199,13 @@ MonoBehaviour:
     m_Value: 0
   focusDistance:
     m_OverrideState: 1
-    m_Value: 2.5
+    m_Value: 6.8
   aperture:
     m_OverrideState: 1
-    m_Value: 5.7
+    m_Value: 18.8
   focalLength:
     m_OverrideState: 1
-    m_Value: 12
+    m_Value: 207
   bladeCount:
     m_OverrideState: 1
     m_Value: 9
