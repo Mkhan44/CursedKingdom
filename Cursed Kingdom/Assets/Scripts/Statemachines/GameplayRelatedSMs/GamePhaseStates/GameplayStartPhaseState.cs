@@ -21,6 +21,7 @@ public class GameplayStartPhaseState : BaseState
 	public override void Enter()
 	{
 		base.Enter();
+        CheckIfMusicNeedsToChangeBoard();
         PhaseDisplay.instance.TurnOnDisplay("Start phase!", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += ActivateStartTurnPopup;
 	}
@@ -35,6 +36,79 @@ public class GameplayStartPhaseState : BaseState
         base.Exit();
         PhaseDisplay.instance.displayTimeCompleted -= ActivateStartTurnPopup;
         popupAppeared = false;
+    }
+
+    public void CheckIfMusicNeedsToChangeBoard()
+    {
+        //Check audiosources in the audiomanager. If the song we want to play is in OUR AudioData:
+        //Check if it is the current one playing already. If it is, do nothing.
+        //If it is NOT: (Example: Same set of songs that have lvl 1,3,5 variations; last player was level 3 and we are not at least level 3.) Swap to the correct one but keep same audio sources.
+        //If the first point is NOT true. We need to swap entire set of audiosources to the ones related to our data and tell it which one to play.
+
+        AudioData ourRowAudioData = default;
+        foreach(BoardSpacesData boardSpacesData in gameplayPhaseSM.gameplayManager.boardManager.boardSpacesData)
+        {
+            if(ourRowAudioData != null)
+            {
+                break;
+            }
+            foreach(SpaceData spaceData in boardSpacesData.perimeterSpaces)
+            {
+                if(spaceData == gameplayPhaseSM.gameplayManager.GetCurrentPlayer().CurrentSpacePlayerIsOn.spaceData)
+                {
+                    ourRowAudioData = boardSpacesData.AreaMusic;
+                    break;
+                }
+            }
+
+            if (ourRowAudioData != null)
+            {
+                break;
+            }
+            foreach (SpaceData spaceData in boardSpacesData.insideSpaces)
+            {
+                if (spaceData == gameplayPhaseSM.gameplayManager.GetCurrentPlayer().CurrentSpacePlayerIsOn.spaceData)
+                {
+                    ourRowAudioData = boardSpacesData.AreaMusic;
+                    break;
+                }
+            }
+        }
+
+        //Could be a special space like the conference room so basically just do what we would do if the music does not need to change.
+        if(ourRowAudioData == null)
+        {
+            Debug.LogWarning($"Couldn't find a row that matched the space we are on. This is probably bad!");
+            return;
+        }
+
+
+        if(Audio_Manager.Instance.CurrentlyPlayingTrack.clip == null)
+        {
+            //Pass in our audioData and play music from there since it's the first time we're playing music.
+        }
+
+        bool isSameMusicAlreadyPlaying = false;
+        //Checking for if the music is already playing. If it is: We do nothing. If it's not, then audio_manager will hafta take care of some lifting to change the track. We will pass in our audioData.
+        foreach(AudioSource audioSource in Audio_Manager.Instance.MusicSources)
+        {
+            if(isSameMusicAlreadyPlaying)
+            {
+                break;
+            }
+
+            foreach(AudioData.MusicClip musicClip in ourRowAudioData.MusicClips)
+            {
+                if(musicClip.Clip == audioSource.clip)
+                {
+                    isSameMusicAlreadyPlaying = true;
+                    break;
+                }
+            }
+        }
+
+        //Method on Audio_manager that takes in a audioData scriptable and we fade to that track.
+        
     }
 
     public void ActivateStartTurnPopup()

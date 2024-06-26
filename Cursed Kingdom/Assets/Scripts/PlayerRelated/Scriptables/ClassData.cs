@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Class Data", menuName = "Player /Class Data", order = 0)]
+[CreateAssetMenu(fileName = "Class Data", menuName = "Player/Class Data", order = 0)]
 public class ClassData : ScriptableObject
 {
     public enum ClassType
@@ -36,4 +36,5 @@ public class ClassData : ScriptableObject
     public AbilityData abilityData;
     public EliteAbilityData eliteAbilityData;
     public List<NegativeCooldownEffects> negativeCooldownEffects;
+    public AudioData defaultWalkingSoundsData;
 }
