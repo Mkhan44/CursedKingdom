@@ -26,6 +26,7 @@ public class AudioData : ScriptableObject
     public class MusicClip
     {
         public MusicType TypeOfMusic;
+        [Range(0, 5)] public int levelRequiredForThisTrackToPlay = 0; 
         public AudioClip Clip;
     }
 
@@ -38,9 +39,12 @@ public class AudioData : ScriptableObject
 
     [SerializeField] private List<MusicClip> musicClips;
     [SerializeField] private List<SFXClip> sfxClips;
+    [Tooltip("This should be true if the board music and duel music have a seamless transition between eachother. Only applicable for music.")]
+    [SerializeField] private bool boardAndDuelAreSynced;
 
     public List<MusicClip> MusicClips { get => musicClips; set => musicClips = value; }
     public List<SFXClip> SfxClips { get => sfxClips; set => sfxClips = value; }
+    public bool BoardAndDuelAreSynced { get => boardAndDuelAreSynced; set => boardAndDuelAreSynced = value; }
 
     private void OnValidate()
     {

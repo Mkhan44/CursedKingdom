@@ -18,6 +18,7 @@ public class DuelStartPhaseState : BaseState
     public override void Enter()
     {
         base.Enter();
+        Audio_Manager.Instance.TransitionBetweenDuelAndBoardMusic();
         PhaseDisplay.instance.TurnOnDisplay("Duel!", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += Logic;
         //Play animation to enter into the duel state.

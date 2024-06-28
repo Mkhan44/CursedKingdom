@@ -583,6 +583,41 @@ public class GameplayManager : MonoBehaviour
 		return currentPlayer;
 	}
 
+	public AudioData GetCurrentAreaPlayerIsInAudioData()
+	{
+		AudioData currentRowPlayerIsOnAudioData = default;
+        foreach (BoardSpacesData boardSpacesData in boardManager.boardSpacesData)
+        {
+            if (currentRowPlayerIsOnAudioData != null)
+            {
+                break;
+            }
+            foreach (SpaceData spaceData in boardSpacesData.perimeterSpaces)
+            {
+                if (spaceData == GetCurrentPlayer().CurrentSpacePlayerIsOn.spaceData)
+                {
+                    currentRowPlayerIsOnAudioData = boardSpacesData.AreaMusic;
+                    break;
+                }
+            }
+
+            if (currentRowPlayerIsOnAudioData != null)
+            {
+                break;
+            }
+            foreach (SpaceData spaceData in boardSpacesData.insideSpaces)
+            {
+                if (spaceData == GetCurrentPlayer().CurrentSpacePlayerIsOn.spaceData)
+                {
+                    currentRowPlayerIsOnAudioData = boardSpacesData.AreaMusic;
+                    break;
+                }
+            }
+        }
+
+		return currentRowPlayerIsOnAudioData;
+    }
+
 	#region PlayerInfoUI Functions
 
 	public void UpdatePlayerInfoUICardCount(Player playerRef)

@@ -114,6 +114,9 @@ public class Player : MonoBehaviour
 	//Duel related
 	[SerializeField] private int rangeOfSpacesToLookForDuelOpponents;
 
+	//Sound related
+	
+
 	//References
 	[SerializeField] private GameplayManager gameplayManagerRef;
 	[SerializeField] private RuntimeAnimatorController animatorController;
@@ -2901,6 +2904,54 @@ public class Player : MonoBehaviour
 		//Play animation for Player activating their Elite ability!!!!
 		IsHandlingEliteAbilityActivation = true;
 	}
+
+    #endregion
+
+    #region Audio Related
+
+	//Most of these methods are going to be played via an animation event.
+	public void PlayStepSound(int numSoundToPlay)
+	{
+		if(ClassData.defaultWalkingSoundsData == null)
+		{
+			Debug.LogWarning("No step sound audio data on the class data scriptable!");
+			return;
+		}
+
+		if(numSoundToPlay > ClassData.defaultWalkingSoundsData.SfxClips.Count || numSoundToPlay <= 0)
+		{
+			Debug.LogError($"You're trying to play a sound that exceeds the index of the array. There are {ClassData.defaultWalkingSoundsData.SfxClips.Count} sounds in the audio data but you're trying to play sound # {numSoundToPlay}");
+			return;
+		}
+
+		int indexToPlay = 0;
+		//if(playRandom)
+		//{
+		//	indexToPlay = Random.Range(0, ClassData.defaultWalkingSoundsData.SfxClips.Count);
+		//}
+		//else
+		//{
+		//	indexToPlay = numSoundToPlay - 1;
+  //      }
+
+        indexToPlay = numSoundToPlay - 1;
+
+        Audio_Manager.Instance.PlaySFX(ClassData.defaultWalkingSoundsData.SfxClips[indexToPlay].Clip);
+    }
+
+	public void PlayStepSoundRandom()
+	{
+        if (ClassData.defaultWalkingSoundsData == null)
+        {
+            Debug.LogWarning("No step sound audio data on the class data scriptable!");
+            return;
+        }
+
+        int indexToPlay = 0;
+        indexToPlay = Random.Range(0, ClassData.defaultWalkingSoundsData.SfxClips.Count);
+
+        Audio_Manager.Instance.PlaySFX(ClassData.defaultWalkingSoundsData.SfxClips[indexToPlay].Clip);
+    }
 
     #endregion
 

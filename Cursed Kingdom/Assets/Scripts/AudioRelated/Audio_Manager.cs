@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Audio_Manager : MonoBehaviour
@@ -16,7 +17,7 @@ public class Audio_Manager : MonoBehaviour
     [SerializeField] private List<AudioSource> musicSources;
 
     [Header("Currently playing track")]
-    [SerializeField] private AudioSource currentlyPlayingTrack;
+    private CurrentlyPlayingMusicInfo currentlyPlayingMusicInformation = new();
 
     [Header("SFX Holders")]
     [SerializeField] private GameObject SFXHolder;
@@ -25,9 +26,23 @@ public class Audio_Manager : MonoBehaviour
     [SerializeField] private List<AudioSource> sfxSources;
     private List<AudioSource> pausedAudioSources = new List<AudioSource>();
 
-    public AudioSource CurrentlyPlayingTrack { get => currentlyPlayingTrack; set => currentlyPlayingTrack = value; }
+    [Header("DebugStuff")]
+    [Range(-1,1)] public float defaultMusicVolume = -1f;
+
+    private AudioData currentMusicAudioData;
+
+    public CurrentlyPlayingMusicInfo CurrentlyPlayingMusicInformation { get => currentlyPlayingMusicInformation; set => currentlyPlayingMusicInformation = value; }
     public List<AudioSource> MusicSources { get => musicSources; set => musicSources = value; }
     public List<AudioSource> SfxSources { get => sfxSources; set => sfxSources = value; }
+    public AudioData CurrentMusicAudioData { get => currentMusicAudioData; set => currentMusicAudioData = value; }
+
+    public class CurrentlyPlayingMusicInfo
+    {
+        [SerializeField] private AudioSource currentlyPlayingTrackSource = default;
+        [SerializeField] private AudioData.MusicClip musicClip = default;
+        public AudioSource CurrentlyPlayingTrackSource { get => currentlyPlayingTrackSource; set => currentlyPlayingTrackSource = value; }
+        public AudioData.MusicClip MusicClip { get => musicClip; set => musicClip = value; }
+    }
 
     private void Awake()
     {
@@ -55,14 +70,25 @@ public class Audio_Manager : MonoBehaviour
 
         //setMusicTracks(Level_Manager.Instance.getTimePeriod());
 
+        MusicSources = new();
+        //for(int i = 0; i < 5; i++)
+        //{
+        //    GameObject tempObj = Instantiate(musicAudioSourcePrefab, this.transform);
+        //    tempObj.transform.SetParent(MusicHolder.transform);
+        //    MusicSources.Add(tempObj.GetComponent<AudioSource>());
+        //    tempObj.name = "MusicSource_" + MusicSources.Count;
+        //}
+        
 
+
+        SfxSources = new();
         SetupNewSFXObjects();
 
     }
 
     public void SetupNewSFXObjects()
     {
-        stopSFX();
+        //StopSFX();
 
         foreach (Transform child in SFXHolder.transform)
         {
@@ -80,11 +106,24 @@ public class Audio_Manager : MonoBehaviour
 
     public void SetupNewMusicObjects()
     {
+        StopMusic();
 
+        foreach (Transform child in MusicHolder.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < MusicSources.Count; i++)
+        {
+            GameObject tempObj = Instantiate(musicAudioSourcePrefab, this.transform);
+            tempObj.transform.SetParent(MusicHolder.transform);
+            tempObj.name = "MusicSource_" + i;
+            MusicSources[i] = tempObj.GetComponent<AudioSource>();
+        }
     }
 
-    //SFX Functions
-    public int playSFX(AudioClip soundToPlay, bool loop = false, float volume = 0.1f)
+    #region SFX Methods
+    public int PlaySFX(AudioClip soundToPlay, bool loop = false, float volume = 1.0f)
     {
         for(int i = 0; i < SfxSources.Count; i++)
         {
@@ -110,16 +149,15 @@ public class Audio_Manager : MonoBehaviour
         return SfxSources.Count - 1;
     }
 
-    public void stopSFX(int audioIndex)
+    public void StopSFX(int audioIndex)
     {
         if(SfxSources[audioIndex].isPlaying)
         {
             SfxSources[audioIndex].Stop();
         }
-       
     }
 
-    public void stopSFX(string clipName)
+    public void StopSFX(string clipName)
     {
         for (int i = 0; i < SfxSources.Count; i++)
         {
@@ -130,7 +168,7 @@ public class Audio_Manager : MonoBehaviour
         }
     }
 
-    public void stopSFX()
+    public void StopSFX()
     {
         for (int i = 0; i < SfxSources.Count; i++)
         {
@@ -180,10 +218,221 @@ public class Audio_Manager : MonoBehaviour
         Debug.LogWarning("All SFX clips are playing, we are going to add another source for more clips!");
     }
     */
-    //SFX Functions
 
-    public void SetupMusicTracks()
+    #endregion
+
+    //For a single track.
+    public void PlayMusic(AudioClip soundToPlay, AudioData.MusicClip musicClip, bool loop = true, float volume = 1.0f)
     {
+        if(defaultMusicVolume >= 0 && volume != 0)
+        {
+            volume = defaultMusicVolume;
+        }
+
+        for (int i = 0; i < MusicSources.Count; i++)
+        {
+            if (!MusicSources[i].isPlaying)
+            {
+                MusicSources[i].clip = soundToPlay;
+                MusicSources[i].loop = loop;
+                MusicSources[i].volume = volume;
+                MusicSources[i].Play();
+                if (volume > 0f)
+                {
+                    CurrentlyPlayingMusicInformation.MusicClip = musicClip;
+                    CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = MusicSources[i];
+                }
+                return;
+            }
+        }
+
+        GameObject tempObj = Instantiate(musicAudioSourcePrefab, this.transform);
+        tempObj.transform.SetParent(MusicHolder.transform);
+        MusicSources.Add(tempObj.GetComponent<AudioSource>());
+        tempObj.name = "MusicSource_" + MusicSources.Count;
+        MusicSources[MusicSources.Count - 1].clip = soundToPlay;
+        MusicSources[MusicSources.Count - 1].loop = loop;
+        MusicSources[MusicSources.Count - 1].volume = volume;
+        MusicSources[MusicSources.Count - 1].Play();
+        if(volume > 0f)
+        {
+            CurrentlyPlayingMusicInformation.MusicClip = musicClip;
+            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = MusicSources[MusicSources.Count - 1];
+        }
+        Debug.LogWarning("All Music clips are playing, we are going to add another source for more clips!");
+        return;
+    }
+
+    public void PlayAlreadyLoadedMusic(AudioSource audioSourceToPlay, AudioData.MusicClip musicClip, bool pausePreviouslyPlayingTrack = false, bool loop = true, float volume = 1.0f)
+    {
+        if (defaultMusicVolume >= 0 && volume != 0)
+        {
+            volume = defaultMusicVolume;
+        }
+
+        //Fade out other song.
+        if(pausePreviouslyPlayingTrack)
+        {
+            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.Pause();
+        }
+        else
+        {
+            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume = 0;
+        }
+        
+
+        CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = audioSourceToPlay;
+        CurrentlyPlayingMusicInformation.MusicClip = musicClip;
+
+        audioSourceToPlay.loop = loop;
+        audioSourceToPlay.volume = volume;
+        audioSourceToPlay.Play();
+    }
+
+    //Maybe we change this to be a method called "TransitionBetweenDuelAndBoardMusic" and basically we have something to keep track of if we are playing 'board' music or 'duel' music.
+    //If this method is called it mutes the current one that's playing and turns on the opposite. I.E. if we were in a duel and just finished; call this and it forces us into board music.
+    public void TransitionBetweenDuelAndBoardMusic(AudioData audioData = null, bool loop = true, float volume = 1.0f)
+    {
+        if (defaultMusicVolume >= 0 && volume != 0)
+        {
+            volume = defaultMusicVolume;
+        }
+
+        if(CurrentMusicAudioData.BoardAndDuelAreSynced)
+        {
+            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume = 0f;
+        }
+        else
+        {
+            if(CurrentlyPlayingMusicInformation.MusicClip.TypeOfMusic == AudioData.MusicType.Duel)
+            {
+                StopMusic(CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource);
+            }
+        }
+        
+
+        if (CurrentMusicAudioData != null && audioData == null)
+        {
+            switch (CurrentlyPlayingMusicInformation.MusicClip.TypeOfMusic)
+            {
+                case AudioData.MusicType.Board:
+                    {
+                        foreach (AudioData.MusicClip musicClip in CurrentMusicAudioData.MusicClips)
+                        {
+                            if (musicClip.TypeOfMusic == AudioData.MusicType.Duel)
+                            {
+                                if(CurrentMusicAudioData.BoardAndDuelAreSynced)
+                                {
+                                    foreach (AudioSource audioSource in MusicSources)
+                                    {
+                                        if (audioSource.clip == musicClip.Clip)
+                                        {
+                                            audioSource.volume = volume;
+                                            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = audioSource;
+                                            CurrentlyPlayingMusicInformation.MusicClip = musicClip;
+                                            break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (AudioSource audioSource in MusicSources)
+                                    {
+                                        if (audioSource.clip == musicClip.Clip)
+                                        {
+                                            PlayAlreadyLoadedMusic(audioSource, musicClip);
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        }
+                        break;
+                    }
+                case AudioData.MusicType.Duel:
+                    {
+                        foreach (AudioData.MusicClip musicClip in CurrentMusicAudioData.MusicClips)
+                        {
+                            if (musicClip.TypeOfMusic == AudioData.MusicType.Board)
+                            {
+                                foreach (AudioSource audioSource in MusicSources)
+                                {
+                                    if (audioSource.clip == musicClip.Clip)
+                                    {
+                                        if(!audioSource.isPlaying)
+                                        {
+                                            audioSource.UnPause();
+                                        }
+                                        audioSource.volume = volume;
+                                        CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = audioSource;
+                                        CurrentlyPlayingMusicInformation.MusicClip = musicClip;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
+    }
+    public void SetupMusicTracks(AudioData audioData)
+    {
+        SetupNewMusicObjects();
+
+        CurrentMusicAudioData = audioData;
+        
+        //Only 1 track so just play that one.
+        if (CurrentMusicAudioData.MusicClips.Count == 1f)
+        {
+            PlayMusic(CurrentMusicAudioData.MusicClips[0].Clip, CurrentMusicAudioData.MusicClips[0]);
+            return;
+        }
+
+        bool isFirstTrack = true;
+        foreach(AudioData.MusicClip musicClip in CurrentMusicAudioData.MusicClips)
+        {
+            //Play all music that should be simultaneous here.
+            if(CurrentMusicAudioData.BoardAndDuelAreSynced)
+            {
+                if(isFirstTrack)
+                {
+                    isFirstTrack = false;
+                    PlayMusic(musicClip.Clip, musicClip, true);
+                    continue;
+                }
+                PlayMusic(musicClip.Clip, musicClip, true, 0f);
+                continue;
+            }
+
+            if(musicClip.TypeOfMusic == AudioData.MusicType.Board)
+            {
+                if(isFirstTrack)
+                {
+                    isFirstTrack = false;
+                    PlayMusic(musicClip.Clip, musicClip, true);
+                    continue;
+                }
+                PlayMusic(musicClip.Clip, musicClip, true, 0f);
+                continue;
+            }
+            else if(musicClip.TypeOfMusic == AudioData.MusicType.Duel)
+            {
+                PlayMusic(musicClip.Clip, musicClip, true, 0f);
+                StopMusic(MusicSources[MusicSources.Count - 1]);
+                continue;
+            }
+        }
+
+        //Prolly need to call this function BEFORE swapping the tracks...
+       // StartCoroutine(fadeBetweenTimeswaps(CurrentlyPlayingTrack, 1f));
+
+
         //switch(theEra)
         //{
         //    case Level_Manager.timePeriod.Prehistoric:
@@ -228,7 +477,7 @@ public class Audio_Manager : MonoBehaviour
         //        }
         //    case Level_Manager.timePeriod.tutorial:
         //        {
-                    
+
         //            StartCoroutine(tutorialPlay());
         //            return;
         //            break;
@@ -240,9 +489,8 @@ public class Audio_Manager : MonoBehaviour
         //}
 
         //DEBUG.
-        
-        //Prolly need to call this function BEFORE swapping the tracks...
-        StartCoroutine(fadeBetweenTimeswaps(CurrentlyPlayingTrack, 1f));
+
+
 
         /*
         easySource.volume = 0f;
@@ -250,11 +498,40 @@ public class Audio_Manager : MonoBehaviour
         hardPauseSource.volume = 0f;
         bonusSource.volume = 0f;
         */
-        
+
 
         //Have coroutine fade out the current tracks and then play the new ones.
         //Fade out should probably be before the swap above.
-   
+
+    }
+
+    public void StopMusic(bool fadeOut = false)
+    {
+        //Do a coroutine that fades it and throws an event prolly.
+        if(fadeOut)
+        {
+
+            return;
+        }
+
+        for (int i = 0; i < MusicSources.Count; i++)
+        {
+            if (MusicSources[i].isPlaying)
+            {
+                MusicSources[i].Stop();
+            }
+        }
+    }
+
+    public void StopMusic(AudioSource audioSourceToStop, bool fadeout = false)
+    {
+        if(fadeout)
+        {
+
+            return;
+        }
+
+        audioSourceToStop.Stop();
     }
 
     //IEnumerator tutorialPlay()
@@ -387,7 +664,7 @@ public class Audio_Manager : MonoBehaviour
     }
     IEnumerator fadeBetweenDifficultyTracks(AudioSource currentTrackToFadeOut, AudioSource nextTrackToFadeIn, float fadeInTargetVolume)
     {
-        CurrentlyPlayingTrack = nextTrackToFadeIn;
+        //CurrentlyPlayingTrack = nextTrackToFadeIn;
 
         //Debug.Log("BEFORE LOOP: " + currentTrackToFadeOut.volume + " = the volume of the current track & " + nextTrackToFadeIn.volume + " = the volume of the next track!");
         while(currentTrackToFadeOut.volume > 0 && nextTrackToFadeIn.volume < fadeInTargetVolume)
@@ -425,11 +702,11 @@ public class Audio_Manager : MonoBehaviour
 
     public void muteCurrentTrack()
     {
-        CurrentlyPlayingTrack.volume = 0f;
+        //CurrentlyPlayingTrack.volume = 0f;
     }
 
     public void unmuteCurrentTrack()
     {
-        CurrentlyPlayingTrack.volume = 1f;
+        //CurrentlyPlayingTrack.volume = 1f;
     }
 }
