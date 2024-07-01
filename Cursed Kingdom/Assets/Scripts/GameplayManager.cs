@@ -205,8 +205,7 @@ public class GameplayManager : MonoBehaviour
 		cinemachineVirtualCameras[1].LookAt = spaces[spaces.Count - 1].gameObject.transform;
 		cinemachineVirtualCameras[1].Follow = spaces[spaces.Count - 1].gameObject.transform;
 
-
-		foreach (CinemachineVirtualCamera camera in cinemachineVirtualCameras)
+        foreach (CinemachineVirtualCamera camera in cinemachineVirtualCameras)
 		{
 			camera.enabled = false;
 		}
@@ -582,6 +581,41 @@ public class GameplayManager : MonoBehaviour
 
 		return currentPlayer;
 	}
+
+	public AudioData GetCurrentAreaPlayerIsInAudioData()
+	{
+		AudioData currentRowPlayerIsOnAudioData = default;
+        foreach (BoardSpacesData boardSpacesData in boardManager.boardSpacesData)
+        {
+            if (currentRowPlayerIsOnAudioData != null)
+            {
+                break;
+            }
+            foreach (SpaceData spaceData in boardSpacesData.perimeterSpaces)
+            {
+                if (spaceData == GetCurrentPlayer().CurrentSpacePlayerIsOn.spaceData)
+                {
+                    currentRowPlayerIsOnAudioData = boardSpacesData.AreaMusic;
+                    break;
+                }
+            }
+
+            if (currentRowPlayerIsOnAudioData != null)
+            {
+                break;
+            }
+            foreach (SpaceData spaceData in boardSpacesData.insideSpaces)
+            {
+                if (spaceData == GetCurrentPlayer().CurrentSpacePlayerIsOn.spaceData)
+                {
+                    currentRowPlayerIsOnAudioData = boardSpacesData.AreaMusic;
+                    break;
+                }
+            }
+        }
+
+		return currentRowPlayerIsOnAudioData;
+    }
 
 	#region PlayerInfoUI Functions
 

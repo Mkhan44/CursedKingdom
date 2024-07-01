@@ -100,6 +100,10 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 		MovementCardDuel spawnedMovementCardDuel = spawnedMovementCard.GetComponent<MovementCardDuel>();
 		spawnedMovementCardDuel.DuelPhaseSMReference = duelPhaseSM;
 		spawnedMovementCardDuel.SetupCard(movementCards[0]);
+        if (wasForcedDrawDueToNotHavingMovementCardsInHand)
+        {
+            spawnedMovementCardDuel.IsClickable = false;
+        }
 
 
         Debug.Log($"Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected at least 1 movement card for the duel.");

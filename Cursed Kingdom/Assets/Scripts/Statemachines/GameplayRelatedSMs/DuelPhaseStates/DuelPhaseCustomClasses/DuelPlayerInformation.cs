@@ -38,6 +38,8 @@ public class DuelPlayerInformation
             PlayerDuelTransform = PlayerDuelPrefabInstance.transform;
             PlayerDuelAnimator = PlayerDuelPrefabInstance.GetComponent<Animator>();
             PlayerDuelAnimator.runtimeAnimatorController = PlayerInDuel.ClassData.animatorController;
+            //Bad might wanna change this to be less hardcoded.
+            playerDuelTransform.GetChild(0).GetComponent<Billboard>().CameraToBillboardTowards = GameObject.Find("Duel Camera").GetComponent<Camera>();
         }
     }
 }

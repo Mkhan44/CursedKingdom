@@ -31,11 +31,13 @@ public class Player : MonoBehaviour
 	public event Action<Player> DoneActivatingEliteAbilityEffect;
 	public event Action<Player> StatusEffectUpdateCompleted;
 	public event Action<Player> HasBeenDefeated;
+	public event Action<Player> BillboardLookAtCamera;
+    public event Action<Player> BillboarForwardCamera;
 
-	//Events End
+    //Events End
 
-	//Consts
-	[SerializeField] public const string NEGATIVEEFFECT = "NegativeEffect";
+    //Consts
+    [SerializeField] public const string NEGATIVEEFFECT = "NegativeEffect";
 	[SerializeField] public const string POSITIVEEFFECT = "PositiveEffect";
 	[SerializeField] public const string ISCASTING = "IsCasting";
 	[SerializeField] public const string ISHURT = "IsHurt";
@@ -113,6 +115,9 @@ public class Player : MonoBehaviour
 
 	//Duel related
 	[SerializeField] private int rangeOfSpacesToLookForDuelOpponents;
+
+	//Sound related
+	
 
 	//References
 	[SerializeField] private GameplayManager gameplayManagerRef;
@@ -334,8 +339,10 @@ public class Player : MonoBehaviour
         GameplayManagerRef.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += ApplyCurrentSpaceEffects;
         HasBeenDefeated += GameplayManagerRef.CheckIfAllPlayersButOneDefeated;
 
-        //DEBUG
-        // UseEliteAbility();
+		//DEBUG
+		// UseEliteAbility();
+
+
     }
 
 	public void DebugTheSpace()
@@ -2904,6 +2911,54 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    #region Audio Related
+
+	//Most of these methods are going to be played via an animation event.
+	public void PlayStepSound(int numSoundToPlay)
+	{
+		if(ClassData.defaultWalkingSoundsData == null)
+		{
+			Debug.LogWarning("No step sound audio data on the class data scriptable!");
+			return;
+		}
+
+		if(numSoundToPlay > ClassData.defaultWalkingSoundsData.SfxClips.Count || numSoundToPlay <= 0)
+		{
+			Debug.LogError($"You're trying to play a sound that exceeds the index of the array. There are {ClassData.defaultWalkingSoundsData.SfxClips.Count} sounds in the audio data but you're trying to play sound # {numSoundToPlay}");
+			return;
+		}
+
+		int indexToPlay = 0;
+		//if(playRandom)
+		//{
+		//	indexToPlay = Random.Range(0, ClassData.defaultWalkingSoundsData.SfxClips.Count);
+		//}
+		//else
+		//{
+		//	indexToPlay = numSoundToPlay - 1;
+  //      }
+
+        indexToPlay = numSoundToPlay - 1;
+
+        Audio_Manager.Instance.PlaySFX(ClassData.defaultWalkingSoundsData.SfxClips[indexToPlay].Clip);
+    }
+
+	public void PlayStepSoundRandom()
+	{
+        if (ClassData.defaultWalkingSoundsData == null)
+        {
+            Debug.LogWarning("No step sound audio data on the class data scriptable!");
+            return;
+        }
+
+        int indexToPlay = 0;
+        indexToPlay = Random.Range(0, ClassData.defaultWalkingSoundsData.SfxClips.Count);
+
+        Audio_Manager.Instance.PlaySFX(ClassData.defaultWalkingSoundsData.SfxClips[indexToPlay].Clip);
+    }
+
+    #endregion
+
     #region Event Triggers
     //Event triggers
 
@@ -2966,6 +3021,16 @@ public class Player : MonoBehaviour
 	{
 		HasBeenDefeated?.Invoke(this);
     }
+
+	public void BillboardLookAtCameraEvent()
+	{
+		BillboardLookAtCamera?.Invoke(this);
+    }
+
+	public void BillboardForwardCameraEvent()
+	{
+		BillboardLookAtCamera?.Invoke(this);
+	}
     #endregion
 
     #endregion

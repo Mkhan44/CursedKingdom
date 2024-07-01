@@ -20,6 +20,7 @@ public class MovementCardDuel : CardDuel
     //References
     [SerializeField] private TextMeshProUGUI movementValueText;
     [SerializeField] private MovementCard movementCardReference;
+    
 
     public MovementCardData MovementCardData { get => movementCardData; set => movementCardData = value; }
     public int MovementCardValue { get => movementCardValue; set => movementCardValue = value; }
@@ -63,7 +64,7 @@ public class MovementCardDuel : CardDuel
 
     public override void OnPointerClick(PointerEventData eventData)
     {
-        if(DuelPhaseSMReference != null)
+        if(DuelPhaseSMReference != null && IsClickable)
         {
             DuelPhaseSMReference.duelSelectCardsToUsePhaseState.DeselectMovementCard(movementCardReference);
         }

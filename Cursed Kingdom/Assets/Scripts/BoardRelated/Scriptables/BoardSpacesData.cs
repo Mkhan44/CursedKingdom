@@ -16,6 +16,9 @@ public class BoardSpacesData : ScriptableObject
     public List<SpaceData> perimeterSpaces;
     public List<SpaceData> insideSpaces;
 
+    [Header("Audio override")]
+    public AudioData AreaMusic;
+
     public void OnValidate()
     {
         if(rowPrefab != null)

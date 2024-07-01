@@ -72,6 +72,8 @@ public class SpaceData : ScriptableObject
     public Sprite spaceSprite;
     [Header("Material related")]
     public List<Material> spaceMaterials;
+    [Header("Audio")]
+    public AudioData StepSoundClipsData;
 
     //Test for finding all classes that implement the interface for spaceEffects. We need to compile a list above for the user to select from in a dropdown.
     

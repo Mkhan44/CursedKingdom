@@ -26,6 +26,7 @@ public class DuelResultPhaseState : BaseState
 
     public void TurnOffCameraAfterDuel()
     {
+        Audio_Manager.Instance.TransitionBetweenDuelAndBoardMusic();
         duelPhaseSM.FadePanelCompletedFadingDuel -= TurnOffCameraAfterDuel;
         duelPhaseSM.gameplayManager.GameplayCameraManagerRef.TurnOffVirtualDuelCamera();
 

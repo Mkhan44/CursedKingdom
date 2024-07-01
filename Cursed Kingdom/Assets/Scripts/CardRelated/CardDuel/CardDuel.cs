@@ -29,6 +29,7 @@ public class CardDuel : MonoBehaviour , IPointerClickHandler
 	[SerializeField] private Image cardBorderImage;
 	[SerializeField] private CardType thisCardType;
 	[SerializeField] private Button clickableAreaButton;
+	[SerializeField] private Image clickableAreaImage;
 	[SerializeField] private GameplayManager gameplayManager;
 	[SerializeField] private Image backgroundSelectedGlow;
 	[SerializeField] private Animator parentAnimator;
@@ -41,12 +42,15 @@ public class CardDuel : MonoBehaviour , IPointerClickHandler
 	[SerializeField] private Vector3 hoveredSize;
 	[SerializeField] private Color originalBackgroundGlowColor;
 
-	public DuelPhaseSM DuelPhaseSMReference { get => duelPhaseSMReference; set => duelPhaseSMReference = value; }
+    [SerializeField] private bool isClickable;
+
+    public DuelPhaseSM DuelPhaseSMReference { get => duelPhaseSMReference; set => duelPhaseSMReference = value; }
 	public TextMeshProUGUI TitleText { get => titleText; set => titleText = value; }
 	public Image CardArtworkImage { get => cardArtworkImage; set => cardArtworkImage = value; }
 	public Image CardBorderImage { get => cardBorderImage; set => cardBorderImage = value; }
 	public CardType ThisCardType { get => thisCardType; }
 	public Button ClickableAreaButton { get => clickableAreaButton; set => clickableAreaButton = value; }
+    public Image ClickableAreaImage { get => clickableAreaImage; set => clickableAreaImage = value; }
 	public Image BackgroundSelectedGlow { get => backgroundSelectedGlow; set => backgroundSelectedGlow = value; }
 	public Animator ParentAnimator { get => parentAnimator; set => parentAnimator = value; }
 	public Animator TextureAnimator { get => textureAnimator; set => textureAnimator = value; }
@@ -57,12 +61,13 @@ public class CardDuel : MonoBehaviour , IPointerClickHandler
 	public Vector3 OriginalSize { get => originalSize; set => originalSize = value; }
 	public Vector3 HoveredSize { get => hoveredSize; set => hoveredSize = value; }
 	public Color OriginalBackgroundGlowColor { get => originalBackgroundGlowColor; set => originalBackgroundGlowColor = value; }
+    public bool IsClickable { get => isClickable; set => isClickable = value; }
 
     public virtual void SetupCard(Card cardReference)
     {
 		TitleText.text = cardReference.TitleText.text;
 		CardArtworkImage.sprite = cardReference.CardArtworkImage.sprite;
-
+		IsClickable = true;
         //TitleText.text = cardData.CardTitle;
         //cardArtworkImage.sprite = cardData.CardArtwork;
         //OriginalSize = new Vector3(this.transform.localScale.x, this.transform.localScale.y, this.transform.localScale.z);
