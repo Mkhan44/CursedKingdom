@@ -205,8 +205,7 @@ public class GameplayManager : MonoBehaviour
 		cinemachineVirtualCameras[1].LookAt = spaces[spaces.Count - 1].gameObject.transform;
 		cinemachineVirtualCameras[1].Follow = spaces[spaces.Count - 1].gameObject.transform;
 
-
-		foreach (CinemachineVirtualCamera camera in cinemachineVirtualCameras)
+        foreach (CinemachineVirtualCamera camera in cinemachineVirtualCameras)
 		{
 			camera.enabled = false;
 		}

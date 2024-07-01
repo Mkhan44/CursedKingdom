@@ -308,6 +308,10 @@ public class Audio_Manager : MonoBehaviour
             {
                 StopMusic(CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource);
             }
+            else
+            {
+                CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.Pause();
+            }
         }
         
 

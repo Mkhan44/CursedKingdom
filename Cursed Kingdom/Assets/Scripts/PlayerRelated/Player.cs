@@ -31,11 +31,13 @@ public class Player : MonoBehaviour
 	public event Action<Player> DoneActivatingEliteAbilityEffect;
 	public event Action<Player> StatusEffectUpdateCompleted;
 	public event Action<Player> HasBeenDefeated;
+	public event Action<Player> BillboardLookAtCamera;
+    public event Action<Player> BillboarForwardCamera;
 
-	//Events End
+    //Events End
 
-	//Consts
-	[SerializeField] public const string NEGATIVEEFFECT = "NegativeEffect";
+    //Consts
+    [SerializeField] public const string NEGATIVEEFFECT = "NegativeEffect";
 	[SerializeField] public const string POSITIVEEFFECT = "PositiveEffect";
 	[SerializeField] public const string ISCASTING = "IsCasting";
 	[SerializeField] public const string ISHURT = "IsHurt";
@@ -337,8 +339,10 @@ public class Player : MonoBehaviour
         GameplayManagerRef.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += ApplyCurrentSpaceEffects;
         HasBeenDefeated += GameplayManagerRef.CheckIfAllPlayersButOneDefeated;
 
-        //DEBUG
-        // UseEliteAbility();
+		//DEBUG
+		// UseEliteAbility();
+
+
     }
 
 	public void DebugTheSpace()
@@ -3017,6 +3021,16 @@ public class Player : MonoBehaviour
 	{
 		HasBeenDefeated?.Invoke(this);
     }
+
+	public void BillboardLookAtCameraEvent()
+	{
+		BillboardLookAtCamera?.Invoke(this);
+    }
+
+	public void BillboardForwardCameraEvent()
+	{
+		BillboardLookAtCamera?.Invoke(this);
+	}
     #endregion
 
     #endregion

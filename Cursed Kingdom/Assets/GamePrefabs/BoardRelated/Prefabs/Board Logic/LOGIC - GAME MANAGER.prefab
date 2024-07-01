@@ -335,6 +335,11 @@ MonoBehaviour:
   duelCamera: {fileID: 0}
   cutInCameraPlayerFollowVirtualCamAnimator: {fileID: 0}
   cutInCameraDisplayRawImage: {fileID: 0}
+  currentBillboardCamera: {fileID: 0}
+  isBillboardingLookAtCamera: 0
+  lockXBillboard: 1
+  lockYBillboard: 0
+  lockZBillboard: 0
   currentPlayerCamStartingFOV: 45
   currentPlayerCamZoomFOV: 25
   timeToWaitForCastingPlayerToBeginCasting: 0.8
@@ -430,7 +435,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  currentlyPlayingTrack: {fileID: 0}
   SFXHolder: {fileID: 7114543616133635886}
   sfxAudioSourcePrefab: {fileID: 6802419153013207896, guid: 0e3dff5e50a646642a7840ca0935f735, type: 3}
   sfxSources:

@@ -76,7 +76,6 @@ public class GameplayMovementPhaseState : BaseState
 		base.Exit();
 		playerStartedMoving = false;
         checkedForDuelOpponents = false;
-
     }
 
     public void ActivatePopupForDuelNotDuel(List<Player> playersToDuelAgainst)
