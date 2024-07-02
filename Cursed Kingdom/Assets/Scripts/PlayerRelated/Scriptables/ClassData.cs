@@ -2,6 +2,7 @@
 //All code is written by me (Above name) unless otherwise stated via comments below.
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Class Data", menuName = "Player/Class Data", order = 0)]
 public class ClassData : ScriptableObject
 {
+    [Serializable]
+    public class ClassAudioData
+    {
+        public AudioData defaultWalkingSoundData;
+        //AudioData 
+    }
+
     public enum ClassType
     {
         Magician,
@@ -36,5 +44,5 @@ public class ClassData : ScriptableObject
     public AbilityData abilityData;
     public EliteAbilityData eliteAbilityData;
     public List<NegativeCooldownEffects> negativeCooldownEffects;
-    public AudioData defaultWalkingSoundsData;
+    public ClassAudioData ClassAudioDataHolder;
 }

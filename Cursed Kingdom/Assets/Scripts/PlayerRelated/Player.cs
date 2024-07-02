@@ -2911,50 +2911,41 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    #region Audio Related
+    #region Audio/Sound Related
 
 	//Most of these methods are going to be played via an animation event.
 	public void PlayStepSound(int numSoundToPlay)
 	{
-		if(ClassData.defaultWalkingSoundsData == null)
+		if(ClassData.ClassAudioDataHolder.defaultWalkingSoundData == null)
 		{
 			Debug.LogWarning("No step sound audio data on the class data scriptable!");
 			return;
 		}
 
-		if(numSoundToPlay > ClassData.defaultWalkingSoundsData.SfxClips.Count || numSoundToPlay <= 0)
+		if(numSoundToPlay > ClassData.ClassAudioDataHolder.defaultWalkingSoundData.SfxClips.Count || numSoundToPlay <= 0)
 		{
-			Debug.LogError($"You're trying to play a sound that exceeds the index of the array. There are {ClassData.defaultWalkingSoundsData.SfxClips.Count} sounds in the audio data but you're trying to play sound # {numSoundToPlay}");
+			Debug.LogError($"You're trying to play a sound that exceeds the index of the array. There are {ClassData.ClassAudioDataHolder.defaultWalkingSoundData.SfxClips.Count} sounds in the audio data but you're trying to play sound # {numSoundToPlay}");
 			return;
 		}
 
 		int indexToPlay = 0;
-		//if(playRandom)
-		//{
-		//	indexToPlay = Random.Range(0, ClassData.defaultWalkingSoundsData.SfxClips.Count);
-		//}
-		//else
-		//{
-		//	indexToPlay = numSoundToPlay - 1;
-  //      }
-
         indexToPlay = numSoundToPlay - 1;
 
-        Audio_Manager.Instance.PlaySFX(ClassData.defaultWalkingSoundsData.SfxClips[indexToPlay].Clip);
+        Audio_Manager.Instance.PlaySFX(ClassData.ClassAudioDataHolder.defaultWalkingSoundData.SfxClips[indexToPlay].Clip);
     }
 
 	public void PlayStepSoundRandom()
 	{
-        if (ClassData.defaultWalkingSoundsData == null)
+        if (ClassData.ClassAudioDataHolder.defaultWalkingSoundData == null)
         {
             Debug.LogWarning("No step sound audio data on the class data scriptable!");
             return;
         }
 
         int indexToPlay = 0;
-        indexToPlay = Random.Range(0, ClassData.defaultWalkingSoundsData.SfxClips.Count);
+        indexToPlay = Random.Range(0, ClassData.ClassAudioDataHolder.defaultWalkingSoundData.SfxClips.Count);
 
-        Audio_Manager.Instance.PlaySFX(ClassData.defaultWalkingSoundsData.SfxClips[indexToPlay].Clip);
+        Audio_Manager.Instance.PlaySFX(ClassData.ClassAudioDataHolder.defaultWalkingSoundData.SfxClips[indexToPlay].Clip);
     }
 
     #endregion
