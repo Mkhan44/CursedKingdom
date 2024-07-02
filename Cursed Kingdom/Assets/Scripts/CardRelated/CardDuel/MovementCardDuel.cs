@@ -68,5 +68,10 @@ public class MovementCardDuel : CardDuel
         {
             DuelPhaseSMReference.duelSelectCardsToUsePhaseState.DeselectMovementCard(movementCardReference);
         }
+
+        if(DuelPhaseSMReference.GetCurrentState() == DuelPhaseSMReference.duelSelectCardsToUsePhaseState && !IsClickable)
+        {
+            DialogueBoxPopup.instance.ActivatePopupWithJustText("You can't deslect this card.", 1.0f);
+        }
     }
 }

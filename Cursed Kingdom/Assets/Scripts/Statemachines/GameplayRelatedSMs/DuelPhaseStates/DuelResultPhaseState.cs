@@ -46,6 +46,7 @@ public class DuelResultPhaseState : BaseState
             if (duelPhaseSM.CurrentWinners.Count > 1)
             {
                 playerInfo.PlayerInDuel.TakeDamage(playerInfo.DamageToTake);
+                DiscardSelectedCardsAfterDuel(playerInfo);
                 continue;
 
                 //if (duelPhaseSM.CurrentWinners.Count == duelPhaseSM.PlayersInCurrentDuel.Count)
@@ -97,23 +98,28 @@ public class DuelResultPhaseState : BaseState
                 }
             }
 
-            //We'll need to resolve end of duel movement cards before discarding them here.
-            for (int i = 0; i < playerInfo.SelectedSupportCards.Count; i++)
-            {
-                int index = i;
-                playerInfo.SelectedSupportCards[index].gameObject.SetActive(true);
-                playerInfo.SelectedSupportCards[index].transform.localScale = playerInfo.SelectedSupportCards[index].OriginalSize;
-                playerInfo.PlayerInDuel.DiscardFromHand(playerInfo.SelectedSupportCards[index].ThisCardType, playerInfo.SelectedSupportCards[index]);
-            }
+            DiscardSelectedCardsAfterDuel(playerInfo);
+        }
+    }
 
-            for (int j = 0; j < playerInfo.SelectedMovementCards.Count; j++)
-            {
-                int index = j;
-                playerInfo.SelectedMovementCards[index].gameObject.SetActive(true);
-                playerInfo.SelectedMovementCards[index].transform.localScale = playerInfo.SelectedMovementCards[index].OriginalSize;
-                playerInfo.SelectedMovementCards[index].ResetMovementValue();
-                playerInfo.PlayerInDuel.DiscardFromHand(playerInfo.SelectedMovementCards[index].ThisCardType, playerInfo.SelectedMovementCards[index]);
-            }
+    private void DiscardSelectedCardsAfterDuel(DuelPlayerInformation playerInfo)
+    {
+        //We'll need to resolve end of duel movement cards before discarding them here.
+        for (int i = 0; i < playerInfo.SelectedSupportCards.Count; i++)
+        {
+            int index = i;
+            playerInfo.SelectedSupportCards[index].gameObject.SetActive(true);
+            playerInfo.SelectedSupportCards[index].transform.localScale = playerInfo.SelectedSupportCards[index].OriginalSize;
+            playerInfo.PlayerInDuel.DiscardFromHand(playerInfo.SelectedSupportCards[index].ThisCardType, playerInfo.SelectedSupportCards[index]);
+        }
+
+        for (int j = 0; j < playerInfo.SelectedMovementCards.Count; j++)
+        {
+            int index = j;
+            playerInfo.SelectedMovementCards[index].gameObject.SetActive(true);
+            playerInfo.SelectedMovementCards[index].transform.localScale = playerInfo.SelectedMovementCards[index].OriginalSize;
+            playerInfo.SelectedMovementCards[index].ResetMovementValue();
+            playerInfo.PlayerInDuel.DiscardFromHand(playerInfo.SelectedMovementCards[index].ThisCardType, playerInfo.SelectedMovementCards[index]);
         }
     }
 

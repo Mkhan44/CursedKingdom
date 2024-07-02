@@ -106,7 +106,7 @@ public class Audio_Manager : MonoBehaviour
 
     public void SetupNewMusicObjects()
     {
-        StopMusic();
+        StopMusic(true);
 
         foreach (Transform child in MusicHolder.transform)
         {
@@ -239,8 +239,15 @@ public class Audio_Manager : MonoBehaviour
                 MusicSources[i].Play();
                 if (volume > 0f)
                 {
-                    CurrentlyPlayingMusicInformation.MusicClip = musicClip;
-                    CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = MusicSources[i];
+                    if(CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource != null)
+                    {
+                        StartCoroutine(FadeBetweenMusicTracks(musicClip, MusicSources[i], volume));
+                    }
+                    else
+                    {
+                        CurrentlyPlayingMusicInformation.MusicClip = musicClip;
+                        CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = MusicSources[i];
+                    }
                 }
                 return;
             }
@@ -256,8 +263,15 @@ public class Audio_Manager : MonoBehaviour
         MusicSources[MusicSources.Count - 1].Play();
         if(volume > 0f)
         {
-            CurrentlyPlayingMusicInformation.MusicClip = musicClip;
-            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = MusicSources[MusicSources.Count - 1];
+            if (CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource != null)
+            {
+                StartCoroutine(FadeBetweenMusicTracks(musicClip, MusicSources[MusicSources.Count - 1], volume));
+            }
+            else
+            {
+                CurrentlyPlayingMusicInformation.MusicClip = musicClip;
+                CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = MusicSources[MusicSources.Count - 1];
+            }
         }
         Debug.LogWarning("All Music clips are playing, we are going to add another source for more clips!");
         return;
@@ -270,23 +284,19 @@ public class Audio_Manager : MonoBehaviour
             volume = defaultMusicVolume;
         }
 
+        audioSourceToPlay.volume = 0f;
+        audioSourceToPlay.Play();
+
         //Fade out other song.
-        if(pausePreviouslyPlayingTrack)
+        if (pausePreviouslyPlayingTrack)
         {
-            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.Pause();
+            StartCoroutine(FadeBetweenMusicTracks(musicClip, audioSourceToPlay, volume, false, true));
         }
         else
         {
-            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume = 0;
+            StartCoroutine(FadeBetweenMusicTracks(musicClip, audioSourceToPlay, volume));
         }
         
-
-        CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = audioSourceToPlay;
-        CurrentlyPlayingMusicInformation.MusicClip = musicClip;
-
-        audioSourceToPlay.loop = loop;
-        audioSourceToPlay.volume = volume;
-        audioSourceToPlay.Play();
     }
 
     //Maybe we change this to be a method called "TransitionBetweenDuelAndBoardMusic" and basically we have something to keep track of if we are playing 'board' music or 'duel' music.
@@ -300,17 +310,17 @@ public class Audio_Manager : MonoBehaviour
 
         if(CurrentMusicAudioData.BoardAndDuelAreSynced)
         {
-            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume = 0f;
+            //CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume = 0f;
         }
         else
         {
             if(CurrentlyPlayingMusicInformation.MusicClip.TypeOfMusic == AudioData.MusicType.Duel)
             {
-                StopMusic(CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource);
+               // StopMusic(CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource);
             }
             else
             {
-                CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.Pause();
+               // CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.Pause();
             }
         }
         
@@ -331,9 +341,7 @@ public class Audio_Manager : MonoBehaviour
                                     {
                                         if (audioSource.clip == musicClip.Clip)
                                         {
-                                            audioSource.volume = volume;
-                                            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = audioSource;
-                                            CurrentlyPlayingMusicInformation.MusicClip = musicClip;
+                                            StartCoroutine(FadeBetweenMusicTracks(musicClip, audioSource, volume));
                                             break;
                                         }
                                     }
@@ -368,9 +376,8 @@ public class Audio_Manager : MonoBehaviour
                                         {
                                             audioSource.UnPause();
                                         }
-                                        audioSource.volume = volume;
-                                        CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = audioSource;
-                                        CurrentlyPlayingMusicInformation.MusicClip = musicClip;
+
+                                        StartCoroutine(FadeBetweenMusicTracks(musicClip, audioSource, volume));
                                         break;
                                     }
                                 }
@@ -391,6 +398,9 @@ public class Audio_Manager : MonoBehaviour
 
         CurrentMusicAudioData = audioData;
         
+        //Fade out whatever the current playing track is.
+
+
         //Only 1 track so just play that one.
         if (CurrentMusicAudioData.MusicClips.Count == 1f)
         {
@@ -432,89 +442,111 @@ public class Audio_Manager : MonoBehaviour
                 continue;
             }
         }
+    }
 
-        //Prolly need to call this function BEFORE swapping the tracks...
-       // StartCoroutine(fadeBetweenTimeswaps(CurrentlyPlayingTrack, 1f));
+    private IEnumerator FadeBetweenMusicTracks(AudioData.MusicClip musicClipToPlay, AudioSource sourceToPlay, float targetVolume, bool fadeBetweenSimultaneously = true, bool stopPreviousTrack = false, bool pausePreviousTrack = false, float delayBetweenTracks = 0.0f)
+    {
 
+        //Can't exceed 1 so we don't want an infinite loop.
+        if (targetVolume > 1)
+        {
+            targetVolume = 1;
+        }
+        else if (targetVolume < 0)
+        {
+            targetVolume = 0.1f;
+        }
 
-        //switch(theEra)
-        //{
-        //    case Level_Manager.timePeriod.Prehistoric:
-        //        {
-        //            bonusSource.clip = prehistoricMusic[0];
-        //            easySource.clip = prehistoricMusic[1];
-        //            mediumSource.clip = prehistoricMusic[2];
-        //            hardPauseSource.clip = prehistoricMusic[3];
-        //            break;
-        //        }
-        //    case Level_Manager.timePeriod.FeudalJapan:
-        //        {
-        //            bonusSource.clip = feudalJapanMusic[0];
-        //            easySource.clip = feudalJapanMusic[1];
-        //            mediumSource.clip = feudalJapanMusic[2];
-        //            hardPauseSource.clip = feudalJapanMusic[3];
-        //            break;
-        //        }
-        //    case Level_Manager.timePeriod.WildWest:
-        //        {
-        //            bonusSource.clip = wildWestMusic[0];
-        //            easySource.clip = wildWestMusic[1];
-        //            mediumSource.clip = wildWestMusic[2];
-        //            hardPauseSource.clip = wildWestMusic[3];
-        //            break;
-        //        }
-        //    case Level_Manager.timePeriod.Medieval:
-        //        {
-        //            bonusSource.clip = medMusic[0];
-        //            easySource.clip = medMusic[1];
-        //            mediumSource.clip = medMusic[2];
-        //            hardPauseSource.clip = medMusic[3];
-        //            break;
-        //        }
-        //    case Level_Manager.timePeriod.Future:
-        //        {
-        //            bonusSource.clip = futureMusic[0];
-        //            easySource.clip = futureMusic[1];
-        //            mediumSource.clip = futureMusic[2];
-        //            hardPauseSource.clip = futureMusic[3];
-        //            break;
-        //        }
-        //    case Level_Manager.timePeriod.tutorial:
-        //        {
+        //Do this if we want to emulate fading between difficulties in RPRT.
+        if (fadeBetweenSimultaneously)
+        {
+            while (CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume > 0f && sourceToPlay.volume < targetVolume)
+            {
+                CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume -= 0.1f;
 
-        //            StartCoroutine(tutorialPlay());
-        //            return;
-        //            break;
-        //        }
-        //    default:
-        //        {
-        //            break;  
-        //        }
-        //}
+                sourceToPlay.volume += 0.1f;
 
-        //DEBUG.
+                yield return new WaitForSeconds(0.1f);
+            }
 
+            if (stopPreviousTrack)
+            {
+                CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.Stop();
+            }
 
+            if (pausePreviousTrack)
+            {
+                CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.Pause();
+            }
 
-        /*
-        easySource.volume = 0f;
-        mediumSource.volume = 0f;
-        hardPauseSource.volume = 0f;
-        bonusSource.volume = 0f;
-        */
+            CurrentlyPlayingMusicInformation.MusicClip = musicClipToPlay;
+            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = sourceToPlay;
 
+            yield break;
+        }
 
-        //Have coroutine fade out the current tracks and then play the new ones.
-        //Fade out should probably be before the swap above.
+        //Do this if we want to fade out the current song, have a slight delay, and then fade in the new song. Similar to time period switching in RPRT.
+        while(CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume > 0f)
+        {
+            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume -= 0.1f;
 
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        if(stopPreviousTrack)
+        {
+            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.Stop();
+        }
+
+        if(pausePreviousTrack)
+        {
+            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.Pause();
+        }
+
+        yield return new WaitForSeconds(delayBetweenTracks);
+
+        CurrentlyPlayingMusicInformation.MusicClip = musicClipToPlay;
+        CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource = sourceToPlay;
+
+        while(CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume < targetVolume)
+        {
+            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume += 0.1f;
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return null;
+    }
+
+    private IEnumerator FadeOutCurrentMusicTrack(AudioSource audioSource, bool stopTrackAfterFading = false)
+    {
+        while (audioSource.volume > 0f)
+        {
+            audioSource.volume -= 0.1f;
+
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        if(stopTrackAfterFading)
+        {
+            audioSource.Stop();
+        }
+
+        yield return null;
     }
 
     public void StopMusic(bool fadeOut = false)
     {
         //Do a coroutine that fades it and throws an event prolly.
-        if(fadeOut)
+        if(fadeOut && CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource != null)
         {
-
+            StartCoroutine(FadeOutCurrentMusicTrack(CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource, true));
+            for (int i = 0; i < MusicSources.Count; i++)
+            {
+                if (MusicSources[i].isPlaying && MusicSources[i] != CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource)
+                {
+                    MusicSources[i].Stop();
+                }
+            }
             return;
         }
 
@@ -531,7 +563,7 @@ public class Audio_Manager : MonoBehaviour
     {
         if(fadeout)
         {
-
+            StartCoroutine(FadeOutCurrentMusicTrack(audioSourceToStop, true));
             return;
         }
 
@@ -626,46 +658,6 @@ public class Audio_Manager : MonoBehaviour
      
     }
 
-    IEnumerator fadeBetweenTimeswaps(AudioSource currentTrackToFade, float fadeInTargetVolume)
-    {
-        //Fade out current track.
-        
-        //if(Wave_Spawner.Instance != null)
-        //{
-        //    while(!Wave_Spawner.Instance.getIntroFinishedStatus())
-        //    {
-        //        yield return null;
-        //    }
-        //}
-
-        //while(currentTrackToFade.volume > 0)
-        //{
-        //    Debug.Log("During Timeswap loop: " + currentTrackToFade.volume + " = the volume of current track");
-        //    if(currentTrackToFade.volume > 0)
-        //    {
-        //        currentTrackToFade.volume -= 0.1f;
-        //    }
-
-        //    yield return new WaitForSeconds(0.2f);
-        //}
-
-        //yield return new WaitForSeconds(0.5f);
-
-        //bonusSource.Play();
-        //easySource.Play();
-        //mediumSource.Play();
-        //hardPauseSource.Play();
-
-        ////Fade in new track.
-        //while (easySource.volume < fadeInTargetVolume)
-        //{
-        //    easySource.volume += 0.1f;
-        //    yield return new WaitForSeconds(0.1f);
-        //}
-
-        //currentlyPlayingTrack = easySource;
-        yield return null;
-    }
     IEnumerator fadeBetweenDifficultyTracks(AudioSource currentTrackToFadeOut, AudioSource nextTrackToFadeIn, float fadeInTargetVolume)
     {
         //CurrentlyPlayingTrack = nextTrackToFadeIn;
