@@ -4,12 +4,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Audio_Manager : MonoBehaviour
 {
     public static Audio_Manager Instance;
+
+    public event Action<AudioData> NewMusicObjectsSetup;
+
 
     [Header("Gameobject music holders")]
     [SerializeField] private GameObject MusicHolder;
@@ -51,36 +55,9 @@ public class Audio_Manager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        //Gameplay scene, play music.
-
-        //if (Level_Manager.Instance.getThisLevelType() == Level_Manager.levelType.normal)
-        //{
-        //    tutorialSource.gameObject.SetActive(false);
-        //    currentlyPlayingTrack = easySource;
-        //}
-        //else
-        //{
-        //    easySource.gameObject.SetActive(false);
-        //    mediumSource.gameObject.SetActive(false);
-        //    bonusSource.gameObject.SetActive(false);
-        //    hardPauseSource.gameObject.SetActive(false);
-        //    currentlyPlayingTrack = tutorialSource;
-
-        //}
-
-        //setMusicTracks(Level_Manager.Instance.getTimePeriod());
+        NewMusicObjectsSetup += SetupMusicTracks;
 
         MusicSources = new();
-        //for(int i = 0; i < 5; i++)
-        //{
-        //    GameObject tempObj = Instantiate(musicAudioSourcePrefab, this.transform);
-        //    tempObj.transform.SetParent(MusicHolder.transform);
-        //    MusicSources.Add(tempObj.GetComponent<AudioSource>());
-        //    tempObj.name = "MusicSource_" + MusicSources.Count;
-        //}
-        
-
-
         SfxSources = new();
         SetupNewSFXObjects();
 
@@ -104,9 +81,9 @@ public class Audio_Manager : MonoBehaviour
         }
     }
 
-    public void SetupNewMusicObjects()
+    public void SetupNewMusicObjects(AudioData newAudioData)
     {
-        StopMusic(true);
+        StopMusic();
 
         foreach (Transform child in MusicHolder.transform)
         {
@@ -120,6 +97,8 @@ public class Audio_Manager : MonoBehaviour
             tempObj.name = "MusicSource_" + i;
             MusicSources[i] = tempObj.GetComponent<AudioSource>();
         }
+
+        SetupNewMusicObjectsEvent(newAudioData);
     }
 
     #region SFX Methods
@@ -394,12 +373,9 @@ public class Audio_Manager : MonoBehaviour
     }
     public void SetupMusicTracks(AudioData audioData)
     {
-        SetupNewMusicObjects();
-
         CurrentMusicAudioData = audioData;
-        
-        //Fade out whatever the current playing track is.
 
+        //Fade out whatever the current playing track is.
 
         //Only 1 track so just play that one.
         if (CurrentMusicAudioData.MusicClips.Count == 1f)
@@ -534,6 +510,27 @@ public class Audio_Manager : MonoBehaviour
         yield return null;
     }
 
+    public IEnumerator FadeOutCurrentMusicTrackThenSetupNewMusicTracks(AudioData audioData)
+    {
+        if(CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource == null)
+        {
+            SetupNewMusicObjects(audioData);
+            yield break;
+        }
+
+        while (CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume > 0f)
+        {
+            CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.volume -= 0.1f;
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource.Stop();
+
+        SetupNewMusicObjects(audioData);
+        yield return null;
+    }
+
     public void StopMusic(bool fadeOut = false)
     {
         //Do a coroutine that fades it and throws an event prolly.
@@ -570,94 +567,6 @@ public class Audio_Manager : MonoBehaviour
         audioSourceToStop.Stop();
     }
 
-    //IEnumerator tutorialPlay()
-    //{
-       
-    //    float introLength;
-    //    introLength = tutorialMusicIntro.length;
-    //    tutorialSource.clip = tutorialMusicIntro;
-    //    tutorialSource.volume = 1f;
-    //    tutorialSource.loop = false;
-    //    tutorialSource.Play();
-     
-    //    yield return new WaitForSecondsRealtime(introLength - 0.01f);
-
-    //    tutorialSource.Stop();
-    //    tutorialSource.clip = tutorialMusicLoop;
-    //    tutorialSource.loop = true;
-    //    tutorialSource.volume = 1f;
-    //    tutorialSource.Play();
-
-    //}
-
-    //Change the music based on the difficulty we are in. If it's a bonus/timeswap wave, use the Bonus music track.
-    public void ChangeMusicTrack()
-    {
-        //if(isSpecial)
-        //{
-        //    StartCoroutine(fadeBetweenDifficultyTracks(currentlyPlayingTrack, bonusSource, 1f));
-        //    /*
-        //    easySource.volume = 0f;
-        //    mediumSource.volume = 0f;
-        //    hardPauseSource.volume = 0f;
-        //    bonusSource.volume = 1f;
-        //    */
-        //    //  currentlyPlayingTrack = bonusSource;
-        //    return;
-        //}
-
-        //switch(theDifficulty)
-        //{
-        //    case Wave_Spawner.waveDiff.easy:
-        //        {
-        //            StartCoroutine(fadeBetweenDifficultyTracks(currentlyPlayingTrack, easySource, 1f));
-
-        //            /*
-        //            easySource.volume = 1f;
-        //            mediumSource.volume = 0f;
-        //            hardPauseSource.volume = 0f;
-        //            bonusSource.volume = 0f;
-        //            */
-        //            // currentlyPlayingTrack = easySource;
-
-        //            break;
-        //        }
-        //    case Wave_Spawner.waveDiff.medium:
-        //        {
-        //            StartCoroutine(fadeBetweenDifficultyTracks(currentlyPlayingTrack, mediumSource, 1f));
-
-        //            /*
-        //            easySource.volume = 0f;
-        //            mediumSource.volume = 1f;
-        //            hardPauseSource.volume = 0f;
-        //            bonusSource.volume = 0f;
-        //            */
-        //           // currentlyPlayingTrack = mediumSource;
-        //            break;
-        //        }
-        //    case Wave_Spawner.waveDiff.hardPause:
-        //        {
-        //            StartCoroutine(fadeBetweenDifficultyTracks(currentlyPlayingTrack, hardPauseSource, 1f));
-
-        //            /*
-        //            easySource.volume = 0f;
-        //            mediumSource.volume = 0f;
-        //            hardPauseSource.volume = 1f;
-        //            bonusSource.volume = 0f;
-        //            */
-        //            //currentlyPlayingTrack = hardPauseSource;
-        //            break;
-        //        }
-        //    default:
-        //        {
-        //            Debug.LogWarning("We couldn't find the difficulty in the switch!");
-        //            break;
-        //        }
-        //}
-
-     
-    }
-
     IEnumerator fadeBetweenDifficultyTracks(AudioSource currentTrackToFadeOut, AudioSource nextTrackToFadeIn, float fadeInTargetVolume)
     {
         //CurrentlyPlayingTrack = nextTrackToFadeIn;
@@ -689,13 +598,6 @@ public class Audio_Manager : MonoBehaviour
         //currentlyPlayingTrack = nextTrackToFadeIn;
         yield return null;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void muteCurrentTrack()
     {
         //CurrentlyPlayingTrack.volume = 0f;
@@ -704,5 +606,12 @@ public class Audio_Manager : MonoBehaviour
     public void unmuteCurrentTrack()
     {
         //CurrentlyPlayingTrack.volume = 1f;
+    }
+
+    //Events
+
+    public void SetupNewMusicObjectsEvent(AudioData newAudioData)
+    {
+        NewMusicObjectsSetup?.Invoke(newAudioData);
     }
 }

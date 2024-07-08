@@ -250,7 +250,15 @@ public class SupportCard : Card
 							return;
 						}
 
-						List<SupportCard> supportCards = new List<SupportCard>();
+						CheckIfCostsCanBePaid(out bool canCostBePaid);
+                        if (!canCostBePaid)
+                        {
+                            GameplayManager.HandDisplayPanel.ShrinkHand();
+                            transform.localScale = OriginalSize;
+                            CardIsActiveHovered = false;
+                            return;
+                        }
+                        List<SupportCard> supportCards = new List<SupportCard>();
 						supportCards.Add(this);
 						GameplayManager.DuelPhaseSMRef.duelSelectCardsToUsePhaseState.SelectSupportCard(supportCards);
 					}
@@ -279,7 +287,35 @@ public class SupportCard : Card
 		GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled.PlayerInDuel.ShowHand();
 	}
 
-	public void AttemptToUseSupportCard(Player playerUsingCard, bool isCurrentPlayer = true)
+	//For duels.
+	private void CheckIfCostsCanBePaid(out bool canCostBePaid)
+	{
+		canCostBePaid = false;
+        for (int i = 0; i < SupportCardData.supportCardEffects.Count; i++)
+        {
+            if (SupportCardData.supportCardEffects[i].supportCardEffectData.IsACost)
+            {
+                if (!SupportCardData.supportCardEffects[i].supportCardEffectData.CanCostBePaid(GameplayManager.DuelPhaseSMRef.CurrentPlayerBeingHandled))
+                {
+                    Debug.LogWarning($"Cost of {SupportCardData.supportCardEffects[i].supportCardEffectData.name} can't be paid. Can't execute support card effects.");
+                    //DialogueBoxPopup.instance.ActivatePopupWithJustText($"Cost of {SupportCardData.supportCardEffects[i].supportCardEffectData.name} can't be paid.", 2.0f);
+                    canCostBePaid = false;
+                    break;
+                }
+                else
+                {
+                    canCostBePaid = true;
+                }
+            }
+            else
+            {
+                canCostBePaid = true;
+            }
+        }
+	}
+
+
+    public void AttemptToUseSupportCard(Player playerUsingCard, bool isCurrentPlayer = true)
 	{
 		bool canCostBePaid = false;
 		ApplySupportCardEffects(playerUsingCard, out canCostBePaid);
@@ -376,7 +412,7 @@ public class SupportCard : Card
 			{
 				if (!SupportCardData.supportCardEffects[i].supportCardEffectData.CanCostBePaid(player))
 				{
-					Debug.LogWarning($"Cost of {SupportCardData.supportCardEffects[i].supportCardEffectData.name} can't be paid. Can't execute space effects.");
+					Debug.LogWarning($"Cost of {SupportCardData.supportCardEffects[i].supportCardEffectData.name} can't be paid. Can't execute support card effects.");
 					//DialogueBoxPopup.instance.ActivatePopupWithJustText($"Cost of {SupportCardData.supportCardEffects[i].supportCardEffectData.name} can't be paid.", 2.0f);
 					canAllCostsBePaid = false;
 					break;

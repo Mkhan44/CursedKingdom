@@ -60,10 +60,10 @@ public class GameplayStartPhaseState : BaseState
         }
 
 
-        if(Audio_Manager.Instance.CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource == null)
+        if(Audio_Manager.Instance.CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource == null || (Audio_Manager.Instance.CurrentMusicAudioData != null && Audio_Manager.Instance.CurrentMusicAudioData != ourRowAudioData))
         {
             //Pass in our audioData and play music from there since it's the first time we're playing music.
-            Audio_Manager.Instance.SetupMusicTracks(ourRowAudioData);
+            Audio_Manager.Instance.StartCoroutine(Audio_Manager.Instance.FadeOutCurrentMusicTrackThenSetupNewMusicTracks(ourRowAudioData));
         }
 
         bool isSameMusicAlreadyPlaying = false;

@@ -57,6 +57,27 @@ public class ExtraDamageWithStatusEffect : SupportCardEffectData, ISupportEffect
         base.EffectOfCard(duelPlayerInformation, cardPlayed);
     }
 
+    public override bool CanCostBePaid(DuelPlayerInformation duelPlayerInformation, Card cardPlayed = null)
+    {
+        bool canCostBePaid = false;
+
+        foreach(DuelPlayerInformation duelPlayerInfo in duelPlayerInformation.PlayerInDuel.GameplayManagerRef.DuelPhaseSMRef.PlayersInCurrentDuel)
+        {
+            if(duelPlayerInfo != duelPlayerInformation && (duelPlayerInfo.PlayerInDuel.IsPoisoned || duelPlayerInfo.PlayerInDuel.IsCursed))
+            {
+                canCostBePaid = true;
+                break;
+            }
+        }
+
+        if(!canCostBePaid)
+        {
+            DialogueBoxPopup.instance.ActivatePopupWithJustText("No opponent's are afflicted with status effects currently!", 1.5f);
+        }
+
+        return canCostBePaid;
+    }
+
     public override void CompletedEffect(Player playerReference)
     {
         //Reset it cause this is a scriptable...Prolly not the best way of doing this.

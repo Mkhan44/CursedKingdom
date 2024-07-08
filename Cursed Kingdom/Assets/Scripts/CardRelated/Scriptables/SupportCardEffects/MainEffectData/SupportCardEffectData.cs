@@ -61,6 +61,11 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
         return true;
     }
 
+    public virtual bool CanCostBePaid(DuelPlayerInformation playerDuelInfo, Card cardPlayer = null)
+    {
+        return true;
+    }
+
     public virtual void CompletedEffect(Player playerReference)
     {
         SupportCardEffectCompleted?.Invoke(supportCardThatWasJustUsed);
