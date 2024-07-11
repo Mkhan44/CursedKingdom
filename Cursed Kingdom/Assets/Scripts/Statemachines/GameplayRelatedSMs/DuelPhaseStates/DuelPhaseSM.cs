@@ -42,6 +42,7 @@ public class DuelPhaseSM : BukuStateMachine
 	public Button supportCardsDeselectButton;
 	public Button confirmChoicesButton;
 	public Animator duelFadePanelAnimator;
+	public Animator duelSelectCardsUIAnimator;
 	public GameObject supportCardDuelPrefab;
 	public GameObject movementCardDuelPrefab;
 	public GameObject movementCardDuelHolderPrefab;

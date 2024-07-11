@@ -290,7 +290,8 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 
 	private void Logic()
 	{
-		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, false);
+		
+        duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, false);
 		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetInteger(GameplayCameraManager.ZOOMTOSPOTNUM, (duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled) + 1));
 
 		PhaseDisplay.instance.displayTimeCompleted -= Logic;
@@ -309,5 +310,31 @@ public class DuelSelectCardsToUsePhaseState : BaseState
         duelPhaseSM.movementCardDuelHolderPrefab.SetActive(true);
         duelPhaseSM.supportCardDuelHolderPrefab.SetActive(true);
         duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.ShowHand();
-	}
+        int currentIndex = duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled);
+        string animToPlay = "";
+        switch (currentIndex)
+        {
+            case 0:
+                {
+                    animToPlay = "Spot1";
+                    break;
+                }
+            case 1:
+                {
+                    animToPlay = "Spot2";
+                    break;
+                }
+            case 2:
+                {
+                    animToPlay = "Spot3";
+                    break;
+                }
+            case 3:
+                {
+                    animToPlay = "Spot4";
+                    break;
+                }
+        }
+        duelPhaseSM.duelSelectCardsUIAnimator.Play(animToPlay);
+    }
 }
