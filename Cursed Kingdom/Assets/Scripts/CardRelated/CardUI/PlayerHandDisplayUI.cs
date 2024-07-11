@@ -21,17 +21,18 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
     [SerializeField] private HandUITransform currentActiveTransform;
     [SerializeField] private Animator handUIControlPanelAnimator;
     [SerializeField] private GameplayManager gameplayManagerRef;
+    [SerializeField] private Image expandedHandRaycastImage;
 
     public List<HandUITransform> HandUITransforms { get => handUITransforms; set => handUITransforms = value; }
     public RectTransform SmallCardHolderPanelTransform { get => smallCardHolderPanelTransform; set => smallCardHolderPanelTransform = value; }
     public HandUITransform CurrentActiveTransform { get => currentActiveTransform; set => currentActiveTransform = value; }
     public Animator HandUIControlPanelAnimator { get => handUIControlPanelAnimator; set => handUIControlPanelAnimator = value; }
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
+    public Image ExpandedHandRaycastImage { get => expandedHandRaycastImage; set => expandedHandRaycastImage = value; }
 
     public void AddNewHandUI(RectTransform movementCardHolder, RectTransform supportCardHolder)
     {
         HandUITransform handUITransform = new();
-
 
         handUITransform.MovementCardsHolder = movementCardHolder;
         handUITransform.SupportCardsHolder = supportCardHolder;
@@ -106,6 +107,7 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 
         HandUIControlPanelAnimator.SetBool(menuPopup, true);
         CurrentActiveTransform.IsExpanded = true;
+        ExpandedHandRaycastImage.raycastTarget = true;
     }
 
     public void ShrinkHand(bool waitForAnim = false)
@@ -140,6 +142,8 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         {
             StartCoroutine(WaitForAnimation());
         }
+
+        ExpandedHandRaycastImage.raycastTarget = false;
     }
 
     public IEnumerator WaitForAnimation(float waitTime = 0f)
