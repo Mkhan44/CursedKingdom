@@ -30,10 +30,12 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
     public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
     public Image ExpandedHandRaycastImage { get => expandedHandRaycastImage; set => expandedHandRaycastImage = value; }
 
-    public void AddNewHandUI(RectTransform movementCardHolder, RectTransform supportCardHolder)
+    public void AddNewHandUI(RectTransform movementCardHolder, RectTransform supportCardHolder, Button noMovementCardsInHandButton)
     {
         HandUITransform handUITransform = new();
 
+        handUITransform.NoMovementCardsInHandButton = noMovementCardsInHandButton;
+        handUITransform.NoMovementCardsInHandAnimator = noMovementCardsInHandButton.GetComponent<Animator>();
         handUITransform.MovementCardsHolder = movementCardHolder;
         handUITransform.SupportCardsHolder = supportCardHolder;
         handUITransform.MovementLayoutGroup = movementCardHolder.GetComponent<HorizontalLayoutGroup>();
@@ -74,7 +76,6 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 
     public void ExpandHand(Card.CardType cardTypeToExpand)
     {
-
         Vector2 smallCardHolderAnchorMaxTemp = SmallCardHolderPanelTransform.anchorMax;
         smallCardHolderAnchorMaxTemp.y = 1;
         SmallCardHolderPanelTransform.anchorMax = smallCardHolderAnchorMaxTemp;
@@ -93,7 +94,6 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         }
         else
         {
-
             if (CurrentActiveTransform.MovementAnimator is not null)
             {
                 CurrentActiveTransform.MovementAnimator.SetBool(hidden, true);
@@ -103,6 +103,11 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
             {
                 CurrentActiveTransform.SupportAnimator.SetBool(active, true);
             }
+        }
+
+        if(GameplayManagerRef.GetCurrentPlayer().MovementCardsInHandCount < 1)
+        {
+            CurrentActiveTransform.MovementAnimator.SetBool(hidden, true);
         }
 
         HandUIControlPanelAnimator.SetBool(menuPopup, true);
@@ -132,6 +137,11 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         }
 
         HandUIControlPanelAnimator.SetBool(menuPopup, false);
+
+        if(GameplayManagerRef.GetCurrentPlayer().MovementCardsInHandCount < 1)
+        {
+            CurrentActiveTransform.MovementAnimator.SetBool(hidden, false);
+        }
 
 
         if (waitForAnim)
@@ -219,6 +229,8 @@ public class HandUITransform
     [SerializeField] private RectTransform parentCardHolder;
     [SerializeField] private RectTransform movementCardsHolder;
     [SerializeField] private RectTransform supportCardsHolder;
+    [SerializeField] private Button noMovementCardsInHandButton;
+    [SerializeField] private Animator noMovementCardsInHandAnimator;
     [SerializeField] private Animator movementAnimator;
     [SerializeField] private Animator supportAnimator;
 
@@ -241,6 +253,8 @@ public class HandUITransform
     public RectTransform ParentCardHolder { get => parentCardHolder; set => parentCardHolder = value; }
     public RectTransform MovementCardsHolder { get => movementCardsHolder; set => movementCardsHolder = value; }
     public RectTransform SupportCardsHolder { get => supportCardsHolder; set => supportCardsHolder = value; }
+    public Button NoMovementCardsInHandButton { get => noMovementCardsInHandButton; set => noMovementCardsInHandButton = value; }
+    public Animator NoMovementCardsInHandAnimator { get => noMovementCardsInHandAnimator; set => noMovementCardsInHandAnimator = value; }
     public Animator MovementAnimator { get => movementAnimator; set => movementAnimator = value; }
     public Animator SupportAnimator { get => supportAnimator; set => supportAnimator = value; }
     public Vector2 MovementCardAnchorMaxInitial { get => movementCardAnchorMaxInitial; set => movementCardAnchorMaxInitial = value; }
@@ -256,4 +270,5 @@ public class HandUITransform
     public HorizontalLayoutGroup SupportLayoutGroup { get => supportLayoutGroup; set => supportLayoutGroup = value; }
     public float SupportLayoutGroupInitialSpacing { get => supportLayoutGroupInitialSpacing; set => supportLayoutGroupInitialSpacing = value; }
     public bool IsExpanded { get => isExpanded; set => isExpanded = value; }
+    
 }

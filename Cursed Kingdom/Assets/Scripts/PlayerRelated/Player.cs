@@ -107,6 +107,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private int extraMovementCardUses;
 	[SerializeField] private bool movementCardSelectedForUse;
 	[SerializeField] private bool supportCardSelectedForUse;
+	[SerializeField] private Button noMovementCardsInHandButton;
 
 	[SerializeField] private bool ableToLevelUp;
 	[SerializeField] private ClassData classData;
@@ -144,6 +145,7 @@ public class Player : MonoBehaviour
 	public GameObject MovementCardsInHandHolderPanel { get => movementCardsInHandHolderPanel; set => movementCardsInHandHolderPanel = value; }
 	public GameObject SupportCardsInHandHolderPanel { get => supportCardsInHandHolderPanel; set => supportCardsInHandHolderPanel = value; }
 	public GameObject HandDisplayPanel { get => handDisplayPanel; set => handDisplayPanel = value; }
+	public Button NoMovementCardsInHandButton { get => noMovementCardsInHandButton; set => noMovementCardsInHandButton = value; }
 	public bool IsOnCooldown { get => isOnCooldown; set => isOnCooldown = value; }
 	public bool WentOnCooldownThisTurn { get => wentOnCooldownThisTurn; set => wentOnCooldownThisTurn = value; }
 	public bool IsHandlingAbilityActivation { get => isHandlingAbilityActivation; set => isHandlingAbilityActivation = value; }
@@ -246,8 +248,7 @@ public class Player : MonoBehaviour
 	public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
 	public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
 	public Animator Animator { get => animator; set => animator = value; }
-
-	
+    
 
     public void InitializePlayer(ClassData data)
 	{
@@ -1775,7 +1776,7 @@ public class Player : MonoBehaviour
 			{
                 MovementCard movementCard = (MovementCard)card;
                 movementCard.AttemptToMove(this);
-				gameplayManagerRef.UseMovementCardNoCardsInHandButton.gameObject.SetActive(false);
+				NoMovementCardsInHandButton.gameObject.SetActive(false);
 				break;
 			}
 		}
@@ -1858,6 +1859,10 @@ public class Player : MonoBehaviour
 
 		MovementCardsInHandHolderPanel.SetActive(true);
 		SupportCardsInHandHolderPanel.SetActive(true);
+		if(!NoMovementCardsInHandButton.IsActive() && MovementCardsInHandCount < 1 && GameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState() == GameplayManagerRef.GameplayPhaseStatemachineRef.gameplayMovementPhaseState)
+		{
+			NoMovementCardsInHandButton.gameObject.SetActive(true);
+		}
 
 		//For Curse animation on cards.
 		if (IsCursed)
@@ -1872,6 +1877,10 @@ public class Player : MonoBehaviour
 		//GameplayManagerRef.HandDisplayPanel.ShrinkHand(true);
 		MovementCardsInHandHolderPanel.SetActive(false);
 		SupportCardsInHandHolderPanel.SetActive(false);
+		if(NoMovementCardsInHandButton.IsActive())
+		{
+			NoMovementCardsInHandButton.gameObject.SetActive(false);
+		}
 	}
 
 
