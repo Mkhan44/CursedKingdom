@@ -35,7 +35,6 @@ public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
         HandUITransform handUITransform = new();
 
         handUITransform.NoMovementCardsInHandButton = noMovementCardsInHandButton;
-        handUITransform.NoMovementCardsInHandAnimator = noMovementCardsInHandButton.GetComponent<Animator>();
         handUITransform.MovementCardsHolder = movementCardHolder;
         handUITransform.SupportCardsHolder = supportCardHolder;
         handUITransform.MovementLayoutGroup = movementCardHolder.GetComponent<HorizontalLayoutGroup>();
@@ -230,7 +229,6 @@ public class HandUITransform
     [SerializeField] private RectTransform movementCardsHolder;
     [SerializeField] private RectTransform supportCardsHolder;
     [SerializeField] private Button noMovementCardsInHandButton;
-    [SerializeField] private Animator noMovementCardsInHandAnimator;
     [SerializeField] private Animator movementAnimator;
     [SerializeField] private Animator supportAnimator;
 
@@ -254,7 +252,6 @@ public class HandUITransform
     public RectTransform MovementCardsHolder { get => movementCardsHolder; set => movementCardsHolder = value; }
     public RectTransform SupportCardsHolder { get => supportCardsHolder; set => supportCardsHolder = value; }
     public Button NoMovementCardsInHandButton { get => noMovementCardsInHandButton; set => noMovementCardsInHandButton = value; }
-    public Animator NoMovementCardsInHandAnimator { get => noMovementCardsInHandAnimator; set => noMovementCardsInHandAnimator = value; }
     public Animator MovementAnimator { get => movementAnimator; set => movementAnimator = value; }
     public Animator SupportAnimator { get => supportAnimator; set => supportAnimator = value; }
     public Vector2 MovementCardAnchorMaxInitial { get => movementCardAnchorMaxInitial; set => movementCardAnchorMaxInitial = value; }

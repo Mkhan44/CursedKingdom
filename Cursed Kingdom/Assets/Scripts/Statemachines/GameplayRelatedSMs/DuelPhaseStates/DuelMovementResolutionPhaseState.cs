@@ -34,6 +34,7 @@ public class DuelMovementResolutionPhaseState : BaseState
 	public override void Exit()
 	{
 		base.Exit();
+		duelPhaseSM.duelResolveCardsHolder.SetActive(false);
 		currentHighestCardValue = 0;
     }
 

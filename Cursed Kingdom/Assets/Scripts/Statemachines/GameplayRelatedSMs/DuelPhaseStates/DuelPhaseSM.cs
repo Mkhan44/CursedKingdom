@@ -38,6 +38,8 @@ public class DuelPhaseSM : BukuStateMachine
 
 	//Testing button references. We should NOT have these here.
 	public GameObject duelUIHolder;
+	public GameObject duelResolveCardsHolder;
+	public GameObject cardResolveHolderPrefab;
 	public Button movementCardsDeselectButton;
 	public Button supportCardsDeselectButton;
 	public Button confirmChoicesButton;
@@ -65,6 +67,7 @@ public class DuelPhaseSM : BukuStateMachine
 		gameplayManager = GetComponent<GameplayManager>();
 		CurrentWinners = new();
 		duelUIHolder.SetActive(false);
+		duelResolveCardsHolder.SetActive(false);
 		movementCardDuelHolderPrefab.SetActive(false);
 		supportCardDuelHolderPrefab.SetActive(false);
 	}
@@ -83,8 +86,20 @@ public class DuelPhaseSM : BukuStateMachine
 			Destroy(duelPlayerInformation.PlayerDuelPrefabInstance);
 			duelPlayerInformation.PlayerDuelTransform = null;
 			duelPlayerInformation.PlayerDuelAnimator = null;
+			if(duelPlayerInformation.CardDuelResolveHolderObject != null)
+			{
+				foreach(Transform child in duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(0))
+				{
+					Destroy(child.gameObject);
+				}
+				foreach(Transform child in duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(1))
+				{
+					Destroy(child.gameObject);
+				}
+			}
 		}
 
+		duelResolveCardsHolder.SetActive(false);
 		PlayersInCurrentDuel.Clear();
 		CurrentWinners.Clear();
 		CurrentPlayerBeingHandled = null;
@@ -292,6 +307,9 @@ public class DuelPhaseSM : BukuStateMachine
 		//We need to rework this as right now there is no way to guarantee that the final player has the longest animations.
 		if (PlayersInCurrentDuel.Last() == duelPlayerInformation)
 		{
+			//JUST A TEST.
+			GameObject.Find("Duel Resolve Cam").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 11;
+			//JUST A TEST.
 			CurrentPlayerBeingHandled = PlayersInCurrentDuel[0];
 			if (CurrentWinners.Count > 1)
 			{

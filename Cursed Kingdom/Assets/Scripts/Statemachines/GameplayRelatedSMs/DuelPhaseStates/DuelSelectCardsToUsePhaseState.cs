@@ -290,7 +290,6 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 
 	private void Logic()
 	{
-		
         duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, false);
 		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetInteger(GameplayCameraManager.ZOOMTOSPOTNUM, (duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled) + 1));
 

@@ -77,11 +77,6 @@ public class CardDuel : MonoBehaviour , IPointerClickHandler
 			CardAnimator.enabled = false;
 			CardCanvasGroup.alpha = 1.0f;
         }
-        //TitleText.text = cardData.CardTitle;
-        //cardArtworkImage.sprite = cardData.CardArtwork;
-        //OriginalSize = new Vector3(this.transform.localScale.x, this.transform.localScale.y, this.transform.localScale.z);
-        //HoveredSize = new Vector3(OriginalSize.x + 0.2f, OriginalSize.y + 0.2f, OriginalSize.z + 0.2f);
-        //OriginalBackgroundGlowColor = backgroundSelectedGlow.color;
     }
     public virtual void OnPointerClick(PointerEventData eventData)
 	{
