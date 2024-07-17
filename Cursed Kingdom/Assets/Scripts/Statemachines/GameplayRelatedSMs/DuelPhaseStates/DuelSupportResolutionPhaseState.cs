@@ -121,6 +121,7 @@ public class DuelSupportResolutionPhaseState : BaseState
 		}
 
 		SetupSupportCardsToResolve();
+		SetupMovementCardsToResolve();
 	}
 
 	public void SetupSupportCardsToResolve()
@@ -135,9 +136,33 @@ public class DuelSupportResolutionPhaseState : BaseState
 					SupportCardDuel spawnedSupportCardDuel = spawnedSupportCard.GetComponent<SupportCardDuel>();
 					spawnedSupportCardDuel.DuelPhaseSMReference = duelPhaseSM;
 					spawnedSupportCardDuel.SetupCard(supportCard);
+					spawnedSupportCardDuel.IsClickable = false;
 				}
 
 				foreach(Transform child in duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(1))
+				{
+					child.GetComponent<Animator>().Play("ComeDown");
+				}
+			}
+		}
+	}
+
+	public void SetupMovementCardsToResolve()
+	{
+		foreach(DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
+		{
+			if(duelPlayerInformation.CardDuelResolveHolderObject != null)
+			{
+				foreach(MovementCard movementCard in duelPlayerInformation.SelectedMovementCards)
+				{
+					GameObject spawnedMovementCard = GameObject.Instantiate(duelPhaseSM.movementCardDuelPrefab, duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(0));
+					MovementCardDuel spawnedMovementCardDuel = spawnedMovementCard.GetComponent<MovementCardDuel>();
+					spawnedMovementCardDuel.DuelPhaseSMReference = duelPhaseSM;
+					spawnedMovementCardDuel.SetupCard(movementCard);
+					spawnedMovementCardDuel.IsClickable = false;
+				}
+
+				foreach(Transform child in duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(0))
 				{
 					child.GetComponent<Animator>().Play("ComeDown");
 				}
