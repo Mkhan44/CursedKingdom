@@ -42,7 +42,7 @@ public class SupportCardDuel : CardDuel
 
     public override void OnPointerClick(PointerEventData eventData)
     {
-        if (DuelPhaseSMReference != null)
+        if (DuelPhaseSMReference != null && IsClickable)
         {
             DuelPhaseSMReference.duelSelectCardsToUsePhaseState.DeselectSupportCard(SupportCardReference);
         }

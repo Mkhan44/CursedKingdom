@@ -41,6 +41,8 @@ public class CardDuel : MonoBehaviour , IPointerClickHandler
 	[SerializeField] private Vector3 originalSize;
 	[SerializeField] private Vector3 hoveredSize;
 	[SerializeField] private Color originalBackgroundGlowColor;
+	[SerializeField] private Animator cardAnimator;
+	[SerializeField] private CanvasGroup cardCanvasGroup;
 
     [SerializeField] private bool isClickable;
 
@@ -62,17 +64,19 @@ public class CardDuel : MonoBehaviour , IPointerClickHandler
 	public Vector3 HoveredSize { get => hoveredSize; set => hoveredSize = value; }
 	public Color OriginalBackgroundGlowColor { get => originalBackgroundGlowColor; set => originalBackgroundGlowColor = value; }
     public bool IsClickable { get => isClickable; set => isClickable = value; }
+    public Animator CardAnimator { get => cardAnimator; set => cardAnimator = value; }
+    public CanvasGroup CardCanvasGroup { get => cardCanvasGroup; set => cardCanvasGroup = value; }
 
     public virtual void SetupCard(Card cardReference)
     {
 		TitleText.text = cardReference.TitleText.text;
 		CardArtworkImage.sprite = cardReference.CardArtworkImage.sprite;
 		IsClickable = true;
-        //TitleText.text = cardData.CardTitle;
-        //cardArtworkImage.sprite = cardData.CardArtwork;
-        //OriginalSize = new Vector3(this.transform.localScale.x, this.transform.localScale.y, this.transform.localScale.z);
-        //HoveredSize = new Vector3(OriginalSize.x + 0.2f, OriginalSize.y + 0.2f, OriginalSize.z + 0.2f);
-        //OriginalBackgroundGlowColor = backgroundSelectedGlow.color;
+		if(DuelPhaseSMReference.GetCurrentState() == DuelPhaseSMReference.duelSelectCardsToUsePhaseState)
+		{
+			CardAnimator.enabled = false;
+			CardCanvasGroup.alpha = 1.0f;
+        }
     }
     public virtual void OnPointerClick(PointerEventData eventData)
 	{

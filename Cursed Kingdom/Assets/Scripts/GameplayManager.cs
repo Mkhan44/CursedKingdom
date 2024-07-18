@@ -438,11 +438,15 @@ public class GameplayManager : MonoBehaviour
 		GameObject decksHolder = Instantiate(decksHolderPrefab, cardDisplayPanelParent.transform);
 		GameObject playerMovementCardPanel = decksHolder.transform.GetChild(0).GetChild(0).gameObject;
 		GameObject playerSupportCardPanel = decksHolder.transform.GetChild(1).GetChild(0).gameObject;
-		HandDisplayPanel.AddNewHandUI(playerMovementCardPanel.GetComponent<RectTransform>(), playerSupportCardPanel.GetComponent<RectTransform>());
+		GameObject noMovementCardsInHandButtonObj = decksHolder.transform.GetChild(0).GetChild(1).gameObject;
+		Button noMovementCardsInHandButton = noMovementCardsInHandButtonObj.GetComponent<Button>();
+
+		HandDisplayPanel.AddNewHandUI(playerMovementCardPanel.GetComponent<RectTransform>(), playerSupportCardPanel.GetComponent<RectTransform>(), noMovementCardsInHandButton);
 
 		playerTempReferencePlayer.MovementCardsInHandHolderPanel = playerMovementCardPanel;
 		playerTempReferencePlayer.SupportCardsInHandHolderPanel = playerSupportCardPanel;
 		playerTempReferencePlayer.HandDisplayPanel = HandDisplayPanel.gameObject;
+		playerTempReferencePlayer.NoMovementCardsInHandButton = noMovementCardsInHandButton;
 		
 		//1st 5 cards in player's hand.
 		playerTempReferencePlayer.GameplayManagerRef = this;

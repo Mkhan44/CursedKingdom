@@ -38,9 +38,9 @@ public class GameplayMovementPhaseState : BaseState
 		base.UpdateLogic();
 		if(!playerWentToZeroCards && currentPlayer.MovementCardsInHandCount == 0 && currentPlayer.NumMovementCardsUsedThisTurn == 0)
 		{
-			currentPlayer.GameplayManagerRef.UseMovementCardNoCardsInHandButton.gameObject.SetActive(true);
-			currentPlayer.GameplayManagerRef.UseMovementCardNoCardsInHandButton.onClick.RemoveAllListeners();
-			currentPlayer.GameplayManagerRef.UseMovementCardNoCardsInHandButton.onClick.AddListener(currentPlayer.DrawThenUseMovementCardImmediatelyMovement);
+			currentPlayer.NoMovementCardsInHandButton.gameObject.SetActive(true);
+			currentPlayer.NoMovementCardsInHandButton.onClick.RemoveAllListeners();
+			currentPlayer.NoMovementCardsInHandButton.onClick.AddListener(currentPlayer.DrawThenUseMovementCardImmediatelyMovement);
 			playerWentToZeroCards = true;
         }
 

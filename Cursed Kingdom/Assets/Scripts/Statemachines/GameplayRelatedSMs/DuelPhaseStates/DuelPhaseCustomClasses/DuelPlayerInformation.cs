@@ -13,6 +13,7 @@ public class DuelPlayerInformation
     [SerializeField] private GameObject playerDuelPrefabInstance;
     [SerializeField] private Transform playerDuelTransform;
     [SerializeField] private Animator playerDuelAnimator;
+    [SerializeField] private GameObject cardDuelResolveHolderObject;
     [SerializeField] private int damageToTake = 0;
 
     public Player PlayerInDuel { get => playerInDuel; set => playerInDuel = value; }
@@ -21,6 +22,7 @@ public class DuelPlayerInformation
     public GameObject PlayerDuelPrefabInstance { get => playerDuelPrefabInstance; set => playerDuelPrefabInstance = value; }
     public Transform PlayerDuelTransform { get => playerDuelTransform; set => playerDuelTransform = value; }
     public Animator PlayerDuelAnimator { get => playerDuelAnimator; set => playerDuelAnimator = value; }
+    public GameObject CardDuelResolveHolderObject { get => cardDuelResolveHolderObject; set => cardDuelResolveHolderObject = value; }
     public int DamageToTake { get => damageToTake; set => damageToTake = value; }
 
     public DuelPlayerInformation(Player player)
