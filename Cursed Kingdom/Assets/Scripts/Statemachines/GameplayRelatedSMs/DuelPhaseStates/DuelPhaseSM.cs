@@ -227,7 +227,7 @@ public class DuelPhaseSM : BukuStateMachine
 
 	public IEnumerator TestingTimeBetweenPopupsMovementCardResolution()
 	{
-		yield return new WaitForSeconds(2.5f);
+		yield return new WaitForSeconds(1.5f);
 
 		DialogueBoxPopup.instance.DeactivatePopup();
 
@@ -308,9 +308,8 @@ public class DuelPhaseSM : BukuStateMachine
 		//We need to rework this as right now there is no way to guarantee that the final player has the longest animations.
 		if (PlayersInCurrentDuel.Last() == duelPlayerInformation)
 		{
-			//JUST A TEST.
-			GameObject.Find("Duel Resolve Cam").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 11;
-			//JUST A TEST.
+			gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISRESOLVINGCAM, false);
+			gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, true);
 			CurrentPlayerBeingHandled = PlayersInCurrentDuel[0];
 			if (CurrentWinners.Count > 1)
 			{

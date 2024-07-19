@@ -21,9 +21,9 @@ public class DuelSupportResolutionPhaseState : BaseState
 		//Check which player we are in the duelPhaseSM Players list.
 		base.Enter();
         PhaseDisplay.instance.TurnOnDisplay($"Resolve support cards", 1.5f);
-		//duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, false);
-		//JUST A TEST MAKE SURE TO ACTUALLY PLAY AN ANIMATION HERE.
-		GameObject.Find("Duel Resolve Cam").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority = 12;
+		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, false);
+		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISRESOLVINGCAM, true);
+
         PhaseDisplay.instance.displayTimeCompleted += Logic;
     }
 
@@ -95,29 +95,6 @@ public class DuelSupportResolutionPhaseState : BaseState
 		{
 			int indexOfCurrentPlayer = duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPlayerInformation);
 			duelPlayerInformation.CardDuelResolveHolderObject = duelPhaseSM.duelResolveCardsHolder.transform.GetChild(indexOfCurrentPlayer).gameObject;
-
-			/*
-			Transform currentPlayerTransform = duelPlayerInformation.PlayerDuelTransform;
-			//newPlayerDuelPrefabObj.transform.position = gameplayPhaseSM.gameplayManager.duelPlaneSpawnPointsParent.transform.GetChild(currentIndex).position;
-			GameObject newResolveCardHolder = GameObject.Instantiate(duelPhaseSM.cardResolveHolderPrefab, duelPhaseSM.duelResolveCardsHolder.transform);
-			duelPlayerInformation.CardDuelResolveHolderObject = newResolveCardHolder;
-			RectTransform currentHolderRect = newResolveCardHolder.GetComponent<RectTransform>();
-			RectTransform currentSpotRect = duelPhaseSM.gameplayManager.duelPlaneSpawnPointsParent.transform.GetChild(indexOfCurrentPlayer).GetComponent<RectTransform>();
-
-			currentHolderRect.localPosition = currentSpotRect.anchoredPosition;
-
-			//Need a way to have this 'starting position' be based on the player right now it's always based on player 1.
-
-			//If it's even number that means we move this to the left. If it's an odd number then we move it to the right.
-			if(indexOfCurrentPlayer % 2 == 0)
-			{
-				//newResolveCardHolder.transform.position = new Vector3(newResolveCardHolder.transform.position.x + 1, newResolveCardHolder.transform.position.y, 0);
-			}
-			else
-			{
-				//newResolveCardHolder.transform.position = new Vector3(newResolveCardHolder.transform.position.x - 1, newResolveCardHolder.transform.position.y, 0);
-			}
-			*/
 		}
 
 		SetupSupportCardsToResolve();
