@@ -952,7 +952,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ver. 0.14
+  m_text: ver. X
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6f589d6281736a54d8c811051215c0ad, type: 2}
   m_sharedMaterial: {fileID: 2771012035242131098, guid: 6f589d6281736a54d8c811051215c0ad, type: 2}
@@ -1838,7 +1838,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 388.4156, y: 0.00030517578}
+  m_AnchoredPosition: {x: 388.41553, y: 0.00024414062}
   m_SizeDelta: {x: 1850.2383, y: -405.4456}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1277768793
@@ -2111,6 +2111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30d7ddad3777fa9468ecdb75ee27b618, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  versionText: {fileID: 790513238}
+  mainText: {fileID: 1745404321}
 --- !u!1 &1497552205
 GameObject:
   m_ObjectHideFlags: 0
@@ -2749,7 +2751,7 @@ GameObject:
   - component: {fileID: 1745404322}
   - component: {fileID: 1745404321}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: MainText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2821,8 +2823,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
