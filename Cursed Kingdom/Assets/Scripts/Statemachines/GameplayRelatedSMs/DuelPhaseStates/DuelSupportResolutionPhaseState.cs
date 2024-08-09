@@ -10,7 +10,8 @@ public class DuelSupportResolutionPhaseState : BaseState
 {
 	DuelPhaseSM duelPhaseSM;
 	private const string stateName = "DuelSupportResolutionPhaseState";
-	private SupportCard currentSupportCardWeAreHandling = new();
+
+	private int indexOfCurrentSupportCardWeAreHandling;
 	public DuelSupportResolutionPhaseState(DuelPhaseSM stateMachine) : base(stateName, stateMachine)
 	{
 		duelPhaseSM = stateMachine as DuelPhaseSM;
@@ -23,7 +24,7 @@ public class DuelSupportResolutionPhaseState : BaseState
         PhaseDisplay.instance.TurnOnDisplay($"Resolve support cards", 1.5f);
 		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, false);
 		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISRESOLVINGCAM, true);
-
+		indexOfCurrentSupportCardWeAreHandling = 0;
         PhaseDisplay.instance.displayTimeCompleted += Logic;
     }
 
@@ -40,7 +41,7 @@ public class DuelSupportResolutionPhaseState : BaseState
         if (duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards.Count > 0)
 		{
 			//DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal} used {duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0].SupportCardData.name}", 0, "Support card resolution");
-			currentSupportCardWeAreHandling = duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0];
+			//duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0];
 			if(duelPhaseSM.CurrentPlayerBeingHandled.CardDuelResolveHolderObject != null)
 			{
 				string animToPlay = "";
@@ -57,13 +58,13 @@ public class DuelSupportResolutionPhaseState : BaseState
 
 			//Will need to make this work for all effects. Maybe have something on this that kicks off after all effects are completed?
 
-			foreach(SupportCardData.SupportCardEffect supportCardEffect in currentSupportCardWeAreHandling.SupportCardData.supportCardEffects)
+			foreach(SupportCardData.SupportCardEffect supportCardEffect in duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling].SupportCardData.supportCardEffects)
 			{
 
-				if(supportCardEffect.supportCardEffectData.IsAfterDuelEffect || supportCardEffect.supportCardEffectData.IsDuringDuelDamageCalc)
+				if(supportCardEffect.supportCardEffectData.IsAfterDuelEffectAndNeedsToWin || supportCardEffect.supportCardEffectData.IsAfterDuelEffect || supportCardEffect.supportCardEffectData.IsDuringDuelDamageCalc)
 				{
 					//Do nothing we don't want to handle these until after the duel is over.
-					if(currentSupportCardWeAreHandling.SupportCardData.supportCardEffects.Count == 1)
+					if(duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0].SupportCardData.supportCardEffects.Count == 1)
 					{
 						AfterSupportCardEffectIsDone();
 					}
@@ -149,13 +150,12 @@ public class DuelSupportResolutionPhaseState : BaseState
 
 	public void AfterSupportCardEffectIsDone(SupportCard supportCardUsed = null)
 	{
-		if(currentSupportCardWeAreHandling != null)
+		if(duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling] != null)
 		{
-            foreach (SupportCardData.SupportCardEffect supportCardEffect in currentSupportCardWeAreHandling.SupportCardData.supportCardEffects)
+            foreach (SupportCardData.SupportCardEffect supportCardEffect in duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling].SupportCardData.supportCardEffects)
             {
                 supportCardEffect.supportCardEffectData.SupportCardEffectCompleted -= AfterSupportCardEffectIsDone;
             }
-            currentSupportCardWeAreHandling = null;
         }
 
 		duelPhaseSM.StartCoroutine(duelPhaseSM.TestingTimeBetweenPopupsSupportCardResolution());

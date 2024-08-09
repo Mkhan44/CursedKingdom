@@ -352,13 +352,10 @@ public class DuelPhaseSM : BukuStateMachine
         duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISTRANSITIONINGTODUEL, false);
         duelPlayerInformation.PlayerInDuel.Animator.SetBool(Player.ISIDLE, true);
 
-        //Do any effects that we need to after a duel is over. Then change state. For now this is fine.
+        //Do any effects that we need to after a duel is over. Damage calc first.
         if (GetCurrentState() == DuelResultPhaseState && PlayersInCurrentDuel.Last() == duelPlayerInformation)
         {
             DuelResultPhaseState.DamageResults();
-
-            ChangeState(duelNotDuelingPhaseState);
-            gameplayManager.GameplayPhaseStatemachineRef.ChangeState(gameplayManager.GameplayPhaseStatemachineRef.gameplayResolveSpacePhaseState);
         }
     }
 }

@@ -56,6 +56,43 @@ public class CurseEffect : SupportCardEffectData, ISupportEffect
         }
     }
 
+    public override void EffectOfCard(DuelPlayerInformation playerDuelInfo, Card cardPlayed = null)
+    {
+        //If player is already cursed do nothing. Otherwise, add to their curse turn count.
+        //If 'CurseImmediately' is true, curse as soon as the card is used. Otherwise don't curse until after the current turn ends. this usually isn't true for duel related effects.
+
+        //Right now, no way to handle cursing self + enemy.
+        if(CurseUser)
+        {
+            playerDuelInfo.PlayerInDuel.StatusEffectUpdateCompleted += CompletedEffect;
+            playerDuelInfo.PlayerInDuel.CursePlayer(NumTurnsToCurse);
+            if (playerDuelInfo.PlayerInDuel.IsCursed)
+            {
+                playerDuelInfo.PlayerInDuel.CurseEffect();
+            }
+
+            //Make sure that for the current player they're cursed for their entire next turn essentially.
+            if(playerDuelInfo.PlayerInDuel != playerDuelInfo.PlayerInDuel.GameplayManagerRef.GetCurrentPlayer() && playerDuelInfo.PlayerInDuel.IsCursed)
+            {
+                playerDuelInfo.PlayerInDuel.WasAfflictedWithStatusThisTurn = false;
+            }
+            return;
+        }
+
+        if(AttackAllPlayers)
+        {
+            playerDuelInfo.PlayerInDuel.DoneAttackingForEffect += CompletedEffect;
+            playerDuelInfo.PlayerInDuel.AttackAllOtherPlayersStatusEffect("curse", NumTurnsToCurse);
+            return;
+        }
+
+        if (OpponentsCanBeChosen)
+        {
+            playerDuelInfo.PlayerInDuel.DoneAttackingForEffect += CompletedEffect;
+            playerDuelInfo.PlayerInDuel.ActivatePlayerToAttackStatusEffectSelectionPopup(NumPlayersToAttack, "curse", NumTurnsToCurse);
+        }
+    }
+
     public override bool CanCostBePaid(Player playerReference)
     {
         bool canCostBePaid = false;
