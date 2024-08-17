@@ -123,6 +123,19 @@ public class StartDebugMenu : MonoBehaviour
         }
     }
 
+    private void ToggleValueChanged(StartDebugPlayerElement startDebugPlayerElement)
+    {
+        foreach(StartDebugPlayerElement element in playerElements)
+        {
+            if(element == startDebugPlayerElement)
+            {
+                int index = playerElements.IndexOf(element);
+
+                currentlySelectedStartData.playerDebugDatas[index].isAnAIOpponent = element.isAIToggle.isOn;
+            }
+        }
+    }
+
     private void NumPlayersOnValueChanged(int value)
     {
         if(value < 2)
@@ -155,7 +168,8 @@ public class StartDebugMenu : MonoBehaviour
             playerDebugElementScript.playerNumberText.text = $"Player {currentPlayerIndexInData - 1}";
             SetupPlayerDebugElementScriptDropdowns(playerDebugElementScript);
             PopulateDataFromScriptableToEachPlayer(playerDebugElementScript, currentPlayerIndexInData - 2);
-            playerDebugElementScript.ValueChanged += DropdownOnValueChanged;
+            playerDebugElementScript.DropdownValueChanged += DropdownOnValueChanged;
+            playerDebugElementScript.ToggleValueChanged += ToggleValueChanged;
 
             playerElements.Add(playerDebugElementScript);
 
@@ -240,6 +254,7 @@ public class StartDebugMenu : MonoBehaviour
         playerDebugElementScript.levelOverrideDropdown.value = debugData.startingLevelOverride;
         playerDebugElementScript.movementCardsInHandOverrideDropdown.value = debugData.movementCardsToStartWithOverride;
         playerDebugElementScript.supportCardsInHandOverrideDropdown.value = debugData.supportCardsToStartWithOverride;
+        playerDebugElementScript.isAIToggle.isOn = debugData.isAnAIOpponent;
     }
 
     private void SetupNumPlayersDropdownOptions()

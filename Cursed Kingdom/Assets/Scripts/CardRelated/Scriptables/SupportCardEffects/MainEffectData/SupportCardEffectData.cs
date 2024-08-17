@@ -13,6 +13,7 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
     [SerializeField] private bool isACost;
     [SerializeField] private bool isElemental;
     [SerializeField] private bool isReaction;
+    [SerializeField] private bool isAfterDuelEffectAndNeedsToWin;
     [SerializeField] private bool isAfterDuelEffect;
     [SerializeField] private bool isDuringDuelDamageCalc;
     //Used when we want this to always activate first before anything else.
@@ -22,6 +23,7 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
     public bool IsACost { get => isACost; set => isACost = value; }
     public bool IsElemental { get => isElemental; set => isElemental = value; }
     public bool IsReaction { get => isReaction; set => isReaction = value; }
+    public bool IsAfterDuelEffectAndNeedsToWin { get => isAfterDuelEffectAndNeedsToWin; set => isAfterDuelEffectAndNeedsToWin = value; }
     public bool IsAfterDuelEffect { get => isAfterDuelEffect; set => isAfterDuelEffect = value; }
     public bool IsDuringDuelDamageCalc { get => isDuringDuelDamageCalc; set => isDuringDuelDamageCalc = value; }
     public bool HasPriorityInDuel { get => hasPriorityInDuel; set => hasPriorityInDuel = value; }

@@ -17,10 +17,12 @@ public class StartDebugPlayerElement : MonoBehaviour
     public TMP_Dropdown levelOverrideDropdown;
     public TMP_Dropdown movementCardsInHandOverrideDropdown;
     public TMP_Dropdown supportCardsInHandOverrideDropdown;
+    public Toggle isAIToggle;
 
     //events
 
-    public event Action<StartDebugPlayerElement> ValueChanged;
+    public event Action<StartDebugPlayerElement> DropdownValueChanged;
+    public event Action<StartDebugPlayerElement> ToggleValueChanged;
 
     private void Start()
     {
@@ -30,10 +32,16 @@ public class StartDebugPlayerElement : MonoBehaviour
         levelOverrideDropdown.onValueChanged.AddListener(ChangedDropdownValue);
         movementCardsInHandOverrideDropdown.onValueChanged.AddListener(ChangedDropdownValue);
         supportCardsInHandOverrideDropdown.onValueChanged.AddListener(ChangedDropdownValue);
+        isAIToggle.onValueChanged.AddListener(ChangeToggleValue);
     }
 
     public void ChangedDropdownValue(int value)
     {
-        ValueChanged?.Invoke(this);
+        DropdownValueChanged?.Invoke(this);
+    }
+
+    public void ChangeToggleValue(bool value)
+    {
+        ToggleValueChanged?.Invoke(this);
     }
 }

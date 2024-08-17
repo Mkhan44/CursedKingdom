@@ -34,6 +34,7 @@ public class DialogueBoxPopup : MonoBehaviour
 
     public GameObject ButtonLayoutParent { get => buttonLayoutParent; set => buttonLayoutParent = value; }
     public GameObject ImageLayoutParent { get => imageLayoutParent; set => imageLayoutParent = value; }
+    public bool IsActive { get => isActive; }
 
     private void Awake()
     {
@@ -87,6 +88,35 @@ public class DialogueBoxPopup : MonoBehaviour
         {
             DeactivatePopup();
         }
+    }
+
+    public List<Button> GetCurrentPopupChoices()
+    {
+        List<Button> choices = new List<Button>();
+
+        if(ButtonLayoutParent.transform.childCount > 0)
+        {
+            foreach(Transform child in ButtonLayoutParent.transform)
+            {
+                choices.Add(child.GetComponent<Button>());
+            }
+
+        }
+        else if(ImageLayoutParent.transform.childCount > 0)
+        {
+            foreach(Transform child in ImageLayoutParent.transform)
+            {
+                choices.Add(child.GetComponent<Button>());
+            }
+
+        }
+        else
+        {
+            Debug.LogWarning("We did not find any choices for the player to choose.");
+        }
+
+
+        return choices;
     }
 
     /// <summary>
@@ -245,6 +275,7 @@ public class DialogueBoxPopup : MonoBehaviour
     {
         foreach(Transform child in parent.transform)
         {
+            child.GetComponent<Button>().onClick.RemoveAllListeners();
             Destroy(child.gameObject);
         }
     }

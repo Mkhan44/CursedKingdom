@@ -106,7 +106,7 @@ public class DuelSelectCardsToUsePhaseState : BaseState
         }
 
 
-        Debug.Log($"Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected at least 1 movement card for the duel.");
+        //Debug.Log($"Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected at least 1 movement card for the duel.");
 	}
 
 	public void DeselectMovementCards()
@@ -188,7 +188,7 @@ public class DuelSelectCardsToUsePhaseState : BaseState
         spawnedSupportCardDuel.DuelPhaseSMReference = duelPhaseSM;
         spawnedSupportCardDuel.SetupCard(supportCards[0]);
 
-        Debug.Log($"Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected at least 1 support card for the duel.");
+        //Debug.Log($"Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected at least 1 support card for the duel.");
 	}
 
 	public void DeselectSupportCards()

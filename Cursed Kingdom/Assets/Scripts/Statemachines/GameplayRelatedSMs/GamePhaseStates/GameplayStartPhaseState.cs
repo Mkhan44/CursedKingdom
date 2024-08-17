@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,7 +90,7 @@ public class GameplayStartPhaseState : BaseState
         
     }
 
-    public void ActivateStartTurnPopup()
+    public async void ActivateStartTurnPopup()
     {
         CheckIfMusicNeedsToChangeBoard();
 
@@ -101,5 +102,10 @@ public class GameplayStartPhaseState : BaseState
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("Start!", nameof(gameplayPhaseSM.StartTurnConfirmation), gameplayPhaseSM, paramsList));
 
         DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {gameplayPhaseSM.gameplayManager.GetCurrentPlayer().playerIDIntVal}'s turn!", insertedParams, 1, "Turn start!");
+
+        if(gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference != null)
+        {
+            gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.SelectFirstOptionDialogueBoxChoice();
+        }
     }
 }

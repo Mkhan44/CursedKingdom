@@ -11,6 +11,7 @@ public class GameplayCameraManager : MonoBehaviour
 {
     public const string ZOOMTOSPOTNUM = "zoomToSpotNum";
     public const string ISGOINGBACKTODEFAULT = "isGoingBackToDefault";
+    public const string ISRESOLVINGCAM = "isResolving";
 
     [SerializeField] private CinemachineVirtualCamera cutInPlayerCam;
     [SerializeField] private CinemachineVirtualCamera currentPlayerFollowVirtualCam;

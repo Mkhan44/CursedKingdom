@@ -16,6 +16,7 @@ using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
+	[SerializeField] private PlayerAI playerAIReference;
 	public int playerIDIntVal;
 
 	//Events
@@ -125,7 +126,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private RuntimeAnimatorController animatorController;
 	[SerializeField] private Animator animator;
 
-   
+    public PlayerAI PlayerAIReference { get => playerAIReference; set => playerAIReference = value; }
 	public PlayerCharacterSM StateMachineRef { get => stateMachineRef; set => stateMachineRef = value; }
 	public int MaxHealth { get => maxHealth; set => maxHealth = value; }
 	public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
@@ -307,6 +308,12 @@ public class Player : MonoBehaviour
 		{
             MaxHandSize = 6;
         }
+
+		//Use for if we're forcing the player to be an AI through startdebug scriptable. We will want a way to do this without checking this later.
+		if(StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable && StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].isAnAIOpponent)
+		{
+			SetupAIScript();
+		}
         
 		MaxSupportCardsToUse = ClassData.maxSupportCardsToUsePerTurn;
 		NumSupportCardsUsedThisTurn = 0;
@@ -345,6 +352,13 @@ public class Player : MonoBehaviour
 
 
     }
+
+	public void SetupAIScript()
+	{
+		PlayerAI newAIScript = this.gameObject.AddComponent<PlayerAI>();
+		PlayerAIReference = newAIScript;
+		playerAIReference.PlayerReference = this;
+	}
 
 	public void DebugTheSpace()
 	{

@@ -616,7 +616,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 2110810171773290671}
   m_OnClick:
     m_PersistentCalls:
@@ -812,9 +812,9 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1704411824406089148}
-  - {fileID: 3733993219540022847}
-  - {fileID: 4277224418319740614}
   - {fileID: 698372416838233862}
+  - {fileID: 4277224418319740614}
+  - {fileID: 3733993219540022847}
   m_Father: {fileID: 6707447885092244480}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -987,7 +987,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6089542510173026560, guid: da1683e7134d9d84a822cbadcc821885, type: 3}
       propertyPath: m_Name
-      value: CardsHolderResolve (2)
+      value: Spot3CardsHolderResolve
       objectReference: {fileID: 0}
     - target: {fileID: 6089542510173026560, guid: da1683e7134d9d84a822cbadcc821885, type: 3}
       propertyPath: m_IsActive
@@ -1105,7 +1105,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6089542510173026560, guid: da1683e7134d9d84a822cbadcc821885, type: 3}
       propertyPath: m_Name
-      value: CardsHolderResolve (1)
+      value: Spot4CardsHolderResolve
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1219,11 +1219,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2557616018142316079, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.009810146
+      value: 0.009810155
       objectReference: {fileID: 0}
     - target: {fileID: 2557616018142316079, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0038903977
+      value: -0.0038904015
       objectReference: {fileID: 0}
     - target: {fileID: 2825781777934672683, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
       propertyPath: m_TrackedObjectOffset.x
@@ -1605,7 +1605,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6089542510173026560, guid: da1683e7134d9d84a822cbadcc821885, type: 3}
       propertyPath: m_Name
-      value: CardsHolderResolve
+      value: Spot1CardsHolderResolve
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1719,7 +1719,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6089542510173026560, guid: da1683e7134d9d84a822cbadcc821885, type: 3}
       propertyPath: m_Name
-      value: CardsHolderResolve (3)
+      value: Spot2CardsHolderResolve
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1847,6 +1847,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8724011503513230961, guid: c6818d12e2bd95041aebe84a18617995, type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1963,6 +1967,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5514036104045857808, guid: c4f54cf48cbe8f648827ce9f65065c70, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6064452452717746615, guid: c4f54cf48cbe8f648827ce9f65065c70, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6064452452717746615, guid: c4f54cf48cbe8f648827ce9f65065c70, type: 3}
+      propertyPath: m_Interactable
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8936359007737258114, guid: c4f54cf48cbe8f648827ce9f65065c70, type: 3}

@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.UI;
 
 public class GameplayMovementPhaseState : BaseState
@@ -30,21 +31,13 @@ public class GameplayMovementPhaseState : BaseState
 		playerWentToZeroCards = false;
         checkedForDuelOpponents = false;
         PhaseDisplay.instance.TurnOnDisplay("Movement phase!", 1.5f);
-        currentPlayer.ShowHand();
+        PhaseDisplay.instance.displayTimeCompleted += Logic;
     }
 
 	public override void UpdateLogic()
 	{
 		base.UpdateLogic();
-		if(!playerWentToZeroCards && currentPlayer.MovementCardsInHandCount == 0 && currentPlayer.NumMovementCardsUsedThisTurn == 0)
-		{
-			currentPlayer.NoMovementCardsInHandButton.gameObject.SetActive(true);
-			currentPlayer.NoMovementCardsInHandButton.onClick.RemoveAllListeners();
-			currentPlayer.NoMovementCardsInHandButton.onClick.AddListener(currentPlayer.DrawThenUseMovementCardImmediatelyMovement);
-			playerWentToZeroCards = true;
-        }
-
-        
+		
 		if(currentPlayer.NumMovementCardsUsedThisTurn != 0 && currentPlayer.SpacesLeftToMove == 0 && !checkedForDuelOpponents)
 		{
             checkedForDuelOpponents = true;
@@ -71,6 +64,8 @@ public class GameplayMovementPhaseState : BaseState
 		}
 	}
 
+    
+
 	public override void Exit()
 	{
 		base.Exit();
@@ -87,7 +82,13 @@ public class GameplayMovementPhaseState : BaseState
         paramsList.Add(playersToDuelAgainst);
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(gameplayPhaseSM.GoToSpaceResolutionState), gameplayPhaseSM, paramsList));
 
-        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Do you wish to duel? There are {playersToDuelAgainst.Count - 1} opponents to duel against.", insertedParams, 1, "Duel selection");
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Do you wish to duel? There are {playersToDuelAgainst.Count - 1} opponent(s) to duel against.", insertedParams, 1, "Duel selection");
+
+        if(gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference != null)
+        {
+            gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.SelectLastOptionDialogueBoxChoice();
+        }
+        
     }
 
     
@@ -473,5 +474,31 @@ public class GameplayMovementPhaseState : BaseState
 
 
         return spacesToCheckNext;
+    }
+
+    private void Logic()
+    {
+        PhaseDisplay.instance.displayTimeCompleted -= Logic;
+        currentPlayer.ShowHand();
+        if(!playerWentToZeroCards && currentPlayer.MovementCardsInHandCount == 0 && currentPlayer.NumMovementCardsUsedThisTurn == 0)
+		{
+			currentPlayer.NoMovementCardsInHandButton.gameObject.SetActive(true);
+			currentPlayer.NoMovementCardsInHandButton.onClick.RemoveAllListeners();
+			currentPlayer.NoMovementCardsInHandButton.onClick.AddListener(currentPlayer.DrawThenUseMovementCardImmediatelyMovement);
+			playerWentToZeroCards = true;
+
+            if(currentPlayer.PlayerAIReference != null)
+            {
+                currentPlayer.PlayerAIReference.DrawAndUseMovementCardMovementPhase();
+                return;
+            }
+
+        }
+
+        //Check if Player is an AI, if they are then use a random card for now and return.
+        if(currentPlayer.PlayerAIReference != null && currentPlayer.NumMovementCardsUsedThisTurn == 0 && currentPlayer.SpacesLeftToMove == 0)
+        {
+            currentPlayer.PlayerAIReference.ChooseMovementCardToUseMovementPhase();
+        }
     }
 }

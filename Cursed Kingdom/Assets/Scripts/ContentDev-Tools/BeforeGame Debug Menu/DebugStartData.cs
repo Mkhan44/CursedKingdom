@@ -18,6 +18,7 @@ public class DebugStartData : ScriptableObject
         [Range(0, 5)] public int startingLevelOverride = 0;
         [Range(0, 5)] public int movementCardsToStartWithOverride = 0;
         [Range(0, 5)] public int supportCardsToStartWithOverride = 0;
+        public bool isAnAIOpponent;
 
         public PlayerDebugData()
         {
@@ -27,6 +28,7 @@ public class DebugStartData : ScriptableObject
             startingLevelOverride = 0;
             movementCardsToStartWithOverride = 0;
             supportCardsToStartWithOverride = 0;
+            isAnAIOpponent = false;
         }
 
     }
