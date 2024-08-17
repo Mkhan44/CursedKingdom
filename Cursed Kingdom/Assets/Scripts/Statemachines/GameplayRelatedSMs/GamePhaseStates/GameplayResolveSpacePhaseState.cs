@@ -3,6 +3,7 @@
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class GameplayResolveSpacePhaseState : BaseState
@@ -41,6 +42,7 @@ public class GameplayResolveSpacePhaseState : BaseState
             isResolvingSpaceEffect = true;
             currentPlayer.CurrentSpacePlayerIsOn.StartCoroutine(currentPlayer.CurrentSpacePlayerIsOn.PlaySpaceInfoDisplayAnimationUI(currentPlayer));
             gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.TurnOnDisplay(currentPlayer.CurrentSpacePlayerIsOn, currentPlayer);
+			gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += SpaceArtworkPopupDone;
             currentPlayer.ShowHand();
         }
     }
@@ -52,6 +54,20 @@ public class GameplayResolveSpacePhaseState : BaseState
 		isResolvingSpaceEffect = false;
         PhaseDisplay.instance.displayTimeCompleted -= StartResolvingSpaceEffects;
     }
+
+	private async void SpaceArtworkPopupDone(Player player)
+	{
+		if(player.PlayerAIReference != null)
+		{
+			await Task.Delay(3000);
+			if(DialogueBoxPopup.instance.GetCurrentPopupChoices().Count == 0)
+			{
+				return;
+			}
+
+			player.PlayerAIReference.SelectRandomOptionDialogueBoxChoice();
+		}
+	}
 	
 	
 	private void SubscribeToPlayerEvents()
