@@ -81,6 +81,7 @@ public class DuelSupportResolutionPhaseState : BaseState
 		{
             DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal} did not use a support card", 0, "Support card resolution");
 
+			//duelPhaseSM.StartCoroutine(duelPhaseSM.TestingTimeBetweenPopupsMovementCardResolution());
             AfterSupportCardEffectIsDone();
 		}
 
@@ -150,7 +151,7 @@ public class DuelSupportResolutionPhaseState : BaseState
 
 	public void AfterSupportCardEffectIsDone(SupportCard supportCardUsed = null)
 	{
-		if(duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling] != null)
+		if(duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards.Count != 0 && duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling] != null)
 		{
             foreach (SupportCardData.SupportCardEffect supportCardEffect in duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling].SupportCardData.supportCardEffects)
             {
@@ -159,7 +160,6 @@ public class DuelSupportResolutionPhaseState : BaseState
         }
 
 		duelPhaseSM.StartCoroutine(duelPhaseSM.TestingTimeBetweenPopupsSupportCardResolution());
-
     }
 
 	
