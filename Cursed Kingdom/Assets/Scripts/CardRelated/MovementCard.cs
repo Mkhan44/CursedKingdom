@@ -51,31 +51,62 @@ public class MovementCard : Card
         movementValueText.text = MovementCardValue.ToString();
     }
 
-    public void ManipulateMovementValue(bool halfTheValue = false, bool increaseTheValue = false, int valueToIncreaseBy = 0)
+    public void ManipulateMovementValue(bool divideValue = false, float divideTheValueBy = 0f, bool multiplyValue = false, float multipleTheValueBy = 0f,  bool increaseTheValue = false, int valueToIncreaseBy = 0)
     {
         TempIncreaseValue += valueToIncreaseBy;
 
-        if (halfTheValue && increaseTheValue)
+        int typeOfChangeWeAreTryingToDo = 0;
+        if(divideValue)
         {
-            Debug.LogWarning("You're trying to both half and increase the value of the card!! We're not gonna change the value.");
+            typeOfChangeWeAreTryingToDo += 1;
+        }
+        if(multiplyValue)
+        {
+            typeOfChangeWeAreTryingToDo += 1;
+        }
+        if(increaseTheValue)
+        {
+            typeOfChangeWeAreTryingToDo += 1;
+        }
+
+        if (typeOfChangeWeAreTryingToDo > 1)
+        {
+            Debug.LogWarning("You're trying to both half and increase and multiply the value of the card!! We're not gonna change the value.");
             return;
         }
 
-        if(halfTheValue)
+        if(divideValue)
         {
             //Stack with Curse.
             if(TempCardValue != 0)
             {
                 float tempNum = (float)TempCardValue;
-                TempCardValue = Mathf.CeilToInt(tempNum / 2.0f);
+                TempCardValue = Mathf.CeilToInt(tempNum / divideTheValueBy);
             }
             else
             {
                 float tempNum = (float)MovementCardValue;
-                TempCardValue = Mathf.CeilToInt(tempNum / 2.0f);
+                TempCardValue = Mathf.CeilToInt(tempNum / divideTheValueBy);
             }
             movementValueText.text = TempCardValue.ToString();
             
+            return;
+        }
+
+        if(multiplyValue)
+        {
+            //Stack with Curse.
+            if(TempCardValue != 0)
+            {
+                float tempNum = (float)TempCardValue;
+                TempCardValue = Mathf.CeilToInt(tempNum * multipleTheValueBy);
+            }
+            else
+            {
+                float tempNum = (float)MovementCardValue;
+                TempCardValue = Mathf.CeilToInt(tempNum * multipleTheValueBy);
+            }
+            movementValueText.text = TempCardValue.ToString();
             return;
         }
 

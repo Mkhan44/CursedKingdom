@@ -1773,7 +1773,7 @@ public class Player : MonoBehaviour
 			MovementCard tempMovementCard = (MovementCard)card;
 			if(tempMovementCard != null)
 			{
-				tempMovementCard.ManipulateMovementValue(true);
+				tempMovementCard.ManipulateMovementValue(true, 2);
 				CurseCardAnimationEffect();
 			}
 		}
@@ -1840,7 +1840,7 @@ public class Player : MonoBehaviour
 					MovementCard tempMovementCard = (MovementCard)card;
 					if (tempMovementCard != null)
 					{
-						tempMovementCard.ManipulateMovementValue(true);
+						tempMovementCard.ManipulateMovementValue(true, 2);
 						CurseCardAnimationEffect();
 					}
 				}
@@ -2735,7 +2735,7 @@ public class Player : MonoBehaviour
 
 			if (tempMovementCard != null)
 			{
-				tempMovementCard.ManipulateMovementValue(true);
+				tempMovementCard.ManipulateMovementValue(true, 2);
 				tempMovementCard.ActivateCurseEffect();
 			}
 		}
@@ -2748,7 +2748,7 @@ public class Player : MonoBehaviour
 
         foreach (MovementCard movementCard in movementCardsInHand)
         {
-			movementCard.ManipulateMovementValue(false, true, valueToBoostBy);
+			movementCard.ManipulateMovementValue(false,0,false,0, true, valueToBoostBy);
         }
     }
 
