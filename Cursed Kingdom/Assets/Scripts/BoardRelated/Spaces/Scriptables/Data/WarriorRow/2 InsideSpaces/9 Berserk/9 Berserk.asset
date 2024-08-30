@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
-  m_Name: 10 Combat Preparations
+  m_Name: 9 Berserk
   m_EditorClassIdentifier: 
   passingOverSpaceEffect: 0
   isMandatory: 1
   decreasesSpacesToMove: 1
   isNonDuelSpace: 0
-  isNegative: 0
+  isNegative: 1
   spaceEffects:
-  - spaceEffectData: {fileID: 11400000, guid: 01ebf187f78e2eb4b9011463a2f95c32, type: 2}
-    spaceTypeStringHidden: DrawCardSpace
-  - spaceEffectData: {fileID: 11400000, guid: 48853b69cd9503246911f081d7b02435, type: 2}
-    spaceTypeStringHidden: RecoverHealthSpace
-  spaceName: Combat Preparations
-  spaceDescription: Draw 2 movement cards, then recover 1 health.
-  spaceSprite: {fileID: 21300000, guid: 5518877e8e3a86945bbbd9eddde801ca, type: 3}
+  - spaceEffectData: {fileID: 11400000, guid: f3eb157c4b96bb848af2b169005f612f, type: 2}
+    spaceTypeStringHidden: LoseHealthSpace
+  - spaceEffectData: {fileID: 11400000, guid: cabe1a243bfbe184b8e32f5a9425edca, type: 2}
+    spaceTypeStringHidden: AttackSpace
+  spaceName: Berserk
+  spaceDescription: Lose 1 health, then deal 2 damage to an opponent of your choice.
+  spaceSprite: {fileID: 21300000, guid: a77d357c450a1c04ca9107a7a6967791, type: 3}
   spaceMaterials:
   - {fileID: 2100000, guid: aee1b16514deafc438f06e9e304393e3, type: 2}
   - {fileID: 2100000, guid: 72040ae4cb5eced4488b52b28d765df4, type: 2}

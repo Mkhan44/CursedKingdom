@@ -7,6 +7,10 @@ public class SceneLoader : MonoBehaviour
 {
     public TextMeshProUGUI versionText;
     public TextMeshProUGUI mainText;
+    public Animator scroll;
+    public Animator title;
+    public string scrollOpen = "ScrollOpen";
+    public string fadeOut = "FadeOut";
 
     // Start is called before the first frame update
     void Start()
@@ -21,9 +25,7 @@ public class SceneLoader : MonoBehaviour
 
         if (Input.anyKeyDown || Input.touchCount > 0)
         {
-
-            SceneManager.LoadScene("BoardGameplay");
-            mainText.text = "Loading...";
+            title.SetTrigger(fadeOut);
 
         }
 
