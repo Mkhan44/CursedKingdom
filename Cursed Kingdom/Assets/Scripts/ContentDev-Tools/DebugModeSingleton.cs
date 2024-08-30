@@ -20,6 +20,8 @@ public class DebugModeSingleton : MonoBehaviour
     [SerializeField] private TMP_Dropdown spaceLandedOverrideDropdown;
     [SerializeField] private TMP_Dropdown supportCardOverrideDropdown;
     [SerializeField] private TMP_Dropdown levelOverrideDropdown;
+    [SerializeField] private TMP_Dropdown timescaleSpeedOverrideDropdown;
+    [SerializeField] private TextMeshProUGUI timeScaleToggleText;
     [SerializeField] private bool isDebugActive;
     [SerializeField] private string supportCardOverrideName;
     [SerializeField] private string spaceLandedOverrideName;
@@ -28,6 +30,7 @@ public class DebugModeSingleton : MonoBehaviour
 
     public bool IsDebugActive { get => isDebugActive; }
     public int MovementNumberOverride { get => movementNumberOverride; }
+    public TextMeshProUGUI TimeScaleToggleText { get => timeScaleToggleText; set => timeScaleToggleText = value; }
 
     private void Awake()
     {
@@ -69,6 +72,28 @@ public class DebugModeSingleton : MonoBehaviour
             debugUIPanel.SetActive(true);
             debugButtonToggleText.text = "DEBUG MODE: ON";
             isDebugActive = true;
+        }
+    }
+
+    public void ToggleSpeedUp()
+    {
+        gameplayManager.ToggleSpeedUp();
+        if(gameplayManager.isSpeedupOn)
+        {
+            TimeScaleToggleText.text = "Speedup: ON";
+        }
+        else
+        {
+            TimeScaleToggleText.text = "Speedup: OFF";
+        }
+    }
+
+    public void SetSpeedUpvalue()
+    {
+        gameplayManager.speedupValue = timescaleSpeedOverrideDropdown.value + 1;
+        if(gameplayManager.isSpeedupOn)
+        {
+            Time.timeScale = gameplayManager.speedupValue;
         }
     }
 

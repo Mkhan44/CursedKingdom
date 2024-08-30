@@ -79,5 +79,26 @@ public class GameplayPhaseSM : BukuStateMachine
         yield return null;
     }
 
+    /// <summary>
+    /// For AI players when they need to select an option after space effect makes a popup with choices.
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>.
+    public IEnumerator SpaceArtworkPopupDoneDelay(Player player)
+	{
+		if(player.PlayerAIReference != null)
+		{
+			yield return new WaitForSeconds(3.0f);
+			if(DialogueBoxPopup.instance.GetCurrentPopupChoices().Count == 0)
+			{
+				yield break;
+			}
+
+			player.PlayerAIReference.StartCoroutine(player.PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
+
+		yield return null;
+	}
+
 
 }
