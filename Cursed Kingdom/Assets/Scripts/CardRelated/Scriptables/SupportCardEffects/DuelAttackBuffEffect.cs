@@ -33,7 +33,7 @@ public class DuelAttackBuffEffect : SupportCardEffectData, ISupportEffect
     {
         foreach(MovementCard movementCard in duelPlayerInformation.SelectedMovementCards)
         {
-            movementCard.ManipulateMovementValue(false, true, NumMovementIncrease);
+            movementCard.ManipulateMovementValue(false, 0, false, 0, true, NumMovementIncrease);
         }
         base.EffectOfCard(duelPlayerInformation, cardPlayed);
     }

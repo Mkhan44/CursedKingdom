@@ -42,7 +42,7 @@ public class GameplayResolveSpacePhaseState : BaseState
             isResolvingSpaceEffect = true;
             currentPlayer.CurrentSpacePlayerIsOn.StartCoroutine(currentPlayer.CurrentSpacePlayerIsOn.PlaySpaceInfoDisplayAnimationUI(currentPlayer));
             gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.TurnOnDisplay(currentPlayer.CurrentSpacePlayerIsOn, currentPlayer);
-			gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += SpaceArtworkPopupDone;
+			gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += SpaceArtworkDonePopupDone;
             currentPlayer.ShowHand();
         }
     }
@@ -55,18 +55,9 @@ public class GameplayResolveSpacePhaseState : BaseState
         PhaseDisplay.instance.displayTimeCompleted -= StartResolvingSpaceEffects;
     }
 
-	private async void SpaceArtworkPopupDone(Player player)
+	private void SpaceArtworkDonePopupDone(Player player)
 	{
-		if(player.PlayerAIReference != null)
-		{
-			await Task.Delay(3000);
-			if(DialogueBoxPopup.instance.GetCurrentPopupChoices().Count == 0)
-			{
-				return;
-			}
-
-			player.PlayerAIReference.SelectRandomOptionDialogueBoxChoice();
-		}
+		gameplayPhaseSM.StartCoroutine(gameplayPhaseSM.SpaceArtworkPopupDoneDelay(player));
 	}
 	
 	

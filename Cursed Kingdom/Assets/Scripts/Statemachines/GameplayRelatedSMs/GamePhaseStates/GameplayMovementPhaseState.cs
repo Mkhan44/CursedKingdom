@@ -86,7 +86,7 @@ public class GameplayMovementPhaseState : BaseState
 
         if(gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference != null)
         {
-            gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.SelectLastOptionDialogueBoxChoice();
+            gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.StartCoroutine(gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.SelectLastOptionDialogueBoxChoice());
         }
         
     }
@@ -489,7 +489,7 @@ public class GameplayMovementPhaseState : BaseState
 
             if(currentPlayer.PlayerAIReference != null)
             {
-                currentPlayer.PlayerAIReference.DrawAndUseMovementCardMovementPhase();
+                currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.DrawAndUseMovementCardMovementPhase());
                 return;
             }
 
@@ -498,7 +498,7 @@ public class GameplayMovementPhaseState : BaseState
         //Check if Player is an AI, if they are then use a random card for now and return.
         if(currentPlayer.PlayerAIReference != null && currentPlayer.NumMovementCardsUsedThisTurn == 0 && currentPlayer.SpacesLeftToMove == 0)
         {
-            currentPlayer.PlayerAIReference.ChooseMovementCardToUseMovementPhase();
+            currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.ChooseMovementCardToUseMovementPhase());
         }
     }
 }

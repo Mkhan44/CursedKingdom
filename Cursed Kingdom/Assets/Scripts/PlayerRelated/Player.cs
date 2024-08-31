@@ -5,9 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static Card;
@@ -24,6 +22,7 @@ public class Player : MonoBehaviour
 	public event Action<Player> TurnHasEnded;
 	public event Action<Player> EffectCompleted;
 	public event Action<Player> FinishedHandlingCurrentSpaceEffects;
+	public event Action<Player> StartDiscardingCards;
 	public event Action<Player> DoneDiscardingForEffect;
 	public event Action<Player> DoneAttackingForEffect;
 	public event Action<Player> DoneRecoveringHealthEffect;
@@ -33,7 +32,7 @@ public class Player : MonoBehaviour
 	public event Action<Player> StatusEffectUpdateCompleted;
 	public event Action<Player> HasBeenDefeated;
 	public event Action<Player> BillboardLookAtCamera;
-    public event Action<Player> BillboarForwardCamera;
+    public event Action<Player> BillboardForwardCamera;
 
     //Events End
 
@@ -357,7 +356,7 @@ public class Player : MonoBehaviour
 	{
 		PlayerAI newAIScript = this.gameObject.AddComponent<PlayerAI>();
 		PlayerAIReference = newAIScript;
-		playerAIReference.PlayerReference = this;
+		PlayerAIReference.InitializeAI(this);
 	}
 
 	public void DebugTheSpace()
@@ -1760,6 +1759,7 @@ public class Player : MonoBehaviour
 
 		if (MaxHandSizeExceeded())
 		{
+			MaxHandSizeExceededPopup();
 			GameplayManagerRef.ThisDeckManager.IsDiscarding = true;
 		}
 
@@ -1773,7 +1773,7 @@ public class Player : MonoBehaviour
 			MovementCard tempMovementCard = (MovementCard)card;
 			if(tempMovementCard != null)
 			{
-				tempMovementCard.ManipulateMovementValue(true);
+				tempMovementCard.ManipulateMovementValue(true, 2);
 				CurseCardAnimationEffect();
 			}
 		}
@@ -1840,7 +1840,7 @@ public class Player : MonoBehaviour
 					MovementCard tempMovementCard = (MovementCard)card;
 					if (tempMovementCard != null)
 					{
-						tempMovementCard.ManipulateMovementValue(true);
+						tempMovementCard.ManipulateMovementValue(true, 2);
 						CurseCardAnimationEffect();
 					}
 				}
@@ -1905,11 +1905,7 @@ public class Player : MonoBehaviour
 		if(CardsInhand.Count > MaxHandSize)
 		{
 		   // GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
-			DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).", 0, "Discard");
-			SetCardsToDiscard(CardType.Both, CardsInhand.Count - MaxHandSize);
-			HideHand();
-			ShowHand();
-			GameplayManagerRef.HandDisplayPanel.ShrinkHand();
+			
 			result = true;
 		}
 		else
@@ -1918,6 +1914,16 @@ public class Player : MonoBehaviour
 		}
 
 		return result;
+	}
+
+	public void MaxHandSizeExceededPopup()
+	{
+		DialogueBoxPopup.instance.ActivatePopupWithJustText($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count - MaxHandSize} card(s).", 0, "Discard");
+		SetCardsToDiscard(CardType.Both, CardsInhand.Count - MaxHandSize);
+		HideHand();
+		ShowHand();
+		GameplayManagerRef.HandDisplayPanel.ShrinkHand();
+
 	}
 
 	/// <summary>
@@ -1973,8 +1979,10 @@ public class Player : MonoBehaviour
 	/// <param name="numToDiscard"></param>
 	public void SetCardsToDiscard(CardType cardType, int numToDiscard)
 	{
+		Debug.Log("Setting cards to discard");
 		ValidCardTypesToDiscard = cardType;
 		CardsLeftToDiscard = numToDiscard;
+		StartDiscardingCardsEffect();
 	}
 
 	public void SelectCardForDiscard()
@@ -2735,7 +2743,7 @@ public class Player : MonoBehaviour
 
 			if (tempMovementCard != null)
 			{
-				tempMovementCard.ManipulateMovementValue(true);
+				tempMovementCard.ManipulateMovementValue(true, 2);
 				tempMovementCard.ActivateCurseEffect();
 			}
 		}
@@ -2748,7 +2756,7 @@ public class Player : MonoBehaviour
 
         foreach (MovementCard movementCard in movementCardsInHand)
         {
-			movementCard.ManipulateMovementValue(false, true, valueToBoostBy);
+			movementCard.ManipulateMovementValue(false,0,false,0, true, valueToBoostBy);
         }
     }
 
@@ -2984,6 +2992,11 @@ public class Player : MonoBehaviour
 	public void CompletedAttackingEffect()
 	{
 		DoneAttackingForEffect?.Invoke(this);
+	}
+
+	public void StartDiscardingCardsEffect()
+	{
+		StartDiscardingCards?.Invoke(this);
 	}
 
 	public void CompletedDiscardingForEffect()

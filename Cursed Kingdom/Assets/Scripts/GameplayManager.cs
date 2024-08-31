@@ -101,6 +101,8 @@ public class GameplayManager : MonoBehaviour
 	public TextMeshProUGUI fpsText;
 	public bool lockFPS;
 	[Range(10, 200)] public int fpsCap = 60;
+	public bool isSpeedupOn;
+	public int speedupValue = 3;
 	private int lastFrameIndex;
 	private float[] frameDeltaTimeArray;
 	public TextMeshProUGUI spacesToMoveText;
@@ -141,7 +143,9 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
 	{
+		isSpeedupOn = false;
 		FPSCounter();
+		
 
 		if(!useStartDebugMenu && StartDebugMenu.instance != null)
 		{
@@ -504,6 +508,13 @@ public class GameplayManager : MonoBehaviour
 			frameDeltaTimeArray[lastFrameIndex] = Time.unscaledDeltaTime;
 			lastFrameIndex = (lastFrameIndex + 1) % frameDeltaTimeArray.Length;
 			fpsText.text = "FPS: " + Mathf.RoundToInt(CalculateFPS()).ToString();
+		}
+
+		//Debug time speed up
+
+		if (Input.GetKeyDown(KeyCode.S))
+		{
+			ToggleSpeedUp();
 		}
 		
 		//Map controls.
@@ -908,6 +919,28 @@ public class GameplayManager : MonoBehaviour
 	public void CloseDebugMessengerPanel()
 	{
 		debugMessagePanel.SetActive(false);
+	}
+
+	public void ToggleSpeedUp()
+	{
+		isSpeedupOn = !isSpeedupOn;
+
+		if(isSpeedupOn)
+		{
+			Time.timeScale = speedupValue;
+			if(DebugModeSingleton.instance != null)
+			{
+				DebugModeSingleton.instance.TimeScaleToggleText.text = "StartDebugMenu: OFF";
+			}
+		}
+		else
+		{
+			Time.timeScale = 1f;
+			if(DebugModeSingleton.instance != null)
+			{
+				DebugModeSingleton.instance.TimeScaleToggleText.text = "StartDebugMenu: ON";
+			}
+		}
 	}
 
 	void TestFunc()

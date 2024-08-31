@@ -105,7 +105,7 @@ public class GameplayStartPhaseState : BaseState
 
         if(gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference != null)
         {
-            gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.SelectFirstOptionDialogueBoxChoice();
+            gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.StartCoroutine(gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.SelectFirstOptionDialogueBoxChoice());
         }
     }
 }
