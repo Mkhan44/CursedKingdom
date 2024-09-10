@@ -28,6 +28,7 @@ public class MovementCardDuel : CardDuel
     public int TempIncreaseValue { get => tempIncreaseValue; set => tempIncreaseValue = value; }
     public int TempDecreaseValue { get => tempDecreaseValue; set => tempDecreaseValue = value; }
     public MovementCard MovementCardReference { get => movementCardReference; set => movementCardReference = value; }
+    public TextMeshProUGUI MovementValueText { get => movementValueText; set => movementValueText = value; }
 
     public MovementCardDuel(MovementCard moveCardRef)
     {
@@ -49,11 +50,11 @@ public class MovementCardDuel : CardDuel
 
         if(TempCardValue > 0)
         {
-            movementValueText.text = TempCardValue.ToString();
+            MovementValueText.text = TempCardValue.ToString();
         }
         else
         {
-            movementValueText.text = MovementCardValue.ToString();
+            MovementValueText.text = MovementCardValue.ToString();
         }
         //MovementCardData = cardData as MovementCardData;
         //MovementCardValue = MovementCardData.MovementValue;

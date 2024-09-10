@@ -45,6 +45,20 @@ public class DuelMovementResolutionPhaseState : BaseState
 
 		if(duelPhaseSM.CurrentPlayerBeingHandled.CardDuelResolveHolderObject != null)
 		{
+			foreach(Transform child in duelPhaseSM.CurrentPlayerBeingHandled.CardDuelResolveHolderObject.transform.GetChild(0))
+			{
+				MovementCardDuel movementCardDuel = child.GetComponent<MovementCardDuel>();
+				if(movementCardDuel != null)
+				{
+					if(movementCardDuel.MovementCardReference.TempCardValue != 0)
+					{
+						movementCardDuel.MovementValueText.text = movementCardDuel.MovementCardReference.TempCardValue.ToString();
+						Debug.Log($"The value of this movement card is: {movementCardDuel.MovementCardReference.TempCardValue}");
+					}
+				}
+
+			}
+
 			string animToPlay = "";
 			if(duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled) % 2 == 0)
 			{
