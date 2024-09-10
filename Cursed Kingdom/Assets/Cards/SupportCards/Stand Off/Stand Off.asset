@@ -16,8 +16,10 @@ MonoBehaviour:
   cardArtwork: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
   supportCardEffects:
   - supportCardEffectData: {fileID: 11400000, guid: 22f8af47d2d538346a8f3f620a01ccf7, type: 2}
-    supportTypeStringHidden: SwapMovementCardWithOpponentEffect
+    supportTypeStringHidden: SwapMovementCardValueWithOpponentEffect
   thisSupportCardType: 1
   cardDescription: You can only use this card if you have 1 opponent in the current
-    duel. Swap 1 movement card that was used (random if multiple movement cards were
-    used) with your opponent and that becomes your movement card for this duel.
+    duel. Swap your movement card's current attack value (random from the selected
+    movement cards if multiple movement cards were selected) with your opponent's
+    movement card's current attack value for this duel. If you win this duel deal
+    1 extra damage to your opponent.
