@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GameplayMovementPhaseState : BaseState
 {
@@ -489,7 +490,22 @@ public class GameplayMovementPhaseState : BaseState
 
             if(currentPlayer.PlayerAIReference != null)
             {
-                currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.DrawAndUseMovementCardMovementPhase());
+                //Randomize if we use a support card or not for now. Later we'll do strategy to decide if we use one or not...
+
+                int randomChanceToUseSupportCard = 0;
+                if(currentPlayer.MaxSupportCardsToUse >= 1 && currentPlayer.NumSupportCardsUsedThisTurn < currentPlayer.MaxSupportCardsToUse && currentPlayer.SupportCardsInHandCount > 0)
+                {
+                    randomChanceToUseSupportCard = Random.Range(0, 2);
+                }
+
+                if(randomChanceToUseSupportCard > 0)
+                {
+                    currentPlayer.SupportCardAllEffectsCompleted += DrawAndUseMovementCardAI;
+                    currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.UseRandomSupportCardMovementPhase());
+                    return;
+                }
+
+                DrawAndUseMovementCardAI();
                 return;
             }
 
@@ -498,7 +514,34 @@ public class GameplayMovementPhaseState : BaseState
         //Check if Player is an AI, if they are then use a random card for now and return.
         if(currentPlayer.PlayerAIReference != null && currentPlayer.NumMovementCardsUsedThisTurn == 0 && currentPlayer.SpacesLeftToMove == 0)
         {
-            currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.ChooseMovementCardToUseMovementPhase());
+            //Randomize if we use a support card or not for now. Later we'll do strategy to decide if we use one or not...
+            int randomChanceToUseSupportCard = 0;
+            if(currentPlayer.MaxSupportCardsToUse >= 1 && currentPlayer.NumSupportCardsUsedThisTurn < currentPlayer.MaxSupportCardsToUse && currentPlayer.SupportCardsInHandCount > 0)
+            {
+                randomChanceToUseSupportCard = Random.Range(0, 2);
+            }
+
+            if(randomChanceToUseSupportCard > 0)
+            {
+                currentPlayer.SupportCardAllEffectsCompleted += UseMovementCardAI;
+                currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.UseRandomSupportCardMovementPhase());
+                return;
+            }
+            
+            UseMovementCardAI();
+            return;
         }
+    }
+
+    public void UseMovementCardAI(Player player = null)
+    {
+        currentPlayer.SupportCardAllEffectsCompleted -= UseMovementCardAI;
+        currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.ChooseMovementCardToUseMovementPhase());
+    }
+
+    public void DrawAndUseMovementCardAI(Player player = null)
+    {
+        currentPlayer.SupportCardAllEffectsCompleted -= DrawAndUseMovementCardAI;
+        currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.DrawAndUseMovementCardMovementPhase());
     }
 }

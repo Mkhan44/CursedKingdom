@@ -58,7 +58,7 @@ public class SupportCardEffectData : ScriptableObject , ISupportEffect
     {
 
     }
-    public virtual bool CanCostBePaid(Player playerReference)
+    public virtual bool CanCostBePaid(Player playerReference, bool justChecking = false)
     {
         return true;
     }

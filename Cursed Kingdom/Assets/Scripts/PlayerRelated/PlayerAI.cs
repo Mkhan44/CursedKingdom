@@ -69,6 +69,96 @@ public class PlayerAI : MonoBehaviour
         PlayerReference.DrawThenUseMovementCardImmediatelyMovement();
     }
 
+    #region Direction Selection
+
+    public IEnumerator SelectRandomDirectionToMoveIn()
+    {
+        int randomIndex = Random.Range(0, PlayerReference.GameplayManagerRef.directionChoiceButtonHolder.transform.childCount);
+
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+
+        Button selectedButton = PlayerReference.GameplayManagerRef.directionChoiceButtonHolder.transform.GetChild(randomIndex).GetComponent<Button>();
+
+        if(selectedButton != null)
+        {
+            selectedButton.onClick.Invoke();
+        }
+    }
+
+
+    #endregion
+
+    #region UseMovementPhaseSupportCard
+
+    public IEnumerator UseRandomSupportCardMovementPhase()
+    {
+        yield return null;
+
+        //GO through all support cards in hand, if any are movement phase and cost can be paid then attempt to use them.
+        List<SupportCard> validMovementPhaseSupportCards = new();
+
+        foreach(SupportCard card in PlayerReference.GetSupportCardsInHand())
+        {
+            if(card.SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Movement)
+            {
+                validMovementPhaseSupportCards.Add(card);
+            }
+        }
+        if(validMovementPhaseSupportCards.Count == 0)
+        {
+            Debug.Log("No valid support cards for the AI to use during movement phase. Aborting random support card usage.");
+            if(PlayerReference.MovementCardsInHandCount == 0)
+            {
+                PlayerReference.GameplayManagerRef.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.DrawAndUseMovementCardAI();
+            }
+            else
+            {
+                PlayerReference.GameplayManagerRef.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.UseMovementCardAI();
+            }
+            
+            yield break;
+        }
+
+        int randomCardIndex = Random.Range(0, validMovementPhaseSupportCards.Count);
+        SupportCard supportCardReference = validMovementPhaseSupportCards[randomCardIndex];
+
+        foreach(SupportCardData.SupportCardEffect supportCardEffect in supportCardReference.SupportCardData.supportCardEffects)
+        {
+            if(supportCardEffect.supportCardEffectData.IsACost)
+            {
+                if(!supportCardEffect.supportCardEffectData.CanCostBePaid(PlayerReference, true))
+                {
+                    if(PlayerReference.MovementCardsInHandCount == 0)
+                    {
+                        PlayerReference.GameplayManagerRef.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.DrawAndUseMovementCardAI();
+                    }
+                    else
+                    {
+                        PlayerReference.GameplayManagerRef.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.UseMovementCardAI();
+                    }
+                    yield break;
+                }
+            }
+
+        }
+        int indexInHandTouse = PlayerReference.GetSupportCardsInHand().IndexOf(supportCardReference);
+
+
+        playerReference.GameplayManagerRef.HandDisplayPanel.ShrinkHand();
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+        playerReference.GameplayManagerRef.HandDisplayPanel.ExpandHand(Card.CardType.Support);
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+
+        SupportCard supportCardToUse = PlayerReference.GetSupportCardsInHand()[indexInHandTouse];
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+        supportCardToUse.OnPointerClick(null);
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+        supportCardToUse.OnPointerClick(null);
+
+    }
+
+    #endregion
+
     #region Discarding Cards
     
     /// <summary>
@@ -263,7 +353,6 @@ public class PlayerAI : MonoBehaviour
 
     #endregion
 
-
     #endregion
 
     #region Dialogue Box Selection methods
@@ -272,6 +361,10 @@ public class PlayerAI : MonoBehaviour
     {
         if(!skipDelay)
         {
+            if(Time.timeScale > 1)
+            {
+                yield return new WaitForSecondsRealtime(1.0f);
+            }
             yield return new WaitForSeconds(AIDelaySpeedInSeconds);
         }
         
@@ -281,6 +374,11 @@ public class PlayerAI : MonoBehaviour
 
     public IEnumerator SelectLastOptionDialogueBoxChoice()
     {
+        if(Time.timeScale > 1)
+        {
+            yield return new WaitForSecondsRealtime(1.0f);
+        }
+
         yield return new WaitForSeconds(AIDelaySpeedInSeconds);
         List<Button> buttons = DialogueBoxPopup.instance.GetCurrentPopupChoices();
         buttons[buttons.Count-1].onClick.Invoke();
@@ -288,10 +386,15 @@ public class PlayerAI : MonoBehaviour
 
     public IEnumerator SelectRandomOptionDialogueBoxChoice()
     {
+        if(Time.timeScale > 1)
+        {
+            yield return new WaitForSecondsRealtime(1.0f);
+        }
+
         yield return new WaitForSeconds(AIDelaySpeedInSeconds);
 
         List<Button> buttons = DialogueBoxPopup.instance.GetCurrentPopupChoices();
-
+        
         int randomIndex = Random.Range(0, buttons.Count);
        // Debug.Log($"Player is an AI and we are attempting to select a random dialogue box option the value of {randomIndex}");
         buttons[randomIndex].onClick.Invoke();

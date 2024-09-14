@@ -88,13 +88,13 @@ public class GameplayPhaseSM : BukuStateMachine
 	{
 		if(player.PlayerAIReference != null)
 		{
-			yield return new WaitForSeconds(3.0f);
+			yield return new WaitForSecondsRealtime(1.5f);
 			if(DialogueBoxPopup.instance.GetCurrentPopupChoices().Count == 0)
 			{
 				yield break;
 			}
 
-			player.PlayerAIReference.StartCoroutine(player.PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+			
 		}
 
 		yield return null;

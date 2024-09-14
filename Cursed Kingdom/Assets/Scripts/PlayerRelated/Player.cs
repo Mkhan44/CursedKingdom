@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
 
 	public event Action<Player> TurnHasEnded;
 	public event Action<Player> EffectCompleted;
+	public event Action<Player> SupportCardAllEffectsCompleted;
 	public event Action<Player> FinishedHandlingCurrentSpaceEffects;
 	public event Action<Player> StartDiscardingCards;
 	public event Action<Player> DoneDiscardingForEffect;
@@ -457,6 +458,11 @@ public class Player : MonoBehaviour
         }
 
         DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams, 1, "Attack");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
     }
 
     /// <summary>
@@ -495,7 +501,7 @@ public class Player : MonoBehaviour
                     if (supportCardsToNegateWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse && !TriedToNegateCurrentSupportCard)
                     {
 						TriedToNegateCurrentSupportCard = true;
-                        ActivatePlayerNegateSupportCardPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
+                        ActivatePlayerNegateSupportCardSelectionPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
                         yield break;
                     }
 
@@ -565,6 +571,11 @@ public class Player : MonoBehaviour
 		}
 
 		DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams, 1, "Attack");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
 	}
 
 	public void ActivatePlayerWithTargetSelectionToAttackDamageSelectionPopup(List<Player> validTargets, int damageToGive)
@@ -580,6 +591,11 @@ public class Player : MonoBehaviour
         }
 
         DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to attack.", insertedParams, 1, "Attack");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
     }
 
     #region BLOCK EFFECT POPUPS
@@ -600,6 +616,11 @@ public class Player : MonoBehaviour
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToBlockElementalDamage), this, paramsList));
 
         DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a support card that can block {damageToPotentiallytake} incoming elemental damage. Do you wish to use it?", insertedParams, 1, "Reaction");
+
+		if(targetedPlayer.PlayerAIReference != null)
+		{
+			targetedPlayer.PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
     }
 
 	public void ActivatePlayerBlockPoisonSelectionPopup(Player targetedPlayer, List<SupportCard> poisonBlockSupportCards, int turnsToBePoisoned)
@@ -621,9 +642,14 @@ public class Player : MonoBehaviour
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToBlockPoison), this, paramsList));
 
         DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a support card that can prevent you from being poisoned for {turnsToBePoisoned} turn(s). Do you wish to use it?", insertedParams, 1, "Reaction");
+
+		if(targetedPlayer.PlayerAIReference != null)
+		{
+			targetedPlayer.PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
     }
 
-	public void ActivatePlayerNegateSupportCardPopup(Player targetedPlayer, List<SupportCard> negateSupportCards, SupportCard supportCardTryingToBeUsed, Player playerAttemptingToUseSupportCard)
+	public void ActivatePlayerNegateSupportCardSelectionPopup(Player targetedPlayer, List<SupportCard> negateSupportCards, SupportCard supportCardTryingToBeUsed, Player playerAttemptingToUseSupportCard)
 	{
         // Move the camera to the targeted Player. Once they select a choice, move the camera back to the current Player. Moving the camera back will be in the coroutine most likely.
 
@@ -641,9 +667,14 @@ public class Player : MonoBehaviour
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToNegateSupportCard), this, paramsList));
 
         DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a support card that can negate the {supportCardTryingToBeUsed.SupportCardData.CardTitle} support card. Do you wish to negate it?", insertedParams, 1, "Reaction");
+
+		if(targetedPlayer.PlayerAIReference != null)
+		{
+			targetedPlayer.PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
     }
 
-    public void ActivatePlayerStealSupportCardPopup(Player targetedPlayer, List<SupportCard> stealSupportCards, SupportCard supportCardTryingToBeUsed, Player playerAttemptingToUseSupportCard)
+    public void ActivatePlayerStealSupportCardSelectionPopup(Player targetedPlayer, List<SupportCard> stealSupportCards, SupportCard supportCardTryingToBeUsed, Player playerAttemptingToUseSupportCard)
     {
         // Move the camera to the targeted Player. Once they select a choice, move the camera back to the current Player. Moving the camera back will be in the coroutine most likely.
 
@@ -661,6 +692,11 @@ public class Player : MonoBehaviour
         insertedParams.Add(Tuple.Create<string, string, object, List<object>>("No", nameof(DontUseSupportCardToStealSupportCard), this, paramsList));
 
         DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {targetedPlayer.playerIDIntVal} you have a {stealSupportCards[0].SupportCardData.CardTitle} card that can steal the {supportCardTryingToBeUsed.SupportCardData.CardTitle} support card. Do you wish to take it?", insertedParams, 1, "Reaction");
+
+		if(targetedPlayer.PlayerAIReference != null)
+		{
+			targetedPlayer.PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
     }
 
     /// <summary>
@@ -683,6 +719,8 @@ public class Player : MonoBehaviour
           //  GameplayManagerRef.CurrentSupportCardBeingUsed = null;
         }
 
+		SupportCardAllEffectsCompletedEffect();
+
     }
 
     /// <summary>
@@ -697,6 +735,8 @@ public class Player : MonoBehaviour
         List<SupportCard> stealSupportCards = (List<SupportCard>)objects[1];
         SupportCard supportCardTryingToBeUsed = (SupportCard)objects[2];
         Player playerAttemptingToUseSupportCard = (Player)objects[3];
+
+		SupportCardAllEffectsCompletedEffect();
     }
 
 
@@ -860,7 +900,7 @@ public class Player : MonoBehaviour
                         if (supportCardsToNegateWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse && !TriedToNegateCurrentSupportCard)
                         {
 							TriedToNegateCurrentSupportCard = true;
-                            ActivatePlayerNegateSupportCardPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
+                            ActivatePlayerNegateSupportCardSelectionPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
                             yield break;
                         }
 
@@ -879,7 +919,7 @@ public class Player : MonoBehaviour
                     if (supportCardsToNegateWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse && !TriedToNegateCurrentSupportCard)
                     {
                         TriedToNegateCurrentSupportCard = true;
-                        ActivatePlayerNegateSupportCardPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
+                        ActivatePlayerNegateSupportCardSelectionPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
                         yield break;
                     }
 
@@ -1115,6 +1155,11 @@ public class Player : MonoBehaviour
 		}
 
 		DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to take cards from.", insertedParams, 1, "Attack");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
 	}
 
 	/// <summary>
@@ -1277,6 +1322,11 @@ public class Player : MonoBehaviour
         }
 
         DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the Player you wish to take cards from.", insertedParams, 1, "Attack");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
     }
 
 	/// <summary>
@@ -1344,6 +1394,11 @@ public class Player : MonoBehaviour
         }
 
         DialogueBoxPopup.instance.ActivatePopupWithImageChoices("Select the card(s) you wish to discard.", insertedParams, numCardsToDiscard, "Discard");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
     }
 
     /// <summary>
@@ -1419,6 +1474,11 @@ public class Player : MonoBehaviour
         }
 
         DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Select the card(s) you wish to take from player {playerTarget.playerIDIntVal}.", insertedParams, numCardsToTakeFromOpponent, "Attack");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
     }
 
 
@@ -1732,6 +1792,11 @@ public class Player : MonoBehaviour
 		insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(Resources.Load<Sprite>("CardArtwork/CardBacksFullArtwork/Supportbackfull"), nameof(SelectCardToDraw), this, supportParamsList));
 
 		DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Select which deck you would like to draw {numCardsToDraw} card(s) from.", insertedParams, 1, "Draw");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
 	}
 
 	/// <summary>
@@ -2823,13 +2888,18 @@ public class Player : MonoBehaviour
 
                 if (wasCardUsedAGrapplingHook)
                 {
+					SupportCardAllEffectsCompletedEffect();
                     return;
                 }
                 //Need this to be dynamic so that if Player 1 says no, Player 2 has a chance to respond etc.
-                ActivatePlayerStealSupportCardPopup(playersThatCanSteal[0], supportCards, GameplayManagerRef.CurrentSupportCardBeingUsed, this);
+                ActivatePlayerStealSupportCardSelectionPopup(playersThatCanSteal[0], supportCards, GameplayManagerRef.CurrentSupportCardBeingUsed, this);
             }
 			
         }
+		else
+		{
+			SupportCardAllEffectsCompletedEffect();
+		}
 
 		//We'll need to up the counter of the amount of Support cards the user has used this turn here.
 	}
@@ -2992,6 +3062,11 @@ public class Player : MonoBehaviour
 	public void CompletedAttackingEffect()
 	{
 		DoneAttackingForEffect?.Invoke(this);
+	}
+
+	public void SupportCardAllEffectsCompletedEffect()
+	{
+		SupportCardAllEffectsCompleted?.Invoke(this);
 	}
 
 	public void StartDiscardingCardsEffect()

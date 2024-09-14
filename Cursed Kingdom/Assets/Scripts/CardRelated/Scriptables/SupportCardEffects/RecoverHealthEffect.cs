@@ -28,7 +28,7 @@ public class RecoverHealthEffect : SupportCardEffectData, ISupportEffect
         playerReference.RecoverHealth(HealthToRecover);
     }
 
-    public override bool CanCostBePaid(Player playerReference)
+    public override bool CanCostBePaid(Player playerReference, bool justChecking = false)
     {
         bool canCostBePaid = false;
 
@@ -37,7 +37,7 @@ public class RecoverHealthEffect : SupportCardEffectData, ISupportEffect
             canCostBePaid = true;
         }
 
-        if (!canCostBePaid)
+        if (!canCostBePaid && !justChecking)
         {
             DialogueBoxPopup.instance.ActivatePopupWithJustText("You're already at max health!", 1.5f);
         }

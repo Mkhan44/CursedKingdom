@@ -29,7 +29,7 @@ public class DiscardToTakeCardEffect : SupportCardEffectData, ISupportEffect
         playerReference.ActivateChoosePlayerToTakeCardsFromSupportSelectionPopup(NumCardsToDiscard, CardTypeToDiscard, NumCardsToTake, CardTypeToTakeFromOpponent);
     }
 
-    public override bool CanCostBePaid(Player playerReference)
+    public override bool CanCostBePaid(Player playerReference, bool justChecking = false)
     {
         bool canCostBePaid = false;
 
@@ -59,7 +59,7 @@ public class DiscardToTakeCardEffect : SupportCardEffectData, ISupportEffect
 
 
         //Early return since if even 1 of the conditions are not met we can't do it.
-        if (!canCostBePaid)
+        if (!canCostBePaid && !justChecking)
         {
             DialogueBoxPopup.instance.ActivatePopupWithJustText("You need at least 1 other support card to discard to use this card!", 2.5f);
             return canCostBePaid;
@@ -96,7 +96,7 @@ public class DiscardToTakeCardEffect : SupportCardEffectData, ISupportEffect
             }
         }
 
-        if (!canCostBePaid)
+        if (!canCostBePaid && !justChecking)
         {
             DialogueBoxPopup.instance.ActivatePopupWithJustText("There are no valid targets to use this card against currently.", 2.5f);
             return canCostBePaid;

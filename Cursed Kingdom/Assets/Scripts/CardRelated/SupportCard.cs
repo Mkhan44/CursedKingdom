@@ -228,7 +228,7 @@ public class SupportCard : Card
 					{
 						List<SupportCard> supportCards = currentPlayer.GetSupportCardsPlayersCanNegateSupportCardEffectsWith(currentPlayer);
 						//Need this to be dynamic so that if Player 1 says no, Player 2 has a chance to respond etc.
-						currentPlayer.ActivatePlayerNegateSupportCardPopup(playersThatCanNegate[0], supportCards, this, currentPlayer);
+						currentPlayer.ActivatePlayerNegateSupportCardSelectionPopup(playersThatCanNegate[0], supportCards, this, currentPlayer);
 						return;
 					}
 

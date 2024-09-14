@@ -31,6 +31,7 @@ public class MovementCardBoardBuffEffect : SupportCardEffectData, ISupportEffect
         if (BuffAllCards)
         {
             playerReference.BoostAllMovementCardValuesInHand(numMovementIncrease);
+            base.CompletedEffect(playerReference);
         }
     }
 }

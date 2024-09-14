@@ -202,6 +202,11 @@ public class PlayerCharacterMoveState : BaseState
 
         playerToMove.GameplayManagerRef.HandDisplayPanel.gameObject.SetActive(false);
 		playerToMove.GameplayManagerRef.SpacesPlayerWillLandOnParent.TurnOnDisplay(playerToMove.GameplayManagerRef.GameplayPhaseStatemachineRef.gameplayMovementPhaseState.FindValidSpaces(playerToMove, playerToMove.SpacesLeftToMove));
+
+		if(playerToMove.PlayerAIReference != null)
+		{
+			playerToMove.PlayerAIReference.StartCoroutine(playerToMove.PlayerAIReference.SelectRandomDirectionToMoveIn());
+		}
     }
 
 	//Used when a direction is chosen. This function should be called by clicking a button.

@@ -93,7 +93,7 @@ public class CurseEffect : SupportCardEffectData, ISupportEffect
         }
     }
 
-    public override bool CanCostBePaid(Player playerReference)
+    public override bool CanCostBePaid(Player playerReference, bool justChecking = false)
     {
         bool canCostBePaid = false;
 
@@ -114,7 +114,7 @@ public class CurseEffect : SupportCardEffectData, ISupportEffect
         }
 
                 
-        if (!canCostBePaid)
+        if (!canCostBePaid && !justChecking)
         {
             DialogueBoxPopup.instance.ActivatePopupWithJustText("No valid targets to Curse.", 1.5f);
         }

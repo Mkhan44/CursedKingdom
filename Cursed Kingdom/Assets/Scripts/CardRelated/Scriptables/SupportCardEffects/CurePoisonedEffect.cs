@@ -30,11 +30,11 @@ public class CurePoisonedEffect : SupportCardEffectData, ISupportEffect
         base.CompletedEffect(playerReference);
     }
 
-    public override bool CanCostBePaid(Player playerReference)
+    public override bool CanCostBePaid(Player playerReference, bool justChecking = false)
     {
         bool canCostBePaid = playerReference.IsPoisoned;
 
-        if(!canCostBePaid)
+        if(!canCostBePaid && !justChecking)
         {
             DialogueBoxPopup.instance.ActivatePopupWithJustText("You're not poisoned currently.", 1.5f);
         }

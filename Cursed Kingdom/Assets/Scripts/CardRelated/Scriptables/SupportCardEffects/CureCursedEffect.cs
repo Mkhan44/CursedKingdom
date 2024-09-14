@@ -30,11 +30,11 @@ public class CureCursedEffect : SupportCardEffectData, ISupportEffect
         base.CompletedEffect(playerReference);
     }
 
-    public override bool CanCostBePaid(Player playerReference)
+    public override bool CanCostBePaid(Player playerReference, bool justChecking = false)
     {
         bool canCostBePaid = playerReference.IsCursed;
 
-        if (!canCostBePaid)
+        if (!canCostBePaid && !justChecking)
         {
             DialogueBoxPopup.instance.ActivatePopupWithJustText("You're not cursed currently.", 1.5f);
         }
