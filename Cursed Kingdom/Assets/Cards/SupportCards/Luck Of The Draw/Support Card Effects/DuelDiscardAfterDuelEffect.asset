@@ -9,13 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3543d4ec95f163f46b7540b191beb64c, type: 3}
-  m_Name: DrawFromDeckAndUseMovementCardEffect
+  m_Script: {fileID: 11500000, guid: ad031b04437783c49ba545387ed47303, type: 3}
+  m_Name: DuelDiscardAfterDuelEffect
   m_EditorClassIdentifier: 
   isACost: 0
   isElemental: 0
   isReaction: 0
-  isAfterDuelIEffect: 0
+  isAfterDuelEffectAndNeedsToWin: 0
+  isAfterDuelEffect: 1
+  isDuringDuelDamageCalc: 0
   hasPriorityInDuel: 0
-  requiresMovementCardInHandFirst: 1
-  discardAllMovementCardsIfYouLoseTheDuel: 1
+  cardTypeToDiscard: 0
+  numCardsToDiscard: 0
+  discardAllCards: 1

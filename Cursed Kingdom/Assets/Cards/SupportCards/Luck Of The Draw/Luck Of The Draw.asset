@@ -15,12 +15,16 @@ MonoBehaviour:
   cardTitle: Luck Of The Draw
   cardArtwork: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
   supportCardEffects:
-  - supportCardEffectData: {fileID: 11400000, guid: 69eb61033deaddb459f5f9600414129b, type: 2}
-    supportTypeStringHidden: DrawFromDeckAndUseMovementCardEffect
+  - supportCardEffectData: {fileID: 11400000, guid: 82e75cd6e78e5524a8649034432f015d, type: 2}
+    supportTypeStringHidden: DuelDrawFromDeckAndUseMovementCardEffect
+  - supportCardEffectData: {fileID: 11400000, guid: bc80ef823899fcd4b87a9d635f02cd02, type: 2}
+    supportTypeStringHidden: DuelExtraDamageBasedOnCardsInHand
+  - supportCardEffectData: {fileID: 11400000, guid: e6d0055fe0ceb01498c175ba2081215b, type: 2}
+    supportTypeStringHidden: DuelDiscardAfterDuelEffect
   thisSupportCardType: 1
-  cardDescription: '(You must have at least 1 movement card in your hand before the
-    duel began to use this card.) Return the movement card you selected for this
-    duel to your hand. Immediately draw and use the next movement card in the movement
-    deck as your movement card for this duel. If you win the duel: Deal 1 extra damage
-    to the losers up to the number of movement cards you have in your hand (Max:
-    3 extra damage). If you lose this duel: Discard all movement cards in your hand.'
+  cardDescription: '(You must have at least 2 movement cards in your hand to use
+    this card.) Return the movement card you selected for this duel to your hand.
+    Immediately draw and use the next movement card in the movement deck as your
+    movement card for this duel. If you win the duel: Deal 1 extra damage to the
+    losers up to the number of movement cards you have in your hand (Max: 3 extra
+    damage). If you lose this duel: Discard all movement cards in your hand.'

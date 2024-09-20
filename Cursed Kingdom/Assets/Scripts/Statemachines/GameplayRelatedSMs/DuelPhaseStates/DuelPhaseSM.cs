@@ -202,9 +202,17 @@ public class DuelPhaseSM : BukuStateMachine
 		yield return null;
 	}
 
+	public IEnumerator SetupCardsToResolve()
+	{
+		duelSupportResolutionPhaseState.SetupSupportCardsToResolve();
+		duelSupportResolutionPhaseState.SetupMovementCardsToResolve();
+		yield return new WaitForSeconds(0.65f);
+		duelSupportResolutionPhaseState.FlipAndUseSupportCards();
+	}
+
 	public IEnumerator TestingTimeBetweenPopupsSupportCardResolution()
 	{
-		yield return new WaitForSeconds(2.5f);
+		yield return new WaitForSeconds(2.0f);
 
 		DialogueBoxPopup.instance.DeactivatePopup();
 

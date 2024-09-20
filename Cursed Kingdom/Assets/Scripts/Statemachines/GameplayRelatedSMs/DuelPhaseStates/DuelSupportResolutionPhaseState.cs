@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class DuelSupportResolutionPhaseState : BaseState
@@ -37,8 +38,17 @@ public class DuelSupportResolutionPhaseState : BaseState
 			duelPhaseSM.duelResolveCardsHolder.SetActive(true);
 			SpawnInCardResolveHolders();
 		}
+		else
+		{
+			FlipAndUseSupportCards();
+		}
+
+    }
+
+	public void FlipAndUseSupportCards()
+	{
 		
-        if (duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards.Count > 0)
+		if (duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards.Count > 0)
 		{
 			//DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal} used {duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0].SupportCardData.name}", 0, "Support card resolution");
 			//duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0];
@@ -86,8 +96,7 @@ public class DuelSupportResolutionPhaseState : BaseState
 		}
 
 		//Will need to loop through each support card: Use each.
-
-    }
+	}
 
 	//Spawn the holders a certain distance away from where the player is. Spawn it the way the player is facing (Right = spawn to the right etc)
 	public void SpawnInCardResolveHolders()
@@ -99,9 +108,10 @@ public class DuelSupportResolutionPhaseState : BaseState
 			duelPlayerInformation.CardDuelResolveHolderObject = duelPhaseSM.duelResolveCardsHolder.transform.GetChild(indexOfCurrentPlayer).gameObject;
 		}
 
-		SetupSupportCardsToResolve();
-		SetupMovementCardsToResolve();
+		duelPhaseSM.StartCoroutine(duelPhaseSM.SetupCardsToResolve());
 	}
+
+	
 
 	public void SetupSupportCardsToResolve()
 	{
@@ -122,6 +132,8 @@ public class DuelSupportResolutionPhaseState : BaseState
 				{
 					child.GetComponent<Animator>().Play("ComeDown");
 				}
+
+				//After final card animation begins playing, we need to wait until it's done before moving on by getting the clip length.
 			}
 		}
 	}
