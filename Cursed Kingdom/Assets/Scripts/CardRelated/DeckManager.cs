@@ -136,6 +136,40 @@ public class DeckManager : MonoBehaviour
         }
     }
 
+    public Card LookAtNextCardInDeck(Card.CardType deckToLookAt)
+    {
+        Card cardToReturn = null;
+        if (deckToLookAt == Card.CardType.Movement)
+        {
+            if (MovementDeckList.Count == 0)
+            {
+                Debug.LogWarning($"{nameof(MovementDeckList)} is out of cards! The next card is nothing.");
+            }
+            else
+            {
+                cardToReturn = MovementDeckList[0];
+            }
+        }
+        else if (deckToLookAt == Card.CardType.Support)
+        {
+            if (SupportDeckList.Count == 0)
+            {
+                Debug.LogWarning($"{nameof(SupportDeckList)} is out of cards! The next card is nothing.");
+            }
+            else
+            {
+                cardToReturn = SupportDeckList[0];
+            }
+        }
+        
+        return cardToReturn;
+    }
+
+    public void DiscardNextCardInDeck(Card.CardType deckToDiscardFrom)
+    {
+        
+    }
+
     public void DrawCard(Card.CardType deckTypeToDrawFrom, Player playerDrawingCard)
     {
         if (deckTypeToDrawFrom == Card.CardType.Movement)
@@ -309,6 +343,8 @@ public class DeckManager : MonoBehaviour
     /// <param name="placeToDiscardCardFrom"> The list we're discarding from. This could be the deck, the player's hand, etc.</param>
     public void AddCardToDiscardPile(Card.CardType cardTypeToDiscard, Card cardReferenceToDiscard, List<Card> placeToDiscardCardFrom)
     {
+        cardReferenceToDiscard.DeselectCard();
+
         if(cardTypeToDiscard == Card.CardType.Movement)
         {
             MovementCard movementCard = cardReferenceToDiscard as MovementCard;
@@ -352,6 +388,11 @@ public class DeckManager : MonoBehaviour
     /// <param name="placeToDiscardCardFrom"> The list we're discarding from. This could be the deck, the player's hand, etc.</param>
     public void AddCardsToDiscardPile(Card.CardType cardTypeToDiscard, List<Card> cardReferencesToDiscard, List<Card> placeToDiscardCardFrom)
     {
+        foreach(Card card in cardReferencesToDiscard)
+        {
+            card.DeselectDueToDiscardingCardToDiscardPile();
+        }
+
         if (cardTypeToDiscard == Card.CardType.Movement)
         {
             for(int i = 0; i < cardReferencesToDiscard.Count; i++)

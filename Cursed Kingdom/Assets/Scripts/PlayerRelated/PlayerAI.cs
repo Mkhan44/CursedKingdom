@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,8 +47,13 @@ public class PlayerAI : MonoBehaviour
 
     public IEnumerator ChooseMovementCardToUseMovementPhase()
     {
+        if((PlayerReference.MaxMovementCardsToUse + PlayerReference.ExtraMovementCardUses) > 1)
+        {
+            StartCoroutine(SelectMultipleMovementCardsToMoveWith());
+            yield break;
+        }
         yield return new WaitForSeconds(AIDelaySpeedInSeconds);
-        playerReference.GameplayManagerRef.HandDisplayPanel.ExpandHand(Card.CardType.Movement);
+        PlayerReference.GameplayManagerRef.HandDisplayPanel.ExpandHand(Card.CardType.Movement);
         yield return new WaitForSeconds(AIDelaySpeedInSeconds);
 
         int movementCardToUseIndex = Random.Range(0,PlayerReference.MovementCardsInHandCount);
@@ -68,6 +74,103 @@ public class PlayerAI : MonoBehaviour
         PlayerReference.NoMovementCardsInHandButton.onClick.RemoveAllListeners();
         PlayerReference.DrawThenUseMovementCardImmediatelyMovement();
     }
+
+    public IEnumerator SelectMultipleMovementCardsToMoveWith()
+    {
+        //We have 0 movement cards in hand so just draw and use next one.
+        if(PlayerReference.MovementCardsInHandCount == 0)
+        {
+            //We click the use next card button so I think we don't needa do the selected cards thing...Might still needa turn off the button though.
+            StartCoroutine(DrawAndUseMovementCardMovementPhase());
+            yield break;
+        }
+        //We only have 1 so select that 1 and then use it.
+        else if(PlayerReference.MovementCardsInHandCount == 1)
+        {
+            yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+            PlayerReference.GameplayManagerRef.HandDisplayPanel.ExpandHand(Card.CardType.Movement);
+            yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+            PlayerReference.GetMovementCardsInHand()[0].SelectForUse();
+            yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+
+            Image selectedCardsButtonTargetGraphicImage = PlayerReference.GameplayManagerRef.UseSelectedCardsButton.targetGraphic.GetComponent<Image>();
+            selectedCardsButtonTargetGraphicImage.color = PlayerReference.GameplayManagerRef.UseSelectedCardsButton.colors.highlightedColor;
+
+            yield return new WaitForSeconds(0.6f);
+
+            PlayerReference.GameplayManagerRef.UseSelectedCardsButton.onClick.Invoke();
+
+            selectedCardsButtonTargetGraphicImage.color = PlayerReference.GameplayManagerRef.UseSelectedCardsButton.colors.normalColor;
+
+            yield break;
+        }
+
+        int numMovementCardsTotal = PlayerReference.MaxMovementCardsToUse + PlayerReference.ExtraMovementCardUses;
+
+        List<int> randomCardsToUseMultiple = new();
+
+        for(int i = 0; i < numMovementCardsTotal; i++)
+        {
+            int currentRandomNum = Random.Range(0, PlayerReference.MovementCardsInHandCount);
+            while(randomCardsToUseMultiple.Count != 0 && randomCardsToUseMultiple.Contains(currentRandomNum))
+            {
+                currentRandomNum = Random.Range(0, PlayerReference.MovementCardsInHandCount);
+            }
+            randomCardsToUseMultiple.Add(currentRandomNum);
+        }
+        
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+        PlayerReference.GameplayManagerRef.HandDisplayPanel.ExpandHand(Card.CardType.Movement);
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+
+        for(int j = 0; j < randomCardsToUseMultiple.Count; j++)
+        {
+            int index = j;
+            PlayerReference.GetMovementCardsInHand()[randomCardsToUseMultiple[index]].SelectForUse();
+            yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+        }
+
+        Image targetGraphicImage = PlayerReference.GameplayManagerRef.UseSelectedCardsButton.targetGraphic.GetComponent<Image>();
+        targetGraphicImage.color = PlayerReference.GameplayManagerRef.UseSelectedCardsButton.colors.highlightedColor;
+
+        yield return new WaitForSeconds(0.6f);
+
+        PlayerReference.GameplayManagerRef.UseSelectedCardsButton.onClick.Invoke();
+
+        targetGraphicImage.color = PlayerReference.GameplayManagerRef.UseSelectedCardsButton.colors.normalColor;
+
+        yield return null;
+    }
+
+    #region Ability related
+    public IEnumerator UseAbility()
+    {
+        if(!PlayerReference.ClassData.abilityData.CanBeManuallyActivated)
+        {
+            //Force the event to trigger.
+            PlayerReference.CompletedAbilityActivation();
+            yield break;
+        }
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+        PlayerReference.GameplayManagerRef.UseAbilityButton.onClick.Invoke();
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+    }
+
+    public IEnumerator UseEliteAbility()
+    {
+        if(!PlayerReference.ClassData.eliteAbilityData.CanBeManuallyActivated || !PlayerReference.ClassData.eliteAbilityData.CanCostBePaid(PlayerReference, true))
+        {
+            //Force the event to trigger.
+            PlayerReference.CompletedEliteAbilityActivation();
+            yield break;
+        }
+
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+        PlayerReference.GameplayManagerRef.UseEliteAbilityButton.onClick.Invoke();
+        yield return new WaitForSeconds(AIDelaySpeedInSeconds);
+    }
+
+    #endregion
 
     #region Direction Selection
 
@@ -369,7 +472,8 @@ public class PlayerAI : MonoBehaviour
         }
         
         List<Button> buttons = DialogueBoxPopup.instance.GetCurrentPopupChoices();
-        buttons[0].onClick.Invoke();
+        Button buttonToSelect = buttons[0];
+        StartCoroutine(SelectTheButton(buttonToSelect));
     }
 
     public IEnumerator SelectLastOptionDialogueBoxChoice()
@@ -381,7 +485,8 @@ public class PlayerAI : MonoBehaviour
 
         yield return new WaitForSeconds(AIDelaySpeedInSeconds);
         List<Button> buttons = DialogueBoxPopup.instance.GetCurrentPopupChoices();
-        buttons[buttons.Count-1].onClick.Invoke();
+        Button buttonToSelect = buttons[buttons.Count-1];
+        StartCoroutine(SelectTheButton(buttonToSelect));
     }
 
     public IEnumerator SelectRandomOptionDialogueBoxChoice()
@@ -396,8 +501,26 @@ public class PlayerAI : MonoBehaviour
         List<Button> buttons = DialogueBoxPopup.instance.GetCurrentPopupChoices();
         
         int randomIndex = Random.Range(0, buttons.Count);
-       // Debug.Log($"Player is an AI and we are attempting to select a random dialogue box option the value of {randomIndex}");
-        buttons[randomIndex].onClick.Invoke();
+        // Debug.Log($"Player is an AI and we are attempting to select a random dialogue box option the value of {randomIndex}");
+        Button buttonToSelect = buttons[randomIndex];
+        StartCoroutine(SelectTheButton(buttonToSelect));
+    }
+
+    public IEnumerator SelectTheButton(Button buttonToSelect)
+    {
+        Image targetGraphicImage = buttonToSelect.targetGraphic.GetComponent<Image>();
+        targetGraphicImage.color = buttonToSelect.colors.highlightedColor;
+        if(buttonToSelect.colors.normalColor.a == 0)
+        {
+            ColorBlock colorBlock = buttonToSelect.colors;
+            colorBlock.normalColor = buttonToSelect.colors.highlightedColor;
+            buttonToSelect.colors = colorBlock;
+            targetGraphicImage.color = new Color(targetGraphicImage.color.r, targetGraphicImage.color.g, targetGraphicImage.color.b, 255f);
+        }
+
+        yield return new WaitForSeconds(0.6f);
+
+        buttonToSelect.onClick.Invoke();
     }
 
     #endregion

@@ -33,7 +33,7 @@ public class EliteAbilityData : ScriptableObject, IEliteAbility
         EliteAbilityCompletedEffect?.Invoke();
     }
 
-    public virtual bool CanCostBePaid(Player playerReference)
+    public virtual bool CanCostBePaid(Player playerReference, bool justChecking = false)
     {
         return HasACost;
     }

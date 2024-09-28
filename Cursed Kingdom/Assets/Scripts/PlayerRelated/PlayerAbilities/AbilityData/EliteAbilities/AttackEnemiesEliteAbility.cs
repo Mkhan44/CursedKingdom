@@ -37,9 +37,10 @@ public class AttackEnemiesEliteAbility : EliteAbilityData, IEliteAbility
     {
         playerReference.DoneDiscardingForEffect += AttackPortionOfEffect;
         playerReference.DoneAttackingForEffect += CompletedEffect;
+        playerReference.ActivateEliteAbilityEffects();
         DiscardPortionOfEffect(playerReference);
     }
-    public override bool CanCostBePaid(Player playerReference)
+    public override bool CanCostBePaid(Player playerReference, bool justChecking = false)
     {
         bool canCostBePaid = false;
         string messageToPopupIfCostCantBePaid = string.Empty;
@@ -79,7 +80,7 @@ public class AttackEnemiesEliteAbility : EliteAbilityData, IEliteAbility
                 }
             }
         }
-        if(!canCostBePaid)
+        if(!canCostBePaid && !justChecking)
         {
             DialogueBoxPopup.instance.ActivatePopupWithJustText(messageToPopupIfCostCantBePaid, 2.5f);
         }
@@ -92,6 +93,8 @@ public class AttackEnemiesEliteAbility : EliteAbilityData, IEliteAbility
         base.CompletedEffect(playerReference);
         playerReference.DoneDiscardingForEffect -= AttackPortionOfEffect;
         playerReference.DoneAttackingForEffect -= CompletedEffect;
+        //If there are multiple effects in an elite ability we won't wanna do this.
+        playerReference.CompletedEliteAbilityActivation();
     }
 
     protected override void UpdateEffectDescription()

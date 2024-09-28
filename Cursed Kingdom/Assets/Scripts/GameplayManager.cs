@@ -321,9 +321,37 @@ public class GameplayManager : MonoBehaviour
             {
                 UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(false);
             }
+			
+			//Inputting '0' as the playerDebugDatas index for debugging purposes. This is because right now the first player always goes first. WILL NEED TO CHANGE THIS EVENTUALLY.
 
-            //No player should start at level 5.
-            UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
+			if (StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable && StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[0].startingLevelOverride > 1)
+			{
+				if(StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[0].startingLevelOverride >= 5)
+				{
+					Players[0].CanUseEliteAbility = true;
+					if (Players[0].ClassData.eliteAbilityData.IsPassive)
+					{
+						Players[0].UseEliteAbility();
+					}
+					else if (Players[0].ClassData.eliteAbilityData.CanBeManuallyActivated)
+					{
+						UseEliteAbilityButton.gameObject.transform.parent.gameObject.SetActive(true);
+						UseEliteAbilityButton.onClick.RemoveAllListeners();
+						UseEliteAbilityButton.onClick.AddListener(Players[0].UseEliteAbility);
+					}
+				}
+				else
+				{
+					UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
+				}
+			}
+			else
+			{
+				//No player should start at level 5.
+            	UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
+			}
+
+           
 
             HandDisplayPanel.SetCurrentActiveHandUI(0);
             //DEBUG.
@@ -382,8 +410,6 @@ public class GameplayManager : MonoBehaviour
                 UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(false);
             }
 
-            //No player should start at level 5.
-            UseEliteAbilityButton.transform.parent.gameObject.SetActive(false);
 
             HandDisplayPanel.SetCurrentActiveHandUI(0);
             //DEBUG.

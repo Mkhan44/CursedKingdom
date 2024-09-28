@@ -63,6 +63,16 @@ public class GameplayMovementPhaseState : BaseState
                 gameplayPhaseSM.ChangeState(gameplayPhaseSM.gameplayResolveSpacePhaseState);
             }
 		}
+
+        if(!playerWentToZeroCards && currentPlayer.MovementCardsInHandCount == 0 && currentPlayer.NumMovementCardsUsedThisTurn == 0)
+		{
+			currentPlayer.NoMovementCardsInHandButton.gameObject.SetActive(true);
+			currentPlayer.NoMovementCardsInHandButton.onClick.RemoveAllListeners();
+			currentPlayer.NoMovementCardsInHandButton.onClick.AddListener(currentPlayer.DrawThenUseMovementCardImmediatelyMovement);
+            currentPlayer.GameplayManagerRef.UseSelectedCardsPanel.SetActive(false);
+            currentPlayer.GameplayManagerRef.UseSelectedCardsButton.onClick.RemoveAllListeners();
+			playerWentToZeroCards = true;
+        }
 	}
 
     
@@ -481,15 +491,38 @@ public class GameplayMovementPhaseState : BaseState
     {
         PhaseDisplay.instance.displayTimeCompleted -= Logic;
         currentPlayer.ShowHand();
-        if(!playerWentToZeroCards && currentPlayer.MovementCardsInHandCount == 0 && currentPlayer.NumMovementCardsUsedThisTurn == 0)
+        if(currentPlayer.MovementCardsInHandCount == 0 && currentPlayer.NumMovementCardsUsedThisTurn == 0)
 		{
-			currentPlayer.NoMovementCardsInHandButton.gameObject.SetActive(true);
-			currentPlayer.NoMovementCardsInHandButton.onClick.RemoveAllListeners();
-			currentPlayer.NoMovementCardsInHandButton.onClick.AddListener(currentPlayer.DrawThenUseMovementCardImmediatelyMovement);
-			playerWentToZeroCards = true;
 
             if(currentPlayer.PlayerAIReference != null)
             {
+
+                //See if we use the Player's elite ability yet or not.
+                if(currentPlayer.CanUseEliteAbility && currentPlayer.ClassData.eliteAbilityData.CanBeManuallyActivated)
+                {
+                    int randomChanceToUseEliteAbility = 0;
+                    randomChanceToUseEliteAbility = Random.Range(0,2);
+                    if(randomChanceToUseEliteAbility > 0)
+                    {
+                        currentPlayer.DoneActivatingEliteAbilityEffect += UseAbilityAI;
+                        currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.UseEliteAbility());
+                        return;
+                    }
+                }
+
+                //See if we use the Player's ability yet or not.
+                if(!currentPlayer.IsOnCooldown && currentPlayer.ClassData.abilityData.CanBeManuallyActivated)
+                {
+                    int randomChanceToUseAbility = 0;
+                    randomChanceToUseAbility = Random.Range(0,2);
+                    if(randomChanceToUseAbility > 0)
+                    {
+                        currentPlayer.DoneActivatingAbilityEffect += UseRandomSupportCardAI;
+                        currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.UseAbility());
+                        return;
+                    }
+                }
+
                 //Randomize if we use a support card or not for now. Later we'll do strategy to decide if we use one or not...
 
                 int randomChanceToUseSupportCard = 0;
@@ -514,6 +547,33 @@ public class GameplayMovementPhaseState : BaseState
         //Check if Player is an AI, if they are then use a random card for now and return.
         if(currentPlayer.PlayerAIReference != null && currentPlayer.NumMovementCardsUsedThisTurn == 0 && currentPlayer.SpacesLeftToMove == 0)
         {
+
+            //See if we use the Player's elite ability yet or not.
+            if(currentPlayer.CanUseEliteAbility && currentPlayer.ClassData.eliteAbilityData.CanBeManuallyActivated)
+            {
+                int randomChanceToUseEliteAbility = 0;
+                randomChanceToUseEliteAbility = Random.Range(0,2);
+                if(randomChanceToUseEliteAbility > 0)
+                {
+                    currentPlayer.DoneActivatingEliteAbilityEffect += UseAbilityAI;
+                    currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.UseEliteAbility());
+                    return;
+                }
+            }
+
+            //See if we use the Player's ability yet or not.
+            if(!currentPlayer.IsOnCooldown && currentPlayer.ClassData.abilityData.CanBeManuallyActivated)
+            {
+                int randomChanceToUseAbility = 0;
+                randomChanceToUseAbility = Random.Range(0,2);
+                if(randomChanceToUseAbility > 0)
+                {
+                    currentPlayer.DoneActivatingAbilityEffect += UseRandomSupportCardAI;
+                    currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.UseAbility());
+                    return;
+                }
+            }
+
             //Randomize if we use a support card or not for now. Later we'll do strategy to decide if we use one or not...
             int randomChanceToUseSupportCard = 0;
             if(currentPlayer.MaxSupportCardsToUse >= 1 && currentPlayer.NumSupportCardsUsedThisTurn < currentPlayer.MaxSupportCardsToUse && currentPlayer.SupportCardsInHandCount > 0)
@@ -543,5 +603,80 @@ public class GameplayMovementPhaseState : BaseState
     {
         currentPlayer.SupportCardAllEffectsCompleted -= DrawAndUseMovementCardAI;
         currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.DrawAndUseMovementCardMovementPhase());
+    }
+
+    public void UseRandomSupportCardAI(Player player = null)
+    {
+        currentPlayer.DoneActivatingAbilityEffect -= UseRandomSupportCardAI;
+        //Randomize if we use a support card or not for now. Later we'll do strategy to decide if we use one or not...
+
+        if(currentPlayer.IsOnCooldown && currentPlayer.ClassData.negativeCooldownEffects.Contains(ClassData.NegativeCooldownEffects.CannotUseSupportCards))
+        {
+            if(currentPlayer.MovementCardsInHandCount == 0)
+            {
+                currentPlayer.SupportCardAllEffectsCompleted += DrawAndUseMovementCardAI;
+            }
+            else
+            {
+                currentPlayer.SupportCardAllEffectsCompleted += UseMovementCardAI;
+            }
+            
+            currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.UseRandomSupportCardMovementPhase());
+            return;
+        }
+
+        int randomChanceToUseSupportCard = 0;
+        if(currentPlayer.MaxSupportCardsToUse >= 1 && currentPlayer.NumSupportCardsUsedThisTurn < currentPlayer.MaxSupportCardsToUse && currentPlayer.SupportCardsInHandCount > 0)
+        {
+            randomChanceToUseSupportCard = Random.Range(0, 2);
+        }
+
+        if(randomChanceToUseSupportCard > 0)
+        {
+            if(currentPlayer.MovementCardsInHandCount == 0)
+            {
+                currentPlayer.SupportCardAllEffectsCompleted += DrawAndUseMovementCardAI;
+            }
+            else
+            {
+                currentPlayer.SupportCardAllEffectsCompleted += UseMovementCardAI;
+            }
+            currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.UseRandomSupportCardMovementPhase());
+            return;
+        }
+
+        if(currentPlayer.MovementCardsInHandCount == 0)
+        {
+            DrawAndUseMovementCardAI();
+        }
+        else
+        {
+            UseMovementCardAI();
+        }
+    }
+
+    public void UseAbilityAI(Player player = null)
+    {
+        currentPlayer.DoneActivatingAbilityEffect -= UseAbilityAI;
+
+        if(!currentPlayer.IsOnCooldown && currentPlayer.ClassData.abilityData.CanBeManuallyActivated)
+        {
+            int randomChanceToUseAbility = 0;
+            randomChanceToUseAbility = Random.Range(0,2);
+            if(randomChanceToUseAbility > 0)
+            {
+                currentPlayer.DoneActivatingAbilityEffect += UseRandomSupportCardAI;
+                currentPlayer.PlayerAIReference.StartCoroutine(currentPlayer.PlayerAIReference.UseAbility());
+                return;
+            }
+        }
+
+        UseRandomSupportCardAI();
+
+    }
+
+    public void UseEliteAbilityAI(Player player = null)
+    {
+        currentPlayer.DoneActivatingEliteAbilityEffect -= UseEliteAbilityAI;
     }
 }

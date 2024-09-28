@@ -348,7 +348,17 @@ public class MovementCard : Card
             }
         }
 
-        thePlayer.DiscardFromHand(ThisCardType, this);
+        if(thePlayer.CardsInhand.Contains(this))
+        {
+            thePlayer.DiscardFromHand(ThisCardType, this);
+        }
+        //If this is the top card of the deck.
+        else if(thePlayer.GameplayManagerRef.ThisDeckManager.MovementDeckList[0] == this)
+        {
+            thePlayer.GameplayManagerRef.ThisDeckManager.DiscardNextCardInDeck(CardType.Movement);
+        }
+
+        
         GameplayManager.HandDisplayPanel.ShrinkHand();
         transform.localScale = OriginalSize;
         CardIsActiveHovered = false;
@@ -383,7 +393,11 @@ public class MovementCard : Card
 
         CheckAmountOfCardsPlayerHasSelected(out numSelected, out maxNumPlayerCanSelect);
 
-        if (GameplayManager.GetCurrentPlayer().ExtraMovementCardUses > 0)
+        Player currentPlayer = GameplayManager.GetCurrentPlayer();
+
+        //Need a way for if it's the player drawing then using a card to not count that towards the count...
+
+        if (currentPlayer.ExtraMovementCardUses > 0)
         {
             if (GameplayManager.GameplayPhaseStatemachineRef.GetCurrentState() != GameplayManager.GameplayPhaseStatemachineRef.gameplayDuelPhaseState && !GameplayManager.UseSelectedCardsPanel.activeInHierarchy)
             {
@@ -391,15 +405,19 @@ public class MovementCard : Card
             }
             GameplayManager.UseSelectedCardsText.text = $"Selected cards: {numSelected}/{maxNumPlayerCanSelect}";
             GameplayManager.UseSelectedCardsButton.onClick.RemoveAllListeners();
-            GameplayManager.UseSelectedCardsButton.onClick.AddListener(GameplayManager.GetCurrentPlayer().UseMultipleCards);
+            GameplayManager.UseSelectedCardsButton.onClick.AddListener(currentPlayer.UseMultipleCards);
+            if(numSelected == 0)
+            {
+                GameplayManager.UseSelectedCardsPanel.gameObject.SetActive(false);
+            }
 
             if (TempCardValue > 0)
             {
-                GameplayManager.GetCurrentPlayer().CurrentSumOfSpacesToMove -= TempCardValue;
+                currentPlayer.CurrentSumOfSpacesToMove -= TempCardValue;
             }
             else
             {
-                GameplayManager.GetCurrentPlayer().CurrentSumOfSpacesToMove -= MovementCardValue;
+                currentPlayer.CurrentSumOfSpacesToMove -= MovementCardValue;
             }
         }
     }

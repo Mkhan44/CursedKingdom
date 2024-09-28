@@ -198,7 +198,7 @@ public class GameplayCameraManager : MonoBehaviour
 
         //yield return new WaitForSeconds(0.3f);
         //End
-        if (currentPlayer.IsHandlingSpaceEffects || currentPlayer.IsHandlingSupportCardEffects)
+        if (currentPlayer.IsHandlingSpaceEffects || currentPlayer.IsHandlingSupportCardEffects || currentPlayer.IsHandlingEliteAbilityActivation)
         {
             currentPlayer.CompletedAttackingEffect();
         }

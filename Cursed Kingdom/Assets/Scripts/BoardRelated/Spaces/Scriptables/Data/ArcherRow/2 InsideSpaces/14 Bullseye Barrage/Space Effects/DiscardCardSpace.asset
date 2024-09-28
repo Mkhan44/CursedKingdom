@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: DiscardCardSpace
   m_EditorClassIdentifier: 
   isACost: 1
-  cardTypeToDiscard: 0
-  numToDiscard: 1
+  isPositiveEffect: 0
+  onSpaceTurnStartEffect: 0
+  afterDuelEffect: 0
+  effectDescription: 'Discard: 3 Support card(s).'
+  overrideAutoDescription: 0
+  cardTypeToDiscard: 1
+  numToDiscard: 3

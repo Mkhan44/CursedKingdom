@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 14 Bullseye Barrage
   m_EditorClassIdentifier: 
-  afterDuelEffect: 0
-  onSpaceTurnStartEffect: 0
   passingOverSpaceEffect: 0
   isMandatory: 0
+  decreasesSpacesToMove: 1
   isNonDuelSpace: 0
   isNegative: 0
   spaceEffects:
@@ -23,7 +22,6 @@ MonoBehaviour:
     spaceTypeStringHidden: DiscardCardSpace
   - spaceEffectData: {fileID: 11400000, guid: c112099f77f1044419c3268eadd59608, type: 2}
     spaceTypeStringHidden: AttackSpace
-  thisSpaceTypes: 08000000
   spaceName: Bullseye Barrage
   spaceDescription: You can discard 3 support cards to deal 2 damage to all other
     players.
@@ -32,3 +30,4 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 959d706bf1bfed64e8025a2a32dc2e24, type: 2}
   - {fileID: 2100000, guid: 22293bc1330bae3478e23007a8a533bc, type: 2}
   - {fileID: 2100000, guid: c3276c548bb462144a9d242c0919894d, type: 2}
+  StepSoundClipsData: {fileID: 0}

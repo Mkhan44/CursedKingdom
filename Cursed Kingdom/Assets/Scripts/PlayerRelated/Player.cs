@@ -279,21 +279,7 @@ public class Player : MonoBehaviour
         }
         
 		CurrentHealth = maxHealth;
-
-        if (StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable && StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride > 1)
-        {
-			if(StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride > 1)
-			{
-				LevelUp(StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride);
-            }
-			//Loop through levelups for whatever level we are at. So do a for loop if override = 5 as if player passed level up space 4 times.
-			
-        }
-        else
-        {
-            CurrentLevel = 1;
-        }
-        
+		CurrentLevel = 1;
 		AbleToLevelUp = true;
 		SpacesLeftToMove = 0;
 		CurrentSumOfSpacesToMove = 0;
@@ -331,6 +317,16 @@ public class Player : MonoBehaviour
 		IsHandlingEliteAbilityActivation = false;
 		CanUseEliteAbility = false;
 		StatusEffectImmunities = new();
+
+		if (StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable && StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride > 1)
+        {
+			if(StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride > 1)
+			{
+				LevelUp(StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride);
+            }
+			//Loop through levelups for whatever level we are at. So do a for loop if override = 5 as if player passed level up space 4 times.
+			
+        }
 
 		IsDefeated = false;
 		CardsLeftToDiscard = 0;
@@ -766,7 +762,7 @@ public class Player : MonoBehaviour
         }
 
 		//This needs to be something more generic to essentially say whatever is the CURRENT support card being used is done being used. Maybe call it's completed effect?
-        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects || IsHandlingEliteAbilityActivation)
         {
             CompletedAttackingEffect();
         }
@@ -809,7 +805,7 @@ public class Player : MonoBehaviour
 		}
 
 
-        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects || IsHandlingEliteAbilityActivation)
         {
             CompletedAttackingEffect();
         }
@@ -842,10 +838,12 @@ public class Player : MonoBehaviour
         yield return null;
 
         Player targetedPlayer = (Player)objects[0];
-        List<SupportCard> elementalBlockSupportCards = (List<SupportCard>)objects[1];
+        List<SupportCard> poisonBlockSupportCards = (List<SupportCard>)objects[1];
         int turnsToBePoisoned = (int)objects[2];
 
-        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+		targetedPlayer.DiscardFromHand(poisonBlockSupportCards[0].ThisCardType, poisonBlockSupportCards[0]);
+
+        if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects || IsHandlingEliteAbilityActivation)
         {
             CompletedAttackingEffect();
         }
@@ -940,8 +938,9 @@ public class Player : MonoBehaviour
 		{
 			Debug.LogWarning($"Calling the method to attack the player but don't have a target...");
 		}
-		
-		if(IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+
+
+		if(IsHandlingSpaceEffects || IsHandlingSupportCardEffects || isHandlingEliteAbilityActivation)
 		{
 			CompletedAttackingEffect();
 		}
@@ -969,8 +968,6 @@ public class Player : MonoBehaviour
         {
             Debug.LogWarning($"Calling the method to attack the player but don't have a target...");
         }
-
-        CompletedAttackingEffect();
     }
 
     public void AttackAllOtherPlayersDamage(int damageToGive, bool isElemental = false)
@@ -985,7 +982,7 @@ public class Player : MonoBehaviour
 		}
 		//Put some dialogue box here for now to showcase that we've attacked all other players. Will need a log entry + animation here.
 
-		if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+		if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects || IsHandlingEliteAbilityActivation)
 		{
 			CompletedAttackingEffect();
 		}
@@ -999,8 +996,12 @@ public class Player : MonoBehaviour
             player.TakeDamage(damageToGive);
 		}
 
-		//Put some dialogue box here for now to showcase that we've attacked all other players. Will need a log entry + animation here.
-		CompletedAttackingEffect();
+		
+		if(IsHandlingSpaceEffects || IsHandlingSupportCardEffects || isHandlingEliteAbilityActivation)
+		{
+			//Put some dialogue box here for now to showcase that we've attacked all other players. Will need a log entry + animation here.
+			CompletedAttackingEffect();
+		}
 
     }
     #endregion
@@ -2146,6 +2147,8 @@ public class Player : MonoBehaviour
 
 		ValidCardTypesToDiscard = CardType.None;
 		CardsLeftToDiscard = 0;
+
+		gameplayManagerRef.HandDisplayPanel.ShrinkHand();
 	}
 
 	public void DiscardFromHand(Card.CardType cardType , Card cardToDiscard)
@@ -2330,7 +2333,6 @@ public class Player : MonoBehaviour
 		GameplayManagerRef.HandDisplayPanel.ShrinkHand();
 		GameplayManagerRef.StartMove(totalToUse);
 		CurrentSumOfSpacesToMove = 0;
-		
 	}
 
 	/// <summary>

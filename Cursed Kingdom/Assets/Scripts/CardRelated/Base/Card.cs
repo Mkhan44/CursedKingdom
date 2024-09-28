@@ -147,6 +147,9 @@ public class Card : MonoBehaviour , IPointerClickHandler
         GameplayManager.GetCurrentPlayer().SelectCardForDiscard();
     }
 
+    /// <summary>
+    /// When the player has to discard x amount of cards this is what we are deselecting for.
+    /// </summary>
     public virtual void DeselectForDiscard()
     {
         int indexOfCurrentPlayer = GameplayManager.Players.IndexOf(GameplayManager.playerCharacter.GetComponent<Player>());
@@ -159,12 +162,39 @@ public class Card : MonoBehaviour , IPointerClickHandler
         BackgroundSelectedGlow.color = originalBackgroundGlowColor;
     }
 
+    /// <summary>
+    /// When the game is discarding this card to the discard pile this is what should be called.
+    /// </summary>
+    public virtual void DeselectDueToDiscardingCardToDiscardPile()
+    {
+        CardIsActiveHovered = false;
+        selectedForDiscard = false;
+        BackgroundSelectedGlow.color = originalBackgroundGlowColor;
+        if(gameObject.activeInHierarchy)
+        {
+            StartCoroutine(LeaveCardEffect());
+        }
+
+    }
+
     public virtual void DeselectCard()
     {
         CardIsActiveHovered = false;
-        DeselectForDiscard();
-        DeselectForUse();
-        StartCoroutine(LeaveCardEffect());
+        if(selectedForDiscard)
+        {
+            DeselectForDiscard();
+        }
+        
+        if(selectedForUse)
+        {
+            DeselectForUse();
+        }
+        
+        if(gameObject.activeInHierarchy)
+        {
+            StartCoroutine(LeaveCardEffect());
+
+        }
     }
 
     //Prolly shouldn't do this here since we can't guarantee that this card will be in the same parent as other cards.
