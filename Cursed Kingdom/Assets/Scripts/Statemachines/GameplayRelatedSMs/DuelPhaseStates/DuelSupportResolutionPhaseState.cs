@@ -9,13 +9,26 @@ using UnityEngine;
 
 public class DuelSupportResolutionPhaseState : BaseState
 {
-	DuelPhaseSM duelPhaseSM;
+	private DuelPhaseSM duelPhaseSM;
 	private const string stateName = "DuelSupportResolutionPhaseState";
 
 	private int indexOfCurrentSupportCardWeAreHandling;
-	public DuelSupportResolutionPhaseState(DuelPhaseSM stateMachine) : base(stateName, stateMachine)
+
+	private List<DuelPlayerInformation> playersLeftToResolveSupportCardsFor;
+	private DuelPlayerInformation currentDuelPlayerInfoBeingHandledSupportRes;
+
+	private bool checkedForPrioritySupportCards;
+
+    public List<DuelPlayerInformation> PlayersLeftToResolveSupportCardsFor { get => playersLeftToResolveSupportCardsFor; set => playersLeftToResolveSupportCardsFor = value; }
+    public DuelPlayerInformation CurrentDuelPlayerInfoBeingHandledSupportRes { get => currentDuelPlayerInfoBeingHandledSupportRes; set => currentDuelPlayerInfoBeingHandledSupportRes = value; }
+    public bool CheckedForPrioritySupportCards { get => checkedForPrioritySupportCards; set => checkedForPrioritySupportCards = value; }
+
+    public DuelSupportResolutionPhaseState(DuelPhaseSM stateMachine) : base(stateName, stateMachine)
 	{
 		duelPhaseSM = stateMachine as DuelPhaseSM;
+		PlayersLeftToResolveSupportCardsFor = new();
+		CheckedForPrioritySupportCards = false;
+		indexOfCurrentSupportCardWeAreHandling = 0;
 	}
 
 	public override void Enter()
@@ -25,7 +38,6 @@ public class DuelSupportResolutionPhaseState : BaseState
         PhaseDisplay.instance.TurnOnDisplay($"Resolve support cards", 1.5f);
 		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, false);
 		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISRESOLVINGCAM, true);
-		indexOfCurrentSupportCardWeAreHandling = 0;
         PhaseDisplay.instance.displayTimeCompleted += Logic;
     }
 
@@ -47,15 +59,58 @@ public class DuelSupportResolutionPhaseState : BaseState
 
 	public void FlipAndUseSupportCards()
 	{
-		
-		if (duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards.Count > 0)
+		//Checking for players that have priority cards and rearranging a 2nd list to account for that.
+		if(!CheckedForPrioritySupportCards)
+		{
+			int numInsertedBecauseOfPriority = 0;
+			foreach(DuelPlayerInformation originalPlayerInfo in duelPhaseSM.PlayersInCurrentDuel)
+			{
+				bool foundPriorityInACard = false;
+				if(originalPlayerInfo.SelectedSupportCards.Count < 1)
+				{
+					PlayersLeftToResolveSupportCardsFor.Add(originalPlayerInfo);
+				}
+				else
+				{
+					foreach(SupportCard supportCardToCheckOriginal in originalPlayerInfo.SelectedSupportCards)
+					{
+						foreach(SupportCardData.SupportCardEffect supportCardEffectToCheckOriginal in supportCardToCheckOriginal.SupportCardData.supportCardEffects)
+						{
+							if(supportCardEffectToCheckOriginal.supportCardEffectData.HasPriorityInDuel)
+							{
+								PlayersLeftToResolveSupportCardsFor.Insert(numInsertedBecauseOfPriority, originalPlayerInfo);
+								numInsertedBecauseOfPriority++;
+								foundPriorityInACard = true;
+								break;
+							}
+						}
+
+						if(foundPriorityInACard)
+						{
+							break;
+						}
+						else
+						{
+							PlayersLeftToResolveSupportCardsFor.Add(originalPlayerInfo);
+						}
+					}
+				}
+			}
+
+			CurrentDuelPlayerInfoBeingHandledSupportRes = PlayersLeftToResolveSupportCardsFor[0];
+			CheckedForPrioritySupportCards = true;
+		}
+
+
+		if (CurrentDuelPlayerInfoBeingHandledSupportRes.SelectedSupportCards.Count > 0)
 		{
 			//DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal} used {duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0].SupportCardData.name}", 0, "Support card resolution");
 			//duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0];
-			if(duelPhaseSM.CurrentPlayerBeingHandled.CardDuelResolveHolderObject != null)
+			if(CurrentDuelPlayerInfoBeingHandledSupportRes.CardDuelResolveHolderObject != null)
 			{
 				string animToPlay = "";
-				if(duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled) % 2 == 0)
+				//Dunno if this will work since it's not a copy...
+				if(duelPhaseSM.PlayersInCurrentDuel.IndexOf(CurrentDuelPlayerInfoBeingHandledSupportRes) % 2 == 0)
 				{
 					animToPlay = "FlipRight";
 				}
@@ -63,18 +118,17 @@ public class DuelSupportResolutionPhaseState : BaseState
 				{
 					animToPlay = "FlipLeft";
 				}
-				duelPhaseSM.CurrentPlayerBeingHandled.CardDuelResolveHolderObject.transform.GetChild(1).GetChild(0).GetComponent<Animator>().Play(animToPlay);
+				CurrentDuelPlayerInfoBeingHandledSupportRes.CardDuelResolveHolderObject.transform.GetChild(1).GetChild(0).GetComponent<Animator>().Play(animToPlay);
 			}
 
 			//Will need to make this work for all effects. Maybe have something on this that kicks off after all effects are completed?
 
-			foreach(SupportCardData.SupportCardEffect supportCardEffect in duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling].SupportCardData.supportCardEffects)
+			foreach(SupportCardData.SupportCardEffect supportCardEffect in CurrentDuelPlayerInfoBeingHandledSupportRes.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling].SupportCardData.supportCardEffects)
 			{
-
 				if(supportCardEffect.supportCardEffectData.IsAfterDuelEffectAndNeedsToWin || supportCardEffect.supportCardEffectData.IsAfterDuelEffect || supportCardEffect.supportCardEffectData.IsDuringDuelDamageCalc)
 				{
 					//Do nothing we don't want to handle these until after the duel is over.
-					if(duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[0].SupportCardData.supportCardEffects.Count == 1)
+					if(CurrentDuelPlayerInfoBeingHandledSupportRes.SelectedSupportCards[0].SupportCardData.supportCardEffects.Count == 1)
 					{
 						AfterSupportCardEffectIsDone();
 					}
@@ -82,14 +136,14 @@ public class DuelSupportResolutionPhaseState : BaseState
 				else
 				{
                     supportCardEffect.supportCardEffectData.SupportCardEffectCompleted += AfterSupportCardEffectIsDone;
-                    supportCardEffect.supportCardEffectData.EffectOfCard(duelPhaseSM.CurrentPlayerBeingHandled);
+                    supportCardEffect.supportCardEffectData.EffectOfCard(CurrentDuelPlayerInfoBeingHandledSupportRes);
                 }
             }
 			
         }
 		else
 		{
-            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal} did not use a support card", 0, "Support card resolution");
+            DialogueBoxPopup.instance.ActivatePopupWithJustText($"Player {CurrentDuelPlayerInfoBeingHandledSupportRes.PlayerInDuel.playerIDIntVal} did not use a support card", 0, "Support card resolution");
 
 			//duelPhaseSM.StartCoroutine(duelPhaseSM.TestingTimeBetweenPopupsMovementCardResolution());
             AfterSupportCardEffectIsDone();
@@ -163,9 +217,9 @@ public class DuelSupportResolutionPhaseState : BaseState
 
 	public void AfterSupportCardEffectIsDone(SupportCard supportCardUsed = null)
 	{
-		if(duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards.Count != 0 && duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling] != null)
+		if(CurrentDuelPlayerInfoBeingHandledSupportRes.SelectedSupportCards.Count != 0 && CurrentDuelPlayerInfoBeingHandledSupportRes.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling] != null)
 		{
-            foreach (SupportCardData.SupportCardEffect supportCardEffect in duelPhaseSM.CurrentPlayerBeingHandled.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling].SupportCardData.supportCardEffects)
+            foreach (SupportCardData.SupportCardEffect supportCardEffect in CurrentDuelPlayerInfoBeingHandledSupportRes.SelectedSupportCards[indexOfCurrentSupportCardWeAreHandling].SupportCardData.supportCardEffects)
             {
                 supportCardEffect.supportCardEffectData.SupportCardEffectCompleted -= AfterSupportCardEffectIsDone;
             }
@@ -183,6 +237,10 @@ public class DuelSupportResolutionPhaseState : BaseState
 
 	public override void Exit()
 	{
+		PlayersLeftToResolveSupportCardsFor.Clear();
+		CurrentDuelPlayerInfoBeingHandledSupportRes = null;
+		CheckedForPrioritySupportCards = false;
+		indexOfCurrentSupportCardWeAreHandling = 0;
 		base.Exit();
 	}
 }

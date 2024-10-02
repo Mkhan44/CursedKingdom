@@ -68,7 +68,7 @@ public class SupportCard : Card
 				if(effect.supportCardEffectData.HasPriorityInDuel)
 				{
 					string priorityText = "This support card has priority. ";
-					DescriptionText.text = priorityText + DescriptionText;
+					DescriptionText.text = priorityText + DescriptionText.text;
 				}
 			}
 		}

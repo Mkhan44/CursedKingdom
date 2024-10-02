@@ -279,40 +279,38 @@ public class DeckManager : MonoBehaviour
                 SupportDiscardPileList.Clear();
             }
         }
-
         if (deckType == Card.CardType.Movement)
         {
-            List<MovementCard> currentDeck = MovementDeckList;
-            int count = currentDeck.Count;
+            // Debug.Log("Before shuffle -> " + string.Join(", ", MovementDeckList));
+            int count = MovementDeckList.Count;
 
             for (int i = 0; i < count; i++)
             {
-                MovementCard temp = currentDeck[i];
-                int randomNum = Random.Range(1, currentDeck.Count);
-                currentDeck[i] = currentDeck[randomNum];
-                currentDeck[randomNum] = temp;
+                MovementCard temp = MovementDeckList[i];
+                int randomNum = Random.Range(1, MovementDeckList.Count);
+                MovementDeckList[i] = MovementDeckList[randomNum];
+                MovementDeckList[randomNum] = temp;
             }
 
-           // Debug.Log("Before shuffle -> " + string.Join(", ", MovementDeckList));
-            MovementDeckList = currentDeck;
+           
+
            // Debug.Log("After shuffle -> " + string.Join(", ", MovementDeckList));
         }
 
         else
         {
-            List<SupportCard> currentDeck = SupportDeckList;
-            int count = currentDeck.Count;
+            // Debug.Log("Before shuffle -> " + string.Join(", ", SupportDeckList));
+            int count = SupportDeckList.Count;
 
             for (int i = 0; i < count; i++)
             {
-                SupportCard temp = currentDeck[i];
-                int randomNum = Random.Range(1, currentDeck.Count);
-                currentDeck[i] = currentDeck[randomNum];
-                currentDeck[randomNum] = temp;
+                SupportCard temp = SupportDeckList[i];
+                int randomNum = Random.Range(1, SupportDeckList.Count);
+                SupportDeckList[i] = SupportDeckList[randomNum];
+                SupportDeckList[randomNum] = temp;
             }
 
-           // Debug.Log("Before shuffle -> " + string.Join(", ", SupportDeckList));
-            SupportDeckList = currentDeck;
+           
            // Debug.Log("After shuffle -> " + string.Join(", ", SupportDeckList));
         }
 

@@ -210,19 +210,23 @@ public class DuelPhaseSM : BukuStateMachine
 		duelSupportResolutionPhaseState.FlipAndUseSupportCards();
 	}
 
+	/// <summary>
+	/// Use the list from SupportResolutionPhaseState here because some support cards may have priority.
+	/// </summary>
+	/// <returns></returns>
 	public IEnumerator TestingTimeBetweenPopupsSupportCardResolution()
 	{
 		yield return new WaitForSeconds(2.0f);
 
 		DialogueBoxPopup.instance.DeactivatePopup();
 
-		int indexOfCurrentPlayerBeingHandled = PlayersInCurrentDuel.IndexOf(CurrentPlayerBeingHandled);
+		int indexOfCurrentPlayerBeingHandled = duelSupportResolutionPhaseState.PlayersLeftToResolveSupportCardsFor.IndexOf(duelSupportResolutionPhaseState.CurrentDuelPlayerInfoBeingHandledSupportRes);
 
 
-		if (indexOfCurrentPlayerBeingHandled != PlayersInCurrentDuel.Count - 1)
+		if (indexOfCurrentPlayerBeingHandled != duelSupportResolutionPhaseState.PlayersLeftToResolveSupportCardsFor.Count - 1)
 		{
 			//Shouldn't ever go out of bounds.
-			CurrentPlayerBeingHandled = PlayersInCurrentDuel[indexOfCurrentPlayerBeingHandled + 1];
+			duelSupportResolutionPhaseState.CurrentDuelPlayerInfoBeingHandledSupportRes = duelSupportResolutionPhaseState.PlayersLeftToResolveSupportCardsFor[indexOfCurrentPlayerBeingHandled + 1];
 			duelSupportResolutionPhaseState.Logic();
 		}
 		//We're at the final player. Reset back to the first player who initiated the duel and move onto Movementcard resolution phase.

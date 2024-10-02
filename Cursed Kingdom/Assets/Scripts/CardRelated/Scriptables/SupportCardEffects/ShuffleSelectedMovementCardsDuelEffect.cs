@@ -33,6 +33,61 @@ public class ShuffleSelectedMovementCardsDuelEffect : SupportCardEffectData, ISu
 
 	public override void EffectOfCard(DuelPlayerInformation duelPlayerInformation, Card cardPlayed = null)
 	{
+		List<MovementCard> listOfSelectedMovementCardsThatWillBeSwapped = new();
+
+		foreach(DuelPlayerInformation playerInformation in duelPlayerInformation.PlayerInDuel.GameplayManagerRef.DuelPhaseSMRef.PlayersInCurrentDuel)
+		{
+			//If the player only has 1 card selected, we use that card specifically, otherwise we randomly choose an index of their selected cards.
+			if(playerInformation.SelectedMovementCards.Count < 2)
+			{
+				listOfSelectedMovementCardsThatWillBeSwapped.Add(playerInformation.SelectedMovementCards[0]);
+			}
+			else
+			{
+				//We need a way to keep track of which card is being swapped so when we give them a new card it's in the same spot of their selected list...
+				int randomIndexToSelect = Random.Range(0, playerInformation.SelectedMovementCards.Count);
+				listOfSelectedMovementCardsThatWillBeSwapped.Add(playerInformation.SelectedMovementCards[randomIndexToSelect]);
+			}
+		}
+
+		int newCardValueIndex = 0;
+		int newCardValue = 0;
+		List<int> valuesToSwapOnMovementCards = new List<int>();
+
+		foreach(MovementCard movementCard in listOfSelectedMovementCardsThatWillBeSwapped)
+		{
+			if(movementCard.TempCardValue > 0)
+			{
+				valuesToSwapOnMovementCards.Add(movementCard.TempCardValue);
+			}
+			else
+			{
+				valuesToSwapOnMovementCards.Add(movementCard.MovementCardValue);
+			}
+
+		}
+		foreach(DuelPlayerInformation playerInformation in duelPlayerInformation.PlayerInDuel.GameplayManagerRef.DuelPhaseSMRef.PlayersInCurrentDuel)
+		{
+			//For now assume everyone has 1 card, we'll do the 2nd + cards later...
+			if(valuesToSwapOnMovementCards.Count > 1)
+			{
+				newCardValueIndex = Random.Range(0,valuesToSwapOnMovementCards.Count);
+				newCardValue = valuesToSwapOnMovementCards[newCardValueIndex];
+			}
+			else
+			{
+				newCardValueIndex = 0;
+				newCardValue = valuesToSwapOnMovementCards[0];
+			}
+
+			Debug.Log($"Player: {playerInformation.PlayerInDuel.playerIDIntVal}'s card went from value of: {playerInformation.SelectedMovementCards[0].MovementCardValue} to {newCardValue}");
+
+			playerInformation.SelectedMovementCards[0].TempCardValue = newCardValue;
+
+			valuesToSwapOnMovementCards.RemoveAt(newCardValueIndex);
+		}
+		
+
 		base.EffectOfCard(duelPlayerInformation, cardPlayed);
 	}
 }
