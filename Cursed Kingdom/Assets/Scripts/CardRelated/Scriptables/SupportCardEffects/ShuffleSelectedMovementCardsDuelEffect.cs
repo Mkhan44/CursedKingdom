@@ -33,6 +33,12 @@ public class ShuffleSelectedMovementCardsDuelEffect : SupportCardEffectData, ISu
 
 	public override void EffectOfCard(DuelPlayerInformation duelPlayerInformation, Card cardPlayed = null)
 	{
+		SupportCard cardUsed = (SupportCard)cardPlayed;
+		if (cardUsed != null)
+		{
+			supportCardThatWasJustUsed = cardUsed;
+		}
+		
 		List<MovementCard> listOfSelectedMovementCardsThatWillBeSwapped = new();
 
 		foreach(DuelPlayerInformation playerInformation in duelPlayerInformation.PlayerInDuel.GameplayManagerRef.DuelPhaseSMRef.PlayersInCurrentDuel)
@@ -88,6 +94,11 @@ public class ShuffleSelectedMovementCardsDuelEffect : SupportCardEffectData, ISu
 		}
 		
 
-		base.EffectOfCard(duelPlayerInformation, cardPlayed);
+		AnimateMovementCards(duelPlayerInformation, supportCardThatWasJustUsed, this);
+	}
+
+	public void AnimateMovementCards(DuelPlayerInformation duelPlayerInformation, SupportCard cardPlayed, SupportCardEffectData effectData)
+	{
+		duelPlayerInformation.PlayerInDuel.GameplayManagerRef.DuelPhaseSMRef.StartCoroutine(duelPlayerInformation.PlayerInDuel.GameplayManagerRef.DuelPhaseSMRef.ShuffleSelectedMovementCardsAnim(effectData));
 	}
 }

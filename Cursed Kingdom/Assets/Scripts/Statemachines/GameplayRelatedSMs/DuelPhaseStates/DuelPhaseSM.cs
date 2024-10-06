@@ -353,7 +353,7 @@ public class DuelPhaseSM : BukuStateMachine
         foreach (AnimationClip animationClip in duelPlayerInformation.PlayerDuelAnimator.runtimeAnimatorController.animationClips)
         {
             string animationNameToSearchFor = animationClip.name.ToLower();
-            if (animationNameToSearchFor.EndsWith("battletransitionrev"))
+            if (animationNameToSearchFor.EndsWith("battletransition"))
             {
                 animationTime = animationClip.length;
                 break;
@@ -370,4 +370,83 @@ public class DuelPhaseSM : BukuStateMachine
             DuelResultPhaseState.DamageResults();
         }
     }
+
+	#region SupportCardDuelEffectAnimations
+
+	public IEnumerator ShuffleSelectedMovementCardsAnim(SupportCardEffectData effectData)
+	{
+		float delay = 0.4f;
+		yield return new WaitForSeconds(delay);
+
+		float lengthOfCurrentAnimation = 0f;
+		//For now only do the 1st selected movement card of every player.
+
+		foreach(DuelPlayerInformation duelPlayerInformation in PlayersInCurrentDuel)
+		{
+			if(duelPlayerInformation.CardDuelResolveHolderObject != null)
+			{
+				if(lengthOfCurrentAnimation == 0f)
+				{
+					Animator cardAnimator = duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(0).GetChild(0).GetComponent<Animator>();
+					foreach (AnimationClip animationClip in cardAnimator.runtimeAnimatorController.animationClips)
+					{
+						string animationNameToSearchFor = animationClip.name.ToLower();
+						if (animationNameToSearchFor.EndsWith("comedown"))
+						{
+							lengthOfCurrentAnimation = animationClip.length;
+							break;
+						}
+					}
+					
+				}
+
+				foreach(Transform child in duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(0))
+				{
+					Animator childAnimator = child.GetComponent<Animator>();
+					string animationToPlay = "ComeDownRev";
+					childAnimator.Play(animationToPlay);
+				}
+			}
+		}
+
+		yield return new WaitForSeconds(lengthOfCurrentAnimation + delay);
+
+		lengthOfCurrentAnimation = 0f;
+
+		foreach(DuelPlayerInformation duelPlayerInformation in PlayersInCurrentDuel)
+		{
+			if(duelPlayerInformation.CardDuelResolveHolderObject != null)
+			{
+				if(lengthOfCurrentAnimation == 0f)
+				{
+					Animator cardAnimator = duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(0).GetChild(0).GetComponent<Animator>();
+					foreach (AnimationClip animationClip in cardAnimator.runtimeAnimatorController.animationClips)
+					{
+						string animationNameToSearchFor = animationClip.name.ToLower();
+						if (animationNameToSearchFor.EndsWith("comedown"))
+						{
+							lengthOfCurrentAnimation = animationClip.length;
+							break;
+						}
+					}
+					
+				}
+
+				foreach(Transform child in duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(0))
+				{
+					Animator childAnimator = child.GetComponent<Animator>();
+					string animationToPlay = "ComeDown";
+					childAnimator.Play(animationToPlay);
+				}
+			}
+		}
+
+		yield return new WaitForSeconds(lengthOfCurrentAnimation);
+
+		effectData.CompletedEffect(null);
+		yield return null;
+	}
+
+
+	#endregion
 }
