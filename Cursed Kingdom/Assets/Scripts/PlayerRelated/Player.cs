@@ -287,8 +287,9 @@ public class Player : MonoBehaviour
         if (StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable && StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride +
             StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride > 6)
         {
-			MaxHandSize = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride +
-			StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride;
+			// MaxHandSize = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride +
+			// StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride;
+			MaxHandSize = 6;
         }
 		else
 		{
@@ -1819,14 +1820,18 @@ public class Player : MonoBehaviour
 			GameplayManagerRef.ThisDeckManager.DrawCard(cardType, this);
 		}
 	}
-	public void DrawCard(Card card)
+	public void DrawCard(Card card, bool isDrawingFromDeck = false)
 	{
 		CardsInhand.Add(card);
 
-		if (MaxHandSizeExceeded())
+		if (MaxHandSizeExceeded() && GameplayManagerRef.GetCurrentPlayer() == this)
 		{
 			MaxHandSizeExceededPopup();
 			GameplayManagerRef.ThisDeckManager.IsDiscarding = true;
+		}
+		else if(!isDrawingFromDeck)
+		{
+			CompletedDrawingForEffect();
 		}
 
 		SetMovementCardsInHand();
@@ -1841,6 +1846,43 @@ public class Player : MonoBehaviour
 			{
 				tempMovementCard.ManipulateMovementValue(true, 2);
 				CurseCardAnimationEffect();
+			}
+		}
+	}
+    public void DrawCards(List<Card> cards, bool isDrawingFromDeck = false)
+	{
+		foreach(Card card in cards)
+		{
+			CardsInhand.Add(card);
+		}
+
+		if(MaxHandSizeExceeded())
+		{
+			GameplayManagerRef.ThisDeckManager.IsDiscarding = true;
+		}
+		else if(!isDrawingFromDeck)
+		{
+			CompletedDrawingForEffect();
+		}
+
+		SetMovementCardsInHand();
+		SetSupportCardsInHand();
+
+		//Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
+		if (IsCursed)
+		{
+			//Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
+			if (IsCursed)
+			{
+				foreach(Card card in cards)
+				{
+					MovementCard tempMovementCard = (MovementCard)card;
+					if (tempMovementCard != null)
+					{
+						tempMovementCard.ManipulateMovementValue(true, 2);
+						CurseCardAnimationEffect();
+					}
+				}
 			}
 		}
 	}
@@ -1880,39 +1922,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void DrawCards(List<Card> cards)
-	{
-		foreach(Card card in cards)
-		{
-			CardsInhand.Add(card);
-		}
-
-		if(MaxHandSizeExceeded())
-		{
-			GameplayManagerRef.ThisDeckManager.IsDiscarding = true;
-		}
-
-		SetMovementCardsInHand();
-		SetSupportCardsInHand();
-
-		//Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
-		if (IsCursed)
-		{
-			//Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
-			if (IsCursed)
-			{
-				foreach(Card card in cards)
-				{
-					MovementCard tempMovementCard = (MovementCard)card;
-					if (tempMovementCard != null)
-					{
-						tempMovementCard.ManipulateMovementValue(true, 2);
-						CurseCardAnimationEffect();
-					}
-				}
-			}
-		}
-	}
 
 	//Shows this player's hand on screen.
 	public void ShowHand()

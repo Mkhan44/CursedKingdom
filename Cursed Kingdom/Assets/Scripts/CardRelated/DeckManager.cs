@@ -180,7 +180,7 @@ public class DeckManager : MonoBehaviour
                 ShuffleDeck(deckTypeToDrawFrom, true);
                 Debug.LogWarning($"{nameof(MovementDeckList)} is out of cards! Shuffling the deck...");
             }
-            playerDrawingCard.DrawCard(MovementDeckList[0]);
+            playerDrawingCard.DrawCard(MovementDeckList[0], true);
             MovementDeckList.Remove(MovementDeckList[0]);
 
             //End of turn darw
@@ -198,13 +198,13 @@ public class DeckManager : MonoBehaviour
                 ShuffleDeck(deckTypeToDrawFrom, true);
                 Debug.LogWarning($"{nameof(SupportDeckList)} is out of cards! Shuffling the deck...");
             }
-            playerDrawingCard.DrawCard(SupportDeckList[0]);
+            playerDrawingCard.DrawCard(SupportDeckList[0], true);
             SupportDeckList.Remove(SupportDeckList[0]);
         }
 
         gameplayManager.UpdatePlayerInfoUICardCount(playerDrawingCard);
 
-        if (playerDrawingCard.IsHandlingSpaceEffects && !playerDrawingCard.MaxHandSizeExceeded())
+        if ((playerDrawingCard.IsHandlingSpaceEffects  || playerDrawingCard.IsHandlingSupportCardEffects) && !playerDrawingCard.MaxHandSizeExceeded())
         {
             playerDrawingCard.CompletedDrawingForEffect();
         }
@@ -247,7 +247,7 @@ public class DeckManager : MonoBehaviour
 
         if(cardsToDraw.Count > 0)
         {
-            playerDrawingCard.DrawCards(cardsToDraw);
+            playerDrawingCard.DrawCards(cardsToDraw, true);
         }
 
         gameplayManager.UpdatePlayerInfoUICardCount(playerDrawingCard);
