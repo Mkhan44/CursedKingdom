@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class DuelStartPhaseState : BaseState
 {
@@ -39,6 +40,29 @@ public class DuelStartPhaseState : BaseState
     {
         PhaseDisplay.instance.displayTimeCompleted -= Logic;
         duelPhaseSM.CurrentPlayerBeingHandled = duelPhaseSM.PlayersInCurrentDuel[0];
+        //Select all AI player's cards automatically here.
+        foreach(DuelPlayerInformation playerInformation in  duelPhaseSM.PlayersInCurrentDuel)
+		{
+			//Select the AI player's cards randomly from their hand (Add to the lists of movement and support cards)
+			if(playerInformation.PlayerInDuel.PlayerAIReference != null)
+			{
+                int randomChanceToUseSupportCard = 0;
+                //Randomize if they use a support card or not.
+                if(playerInformation.PlayerInDuel.MaxSupportCardsToUse >= 1 && playerInformation.PlayerInDuel.NumSupportCardsUsedThisTurn < playerInformation.PlayerInDuel.MaxSupportCardsToUse && playerInformation.PlayerInDuel.SupportCardsInHandCount > 0)
+                {
+                    randomChanceToUseSupportCard = Random.Range(0, 2);
+                }
+
+                if(randomChanceToUseSupportCard > 0)
+                {
+                    playerInformation.PlayerInDuel.PlayerAIReference.SelectSupportCardForDuel(playerInformation);
+                    continue;
+                }
+
+                playerInformation.PlayerInDuel.PlayerAIReference.SelectMovementCardForDuel(playerInformation);
+			}
+		}
+
         duelPhaseSM.ChangeState(duelPhaseSM.duelSelectCardsToUsePhaseState);
     }
 

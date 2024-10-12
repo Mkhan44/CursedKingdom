@@ -36,8 +36,16 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 	{
 		//Check which player we are in the duelPhaseSM Players list.
 		base.Enter();
-		PhaseDisplay.instance.TurnOnDisplay($"Select cards to duel with, Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}.", 1.5f);
-		PhaseDisplay.instance.displayTimeCompleted += Logic;
+		if(duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.PlayerAIReference != null)
+		{
+			Logic();
+		}
+		else
+		{
+			PhaseDisplay.instance.TurnOnDisplay($"Select cards to duel with, Player {duelPhaseSM.CurrentPlayerBeingHandled.PlayerInDuel.playerIDIntVal}.", 1.5f);
+			PhaseDisplay.instance.displayTimeCompleted += Logic;
+		}
+		
 		//Camera move based on index of current player +1 since it's 0 indexed..
 		
 	}
@@ -287,9 +295,31 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, true);
 	}
 
+	private void SelectCardsForAIPlayers()
+	{
+		//If it's an AI or not the current player (When multiplayer) then we just have the player auto-pick their cards or if it's a human we skip the camera move to go to only us.
+		foreach(DuelPlayerInformation playerInformation in  duelPhaseSM.PlayersInCurrentDuel)
+		{
+			//Select the AI player's cards randomly from their hand (Add to the lists of movement and support cards)
+			if(playerInformation.PlayerInDuel.PlayerAIReference != null)
+			{
+
+
+			}
+
+		}
+	}
+
 
 	private void Logic()
 	{
+		//This is specifically checking for if we  selected cards for AI opponents at the end of the start phase. May want to change how we're doing this.
+		if(duelPhaseSM.CurrentPlayerBeingHandled.SelectedMovementCards.Count > 0)
+		{
+			PhaseDisplay.instance.displayTimeCompleted -= Logic;
+			SwitchToNextPlayerInDuel();
+			return;
+		}
         duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetBool(GameplayCameraManager.ISGOINGBACKTODEFAULT, false);
 		duelPhaseSM.gameplayManager.GameplayCameraManagerRef.DuelVirtualCameraAnimator.SetInteger(GameplayCameraManager.ZOOMTOSPOTNUM, (duelPhaseSM.PlayersInCurrentDuel.IndexOf(duelPhaseSM.CurrentPlayerBeingHandled) + 1));
 

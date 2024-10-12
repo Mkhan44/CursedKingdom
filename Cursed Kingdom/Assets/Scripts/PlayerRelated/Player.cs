@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private bool isChoosingDirection;
 
 	//Abilities
-	[SerializeField] private List<NegativeCooldownEffects> negativeCooldownEffects; 
+	[SerializeField] private List<NegativeCooldownEffects> negativeCooldownEffects;
 	[SerializeField] private bool isOnCooldown;
 	[SerializeField] private bool wentOnCooldownThisTurn;
 	[SerializeField] private bool isHandlingAbilityActivation;
@@ -119,7 +119,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private int rangeOfSpacesToLookForDuelOpponents;
 
 	//Sound related
-	
+
 
 	//References
 	[SerializeField] private GameplayManager gameplayManagerRef;
@@ -131,7 +131,7 @@ public class Player : MonoBehaviour
 	public int MaxHealth { get => maxHealth; set => maxHealth = value; }
 	public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
 	//Clean this up vvvvv
-	
+
 	public bool IsMoving { get => isMoving; set => isMoving = value; }
     public bool IsChoosingDirection { get => isChoosingDirection; set => isChoosingDirection = value; }
     public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
@@ -165,9 +165,9 @@ public class Player : MonoBehaviour
 	public bool WasAfflictedWithStatusThisTurn { get => wasAfflictedWithStatusThisTurn; set => wasAfflictedWithStatusThisTurn = value; }
 	public int PoisonDuration { get => poisonDuration; set => poisonDuration = value; }
 	public int CurseDuration { get => curseDuration; set => curseDuration = value; }
-	public List<StatusEffectImmunityEliteAbility.StatusEffects> StatusEffectImmunities 
+	public List<StatusEffectImmunityEliteAbility.StatusEffects> StatusEffectImmunities
 	{
-		get => statusEffectImmunities; 
+		get => statusEffectImmunities;
 
 		set
 		{
@@ -190,7 +190,7 @@ public class Player : MonoBehaviour
 	public ClassData ClassData { get => classData; set => classData = value; }
 	public Space CurrentSpacePlayerIsOn
 	{
-		get => currentSpacePlayerIsOn; 
+		get => currentSpacePlayerIsOn;
 
 		set
 		{
@@ -228,17 +228,17 @@ public class Player : MonoBehaviour
 							//Nothing needed to change.
 						default:
 							{
-								
+
 								break;
 							}
 					}
-					
+
 					transform.localEulerAngles = thisRot;
 				}
 			}
 
 			currentSpacePlayerIsOn = value;
-		} 
+		}
 	}
 
     //Duel related
@@ -249,7 +249,7 @@ public class Player : MonoBehaviour
 	public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
 	public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
 	public Animator Animator { get => animator; set => animator = value; }
-    
+
 
     public void InitializePlayer(ClassData data)
 	{
@@ -277,7 +277,7 @@ public class Player : MonoBehaviour
 		{
             MaxHealth = ClassData.startingHealth;
         }
-        
+
 		CurrentHealth = maxHealth;
 		CurrentLevel = 1;
 		AbleToLevelUp = true;
@@ -287,9 +287,9 @@ public class Player : MonoBehaviour
         if (StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable && StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride +
             StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride > 6)
         {
-			// MaxHandSize = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride +
-			// StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride;
-			MaxHandSize = 6;
+			MaxHandSize = StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride +
+			StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].movementCardsToStartWithOverride;
+			//MaxHandSize = 6;
         }
 		else
 		{
@@ -301,7 +301,7 @@ public class Player : MonoBehaviour
 		{
 			SetupAIScript();
 		}
-        
+
 		MaxSupportCardsToUse = ClassData.maxSupportCardsToUsePerTurn;
 		NumSupportCardsUsedThisTurn = 0;
 		MaxMovementCardsToUse = ClassData.maxMovementCardsToUsePerTurn;
@@ -326,7 +326,7 @@ public class Player : MonoBehaviour
 				LevelUp(StartDebugMenu.instance.currentlySelectedStartData.playerDebugDatas[playerNum].startingLevelOverride);
             }
 			//Loop through levelups for whatever level we are at. So do a for loop if override = 5 as if player passed level up space 4 times.
-			
+
         }
 
 		IsDefeated = false;
@@ -368,9 +368,9 @@ public class Player : MonoBehaviour
 		{
             HandleLevelUp();
         }
-		
+
         AbleToLevelUp = false;
-		if(CurrentLevel >= 5) 
+		if(CurrentLevel >= 5)
 		{
 			CurrentLevel = 5;
 			CanUseEliteAbility = true;
@@ -403,7 +403,7 @@ public class Player : MonoBehaviour
             RecoverHealth(1);
         }
 		CurrentLevel++;
-        
+
 	}
 
 	//DEBUG
@@ -553,7 +553,7 @@ public class Player : MonoBehaviour
     public void ActivatePlayerToAttackDamageSelectionPopup(int numPlayersToChoose, int damageToGive, bool isElemental = false)
 	{
 		List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
-		
+
 
 		foreach (Player player in GameplayManagerRef.Players)
 		{
@@ -834,7 +834,7 @@ public class Player : MonoBehaviour
     /// </summary>
     /// <param name="objects"></param>
     /// <returns></returns>
-    public IEnumerator UseSupportCardToBlockPoison(List<object> objects) 
+    public IEnumerator UseSupportCardToBlockPoison(List<object> objects)
 	{
         yield return null;
 
@@ -931,7 +931,7 @@ public class Player : MonoBehaviour
                     yield break;
 				}
 
-				
+
 			   // Debug.Log($"Calling the method to attack the player. Player {playerTarget} will take {damageToTake} Damage!");
 			}
 		}
@@ -997,7 +997,7 @@ public class Player : MonoBehaviour
             player.TakeDamage(damageToGive);
 		}
 
-		
+
 		if(IsHandlingSpaceEffects || IsHandlingSupportCardEffects || isHandlingEliteAbilityActivation)
 		{
 			//Put some dialogue box here for now to showcase that we've attacked all other players. Will need a log entry + animation here.
@@ -1502,7 +1502,7 @@ public class Player : MonoBehaviour
 		//Discard the card that is needed for cost.
         if(cardToDiscard.ThisCardType == CardType.Movement)
 		{
-			MovementCard movementCard = cardToDiscard as MovementCard; 
+			MovementCard movementCard = cardToDiscard as MovementCard;
 			if(movementCard != null)
 			{
 				DiscardFromHand(CardType.Movement, movementCard);
@@ -1654,7 +1654,7 @@ public class Player : MonoBehaviour
                 {
 					supportCardsToBlockWith.Add(supportCard);
                     break;
-                }	
+                }
             }
         }
 
@@ -1980,7 +1980,7 @@ public class Player : MonoBehaviour
 		if(CardsInhand.Count > MaxHandSize)
 		{
 		   // GameplayManagerRef.OpenDebugMessenger($"Hand size exceeded. You have {CardsInhand.Count} cards in your hand. Please discard {CardsInhand.Count -  MaxHandSize} cards.");
-			
+
 			result = true;
 		}
 		else
@@ -2011,7 +2011,7 @@ public class Player : MonoBehaviour
 	{
 		bool hasEnough = false;
 
-		switch(cardType) 
+		switch(cardType)
 		{
 			case CardType.Movement:
 				{
@@ -2255,7 +2255,7 @@ public class Player : MonoBehaviour
 		{
 			CompletedAbilityActivation();
 		}
-		
+
 	}
 
 	public void SelectMultipleCardsToUse()
@@ -2583,7 +2583,7 @@ public class Player : MonoBehaviour
 			return;
 		}
 
-		if (IsCursed) 
+		if (IsCursed)
 		{
 			CurseDuration -= 1;
 
@@ -2801,7 +2801,7 @@ public class Player : MonoBehaviour
 			{
 				currentSpaceEffectDataToHandle.LandedOnEffect(this);
 			}
-			
+
 		}
 		else
 		{
@@ -2905,7 +2905,7 @@ public class Player : MonoBehaviour
                 //Need this to be dynamic so that if Player 1 says no, Player 2 has a chance to respond etc.
                 ActivatePlayerStealSupportCardSelectionPopup(playersThatCanSteal[0], supportCards, GameplayManagerRef.CurrentSupportCardBeingUsed, this);
             }
-			
+
         }
 		else
 		{

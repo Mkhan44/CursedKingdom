@@ -57,7 +57,7 @@ public class ExtraDamageWithStatusEffect : SupportCardEffectData, ISupportEffect
         base.EffectOfCard(duelPlayerInformation, cardPlayed);
     }
 
-    public override bool CanCostBePaid(DuelPlayerInformation duelPlayerInformation, Card cardPlayed = null)
+    public override bool CanCostBePaid(DuelPlayerInformation duelPlayerInformation, Card cardPlayed = null, bool justChecking = false)
     {
         bool canCostBePaid = false;
 
@@ -70,7 +70,7 @@ public class ExtraDamageWithStatusEffect : SupportCardEffectData, ISupportEffect
             }
         }
 
-        if(!canCostBePaid)
+        if(!canCostBePaid && !justChecking)
         {
             DialogueBoxPopup.instance.ActivatePopupWithJustText("No opponent's are afflicted with status effects currently!", 1.5f);
         }

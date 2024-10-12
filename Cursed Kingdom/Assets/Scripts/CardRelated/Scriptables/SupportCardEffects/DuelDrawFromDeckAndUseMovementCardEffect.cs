@@ -62,7 +62,7 @@ public class DuelDrawFromDeckAndUseMovementCardEffect : SupportCardEffectData, I
 		base.EffectOfCard(duelPlayerInformation, cardPlayed);
 	}
 
-    public override bool CanCostBePaid(DuelPlayerInformation playerDuelInfo, Card cardPlayer = null)
+    public override bool CanCostBePaid(DuelPlayerInformation playerDuelInfo, Card cardPlayer = null, bool justChecking = false)
     {
 		bool canCostBePaid = false;
 

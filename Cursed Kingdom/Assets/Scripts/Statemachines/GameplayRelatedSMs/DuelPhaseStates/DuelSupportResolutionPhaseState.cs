@@ -54,7 +54,6 @@ public class DuelSupportResolutionPhaseState : BaseState
 		{
 			FlipAndUseSupportCards();
 		}
-
     }
 
 	public void FlipAndUseSupportCards()

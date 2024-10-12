@@ -69,7 +69,7 @@ public class SwapMovementCardValueWithOpponentEffect : SupportCardEffectData, IS
 		base.EffectOfCard(duelPlayerInformation, cardPlayed);
 	}
 
-	public override bool CanCostBePaid(DuelPlayerInformation duelPlayerInformation, Card cardPlayed = null)
+	public override bool CanCostBePaid(DuelPlayerInformation duelPlayerInformation, Card cardPlayed = null, bool justChecking = false)
     {
         bool canCostBePaid = false;
 		if(duelPlayerInformation.PlayerInDuel.GameplayManagerRef.DuelPhaseSMRef.PlayersInCurrentDuel.Count < 3)
@@ -77,7 +77,7 @@ public class SwapMovementCardValueWithOpponentEffect : SupportCardEffectData, IS
 			canCostBePaid = true;
 		}
 
-        if(!canCostBePaid)
+        if(!canCostBePaid && !justChecking)
         {
             DialogueBoxPopup.instance.ActivatePopupWithJustText("You have more than 1 opponent in the duel currently!", 1.5f);
         }

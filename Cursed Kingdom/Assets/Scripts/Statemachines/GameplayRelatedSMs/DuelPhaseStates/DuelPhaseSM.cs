@@ -207,7 +207,25 @@ public class DuelPhaseSM : BukuStateMachine
 		duelSupportResolutionPhaseState.SetupSupportCardsToResolve();
 		duelSupportResolutionPhaseState.SetupMovementCardsToResolve();
 		yield return new WaitForSeconds(0.65f);
-		duelSupportResolutionPhaseState.FlipAndUseSupportCards();
+		
+		bool atLeastOnePlayerSelectedASupportCard = false;
+		foreach(DuelPlayerInformation playerInformation in PlayersInCurrentDuel)
+		{
+			if(playerInformation.SelectedSupportCards.Count > 0)
+			{
+				atLeastOnePlayerSelectedASupportCard = true;
+				break;
+			}
+		}
+
+		if(atLeastOnePlayerSelectedASupportCard)
+		{
+			duelSupportResolutionPhaseState.FlipAndUseSupportCards();
+		}
+		else
+		{
+			ChangeState(duelMovementResolutionPhaseState);
+		}
 	}
 
 	/// <summary>

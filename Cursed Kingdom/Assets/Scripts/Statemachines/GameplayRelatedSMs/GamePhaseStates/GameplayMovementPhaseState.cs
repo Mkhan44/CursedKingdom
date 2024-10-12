@@ -97,7 +97,7 @@ public class GameplayMovementPhaseState : BaseState
 
         if(gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference != null)
         {
-            gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.StartCoroutine(gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.SelectLastOptionDialogueBoxChoice());
+            gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.StartCoroutine(gameplayPhaseSM.gameplayManager.GetCurrentPlayer().PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
         }
         
     }
@@ -491,12 +491,12 @@ public class GameplayMovementPhaseState : BaseState
     {
         PhaseDisplay.instance.displayTimeCompleted -= Logic;
         currentPlayer.ShowHand();
+
+        //This block is for if the AI player has 0 movement cards in their hand.
         if(currentPlayer.MovementCardsInHandCount == 0 && currentPlayer.NumMovementCardsUsedThisTurn == 0)
 		{
-
             if(currentPlayer.PlayerAIReference != null)
             {
-
                 //See if we use the Player's elite ability yet or not.
                 if(currentPlayer.CanUseEliteAbility && currentPlayer.ClassData.eliteAbilityData.CanBeManuallyActivated)
                 {
@@ -547,7 +547,6 @@ public class GameplayMovementPhaseState : BaseState
         //Check if Player is an AI, if they are then use a random card for now and return.
         if(currentPlayer.PlayerAIReference != null && currentPlayer.NumMovementCardsUsedThisTurn == 0 && currentPlayer.SpacesLeftToMove == 0)
         {
-
             //See if we use the Player's elite ability yet or not.
             if(currentPlayer.CanUseEliteAbility && currentPlayer.ClassData.eliteAbilityData.CanBeManuallyActivated)
             {
@@ -566,6 +565,7 @@ public class GameplayMovementPhaseState : BaseState
             {
                 int randomChanceToUseAbility = 0;
                 randomChanceToUseAbility = Random.Range(0,2);
+                randomChanceToUseAbility = 0;
                 if(randomChanceToUseAbility > 0)
                 {
                     currentPlayer.DoneActivatingAbilityEffect += UseRandomSupportCardAI;

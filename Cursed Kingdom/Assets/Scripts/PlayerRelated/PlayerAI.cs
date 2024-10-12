@@ -191,7 +191,7 @@ public class PlayerAI : MonoBehaviour
 
     #endregion
 
-    #region UseMovementPhaseSupportCard
+    #region UseSupportCardMovementPhase
 
     public IEnumerator UseRandomSupportCardMovementPhase()
     {
@@ -360,7 +360,7 @@ public class PlayerAI : MonoBehaviour
             Debug.Log("Player's movement card in hand count is 0. Gonna discard support cards as an AI.");
             yield break;
         }
-        //Choose ranodmly from both decks.
+        //Choose randomly from both decks.
         else
         {
             int deckToChooseFromIndex = 0;
@@ -455,6 +455,89 @@ public class PlayerAI : MonoBehaviour
 
 
     #endregion
+
+    #endregion
+
+    #region Duel Phase Methods
+
+    /// <summary>
+    /// We want the AI to auto-select a card and essentially add it to their 'selected movement cards' list.
+    /// </summary>
+    public void SelectMovementCardForDuel(DuelPlayerInformation duelPlayerInformation)
+    {
+        //Might hafta turn this into another method and wait till an event is triggered to signify the draw being completed.
+        if(PlayerReference.MovementCardsInHandCount < 1)
+        {
+            //If there's no cards in hand, draw the most recent card and select it.
+            PlayerReference.GameplayManagerRef.ThisDeckManager.DrawCard(Card.CardType.Movement, PlayerReference);
+            foreach (Card card in PlayerReference.CardsInhand)
+            {
+                if (card is MovementCard)
+                {
+                    //Dunno if we should curse this card if the Player is cursed since technically it's not a card from their hand...
+                    MovementCard movementCard = (MovementCard)card;
+                    duelPlayerInformation.SelectedMovementCards.Add(movementCard);
+                    //movementCard.AddCardToSelectedCardsDuel(true);
+                    Debug.Log($"AI player didn't have a movement card so we will use the newly drawn one from the deck with a value of: {movementCard.MovementCardValue}");
+                    break;
+                }
+            }
+
+        }
+        //Randomize picking a card in the player's hand. If they can select more than 1 this is where we will handle that.
+        else
+        {
+            int movementCardToUseIndex = Random.Range(0,PlayerReference.MovementCardsInHandCount);
+            MovementCard movementCardToUse = PlayerReference.GetMovementCardsInHand()[movementCardToUseIndex];
+            duelPlayerInformation.SelectedMovementCards.Add(movementCardToUse);
+            Debug.Log($"AI player {duelPlayerInformation.PlayerInDuel.playerIDIntVal} selected a movement card with value: {movementCardToUse.MovementCardValue} for the duel.");
+        }
+    }
+
+    public void SelectSupportCardForDuel(DuelPlayerInformation duelPlayerInformation)
+    {
+        //GO through all support cards in hand, if any are duel phase and cost can be paid then attempt to use them.
+        List<SupportCard> validDuelPhaseSupportCards = new();
+
+        foreach(SupportCard card in PlayerReference.GetSupportCardsInHand())
+        {
+            if(card.SupportCardData.ThisSupportCardType == SupportCardData.SupportCardType.Duel)
+            {
+                validDuelPhaseSupportCards.Add(card);
+            }
+        }
+        if(validDuelPhaseSupportCards.Count == 0)
+        {
+            Debug.Log("No valid support cards for the AI to use during duel phase. Aborting random support card usage.");
+            SelectMovementCardForDuel(duelPlayerInformation);
+            return;
+        }
+
+        int randomCardIndex = Random.Range(0, validDuelPhaseSupportCards.Count);
+        SupportCard supportCardReference = validDuelPhaseSupportCards[randomCardIndex];
+
+        foreach(SupportCardData.SupportCardEffect supportCardEffect in supportCardReference.SupportCardData.supportCardEffects)
+        {
+            if(supportCardEffect.supportCardEffectData.IsACost)
+            {
+                if(!supportCardEffect.supportCardEffectData.CanCostBePaid(duelPlayerInformation, supportCardReference, true))
+                {
+                    Debug.Log("Cost for valid support card for the AI to use during duel phase could not be paid. Aborting random support card usage.");
+                    SelectMovementCardForDuel(duelPlayerInformation);
+                    return;
+                }
+            }
+        }
+
+        int indexInHandTouse = PlayerReference.GetSupportCardsInHand().IndexOf(supportCardReference);
+        SupportCard supportCardToUse = PlayerReference.GetSupportCardsInHand()[indexInHandTouse];
+        duelPlayerInformation.SelectedSupportCards.Add(supportCardToUse);
+        Debug.Log($"AI player {duelPlayerInformation.PlayerInDuel.playerIDIntVal} selected the support card: {supportCardToUse.SupportCardData.CardTitle} for the duel.");
+
+        //Might want to make an event here instead of just calling the method...
+        SelectMovementCardForDuel(duelPlayerInformation);
+    }
+
 
     #endregion
 
