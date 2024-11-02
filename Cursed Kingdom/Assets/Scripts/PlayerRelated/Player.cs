@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
 	public event Action<Player> DoneRecoveringHealthEffect;
 	public event Action<Player> DoneDrawingCard;
 	public event Action<Player> DoneActivatingAbilityEffect;
-	public event Action<Player> DoneMovingBackwards;
+	public event Action<Player> DoneMovingInReverse;
 	public event Action<Player> DoneActivatingEliteAbilityEffect;
 	public event Action<Player> StatusEffectUpdateCompleted;
 	public event Action<Player> HasBeenDefeated;
@@ -66,7 +66,10 @@ public class Player : MonoBehaviour
 	[SerializeField] private GameObject movementCardsInHandHolderPanel;
 	[SerializeField] private GameObject supportCardsInHandHolderPanel;
 	[SerializeField] private GameObject handDisplayPanel;
+
+	//Moving related
 	[SerializeField] private bool isMoving;
+	[SerializeField] private bool isMovingInReverse;
 	[SerializeField] private bool isChoosingDirection;
 
 	//Abilities
@@ -134,6 +137,7 @@ public class Player : MonoBehaviour
 	//Clean this up vvvvv
 
 	public bool IsMoving { get => isMoving; set => isMoving = value; }
+	public bool IsMovingInReverse { get => isMovingInReverse; set => isMovingInReverse = value; }
     public bool IsChoosingDirection { get => isChoosingDirection; set => isChoosingDirection = value; }
     public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
 	public int SpacesLeftToMove { get => spacesLeftToMove; set => spacesLeftToMove = value; }
@@ -250,7 +254,7 @@ public class Player : MonoBehaviour
 	public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
 	public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
 	public Animator Animator { get => animator; set => animator = value; }
-
+    
 
     public void InitializePlayer(ClassData data)
 	{
@@ -312,6 +316,7 @@ public class Player : MonoBehaviour
 
 		IsOnCooldown = false;
 		IsMoving = false;
+		IsMovingInReverse = false;
 		IsChoosingDirection = false;
         WentOnCooldownThisTurn = false;
 		NegativeCooldownEffects = ClassData.negativeCooldownEffects;
@@ -596,7 +601,7 @@ public class Player : MonoBehaviour
 		}
     }
 
-	public void ActivateTargetPlayerToMoveBackwardsPopup(Player playerWhoIsChoosing, List<Player> validTargets, int maxNumSpacesToMoveBack)
+	public void ActivateTargetPlayerToMoveInReversePopup(Player playerWhoIsChoosing, List<Player> validTargets, int maxNumSpacesToMoveBack)
 	{
 		List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
 
@@ -609,7 +614,7 @@ public class Player : MonoBehaviour
             insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToMoveBackSpaces), this, paramsList));
         }
 
-        DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Player {playerWhoIsChoosing.playerIDIntVal} please select the Player you wish to make move backwards.", insertedParams, 1, "Move back");
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Player {playerWhoIsChoosing.playerIDIntVal} please select the Player you wish to make move in reverse.", insertedParams, 1, "Move back");
 
 		if(PlayerAIReference != null)
 		{
@@ -656,20 +661,23 @@ public class Player : MonoBehaviour
 	}
 
 	/// <summary>
-    /// Takes in a list of objects in this order: int index, Player playerWhoIsChoosing, Player targetedPlayer, int spacesToMoveBackwards
+    /// Takes in a list of objects in this order: int index, Player playerWhoIsChoosing, Player targetedPlayer, int spacesToMoveInReverse
     /// </summary>
     /// <param name="objects"></param>
     /// <returns></returns>
 	public IEnumerator SelectNumSpacesToMovePlayerBack(List<object> objects)
 	{
 		yield return null;
-		int indexSpacesToMoveBackwardsTotal = (int)objects[0];
-		Player targetedPlayer = (Player)objects[1];
-		Player playerWhoIsChoosing = (Player)objects[2];
+		int indexSpacesToMoveInReverseTotal = (int)objects[0];
+		Player playerWhoIsChoosing = (Player)objects[1];
+		Player targetedPlayer = (Player)objects[2];
 
-		//Make the target Player move backwards.
-		targetedPlayer.SpacesLeftToMove = indexSpacesToMoveBackwardsTotal;
-		targetedPlayer.gameplayManagerRef.playerMovementManager.SetupMoveReverse(targetedPlayer, playerWhoIsChoosing);
+		//Make the target Player move in reverse.
+		targetedPlayer.SpacesLeftToMove = indexSpacesToMoveInReverseTotal;
+		targetedPlayer.StateMachineRef.playerCharacterMoveState.PlayerMakingDecisions = playerWhoIsChoosing;
+		targetedPlayer.IsMovingInReverse = true;
+		targetedPlayer.PreviousSpacePlayerWasOn = null;
+		targetedPlayer.StateMachineRef.ChangeState(targetedPlayer.StateMachineRef.playerCharacterMoveState);
 	}
 
 
@@ -3184,9 +3192,10 @@ public class Player : MonoBehaviour
 		DoneRecoveringHealthEffect?.Invoke(this);
 	}
 
-	public void CompletedMovingBackwardEffect()
+	public void CompletedMovingInReverseEffect()
 	{
-		DoneMovingBackwards?.Invoke(this);
+		IsMovingInReverse = false;
+		DoneMovingInReverse?.Invoke(this);
 	}
 
 	public void CompletedDrawingForEffect()

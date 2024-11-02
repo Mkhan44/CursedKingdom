@@ -12,17 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: Thief Level 4 Barricade
   m_EditorClassIdentifier: 
-  afterDuelEffect: 0
-  onSpaceTurnStartEffect: 0
   passingOverSpaceEffect: 1
   isMandatory: 1
   decreasesSpacesToMove: 0
   isNonDuelSpace: 0
   isNegative: 0
+  levelRequirementToGoToThisSpace: 4
   spaceEffects:
   - spaceEffectData: {fileID: 11400000, guid: 0b172890d781b78489702ce8a15df897, type: 2}
     spaceTypeStringHidden: BarricadeSpace
-  thisSpaceTypes: 06000000
   spaceName: Barricade Space
   spaceDescription: You must be level 4 before you can pass this barricade.
   spaceSprite: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
@@ -30,3 +28,4 @@ MonoBehaviour:
   - {fileID: 2100000, guid: ee8f17d35716d104c8ad9a530b4dbac7, type: 2}
   - {fileID: 2100000, guid: fa752db494b7d8340b4c53994b177887, type: 2}
   - {fileID: 2100000, guid: 79bc05fd88ff95140af18248c9739c4c, type: 2}
+  StepSoundClipsData: {fileID: 0}

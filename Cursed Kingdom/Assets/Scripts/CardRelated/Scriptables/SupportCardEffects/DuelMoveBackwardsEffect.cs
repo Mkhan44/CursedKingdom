@@ -19,7 +19,7 @@ public class DuelMoveBackwardsEffect : SupportCardEffectData, ISupportEffect
 
     public override void EffectOfCard(Player playerReference, Card cardPlayed = null)
     {
-        playerReference.DoneMovingBackwards += CompletedEffect;
+        playerReference.DoneMovingInReverse += CompletedEffect;
         SupportCard cardUsed = (SupportCard)cardPlayed;
         if (cardUsed != null)
         {
@@ -28,7 +28,8 @@ public class DuelMoveBackwardsEffect : SupportCardEffectData, ISupportEffect
     }
     public override void EffectOfCard(DuelPlayerInformation playerDuelInfo, Card cardPlayed = null)
     {
-        playerDuelInfo.PlayerInDuel.DoneMovingBackwards += CompletedEffect;
+        //This should be changed...maybe a global event in the gameplay manager...?
+        playerDuelInfo.PlayerInDuel.GameplayManagerRef.PlayerFinishedMovingInReverse += CompletedEffect;
         SupportCard cardUsed = (SupportCard)cardPlayed;
         if (cardUsed != null)
         {
@@ -56,12 +57,12 @@ public class DuelMoveBackwardsEffect : SupportCardEffectData, ISupportEffect
             return;
         }
 
-        playerDuelInfo.PlayerInDuel.ActivateTargetPlayerToMoveBackwardsPopup(playerDuelInfo.PlayerInDuel, validTargets, NumSpacesToMoveBack);
+        playerDuelInfo.PlayerInDuel.ActivateTargetPlayerToMoveInReversePopup(playerDuelInfo.PlayerInDuel, validTargets, NumSpacesToMoveBack);
     }
 
     public override void CompletedEffect(Player playerReference)
     {
-        playerReference.DoneMovingBackwards -= CompletedEffect;
+        playerReference.GameplayManagerRef.PlayerFinishedMovingInReverse -= CompletedEffect;
         base.CompletedEffect(playerReference);
     }
 }

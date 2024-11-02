@@ -144,7 +144,156 @@ public class PlayerMovementManager : MonoBehaviour
 			playerMakingDecisions = playerToMove;
 		}
 
+		Space currentSpacePlayerIsOn = playerToMove.CurrentSpacePlayerIsOn;
+
+		if(DebugModeSingleton.instance.IsDebugActive)
+		{
+			if(!hasBeenOveriddenOnce)
+			{
+				DebugModeSingleton.instance.OverrideCurrentPlayerSpacesLeftToMove(playerToMove);
+				hasBeenOveriddenOnce = true;
+			}
+		}
+
+		gameplayManagerRef.spacesToMoveText.text = $"Spaces left: {playerToMove.SpacesLeftToMove}";
+
+		//Go through each of the neighbors of the current space the player is on.
+		//If that neighbor does not exist or is a 'validdirectionfromthisspace' , don't include it.
+		//If that neighbor exists but is NOT a in the valid direction, add it.
+		//Also take into account barricade spaces and direction spaces.
+
+		List<Space> spaceChoicesToGive = new();
+		if(currentSpacePlayerIsOn.NorthNeighbor != null && currentSpacePlayerIsOn.NorthNeighbor.ValidDirectionsFromThisSpace.Contains(Space.Direction.South))
+		{
+			if(CheckIfValidSpaceToMoveToReverse(playerToMove, currentSpacePlayerIsOn.NorthNeighbor))
+			{
+				spaceChoicesToGive.Add(currentSpacePlayerIsOn.NorthNeighbor);
+			}
+		}
+
+		if(currentSpacePlayerIsOn.SouthNeighbor != null && currentSpacePlayerIsOn.SouthNeighbor.ValidDirectionsFromThisSpace.Contains(Space.Direction.North))
+		{
+			if(CheckIfValidSpaceToMoveToReverse(playerToMove, currentSpacePlayerIsOn.SouthNeighbor))
+			{
+				spaceChoicesToGive.Add(currentSpacePlayerIsOn.SouthNeighbor);
+			}
+		}
+
+		if(currentSpacePlayerIsOn.EastNeighbor != null && currentSpacePlayerIsOn.EastNeighbor.ValidDirectionsFromThisSpace.Contains(Space.Direction.West))
+		{
+			if(CheckIfValidSpaceToMoveToReverse(playerToMove, currentSpacePlayerIsOn.EastNeighbor))
+			{
+				spaceChoicesToGive.Add(currentSpacePlayerIsOn.EastNeighbor);
+			}
+		}
+
+		if(currentSpacePlayerIsOn.WestNeighbor != null && currentSpacePlayerIsOn.WestNeighbor.ValidDirectionsFromThisSpace.Contains(Space.Direction.East))
+		{
+			if(CheckIfValidSpaceToMoveToReverse(playerToMove, currentSpacePlayerIsOn.WestNeighbor))
+			{
+				spaceChoicesToGive.Add(currentSpacePlayerIsOn.WestNeighbor);
+			}
+		}
+
+		if(spaceChoicesToGive.Count > 1)
+		{
+			bool isMovingInReverse = true;
+			CreateDirectionChoicePopup(playerToMove, spaceChoicesToGive, isMovingInReverse, playerMakingDecisions);
+		}
+		//Only 1 space we can move to.
+		else if(spaceChoicesToGive.Count == 1)
+		{
+			StartCoroutine(MoveTowardsReverse(spaceChoicesToGive[0], playerToMove, playerToMove.SpacesLeftToMove));
+		}
+		else
+		{
+			Debug.LogError("Could not find a valid space to travel to from your current space in reverse. Check the current space's valid directions?");
+			return;
+		}
+
+		//Multiple valid spaces you can go from this space.
+		// if (currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.Count > 1)
+		// {
+		// 	List<Space> spaceChoicesToGive = new();
+		// 	foreach(Space.Direction direction in currentSpacePlayerIsOn.ValidDirectionsFromThisSpace)
+		// 	{
+		// 		if(direction == Space.Direction.North)
+		// 		{
+		// 			if (CheckIfValidSpaceToMoveToReverse(playerToMove, currentSpacePlayerIsOn.NorthNeighbor))
+		// 			{
+		// 				spaceChoicesToGive.Add(currentSpacePlayerIsOn.NorthNeighbor);
+		// 			}
+		// 		}
+		// 		if (direction == Space.Direction.South)
+		// 		{
+		// 			if (CheckIfValidSpaceToMoveToReverse(playerToMove, currentSpacePlayerIsOn.SouthNeighbor))
+		// 			{
+		// 				spaceChoicesToGive.Add(currentSpacePlayerIsOn.SouthNeighbor);
+		// 			}
+		// 		}
+		// 		if (direction == Space.Direction.West)
+		// 		{
+		// 			if (CheckIfValidSpaceToMoveToReverse(playerToMove, currentSpacePlayerIsOn.WestNeighbor))
+		// 			{
+		// 				spaceChoicesToGive.Add(currentSpacePlayerIsOn.WestNeighbor);
+		// 			}
+		// 		}
+		// 		if (direction == Space.Direction.East)
+		// 		{
+		// 			if (CheckIfValidSpaceToMoveToReverse(playerToMove, currentSpacePlayerIsOn.EastNeighbor))
+		// 			{
+		// 				spaceChoicesToGive.Add(currentSpacePlayerIsOn.EastNeighbor);
+		// 			}                    
+		// 		}
+		// 	}
+
 		
+
+		// 	if(spaceChoicesToGive.Count > 1)
+		// 	{
+		// 		CreateDirectionChoicePopup(playerToMove, spaceChoicesToGive, true);
+		// 	}
+		// 	else
+		// 	{
+		// 		StartCoroutine(MoveTowardsReverse(spaceChoicesToGive[0], playerToMove, playerToMove.SpacesLeftToMove));
+		// 	}
+		// }
+		// //Only 1 valid way to go from this space.
+		// else
+		// {
+		// 	Space.Direction validDirection;
+
+		// 	if (currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.Count == 1)
+		// 	{
+		// 		validDirection = currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.First();
+		// 	}
+		// 	else
+		// 	{
+		// 		Debug.LogError($"There should only be 1 element in the HashSet of valid directions. However, the count is: {currentSpacePlayerIsOn.ValidDirectionsFromThisSpace.Count}");
+		// 		return;
+		// 	}
+			
+
+		// 	if(validDirection == Space.Direction.North)
+		// 	{
+		// 		StartCoroutine(MoveTowardsReverse(currentSpacePlayerIsOn.NorthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+		// 	}
+
+		// 	if (validDirection == Space.Direction.South)
+		// 	{
+		// 		StartCoroutine(MoveTowardsReverse(currentSpacePlayerIsOn.SouthNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+		// 	}
+
+		// 	if (validDirection == Space.Direction.East)
+		// 	{
+		// 		StartCoroutine(MoveTowardsReverse(currentSpacePlayerIsOn.EastNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+		// 	}
+
+		// 	if (validDirection == Space.Direction.West)
+		// 	{
+		// 		StartCoroutine(MoveTowardsReverse(currentSpacePlayerIsOn.WestNeighbor, playerToMove, playerToMove.SpacesLeftToMove));
+		// 	}
+		// }
 
 	}
 
@@ -164,22 +313,33 @@ public class PlayerMovementManager : MonoBehaviour
 			isValid = false;
 		}
 
-		foreach(SpaceData.SpaceEffect spaceEffect in spaceToTryMovingTo.spaceData.spaceEffects)
+		if(player.CurrentLevel < spaceToTryMovingTo.spaceData.LevelRequirementToGoToThisSpace) 
 		{
-			BarricadeSpace barricadeSpace = spaceEffect.spaceEffectData as BarricadeSpace;
-			if(barricadeSpace is not null)
-			{
-				if(player.CurrentLevel < barricadeSpace.LevelNeededToPass) 
-				{
-					isValid = false;
-					break;
-				}
-			}
+			isValid = false;
 		}
+
 		return isValid;
 	}
 
-	private void CreateDirectionChoicePopup(Player playerToMove, List<Space> targetSpacesToMoveTo)
+	private bool CheckIfValidSpaceToMoveToReverse(Player player, Space spaceToTryMovingTo)
+	{
+		bool isValid = true;
+
+		if(spaceToTryMovingTo is null)
+		{
+			isValid = false;
+			return isValid;
+		}
+
+		if(player.CurrentLevel < spaceToTryMovingTo.spaceData.LevelRequirementToGoToThisSpace) 
+		{
+			isValid = false;
+		}
+
+		return isValid;
+	}
+
+	private void CreateDirectionChoicePopup(Player playerToMove, List<Space> targetSpacesToMoveTo, bool isMovingReverse = false, Player playerWhoChoosesDirection = null)
 	{
 		for(int i = 0; i < targetSpacesToMoveTo.Count; i++)
 		{
@@ -189,17 +349,26 @@ public class PlayerMovementManager : MonoBehaviour
 			Button directionButtonButton = directionButtonObj.GetComponent<Button>();
 			directionButton.buttonType = TestCardMoveButton.MoveButtonType.Direction;
 			directionButton.moveText.text = $"Move to: {targetSpacesToMoveTo[currentIndex].spaceData.spaceName}";
-			directionButtonButton.onClick.AddListener(() => ChooseDirection(targetSpacesToMoveTo[currentIndex], playerToMove, playerToMove.SpacesLeftToMove));
+			directionButtonButton.onClick.AddListener(() => ChooseDirection(targetSpacesToMoveTo[currentIndex], playerToMove, playerToMove.SpacesLeftToMove, isMovingReverse));
 		}
+
+		//Have some logic here if playerWhoChoosesDirection is not null to lock the playerToMove's controls and unlock the player who is choosing's controls.
 
 		GameplayManagerRef.HandDisplayPanel.gameObject.SetActive(false);
 	}
 
 	//Used when a direction is chosen. This function should be called by clicking a button.
-	public void ChooseDirection(Space targetSpace, Player playerReference, int spacesLeftToMove)
+	public void ChooseDirection(Space targetSpace, Player playerReference, int spacesLeftToMove, bool isMovingReverse = false)
 	{
-		StartCoroutine(MoveTowards(targetSpace, playerReference, spacesLeftToMove));
-
+		if(!isMovingReverse)
+		{
+			StartCoroutine(MoveTowards(targetSpace, playerReference, spacesLeftToMove));
+		}
+		else
+		{
+			StartCoroutine(MoveTowardsReverse(targetSpace, playerReference, spacesLeftToMove));
+		}
+		
 		//Cleanup button holder.
 		foreach (Transform child in gameplayManagerRef.directionChoiceButtonHolder.transform)
 		{
@@ -225,7 +394,6 @@ public class PlayerMovementManager : MonoBehaviour
 		playerReference.PreviousSpacePlayerWasOn = playerReference.CurrentSpacePlayerIsOn;
 		playerReference.SpacesLeftToMove = spacesToMove;
 		
-
 		playerReference.IsMoving = true;
 		gameplayManagerRef.isPlayerMoving = true;
 		//playerReference.StateMachineRef.ChangeState(playerReference.StateMachineRef.playerCharacterMoveState);
@@ -293,47 +461,82 @@ public class PlayerMovementManager : MonoBehaviour
 		yield return null;
 	}
 
-	public IEnumerator MoveTowardsMultiSpace(List<Vector3> targetPositions, List<Player> playerReferences)
+	public IEnumerator MoveTowardsReverse(Space spaceToMoveTo, Player playerReference, int spacesToMove = 1)
 	{
-		//if (movingCoroutine != null)
-		//{
-		//    StopCoroutine(movingCoroutine);
-		//    null;
-		//}
+		Transform playerCharacter = playerReference.gameObject.transform;
+		Animator = playerCharacter.GetComponent<Animator>();
+		bool decreaseSpacesToMove = true;
 
-		for(int i = 0; i < playerReferences.Count; i++)
+		if(!spaceToMoveTo.spaceData.DecreasesSpacesToMove)
 		{
-			Transform playerCharacter = playerReferences[i].gameObject.transform;
-			Animator = playerCharacter.GetComponent<Animator>();
-
-
-			//playerReferences[i].IsMoving = true;
-			//gameplayManagerRef.isPlayerMoving = true;
-			Animator.SetBool(ISMOVINGPARAMETER, true);
-			// playerReference.HideHand();
-
-			float rate = 5.0f;
-			float finalRate;
-
-			//while (Vector3.Distance(playerCharacter.localPosition, targetPosition) > 0.15f)
-			//{
-			//    finalRate = rate * Time.deltaTime;
-			//    Vector3 smoothedMovement = Vector3.MoveTowards(playerCharacter.localPosition, targetPosition, finalRate);
-			//    playerCharacter.position = smoothedMovement;
-			//    yield return new WaitForFixedUpdate();
-			//}
-
-			finalRate = rate * Time.deltaTime;
-			Vector3 smoothedMovement = Vector3.MoveTowards(playerCharacter.localPosition, targetPositions[i], finalRate);
-			playerCharacter.position = smoothedMovement;
-
-			yield return new WaitForSeconds(0.5f);
-
-			playerCharacter.position = targetPositions[i];
-
-			//gameplayManagerRef.isPlayerMoving = false;
-			Animator.SetBool(ISMOVINGPARAMETER, false);
+			decreaseSpacesToMove = false;
 		}
+
+		Vector3 targetPosition = spaceToMoveTo.spawnPoint.position;
+
+		playerReference.PreviousSpacePlayerWasOn = playerReference.CurrentSpacePlayerIsOn;
+		playerReference.SpacesLeftToMove = spacesToMove;
+		
+
+		playerReference.IsMoving = true;
+		gameplayManagerRef.isPlayerMoving = true;
+
+		float rate = 3.0f;
+
+		if (spacesToMove > 1)
+		{
+			rate = 3.0f;
+		}
+		float finalRate;
+
+		while (Vector3.Distance(playerCharacter.localPosition, targetPosition) > 0.15f)
+		{
+			finalRate = rate * Time.deltaTime;
+			Vector3 smoothedMovement = Vector3.MoveTowards(playerCharacter.localPosition, targetPosition, finalRate);
+			playerCharacter.position = smoothedMovement;
+			yield return new WaitForFixedUpdate();
+		}
+		
+		gameplayManagerRef.isPlayerMoving = false;
+
+		if (spacesToMove > 1)
+		{
+			if(decreaseSpacesToMove)
+			{
+				playerReference.SpacesLeftToMove -= 1;
+			}
+			
+			SetupMoveReverse(playerReference);
+		}
+		else
+		{
+			if (decreaseSpacesToMove)
+			{
+				playerCharacter.position = targetPosition;
+				playerReference.SpacesLeftToMove = 0;
+				hasBeenOveriddenOnce = false;
+				//Make sure we set the previous space to null after this since the next time the player moves forward, it won't let them
+				//since the space they just moved from in reverse would be the space they need to move from forward now.
+				playerReference.PreviousSpacePlayerWasOn = null;
+
+				//Check if multiple characters are on the space, and move everyone accordingly if so.
+				if (!spaceToMoveTo.playersOnThisSpace.Contains(playerReference))
+				{
+					spaceToMoveTo.playersOnThisSpace.Add(playerReference);
+				}
+
+				if (spaceToMoveTo.playersOnThisSpace.Count > 1 && !spaceToMoveTo.haveSeparatedPlayersAlready)
+				{
+					spaceToMoveTo.MoveMultiplePlayersOnSpace();
+				}
+			}
+			else
+			{
+				SetupMoveReverse(playerReference);
+			}
+		}
+		gameplayManagerRef.spacesToMoveText.text = $"Spaces left: {playerReference.SpacesLeftToMove}";
+
 		yield return null;
 	}
 

@@ -20,6 +20,8 @@ public class GameplayManager : MonoBehaviour
     public event Action<KeyCode> MoveHighlightedSpaceIconGroundView;
 	public event Action<KeyCode> MoveHighlightedSpaceIconOverheadView;
 	public event Action<SupportCard> CurrentSupportCardThatWasJustUsed;
+
+	public event Action<Player> PlayerFinishedMovingInReverse;
 	
 	//event if all players die
 	public event Action<Player> AllPlayersDefeated;
@@ -597,6 +599,7 @@ public class GameplayManager : MonoBehaviour
 		MoveHighlightedSpaceIconOverheadView?.Invoke(keyCodePressed);
 	}
 
+
 	public void ReloadScene()
 	{
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -921,6 +924,11 @@ public class GameplayManager : MonoBehaviour
 	{
 		CurrentSupportCardThatWasJustUsed?.Invoke(supportCardUsed);
 		CurrentSupportCardBeingUsed = supportCardUsed;
+	}
+
+	public void FinishedMovingInReverse()
+	{
+		PlayerFinishedMovingInReverse?.Invoke(GetCurrentPlayer());
 	}
 
 
