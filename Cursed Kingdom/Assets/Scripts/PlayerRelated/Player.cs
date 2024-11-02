@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
 	public event Action<Player> DoneRecoveringHealthEffect;
 	public event Action<Player> DoneDrawingCard;
 	public event Action<Player> DoneActivatingAbilityEffect;
+	public event Action<Player> DoneMovingBackwards;
 	public event Action<Player> DoneActivatingEliteAbilityEffect;
 	public event Action<Player> StatusEffectUpdateCompleted;
 	public event Action<Player> HasBeenDefeated;
@@ -594,6 +595,84 @@ public class Player : MonoBehaviour
 			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
 		}
     }
+
+	public void ActivateTargetPlayerToMoveBackwardsPopup(Player playerWhoIsChoosing, List<Player> validTargets, int maxNumSpacesToMoveBack)
+	{
+		List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+
+		foreach (Player player in validTargets)
+		{
+            List<object> paramsList = new();
+            paramsList.Add(player);
+			paramsList.Add(playerWhoIsChoosing);
+			paramsList.Add(maxNumSpacesToMoveBack);
+            insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToMoveBackSpaces), this, paramsList));
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Player {playerWhoIsChoosing.playerIDIntVal} please select the Player you wish to make move backwards.", insertedParams, 1, "Move back");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
+
+	}
+
+	/// <summary>
+    /// Takes in a list of objects in this order: Player targetedPlayer, Player playerWhoIsChoosing, int maxNumSpacesToMoveBack
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+	public IEnumerator SelectPlayerToMoveBackSpaces(List<object> objects)
+	{
+		yield return null;
+		Player targetedPlayer = (Player)objects[0];
+		Player playerWhoIsChoosing = (Player)objects[1];
+		int maxNumSpacesToMoveBack = (int)objects[2];
+		ActivateSelectNumSpacesToMakeTargetPlayerMoveBackPopup(playerWhoIsChoosing, targetedPlayer, maxNumSpacesToMoveBack);
+	}
+
+	public void ActivateSelectNumSpacesToMakeTargetPlayerMoveBackPopup(Player playerWhoIsChoosing, Player targetedPlayer, int maxNumSpacesToMoveBack)
+	{
+		List<Tuple<string, string, object, List<object>>> insertedParams = new();
+
+		for(int i = 0; i < maxNumSpacesToMoveBack; i++)
+		{
+			int index = i+1;
+            List<object> paramsList = new();
+            paramsList.Add(index);
+			paramsList.Add(playerWhoIsChoosing);
+			paramsList.Add(targetedPlayer);
+            insertedParams.Add(Tuple.Create<string, string, object, List<object>>(index.ToString(), nameof(SelectNumSpacesToMovePlayerBack), this, paramsList));
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {playerWhoIsChoosing.playerIDIntVal} please select how many spaces to make player {targetedPlayer.playerIDIntVal} move back.", insertedParams, 1, "Move back");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
+
+	}
+
+	/// <summary>
+    /// Takes in a list of objects in this order: int index, Player playerWhoIsChoosing, Player targetedPlayer, int spacesToMoveBackwards
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+	public IEnumerator SelectNumSpacesToMovePlayerBack(List<object> objects)
+	{
+		yield return null;
+		int indexSpacesToMoveBackwardsTotal = (int)objects[0];
+		Player targetedPlayer = (Player)objects[1];
+		Player playerWhoIsChoosing = (Player)objects[2];
+
+		//Make the target Player move backwards.
+		targetedPlayer.SpacesLeftToMove = indexSpacesToMoveBackwardsTotal;
+		targetedPlayer.gameplayManagerRef.playerMovementManager.SetupMoveReverse(targetedPlayer, playerWhoIsChoosing);
+	}
+
+
 
     #region BLOCK EFFECT POPUPS
     public void ActivatePlayerBlockElementalDamageSelectionPopup(Player targetedPlayer, int damageToPotentiallytake, List<SupportCard> elementalBlockSupportCards)
@@ -2649,6 +2728,11 @@ public class Player : MonoBehaviour
 			GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
 			//play animation of some sort...
 		}
+
+		if(IsHandlingSupportCardEffects)
+		{
+			CompletedStatusEffectUpdate();
+		}
 	}
 
 	private void CursePlayerPriv(int numTurnsToCurse)
@@ -2660,6 +2744,11 @@ public class Player : MonoBehaviour
 			WasAfflictedWithStatusThisTurn = true;
 			GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
 			//play animation of some sort...
+		}
+
+		if(IsHandlingSupportCardEffects)
+		{
+			CompletedStatusEffectUpdate();
 		}
 	}
 
@@ -3093,6 +3182,11 @@ public class Player : MonoBehaviour
 	public void CompletedRecoveringHealthForEffect()
 	{
 		DoneRecoveringHealthEffect?.Invoke(this);
+	}
+
+	public void CompletedMovingBackwardEffect()
+	{
+		DoneMovingBackwards?.Invoke(this);
 	}
 
 	public void CompletedDrawingForEffect()

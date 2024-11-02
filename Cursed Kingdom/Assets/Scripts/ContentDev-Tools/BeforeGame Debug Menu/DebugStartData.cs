@@ -35,4 +35,10 @@ public class DebugStartData : ScriptableObject
 
     [Range(2, 4)] public int numberOfPlayersToUse = 2;
     public List<PlayerDebugData> playerDebugDatas = new();
+
+    public int movementDeckDataToUseIndex = 0;
+    public int supportCardDeckDataToUseIndex = 0;
+
+    public DeckData movementDeckDataToUseRef;
+    public DeckData supportDeckDataToUseRef;
 }

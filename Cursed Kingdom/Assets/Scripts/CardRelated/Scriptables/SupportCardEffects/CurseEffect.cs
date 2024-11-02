@@ -121,6 +121,34 @@ public class CurseEffect : SupportCardEffectData, ISupportEffect
         return canCostBePaid;
     }
 
+    public override bool CanCostBePaid(DuelPlayerInformation playerDuelInfo, Card cardPlayer = null, bool justChecking = false)
+    {
+        bool canCostBePaid = false;
+
+        if(CurseUser)
+        {
+            if(!(playerDuelInfo.PlayerInDuel.IsPoisoned && playerDuelInfo.PlayerInDuel.IsCursed))
+            {
+                canCostBePaid = true;
+            }
+        }
+
+        foreach (Player player in playerDuelInfo.PlayerInDuel.GameplayManagerRef.Players)
+        {
+            if (!player.IsCursed && !player.IsPoisoned && player != playerDuelInfo.PlayerInDuel)
+            {
+                canCostBePaid = true;
+            }
+        }
+
+                
+        if (!canCostBePaid && !justChecking)
+        {
+            DialogueBoxPopup.instance.ActivatePopupWithJustText("No valid targets to Curse.", 1.5f);
+        }
+        return canCostBePaid;
+    }
+
     public override void CompletedEffect(Player playerReference)
     {
         playerReference.DoneAttackingForEffect -= CompletedEffect;

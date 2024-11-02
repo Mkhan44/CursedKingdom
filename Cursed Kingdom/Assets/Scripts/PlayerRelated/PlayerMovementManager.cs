@@ -137,6 +137,17 @@ public class PlayerMovementManager : MonoBehaviour
 
 	}
 
+	public void SetupMoveReverse(Player playerToMove, Player playerMakingDecisions = null)
+	{
+		if(playerMakingDecisions is null)
+		{
+			playerMakingDecisions = playerToMove;
+		}
+
+		
+
+	}
+
 	private bool CheckIfValidSpaceToMoveTo(Player player, Space spaceToTryMovingTo)
 	{
 		bool isValid = true;

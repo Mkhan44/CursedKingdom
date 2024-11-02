@@ -158,12 +158,24 @@ public class GameplayManager : MonoBehaviour
 		DuelPhaseSMRef = GetComponent<DuelPhaseSM>();
 
 
-
         //Deck related
         ThisDeckManager = GetComponent<DeckManager>();
 		UseSelectedCardsPanel.SetActive(false);
 
 		//Get a list of movement cards, pass them in.
+
+		if(StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable)
+		{
+			if(StartDebugMenu.instance.currentlySelectedStartData.movementDeckDataToUseIndex != 0)
+			{
+				ThisDeckManager.MovementDeckData = StartDebugMenu.instance.currentlySelectedStartData.movementDeckDataToUseRef;
+			}
+
+			if(StartDebugMenu.instance.currentlySelectedStartData.supportCardDeckDataToUseIndex != 0)
+			{
+				ThisDeckManager.SupportDeckData = StartDebugMenu.instance.currentlySelectedStartData.supportDeckDataToUseRef;
+			}
+		}
 		ThisDeckManager.CreateDeck();
 
 		//Deck related

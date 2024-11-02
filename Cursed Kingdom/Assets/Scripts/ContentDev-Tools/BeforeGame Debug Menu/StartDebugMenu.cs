@@ -27,6 +27,10 @@ public class StartDebugMenu : MonoBehaviour
 
     public int numberOfPlayers = 0;
     public TMP_Dropdown numberOfPlayersDropDown;
+
+    public TMP_Dropdown movementDeckDropdown;
+    public TMP_Dropdown supportDeckDropdown;
+    public DebugDeckHolderData debugDeckHolderData;
     public TMP_Dropdown currentlySelectedStartDataDropdown;
     public TMP_InputField newStartDataInputField;
     public Button createNewStartDataButton;
@@ -98,6 +102,8 @@ public class StartDebugMenu : MonoBehaviour
         currentlySelectedStartData = defaultDebugStartData;
         SetupSpacesToChooseFromList();
         SetupNumPlayersDropdownOptions();
+        SetupDefaultMovementDeckDropdownOptions(movementDeckDropdown);
+        SetupDefaultSupoortDeckDropdownOptions(supportDeckDropdown);
         PullInitialDataFromScriptable();
     }
 
@@ -180,6 +186,14 @@ public class StartDebugMenu : MonoBehaviour
         }
         numberOfPlayersDropDown.onValueChanged.RemoveAllListeners();
         numberOfPlayersDropDown.onValueChanged.AddListener(NumPlayersOnValueChanged);
+
+        movementDeckDropdown.onValueChanged.RemoveAllListeners();
+        movementDeckDropdown.onValueChanged.AddListener(DefaultMovementDeckOnValueChanged);
+        movementDeckDropdown.value = currentlySelectedStartData.movementDeckDataToUseIndex;
+
+        supportDeckDropdown.onValueChanged.RemoveAllListeners();
+        supportDeckDropdown.onValueChanged.AddListener(DefaultSupportDeckOnValueChanged);
+        supportDeckDropdown.value = currentlySelectedStartData.supportCardDeckDataToUseIndex;
 
         numberOfPlayersDropDown.value = currentlySelectedStartData.numberOfPlayersToUse;
     }
@@ -311,6 +325,53 @@ public class StartDebugMenu : MonoBehaviour
         {
             spacesDropdownList.options.Add(new TMP_Dropdown.OptionData(name));
         }
+    }
+    
+
+    private void SetupDefaultMovementDeckDropdownOptions(TMP_Dropdown defaultMovementDeckDropdownList)
+    {
+        defaultMovementDeckDropdownList.ClearOptions();
+        defaultMovementDeckDropdownList.options.Add(new TMP_Dropdown.OptionData("No override"));
+        foreach(DeckData movementDeckData in debugDeckHolderData.MovementCardDeckDatas)
+        {
+            defaultMovementDeckDropdownList.options.Add(new TMP_Dropdown.OptionData(movementDeckData.name));
+        }
+    }
+
+    private void SetupDefaultSupoortDeckDropdownOptions(TMP_Dropdown defaultSupportDeckDropdownList)
+    {
+        defaultSupportDeckDropdownList.ClearOptions();
+        defaultSupportDeckDropdownList.options.Add(new TMP_Dropdown.OptionData("No override"));
+        foreach(DeckData supportDeckData in debugDeckHolderData.SupportCardDeckDatas)
+        {
+            defaultSupportDeckDropdownList.options.Add(new TMP_Dropdown.OptionData(supportDeckData.name));
+        }
+
+    }
+
+    private void DefaultMovementDeckOnValueChanged(int value)
+    {
+        tipsText.text = $"Tips";
+        currentlySelectedStartData.movementDeckDataToUseIndex = value;
+        if(value != 0)
+        {
+            currentlySelectedStartData.movementDeckDataToUseRef = debugDeckHolderData.MovementCardDeckDatas[value-1];
+            tipsText.text = $"Currently selected movement deck is: {currentlySelectedStartData.movementDeckDataToUseRef.name}";
+        }
+        
+    }
+
+    private void DefaultSupportDeckOnValueChanged(int value)
+    {
+        Debug.Log("The value is: " + value);
+        tipsText.text = $"Tips";
+        currentlySelectedStartData.supportCardDeckDataToUseIndex = value;
+        if(value != 0)
+        {
+            currentlySelectedStartData.supportDeckDataToUseRef = debugDeckHolderData.SupportCardDeckDatas[value-1];
+            tipsText.text = $"Currently selected support deck is: {currentlySelectedStartData.supportDeckDataToUseRef.name}";
+        }
+        
     }
 
 }
