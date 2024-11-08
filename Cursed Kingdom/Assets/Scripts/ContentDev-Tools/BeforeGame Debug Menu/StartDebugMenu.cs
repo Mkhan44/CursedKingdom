@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class StartDebugMenu : MonoBehaviour
 {
@@ -18,9 +19,13 @@ public class StartDebugMenu : MonoBehaviour
     public bool turnOffPanel;
     public CanvasGroup canvasGroup;
 
+    public List<GameObject> Pages;
+
     //Prefab to spawn in per player.
-    public GameObject debugPlayerElementPrefab;
-    public Transform debugElementParentPanel;
+    public GameObject debugPlayerElementPrefabPage1;
+    public Transform debugElementParentPanelPage1;
+    public GameObject debugPlayerElementPrefabPage2;
+    public Transform debugElementParentPanelPage2;
     public DebugStartData defaultDebugStartData;
     public DebugStartData currentlySelectedStartData;
 
@@ -40,7 +45,8 @@ public class StartDebugMenu : MonoBehaviour
     public GameplayManager gameplayManager;
     private List<string> spacesOnCurrentBoardNames;
 
-    List<StartDebugPlayerElement> playerElements;
+    List<StartDebugPlayerElement> playerElementsPage1;
+    List<StartDebugPlayerElement> playerElementsPage2;
 
 
     private void Awake()
@@ -105,6 +111,70 @@ public class StartDebugMenu : MonoBehaviour
         SetupDefaultMovementDeckDropdownOptions(movementDeckDropdown);
         SetupDefaultSupoortDeckDropdownOptions(supportDeckDropdown);
         PullInitialDataFromScriptable();
+
+        TurnOnFirstPage();
+    }
+
+    private void TurnOnFirstPage()
+    {
+        foreach(GameObject page in Pages)
+        {
+            page.SetActive(false);
+        }
+
+        Pages[0].SetActive(true);
+    }
+
+    public void MoveToNextPage()
+    {
+        int indexOfCurrentPage = -1;
+        GameObject currentPage = null;
+        foreach(GameObject page in Pages)
+        {
+            if(page.activeInHierarchy)
+            {
+                currentPage = page;
+                indexOfCurrentPage = Pages.IndexOf(page);
+                break;
+            }
+        }
+
+        Pages[indexOfCurrentPage].SetActive(false);
+
+        //We're on the last page. Turn first page on. Turn last page off.
+        if(indexOfCurrentPage == Pages.Count -1)
+        {
+            Pages[0].SetActive(true);
+            return;
+        }
+
+        Pages[indexOfCurrentPage + 1].SetActive(true);
+    }
+
+    public void MoveToPreviousPage()
+    {
+        int indexOfCurrentPage = -1;
+        GameObject currentPage = null;
+        foreach(GameObject page in Pages)
+        {
+            if(page.activeInHierarchy)
+            {
+                currentPage = page;
+                indexOfCurrentPage = Pages.IndexOf(page);
+                break;
+            }
+        }
+
+        Pages[indexOfCurrentPage].SetActive(false);
+
+        //We're on the first page. Turn last page on. Turn first page off.
+        if(indexOfCurrentPage == 0)
+        {
+            Pages[Pages.Count - 1].SetActive(true);
+            return;
+        }
+
+        Pages[indexOfCurrentPage - 1].SetActive(true);
     }
 
     #region Setup each character dropdown events
@@ -113,11 +183,11 @@ public class StartDebugMenu : MonoBehaviour
     {
         //This is bad because we're just doing all of them even though only 1 value is edited but since it's debug meh it's cool.
 
-        foreach(StartDebugPlayerElement element in playerElements)
+        foreach(StartDebugPlayerElement element in playerElementsPage1)
         {
             if(element == startDebugPlayerElement)
             {
-                int index = playerElements.IndexOf(element);
+                int index = playerElementsPage1.IndexOf(element);
 
                 currentlySelectedStartData.playerDebugDatas[index].typeOfClass = (ClassData.ClassType)element.classDropdown.value;
                 currentlySelectedStartData.playerDebugDatas[index].startingHealthOverride = element.healthOverrideDropdown.value;
@@ -131,11 +201,21 @@ public class StartDebugMenu : MonoBehaviour
 
     private void ToggleValueChanged(StartDebugPlayerElement startDebugPlayerElement)
     {
-        foreach(StartDebugPlayerElement element in playerElements)
+        foreach(StartDebugPlayerElement element in playerElementsPage1)
         {
             if(element == startDebugPlayerElement)
             {
-                int index = playerElements.IndexOf(element);
+                int index = playerElementsPage1.IndexOf(element);
+
+                currentlySelectedStartData.playerDebugDatas[index].isAnAIOpponent = element.isAIToggle.isOn;
+            }
+        }
+
+        foreach(StartDebugPlayerElement element in playerElementsPage2)
+        {
+            if(element == startDebugPlayerElement)
+            {
+                int index = playerElementsPage2.IndexOf(element);
 
                 currentlySelectedStartData.playerDebugDatas[index].isAnAIOpponent = element.isAIToggle.isOn;
             }
@@ -151,7 +231,12 @@ public class StartDebugMenu : MonoBehaviour
         }
         tipsText.text = $"Tips";
         currentlySelectedStartData.numberOfPlayersToUse = numberOfPlayersDropDown.value;
-        foreach(Transform child in debugElementParentPanel)
+        foreach(Transform child in debugElementParentPanelPage1)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach(Transform child in debugElementParentPanelPage2)
         {
             Destroy(child.gameObject);
         }
@@ -165,19 +250,32 @@ public class StartDebugMenu : MonoBehaviour
     {
         numberOfPlayers = currentlySelectedStartData.numberOfPlayersToUse;
         int currentPlayerIndexInData = 1;
-        playerElements = new();
+        playerElementsPage1 = new();
+        playerElementsPage2 = new();
         foreach(DebugStartData.PlayerDebugData playerDebugData in defaultDebugStartData.playerDebugDatas)
         {
             currentPlayerIndexInData++;
-            GameObject newPlayerDebugElement = Instantiate(debugPlayerElementPrefab, debugElementParentPanel);
-            StartDebugPlayerElement playerDebugElementScript = newPlayerDebugElement.GetComponent<StartDebugPlayerElement>();
-            playerDebugElementScript.playerNumberText.text = $"Player {currentPlayerIndexInData - 1}";
-            SetupPlayerDebugElementScriptDropdowns(playerDebugElementScript);
-            PopulateDataFromScriptableToEachPlayer(playerDebugElementScript, currentPlayerIndexInData - 2);
-            playerDebugElementScript.DropdownValueChanged += DropdownOnValueChanged;
-            playerDebugElementScript.ToggleValueChanged += ToggleValueChanged;
 
-            playerElements.Add(playerDebugElementScript);
+            //Spawn in 1st page stuff.
+            GameObject newPlayerDebugElement = Instantiate(debugPlayerElementPrefabPage1, debugElementParentPanelPage1);
+            StartDebugPlayerElement playerDebugElementScriptPage1 = newPlayerDebugElement.GetComponent<StartDebugPlayerElement>();
+            playerDebugElementScriptPage1.playerNumberText.text = $"Player {currentPlayerIndexInData - 1}";
+            SetupPlayerDebugElementScriptDropdownsPage1(playerDebugElementScriptPage1);
+            PopulateDataFromScriptableToEachPlayer1(playerDebugElementScriptPage1, currentPlayerIndexInData - 2);
+            playerDebugElementScriptPage1.DropdownValueChanged += DropdownOnValueChanged;
+            //playerDebugElementScriptPage1.ToggleValueChanged += ToggleValueChanged;
+
+            playerElementsPage1.Add(playerDebugElementScriptPage1);
+
+            //Spawn in 2nd page stuff.
+            GameObject newPlayerDebugElementPage2 = Instantiate(debugPlayerElementPrefabPage2, debugElementParentPanelPage2);
+            StartDebugPlayerElement playerDebugElementScriptPage2 = newPlayerDebugElementPage2.GetComponent<StartDebugPlayerElement>();
+            playerDebugElementScriptPage2.playerNumberText.text = $"Player {currentPlayerIndexInData - 1}";
+            SetupPlayerDebugElementScriptDropdownsPage2(playerDebugElementScriptPage2);
+            PopulateDataFromScriptableToEachPlayer2(playerDebugElementScriptPage2, currentPlayerIndexInData - 2);
+            playerDebugElementScriptPage2.ToggleValueChanged += ToggleValueChanged;
+
+            playerElementsPage2.Add(playerDebugElementScriptPage2);
 
             if (currentPlayerIndexInData > numberOfPlayers)
             {
@@ -199,7 +297,7 @@ public class StartDebugMenu : MonoBehaviour
     }
 
     
-    private void SetupPlayerDebugElementScriptDropdowns(StartDebugPlayerElement playerDebugElementScript)
+    private void SetupPlayerDebugElementScriptDropdownsPage1(StartDebugPlayerElement playerDebugElementScript)
     {
         playerDebugElementScript.classDropdown.ClearOptions();
         playerDebugElementScript.healthOverrideDropdown.ClearOptions();
@@ -239,7 +337,12 @@ public class StartDebugMenu : MonoBehaviour
         SetupSpacesToChooseFromDropdownOptions(playerDebugElementScript.startSpaceDropdown);
     }
 
-    private void PopulateDataFromScriptableToEachPlayer(StartDebugPlayerElement playerDebugElementScript, int playerIndex)
+    private void SetupPlayerDebugElementScriptDropdownsPage2(StartDebugPlayerElement playerDebugElementScript)
+    {
+
+    }
+
+    private void PopulateDataFromScriptableToEachPlayer1(StartDebugPlayerElement playerDebugElementScript, int playerIndex)
     {
         DebugStartData.PlayerDebugData debugData = currentlySelectedStartData.playerDebugDatas[playerIndex];
 
@@ -268,6 +371,12 @@ public class StartDebugMenu : MonoBehaviour
         playerDebugElementScript.levelOverrideDropdown.value = debugData.startingLevelOverride;
         playerDebugElementScript.movementCardsInHandOverrideDropdown.value = debugData.movementCardsToStartWithOverride;
         playerDebugElementScript.supportCardsInHandOverrideDropdown.value = debugData.supportCardsToStartWithOverride;
+        
+    }
+
+    private void PopulateDataFromScriptableToEachPlayer2(StartDebugPlayerElement playerDebugElementScript, int playerIndex)
+    {
+        DebugStartData.PlayerDebugData debugData = currentlySelectedStartData.playerDebugDatas[playerIndex];
         playerDebugElementScript.isAIToggle.isOn = debugData.isAnAIOpponent;
     }
 

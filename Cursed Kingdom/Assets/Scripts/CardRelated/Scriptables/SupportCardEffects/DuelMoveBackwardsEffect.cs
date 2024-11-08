@@ -28,7 +28,6 @@ public class DuelMoveBackwardsEffect : SupportCardEffectData, ISupportEffect
     }
     public override void EffectOfCard(DuelPlayerInformation playerDuelInfo, Card cardPlayed = null)
     {
-        //This should be changed...maybe a global event in the gameplay manager...?
         playerDuelInfo.PlayerInDuel.GameplayManagerRef.PlayerFinishedMovingInReverse += CompletedEffect;
         SupportCard cardUsed = (SupportCard)cardPlayed;
         if (cardUsed != null)
