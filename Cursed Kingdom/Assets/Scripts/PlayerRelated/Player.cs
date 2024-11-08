@@ -1928,11 +1928,17 @@ public class Player : MonoBehaviour
 		//Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
 		if (IsCursed)
 		{
-			MovementCard tempMovementCard = (MovementCard)card;
-			if(tempMovementCard != null)
+			foreach(MovementCard Movementcard in GetMovementCardsInHand())
 			{
-				tempMovementCard.ManipulateMovementValue(true, 2);
-				CurseCardAnimationEffect();
+				if (Movementcard != null)
+				{
+					//This prevents restacking the cusre since we're just looking at the new card that was drawn.
+					if(Movementcard.TempCardValue == 0)
+					{
+						Movementcard.ManipulateMovementValue(true, 2);
+						CurseCardAnimationEffect();
+					}
+				}
 			}
 		}
 	}
@@ -1955,18 +1961,18 @@ public class Player : MonoBehaviour
 		SetMovementCardsInHand();
 		SetSupportCardsInHand();
 
+
 		//Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
 		if (IsCursed)
 		{
-			//Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
-			if (IsCursed)
+			foreach(MovementCard Movementcard in GetMovementCardsInHand())
 			{
-				foreach(Card card in cards)
+				if (Movementcard != null)
 				{
-					MovementCard tempMovementCard = (MovementCard)card;
-					if (tempMovementCard != null)
+					//This prevents restacking the cusre since we're just looking at the new card that was drawn.
+					if(Movementcard.TempCardValue == 0)
 					{
-						tempMovementCard.ManipulateMovementValue(true, 2);
+						Movementcard.ManipulateMovementValue(true, 2);
 						CurseCardAnimationEffect();
 					}
 				}
