@@ -950,7 +950,19 @@ public class Player : MonoBehaviour
         List<SupportCard> elementalBlockSupportCards = (List<SupportCard>)objects[1];
         int turnsToBePoisoned = (int)objects[2];
 
-        StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, targetedPlayer, "poison", turnsToBePoisoned));
+		if(targetedPlayer != this)
+		{
+			StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, targetedPlayer, "poison", turnsToBePoisoned));
+		}
+		else
+		{
+			PoisonPlayer(turnsToBePoisoned);
+			if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+			{
+				CompletedAttackingEffect();
+			}
+		}
+        
     }
 
     #endregion
@@ -2046,12 +2058,26 @@ public class Player : MonoBehaviour
 			NoMovementCardsInHandButton.gameObject.SetActive(true);
 		}
 
-		//For Curse animation on cards.
-		if (IsCursed)
-		{
-			CurseCardAnimationEffect();
-		}
+		ActivateMovementCardVisualEffects();
+	}
 
+	private void ActivateMovementCardVisualEffects()
+	{
+		foreach(MovementCard movementCard in GetMovementCardsInHand())
+		{
+			if(movementCard.TempCardValue > movementCard.MovementCardValue)
+			{
+				movementCard.ActivateBoostedEffect();
+			}
+			else if(IsCursed && movementCard.TempCardValue < movementCard.MovementCardValue)
+			{
+				movementCard.ActivateCurseEffect();
+			}
+			else if(movementCard.TempCardValue != 0 && movementCard.TempCardValue < movementCard.MovementCardValue)
+			{
+				movementCard.ActivateCurseEffect();
+			}
+		}
 	}
 
 	public void HideHand()
@@ -3164,6 +3190,19 @@ public class Player : MonoBehaviour
     }
 
     #endregion
+
+	#region Camera related
+
+	public void ChangeCameraPlayerIsLookingAt(Camera cameraToLookAt)
+	{
+		//Get the player sprite's billboard.
+		Billboard billboardRef =  this.transform.GetComponentInChildren<Billboard>();
+		billboardRef.CameraToBillboardTowards = cameraToLookAt;
+	}
+
+
+
+	#endregion
 
     #region Event Triggers
     //Event triggers

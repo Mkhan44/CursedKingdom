@@ -144,6 +144,7 @@ public class GameplayCameraManager : MonoBehaviour
         yield return new WaitForSeconds(timeToWaitForCutInCamToPopup);
 
         //Turn on camera.
+        targetPlayer.ChangeCameraPlayerIsLookingAt(CutInCamera);
         TurnOnVirtualCutInCamera();
         ChangeVirtualCutInCameraTarget(targetPlayer.transform);
 
@@ -190,6 +191,7 @@ public class GameplayCameraManager : MonoBehaviour
         //Player cam return to original zoom.
         CurrentPlayerFollowVirtualCamAnimator.SetBool("ZoomIn", false);
         TurnOffVirtualCutInCamera();
+        targetPlayer.ChangeCameraPlayerIsLookingAt(Camera.main);
         currentPlayer.ShowHand();
         currentPlayer.Animator.SetBool(Player.ISCASTING, false);
         targetPlayer.Animator.SetBool(Player.ISHURT, false);
@@ -231,6 +233,7 @@ public class GameplayCameraManager : MonoBehaviour
         yield return new WaitForSeconds(timeToWaitForCutInCamToPopup);
 
         //Turn on camera.
+        targetPlayer.ChangeCameraPlayerIsLookingAt(CutInCamera);
         TurnOnVirtualCutInCamera();
         ChangeVirtualCutInCameraTarget(targetPlayer.transform);
 
@@ -286,6 +289,7 @@ public class GameplayCameraManager : MonoBehaviour
         //Player cam return to original zoom.
         CurrentPlayerFollowVirtualCamAnimator.SetBool("ZoomIn", false);
         TurnOffVirtualCutInCamera();
+        targetPlayer.ChangeCameraPlayerIsLookingAt(Camera.main);
         currentPlayer.ShowHand();
         currentPlayer.Animator.SetBool(Player.ISCASTING, false);
         targetPlayer.Animator.SetBool(Player.ISHURT, false);

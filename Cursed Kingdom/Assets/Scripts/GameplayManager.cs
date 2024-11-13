@@ -744,7 +744,6 @@ public class GameplayManager : MonoBehaviour
 		int index = 0;
 		index = currentActiveCameraIndex;
 		currentActiveCamera.enabled = false;
-		int indexOfPlayer = Players.IndexOf(playerCharacter.GetComponent<Player>());
 
 		if (!mapManager.IsViewingMapOverhead)
 		{
@@ -752,7 +751,8 @@ public class GameplayManager : MonoBehaviour
 			index = 1;
 			currentActiveCameraIndex = index;
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-			mapManager.ActivateHighlightOverheadView(Players[indexOfPlayer].CurrentSpacePlayerIsOn);
+			HandDisplayPanel.ShrinkHand();
+			mapManager.ActivateHighlightOverheadView(GetCurrentPlayer().CurrentSpacePlayerIsOn);
 			currentActiveCameraIndex++;
 			mapManager.MobileMapControlsPanel.SetActive(true);
 
@@ -761,7 +761,7 @@ public class GameplayManager : MonoBehaviour
 		{
 			currentActiveCameraIndex = 0;
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-			mapManager.DisableCurrentHighlightedSpaceOverheadView(players[indexOfPlayer].CurrentSpacePlayerIsOn);
+			mapManager.DisableCurrentHighlightedSpaceOverheadView(GetCurrentPlayer().CurrentSpacePlayerIsOn);
             mapManager.MobileMapControlsPanel.SetActive(false);
         }
 
@@ -773,7 +773,6 @@ public class GameplayManager : MonoBehaviour
 		int index = 0;
 		index = currentActiveCameraIndex;
 		currentActiveCamera.enabled = false;
-		int indexOfPlayer = Players.IndexOf(playerCharacter.GetComponent<Player>());
 
 		if (!mapManager.IsViewingMapGround)
 		{
@@ -781,7 +780,8 @@ public class GameplayManager : MonoBehaviour
 			index = 2;
 			currentActiveCameraIndex = index;
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-			mapManager.SetupGroundViewCamera(currentActiveCamera, Players[indexOfPlayer].CurrentSpacePlayerIsOn);
+			HandDisplayPanel.ShrinkHand();
+			mapManager.SetupGroundViewCamera(currentActiveCamera, GetCurrentPlayer().CurrentSpacePlayerIsOn);
 			currentActiveCameraIndex++;
             mapManager.MobileMapControlsPanel.SetActive(true);
         }
@@ -789,7 +789,7 @@ public class GameplayManager : MonoBehaviour
 		{
 			currentActiveCameraIndex = 0;
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-			mapManager.DisableHighlightedSpaceGroundView(players[indexOfPlayer].CurrentSpacePlayerIsOn);
+			mapManager.DisableHighlightedSpaceGroundView(GetCurrentPlayer().CurrentSpacePlayerIsOn);
             mapManager.MobileMapControlsPanel.SetActive(false);
         }
 

@@ -123,6 +123,10 @@ public class MovementCard : Card
             {
                 ActivateBoostedEffect();
             }
+            else if(TempCardValue == MovementCardValue)
+            {
+                TurnOffAllEffects();
+            }
             
             return;
         }
@@ -437,6 +441,7 @@ public class MovementCard : Card
     #region Status Effects/Buffs
     public override void ActivateCurseEffect()
     {
+        TurnOffAllEffects();
         TextureAnimator.SetBool(ISCURSED, true);
     }
 
@@ -447,6 +452,7 @@ public class MovementCard : Card
 
     public override void ActivateBoostedEffect()
     {
+        TurnOffAllEffects();
         TextureAnimator.SetBool(ISBOOSTED, true);
     }
 
