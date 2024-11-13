@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   billboardType: 1
+  cameraToBillboardTowards: {fileID: 0}
   lockX: 1
   lockY: 0
   lockZ: 0
@@ -264,6 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0def50232889eee45874cd1d0388e220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAIReference: {fileID: 0}
   playerIDIntVal: 0
   maxHealth: 0
   currentHealth: 0
@@ -280,6 +282,7 @@ MonoBehaviour:
   supportCardsInHandHolderPanel: {fileID: 0}
   handDisplayPanel: {fileID: 0}
   isMoving: 0
+  isMovingInReverse: 0
   isChoosingDirection: 0
   negativeCooldownEffects: 
   isOnCooldown: 0
@@ -310,6 +313,7 @@ MonoBehaviour:
   extraMovementCardUses: 0
   movementCardSelectedForUse: 0
   supportCardSelectedForUse: 0
+  noMovementCardsInHandButton: {fileID: 0}
   ableToLevelUp: 0
   classData: {fileID: 11400000, guid: 36314dd781939014dace6307901964a3, type: 2}
   currentSpacePlayerIsOn: {fileID: 0}

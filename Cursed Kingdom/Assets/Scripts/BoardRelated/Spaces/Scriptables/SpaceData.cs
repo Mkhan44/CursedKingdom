@@ -38,11 +38,13 @@ public class SpaceData : ScriptableObject
     [SerializeField] private bool isNonDuelSpace;
     [Tooltip("Is this a negative space the impacts the player negatively? If so: True, else: should be False.")]
     [SerializeField] private bool isNegative;
+    [SerializeField] [Range(0,5)] private int levelRequirementToGoToThisSpace = 0; 
 
     public bool PassingOverSpaceEffect { get => passingOverSpaceEffect; set => passingOverSpaceEffect = value; }
     public bool IsMandatory { get => isMandatory; set => isMandatory = value; }
     public bool IsNonDuelSpace { get => isNonDuelSpace; set => isNonDuelSpace = value; }
     public bool IsNegative { get => isNegative; set => isNegative = value; }
+    public int LevelRequirementToGoToThisSpace { get => levelRequirementToGoToThisSpace; set => levelRequirementToGoToThisSpace = value; }
     public bool DecreasesSpacesToMove { get => decreasesSpacesToMove; set => decreasesSpacesToMove = value; }
 
     //Determines icon to be used. Should be moved to whatever script we'll have on the space prefabs.

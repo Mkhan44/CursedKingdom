@@ -17,7 +17,19 @@ public class DuelResultPhaseState : BaseState
     private bool isHandlingSupportCardEffect;
     private int indexOfCurrentSupportCardWeAreHandling;
 
+    private List<DuelPlayerInformation> playersLeftToHandleEndOfDuelEffects;
+
     private DuelPlayerInformation duelPlayerInformationWhosSupportCardsWeAreHandling;
+
+    private List<SupportCardData.SupportCardEffect> supportCardEffectsTohandle;
+
+    private SupportCardData.SupportCardEffect currentSupportCardEffectWeAreHandling;
+
+    public DuelPlayerInformation DuelPlayerInformationWhosSupportCardsWeAreHandling { get => duelPlayerInformationWhosSupportCardsWeAreHandling; set => duelPlayerInformationWhosSupportCardsWeAreHandling = value; }
+    public List<DuelPlayerInformation> PlayersLeftToHandleEndOfDuelEffects { get => playersLeftToHandleEndOfDuelEffects; set => playersLeftToHandleEndOfDuelEffects = value; }
+    public List<SupportCardData.SupportCardEffect> SupportCardEffectsTohandle { get => supportCardEffectsTohandle; set => supportCardEffectsTohandle = value; }
+    public SupportCardData.SupportCardEffect CurrentSupportCardEffectWeAreHandling { get => currentSupportCardEffectWeAreHandling; set => currentSupportCardEffectWeAreHandling = value; }
+
     public DuelResultPhaseState(DuelPhaseSM stateMachine) : base(stateName, stateMachine)
     {
         duelPhaseSM = stateMachine as DuelPhaseSM;
@@ -29,7 +41,9 @@ public class DuelResultPhaseState : BaseState
         PhaseDisplay.instance.TurnOnDisplay($"Result phase", 1.5f);
         isHandlingSupportCardEffect = false;
         indexOfCurrentSupportCardWeAreHandling = 0;
-        duelPlayerInformationWhosSupportCardsWeAreHandling = null;
+        DuelPlayerInformationWhosSupportCardsWeAreHandling = null;
+        PlayersLeftToHandleEndOfDuelEffects = new();
+        SupportCardEffectsTohandle = new();
         duelPhaseSM.FadePanelCompletedFadingDuel += TurnOffCameraAfterDuel;
         duelPhaseSM.StartCoroutine(duelPhaseSM.FadePanelActivate(0.5f));
     }
@@ -111,87 +125,124 @@ public class DuelResultPhaseState : BaseState
             //DiscardSelectedCardsAfterDuel(playerInfo);
         }
 
+        //Setup the players to handle support cards of.
+        foreach(DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
+        {
+            if(duelPlayerInformation.PlayerInDuel.IsDefeated)
+            {
+                //If this player died due to damage calc we'll probably still need to discard everything they have? ...I think death might auto discard but double check this.
+                continue;
+            }
+            else
+            {
+                PlayersLeftToHandleEndOfDuelEffects.Add(duelPlayerInformation);
+            }
+        }
+
         StartHandlingSupportCardEffects();
     }
 
     private void StartHandlingSupportCardEffects()
     {
+        if(PlayersLeftToHandleEndOfDuelEffects.Count != 0)
+        {
+            ActivateEndOfDuelSupportCardEffects(PlayersLeftToHandleEndOfDuelEffects[0]);
+        }
+        else
+        {
+            FinishedHandlingAllSupportCardEffects();
+        }
+    }
+
+    private void FinishedHandlingAllSupportCardEffects()
+    {
+        //Discard the cards. We're done.
         foreach(DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
         {
-            if(duelPlayerInformation.PlayerInDuel.IsDefeated)
-            {
-                continue;
-            }
-            else
-            {
-                ActivateEndOfDuelSupportCardEffects(duelPlayerInformation);
-                break;
-            }
+            DiscardSelectedCardsAfterDuel(duelPlayerInformation);
         }
+
+        duelPhaseSM.ChangeState(duelPhaseSM.duelNotDuelingPhaseState);
+        duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.ChangeState(duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.gameplayResolveSpacePhaseState);
     }
 
     //Method for applying after duel support card effects.
     private void ActivateEndOfDuelSupportCardEffects(DuelPlayerInformation playerWhoWeAreHandling)
     {
+        if(PlayersLeftToHandleEndOfDuelEffects.Contains(playerWhoWeAreHandling))
+        {
+            PlayersLeftToHandleEndOfDuelEffects.Remove(playerWhoWeAreHandling);
+        }
+
+        //Right now this logic will only work for 1 support card. If the player selects 2+ support cards we will need to find a way to
+        //loop back through here and catch the other support cards that we have not handled yet.
         foreach(SupportCard supportCard in playerWhoWeAreHandling.SelectedSupportCards)
         {
             foreach(SupportCardData.SupportCardEffect supportCardEffect in supportCard.SupportCardData.supportCardEffects)
 			{
-				if(supportCardEffect.supportCardEffectData.IsAfterDuelEffectAndNeedsToWin && duelPhaseSM.CurrentWinners.Count == 1 &&  duelPhaseSM.CurrentWinners.Contains(playerWhoWeAreHandling))
-				{
-                    isHandlingSupportCardEffect = true;
-                    duelPlayerInformationWhosSupportCardsWeAreHandling = playerWhoWeAreHandling;
-                    supportCardEffect.supportCardEffectData.SupportCardEffectCompleted += MoveOnToNextSupportCardEffect;
-                    supportCardEffect.supportCardEffectData.EffectOfCard(playerWhoWeAreHandling);
-				}
-                else if(supportCardEffect.supportCardEffectData.IsAfterDuelEffect)
+                if((supportCardEffect.supportCardEffectData.IsACost && supportCardEffect.supportCardEffectData.CanCostBePaid(playerWhoWeAreHandling, supportCard, true)) || !supportCardEffect.supportCardEffectData.IsACost)
                 {
-                    isHandlingSupportCardEffect = true;
-                    duelPlayerInformationWhosSupportCardsWeAreHandling = playerWhoWeAreHandling;
-                    supportCardEffect.supportCardEffectData.SupportCardEffectCompleted += MoveOnToNextSupportCardEffect;
-                    supportCardEffect.supportCardEffectData.EffectOfCard(playerWhoWeAreHandling);
-                } 
-                else
-                {
-                    Debug.Log($"This is not a end of duel effect.");
+                    if(supportCardEffect.supportCardEffectData.IsAfterDuelEffectAndNeedsToWin && duelPhaseSM.CurrentWinners.Count == 1 &&  duelPhaseSM.CurrentWinners.Contains(playerWhoWeAreHandling))
+                    {
+                        isHandlingSupportCardEffect = true;
+                        DuelPlayerInformationWhosSupportCardsWeAreHandling = playerWhoWeAreHandling;
+                        DuelPlayerInformationWhosSupportCardsWeAreHandling.PlayerInDuel.IsHandlingSupportCardEffects = true;
+                        SupportCardEffectsTohandle.Add(supportCardEffect);
+                        // supportCardEffect.supportCardEffectData.SupportCardEffectCompleted += MoveOnToNextSupportCardEffect;
+                        // supportCardEffect.supportCardEffectData.EffectOfCard(playerWhoWeAreHandling);
+                    }
+                    else if(supportCardEffect.supportCardEffectData.IsAfterDuelEffect)
+                    {
+                        isHandlingSupportCardEffect = true;
+                        DuelPlayerInformationWhosSupportCardsWeAreHandling = playerWhoWeAreHandling;
+                        DuelPlayerInformationWhosSupportCardsWeAreHandling.PlayerInDuel.IsHandlingSupportCardEffects = true;
+                        SupportCardEffectsTohandle.Add(supportCardEffect);
+                        // supportCardEffect.supportCardEffectData.SupportCardEffectCompleted += MoveOnToNextSupportCardEffect;
+                        // supportCardEffect.supportCardEffectData.EffectOfCard(playerWhoWeAreHandling);
+                    } 
+                    else
+                    {
+                        Debug.Log($"This is not a end of duel effect.");
+                    }
                 }
             }
 
-        }
-
-        //Only call this part if we have completed all after duel effects...Diff method?
-        int indexOfCurrentPlayer = duelPhaseSM.PlayersInCurrentDuel.IndexOf(playerWhoWeAreHandling) + 1;
-        if(indexOfCurrentPlayer == duelPhaseSM.PlayersInCurrentDuel.Count)
-        {
-            //Discard the cards. We're done.
-            foreach(DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
+            if(supportCardEffectsTohandle.Count > 0)
             {
-                DiscardSelectedCardsAfterDuel(duelPlayerInformation);
+                BeginExecutingSupportCardEffectsOfCurrentPlayer();
+                return;
             }
-
-            duelPhaseSM.ChangeState(duelPhaseSM.duelNotDuelingPhaseState);
-            duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.ChangeState(duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.gameplayResolveSpacePhaseState);
         }
-        else
+
+        StartHandlingSupportCardEffects();
+
+    }
+
+    private void BeginExecutingSupportCardEffectsOfCurrentPlayer()
+    {
+        if(SupportCardEffectsTohandle.Count == 0)
         {
-            //Calling with index instead of index + 1 since we're already doing the +1 earlier so we want the next player.
-            //Also should do a 'death' check here to see if the next player we are attempting to get is already defeated. If they are just skip them.
-            ActivateEndOfDuelSupportCardEffects(duelPhaseSM.PlayersInCurrentDuel[indexOfCurrentPlayer]);
+            isHandlingSupportCardEffect = false;
+            DuelPlayerInformationWhosSupportCardsWeAreHandling.PlayerInDuel.IsHandlingSupportCardEffects = false;
+            StartHandlingSupportCardEffects();
+            return;
+        }
+
+        if(CurrentSupportCardEffectWeAreHandling is null)
+        {
+            CurrentSupportCardEffectWeAreHandling = SupportCardEffectsTohandle[0];
+            CurrentSupportCardEffectWeAreHandling.supportCardEffectData.SupportCardEffectCompleted += MoveOnToNextSupportCardEffect;
+            //If the player info is null there's an issue. It shouldn't be.
+            CurrentSupportCardEffectWeAreHandling.supportCardEffectData.EffectOfCard(DuelPlayerInformationWhosSupportCardsWeAreHandling);
         }
     }
 
     public void MoveOnToNextSupportCardEffect(SupportCard supportCard = null)
     {
-        foreach(SupportCard supportCardWeAreHandling in duelPlayerInformationWhosSupportCardsWeAreHandling.SelectedSupportCards)
-        {
-            //Unsubbing from all but this is fine. If we want to we can also keep track globally of the effect we're handling and just unsub from that one via checking if it matches...
-            foreach(SupportCardData.SupportCardEffect supportCardEffect in supportCardWeAreHandling.SupportCardData.supportCardEffects)
-            {
-                supportCardEffect.supportCardEffectData.SupportCardEffectCompleted -= MoveOnToNextSupportCardEffect;
-            }
-        }
-
-        isHandlingSupportCardEffect = false;
+        SupportCardEffectsTohandle.RemoveAt(0);
+        CurrentSupportCardEffectWeAreHandling.supportCardEffectData.SupportCardEffectCompleted -= MoveOnToNextSupportCardEffect;
+        CurrentSupportCardEffectWeAreHandling = null;
+        BeginExecutingSupportCardEffectsOfCurrentPlayer();
     }
 
     private void DiscardSelectedCardsAfterDuel(DuelPlayerInformation playerInfo)
@@ -224,6 +275,8 @@ public class DuelResultPhaseState : BaseState
     {
         base.Exit();
         isHandlingSupportCardEffect = false;
+        PlayersLeftToHandleEndOfDuelEffects.Clear();
+        SupportCardEffectsTohandle.Clear();
         duelPhaseSM.EnableAbilityButtons();
         duelPhaseSM.ResetDuelParameters();
     }

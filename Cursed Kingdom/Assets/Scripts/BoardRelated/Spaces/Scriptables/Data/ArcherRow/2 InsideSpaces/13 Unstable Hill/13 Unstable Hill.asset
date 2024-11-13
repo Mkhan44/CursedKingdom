@@ -12,18 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 13 Unstable Hill
   m_EditorClassIdentifier: 
-  afterDuelEffect: 0
-  onSpaceTurnStartEffect: 1
   passingOverSpaceEffect: 0
   isMandatory: 1
+  decreasesSpacesToMove: 1
   isNonDuelSpace: 0
   isNegative: 1
+  levelRequirementToGoToThisSpace: 2
   spaceEffects:
   - spaceEffectData: {fileID: 11400000, guid: 30c02d9cab7648748a2af4e1935b2972, type: 2}
     spaceTypeStringHidden: DrawCardSpace
   - spaceEffectData: {fileID: 11400000, guid: 1505e133c225d7f46a9e61ded1b42993, type: 2}
     spaceTypeStringHidden: HalveMovementCardSpace
-  thisSpaceTypes: 03000000
   spaceName: Unstable Hill
   spaceDescription: Draw 3 support cards. Halve the value of all movement cards if
     you start your turn on this space.
@@ -32,3 +31,4 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 959d706bf1bfed64e8025a2a32dc2e24, type: 2}
   - {fileID: 2100000, guid: 22293bc1330bae3478e23007a8a533bc, type: 2}
   - {fileID: 2100000, guid: c3276c548bb462144a9d242c0919894d, type: 2}
+  StepSoundClipsData: {fileID: 0}

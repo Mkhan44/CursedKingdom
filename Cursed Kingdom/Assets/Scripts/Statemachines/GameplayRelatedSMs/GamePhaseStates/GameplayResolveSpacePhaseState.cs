@@ -26,6 +26,7 @@ public class GameplayResolveSpacePhaseState : BaseState
 		isResolvingSpaceEffect = false;
         PhaseDisplay.instance.TurnOnDisplay("Resolve space effects phase!", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += StartResolvingSpaceEffects;
+		gameplayPhaseSM.gameplayManager.HandDisplayPanel.gameObject.SetActive(true);
         gameplayPhaseSM.gameplayManager.HandDisplayPanel.ShrinkHand();
         currentPlayer.HideHand();
     }

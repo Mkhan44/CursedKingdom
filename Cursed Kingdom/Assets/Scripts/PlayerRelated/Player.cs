@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
 	public event Action<Player> DoneRecoveringHealthEffect;
 	public event Action<Player> DoneDrawingCard;
 	public event Action<Player> DoneActivatingAbilityEffect;
+	public event Action<Player> DoneMovingInReverse;
 	public event Action<Player> DoneActivatingEliteAbilityEffect;
 	public event Action<Player> StatusEffectUpdateCompleted;
 	public event Action<Player> HasBeenDefeated;
@@ -65,7 +66,10 @@ public class Player : MonoBehaviour
 	[SerializeField] private GameObject movementCardsInHandHolderPanel;
 	[SerializeField] private GameObject supportCardsInHandHolderPanel;
 	[SerializeField] private GameObject handDisplayPanel;
+
+	//Moving related
 	[SerializeField] private bool isMoving;
+	[SerializeField] private bool isMovingInReverse;
 	[SerializeField] private bool isChoosingDirection;
 
 	//Abilities
@@ -133,6 +137,7 @@ public class Player : MonoBehaviour
 	//Clean this up vvvvv
 
 	public bool IsMoving { get => isMoving; set => isMoving = value; }
+	public bool IsMovingInReverse { get => isMovingInReverse; set => isMovingInReverse = value; }
     public bool IsChoosingDirection { get => isChoosingDirection; set => isChoosingDirection = value; }
     public int CurrentLevel { get => currentLevel; set => currentLevel = value; }
 	public int SpacesLeftToMove { get => spacesLeftToMove; set => spacesLeftToMove = value; }
@@ -249,7 +254,7 @@ public class Player : MonoBehaviour
 	public GameplayManager GameplayManagerRef { get => gameplayManagerRef; set => gameplayManagerRef = value; }
 	public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
 	public Animator Animator { get => animator; set => animator = value; }
-
+    
 
     public void InitializePlayer(ClassData data)
 	{
@@ -311,6 +316,7 @@ public class Player : MonoBehaviour
 
 		IsOnCooldown = false;
 		IsMoving = false;
+		IsMovingInReverse = false;
 		IsChoosingDirection = false;
         WentOnCooldownThisTurn = false;
 		NegativeCooldownEffects = ClassData.negativeCooldownEffects;
@@ -595,6 +601,87 @@ public class Player : MonoBehaviour
 		}
     }
 
+	public void ActivateTargetPlayerToMoveInReversePopup(Player playerWhoIsChoosing, List<Player> validTargets, int maxNumSpacesToMoveBack)
+	{
+		List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
+
+		foreach (Player player in validTargets)
+		{
+            List<object> paramsList = new();
+            paramsList.Add(player);
+			paramsList.Add(playerWhoIsChoosing);
+			paramsList.Add(maxNumSpacesToMoveBack);
+            insertedParams.Add(Tuple.Create<Sprite, string, object, List<object>>(player.ClassData.defaultPortraitImage, nameof(SelectPlayerToMoveBackSpaces), this, paramsList));
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithImageChoices($"Player {playerWhoIsChoosing.playerIDIntVal} please select the Player you wish to make move in reverse.", insertedParams, 1, "Move back");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
+
+	}
+
+	/// <summary>
+    /// Takes in a list of objects in this order: Player targetedPlayer, Player playerWhoIsChoosing, int maxNumSpacesToMoveBack
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+	public IEnumerator SelectPlayerToMoveBackSpaces(List<object> objects)
+	{
+		yield return null;
+		Player targetedPlayer = (Player)objects[0];
+		Player playerWhoIsChoosing = (Player)objects[1];
+		int maxNumSpacesToMoveBack = (int)objects[2];
+		ActivateSelectNumSpacesToMakeTargetPlayerMoveBackPopup(playerWhoIsChoosing, targetedPlayer, maxNumSpacesToMoveBack);
+	}
+
+	public void ActivateSelectNumSpacesToMakeTargetPlayerMoveBackPopup(Player playerWhoIsChoosing, Player targetedPlayer, int maxNumSpacesToMoveBack)
+	{
+		List<Tuple<string, string, object, List<object>>> insertedParams = new();
+
+		for(int i = 0; i < maxNumSpacesToMoveBack; i++)
+		{
+			int index = i+1;
+            List<object> paramsList = new();
+            paramsList.Add(index);
+			paramsList.Add(playerWhoIsChoosing);
+			paramsList.Add(targetedPlayer);
+            insertedParams.Add(Tuple.Create<string, string, object, List<object>>(index.ToString(), nameof(SelectNumSpacesToMovePlayerBack), this, paramsList));
+        }
+
+        DialogueBoxPopup.instance.ActivatePopupWithButtonChoices($"Player {playerWhoIsChoosing.playerIDIntVal} please select how many spaces to make player {targetedPlayer.playerIDIntVal} move back.", insertedParams, 1, "Move back");
+
+		if(PlayerAIReference != null)
+		{
+			PlayerAIReference.StartCoroutine(PlayerAIReference.SelectRandomOptionDialogueBoxChoice());
+		}
+
+	}
+
+	/// <summary>
+    /// Takes in a list of objects in this order: int index, Player playerWhoIsChoosing, Player targetedPlayer, int spacesToMoveInReverse
+    /// </summary>
+    /// <param name="objects"></param>
+    /// <returns></returns>
+	public IEnumerator SelectNumSpacesToMovePlayerBack(List<object> objects)
+	{
+		yield return null;
+		int indexSpacesToMoveInReverseTotal = (int)objects[0];
+		Player playerWhoIsChoosing = (Player)objects[1];
+		Player targetedPlayer = (Player)objects[2];
+
+		//Make the target Player move in reverse.
+		targetedPlayer.SpacesLeftToMove = indexSpacesToMoveInReverseTotal;
+		targetedPlayer.StateMachineRef.playerCharacterMoveState.PlayerMakingDecisions = playerWhoIsChoosing;
+		targetedPlayer.IsMovingInReverse = true;
+		targetedPlayer.PreviousSpacePlayerWasOn = null;
+		targetedPlayer.StateMachineRef.ChangeState(targetedPlayer.StateMachineRef.playerCharacterMoveState);
+	}
+
+
+
     #region BLOCK EFFECT POPUPS
     public void ActivatePlayerBlockElementalDamageSelectionPopup(Player targetedPlayer, int damageToPotentiallytake, List<SupportCard> elementalBlockSupportCards)
     {
@@ -863,7 +950,19 @@ public class Player : MonoBehaviour
         List<SupportCard> elementalBlockSupportCards = (List<SupportCard>)objects[1];
         int turnsToBePoisoned = (int)objects[2];
 
-        StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, targetedPlayer, "poison", turnsToBePoisoned));
+		if(targetedPlayer != this)
+		{
+			StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, targetedPlayer, "poison", turnsToBePoisoned));
+		}
+		else
+		{
+			PoisonPlayer(turnsToBePoisoned);
+			if (IsHandlingSpaceEffects || IsHandlingSupportCardEffects)
+			{
+				CompletedAttackingEffect();
+			}
+		}
+        
     }
 
     #endregion
@@ -1841,11 +1940,17 @@ public class Player : MonoBehaviour
 		//Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
 		if (IsCursed)
 		{
-			MovementCard tempMovementCard = (MovementCard)card;
-			if(tempMovementCard != null)
+			foreach(MovementCard Movementcard in GetMovementCardsInHand())
 			{
-				tempMovementCard.ManipulateMovementValue(true, 2);
-				CurseCardAnimationEffect();
+				if (Movementcard != null)
+				{
+					//This prevents restacking the cusre since we're just looking at the new card that was drawn.
+					if(Movementcard.TempCardValue == 0)
+					{
+						Movementcard.ManipulateMovementValue(true, 2);
+						CurseCardAnimationEffect();
+					}
+				}
 			}
 		}
 	}
@@ -1868,18 +1973,18 @@ public class Player : MonoBehaviour
 		SetMovementCardsInHand();
 		SetSupportCardsInHand();
 
+
 		//Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
 		if (IsCursed)
 		{
-			//Just in case the Player draws a new card and is cursed we need the new card's value to also be halved.
-			if (IsCursed)
+			foreach(MovementCard Movementcard in GetMovementCardsInHand())
 			{
-				foreach(Card card in cards)
+				if (Movementcard != null)
 				{
-					MovementCard tempMovementCard = (MovementCard)card;
-					if (tempMovementCard != null)
+					//This prevents restacking the cusre since we're just looking at the new card that was drawn.
+					if(Movementcard.TempCardValue == 0)
 					{
-						tempMovementCard.ManipulateMovementValue(true, 2);
+						Movementcard.ManipulateMovementValue(true, 2);
 						CurseCardAnimationEffect();
 					}
 				}
@@ -1953,12 +2058,26 @@ public class Player : MonoBehaviour
 			NoMovementCardsInHandButton.gameObject.SetActive(true);
 		}
 
-		//For Curse animation on cards.
-		if (IsCursed)
-		{
-			CurseCardAnimationEffect();
-		}
+		ActivateMovementCardVisualEffects();
+	}
 
+	private void ActivateMovementCardVisualEffects()
+	{
+		foreach(MovementCard movementCard in GetMovementCardsInHand())
+		{
+			if(movementCard.TempCardValue > movementCard.MovementCardValue)
+			{
+				movementCard.ActivateBoostedEffect();
+			}
+			else if(IsCursed && movementCard.TempCardValue < movementCard.MovementCardValue)
+			{
+				movementCard.ActivateCurseEffect();
+			}
+			else if(movementCard.TempCardValue != 0 && movementCard.TempCardValue < movementCard.MovementCardValue)
+			{
+				movementCard.ActivateCurseEffect();
+			}
+		}
 	}
 
 	public void HideHand()
@@ -2649,6 +2768,11 @@ public class Player : MonoBehaviour
 			GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
 			//play animation of some sort...
 		}
+
+		if(IsHandlingSupportCardEffects)
+		{
+			CompletedStatusEffectUpdate();
+		}
 	}
 
 	private void CursePlayerPriv(int numTurnsToCurse)
@@ -2660,6 +2784,11 @@ public class Player : MonoBehaviour
 			WasAfflictedWithStatusThisTurn = true;
 			GameplayManagerRef.UpdatePlayerInfoUIStatusEffect(this);
 			//play animation of some sort...
+		}
+
+		if(IsHandlingSupportCardEffects)
+		{
+			CompletedStatusEffectUpdate();
 		}
 	}
 
@@ -3062,6 +3191,19 @@ public class Player : MonoBehaviour
 
     #endregion
 
+	#region Camera related
+
+	public void ChangeCameraPlayerIsLookingAt(Camera cameraToLookAt)
+	{
+		//Get the player sprite's billboard.
+		Billboard billboardRef =  this.transform.GetComponentInChildren<Billboard>();
+		billboardRef.CameraToBillboardTowards = cameraToLookAt;
+	}
+
+
+
+	#endregion
+
     #region Event Triggers
     //Event triggers
 
@@ -3093,6 +3235,12 @@ public class Player : MonoBehaviour
 	public void CompletedRecoveringHealthForEffect()
 	{
 		DoneRecoveringHealthEffect?.Invoke(this);
+	}
+
+	public void CompletedMovingInReverseEffect()
+	{
+		IsMovingInReverse = false;
+		DoneMovingInReverse?.Invoke(this);
 	}
 
 	public void CompletedDrawingForEffect()

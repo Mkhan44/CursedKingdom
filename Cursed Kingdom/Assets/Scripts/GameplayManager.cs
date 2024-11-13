@@ -20,6 +20,8 @@ public class GameplayManager : MonoBehaviour
     public event Action<KeyCode> MoveHighlightedSpaceIconGroundView;
 	public event Action<KeyCode> MoveHighlightedSpaceIconOverheadView;
 	public event Action<SupportCard> CurrentSupportCardThatWasJustUsed;
+
+	public event Action<Player> PlayerFinishedMovingInReverse;
 	
 	//event if all players die
 	public event Action<Player> AllPlayersDefeated;
@@ -158,12 +160,24 @@ public class GameplayManager : MonoBehaviour
 		DuelPhaseSMRef = GetComponent<DuelPhaseSM>();
 
 
-
         //Deck related
         ThisDeckManager = GetComponent<DeckManager>();
 		UseSelectedCardsPanel.SetActive(false);
 
 		//Get a list of movement cards, pass them in.
+
+		if(StartDebugMenu.instance != null && StartDebugMenu.instance.useScriptable)
+		{
+			if(StartDebugMenu.instance.currentlySelectedStartData.movementDeckDataToUseIndex != 0)
+			{
+				ThisDeckManager.MovementDeckData = StartDebugMenu.instance.currentlySelectedStartData.movementDeckDataToUseRef;
+			}
+
+			if(StartDebugMenu.instance.currentlySelectedStartData.supportCardDeckDataToUseIndex != 0)
+			{
+				ThisDeckManager.SupportDeckData = StartDebugMenu.instance.currentlySelectedStartData.supportDeckDataToUseRef;
+			}
+		}
 		ThisDeckManager.CreateDeck();
 
 		//Deck related
@@ -585,6 +599,7 @@ public class GameplayManager : MonoBehaviour
 		MoveHighlightedSpaceIconOverheadView?.Invoke(keyCodePressed);
 	}
 
+
 	public void ReloadScene()
 	{
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -729,7 +744,6 @@ public class GameplayManager : MonoBehaviour
 		int index = 0;
 		index = currentActiveCameraIndex;
 		currentActiveCamera.enabled = false;
-		int indexOfPlayer = Players.IndexOf(playerCharacter.GetComponent<Player>());
 
 		if (!mapManager.IsViewingMapOverhead)
 		{
@@ -737,7 +751,8 @@ public class GameplayManager : MonoBehaviour
 			index = 1;
 			currentActiveCameraIndex = index;
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-			mapManager.ActivateHighlightOverheadView(Players[indexOfPlayer].CurrentSpacePlayerIsOn);
+			HandDisplayPanel.ShrinkHand();
+			mapManager.ActivateHighlightOverheadView(GetCurrentPlayer().CurrentSpacePlayerIsOn);
 			currentActiveCameraIndex++;
 			mapManager.MobileMapControlsPanel.SetActive(true);
 
@@ -746,7 +761,7 @@ public class GameplayManager : MonoBehaviour
 		{
 			currentActiveCameraIndex = 0;
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-			mapManager.DisableCurrentHighlightedSpaceOverheadView(players[indexOfPlayer].CurrentSpacePlayerIsOn);
+			mapManager.DisableCurrentHighlightedSpaceOverheadView(GetCurrentPlayer().CurrentSpacePlayerIsOn);
             mapManager.MobileMapControlsPanel.SetActive(false);
         }
 
@@ -758,7 +773,6 @@ public class GameplayManager : MonoBehaviour
 		int index = 0;
 		index = currentActiveCameraIndex;
 		currentActiveCamera.enabled = false;
-		int indexOfPlayer = Players.IndexOf(playerCharacter.GetComponent<Player>());
 
 		if (!mapManager.IsViewingMapGround)
 		{
@@ -766,7 +780,8 @@ public class GameplayManager : MonoBehaviour
 			index = 2;
 			currentActiveCameraIndex = index;
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-			mapManager.SetupGroundViewCamera(currentActiveCamera, Players[indexOfPlayer].CurrentSpacePlayerIsOn);
+			HandDisplayPanel.ShrinkHand();
+			mapManager.SetupGroundViewCamera(currentActiveCamera, GetCurrentPlayer().CurrentSpacePlayerIsOn);
 			currentActiveCameraIndex++;
             mapManager.MobileMapControlsPanel.SetActive(true);
         }
@@ -774,7 +789,7 @@ public class GameplayManager : MonoBehaviour
 		{
 			currentActiveCameraIndex = 0;
 			currentActiveCamera = cinemachineVirtualCameras[currentActiveCameraIndex];
-			mapManager.DisableHighlightedSpaceGroundView(players[indexOfPlayer].CurrentSpacePlayerIsOn);
+			mapManager.DisableHighlightedSpaceGroundView(GetCurrentPlayer().CurrentSpacePlayerIsOn);
             mapManager.MobileMapControlsPanel.SetActive(false);
         }
 
@@ -909,6 +924,11 @@ public class GameplayManager : MonoBehaviour
 	{
 		CurrentSupportCardThatWasJustUsed?.Invoke(supportCardUsed);
 		CurrentSupportCardBeingUsed = supportCardUsed;
+	}
+
+	public void FinishedMovingInReverse()
+	{
+		PlayerFinishedMovingInReverse?.Invoke(GetCurrentPlayer());
 	}
 
 
