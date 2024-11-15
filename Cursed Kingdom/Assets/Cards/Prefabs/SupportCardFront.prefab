@@ -164,6 +164,7 @@ MonoBehaviour:
   titleText: {fileID: 4484197816524573013}
   cardArtworkImage: {fileID: 2461497947193884349}
   cardBorderImage: {fileID: 2254910237170926910}
+  cardBackObject: {fileID: 6006526966407194860}
   thisCardType: 1
   clickableAreaButton: {fileID: 7623665038140841134}
   gameplayManager: {fileID: 0}
@@ -749,7 +750,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6006526966407194860}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -758,7 +759,7 @@ RectTransform:
   - {fileID: 1278987095169037914}
   - {fileID: 5049993504722818193}
   m_Father: {fileID: 959177630722259951}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}

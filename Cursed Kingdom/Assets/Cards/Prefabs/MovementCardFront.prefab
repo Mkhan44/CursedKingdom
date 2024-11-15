@@ -269,7 +269,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2407528978886344197, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
       propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2407528978886344197, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2407528978886344197, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
+      propertyPath: m_LocalRotation.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2407528978886344197, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2407528978886344197, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 2461497947193884349, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
       propertyPath: m_Sprite
@@ -603,6 +619,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2931985484637717502 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6006526966407194860, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
+  m_PrefabInstance: {fileID: 8929504671365573394}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5030779271017669191 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4484197816524573013, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
@@ -693,6 +714,7 @@ MonoBehaviour:
   titleText: {fileID: 5030779271017669191}
   cardArtworkImage: {fileID: 6468020530379724207}
   cardBorderImage: {fileID: 7251065715679604268}
+  cardBackObject: {fileID: 2931985484637717502}
   thisCardType: 0
   clickableAreaButton: {fileID: 1308097530283472828}
   gameplayManager: {fileID: 0}

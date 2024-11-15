@@ -99,8 +99,11 @@ public class GameplayManager : MonoBehaviour
 
 	public List<CinemachineVirtualCamera> cinemachineVirtualCameras;
 
-	//Debug
-	public TextMeshProUGUI fpsText;
+    //Client vs Server related:
+
+    private Player playerThatThisClientIs;
+    //Debug
+    public TextMeshProUGUI fpsText;
 	public bool lockFPS;
 	[Range(10, 200)] public int fpsCap = 60;
 	public bool isSpeedupOn;
@@ -142,6 +145,9 @@ public class GameplayManager : MonoBehaviour
 	public TopDownMapDisplay TopDownMapDisplay { get => topDownMapDisplay; set => topDownMapDisplay = value; }
 	public SpaceArtworkPopupDisplay SpaceArtworkPopupDisplay { get => spaceArtworkPopupDisplay; set => spaceArtworkPopupDisplay = value; }
     public GameplayCameraManager GameplayCameraManagerRef { get => gameplayCameraManagerRef; set => gameplayCameraManagerRef = value; }
+
+	//Client/Server related
+    public Player PlayerThatThisClientIs { get => playerThatThisClientIs; set => playerThatThisClientIs = value; }
 
     private void Start()
 	{
@@ -245,6 +251,7 @@ public class GameplayManager : MonoBehaviour
 		DebugModeSingleton.instance.SetupOverrideSpaceLandEffectDropdownOptions(spaces);
 		DebugModeSingleton.instance.SetupOverrideSupportCardEffectDropdownOptions(ThisDeckManager.SupportDeckData.SupportCardDatas);
 
+		SetCurrentPlayerThisClientIs();
 
 		//DialogueBoxPopup.instance.ActivatePopup("This is a test option.", 4);
 
@@ -324,7 +331,7 @@ public class GameplayManager : MonoBehaviour
             playerCharacter = tempPlayerReferences[0].transform;
 
             //DEBUG.
-            Players[0].ShowHand();
+           // Players[0].ShowHand();
             if (Players[0].ClassData.abilityData.CanBeManuallyActivated)
             {
                 UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(true);
@@ -412,7 +419,7 @@ public class GameplayManager : MonoBehaviour
             playerCharacter = tempPlayerReferences[0].transform;
 
             //DEBUG.
-            Players[0].ShowHand();
+          //  Players[0].ShowHand();
             if (Players[0].ClassData.abilityData.CanBeManuallyActivated)
             {
                 UseAbilityButton.gameObject.transform.parent.gameObject.SetActive(true);
@@ -585,6 +592,14 @@ public class GameplayManager : MonoBehaviour
 			HandleMapKeyInput(KeyCode.RightArrow);
 		}
 
+		if(Input.GetKeyDown(KeyCode.C))
+		{
+			if(DebugModeSingleton.instance != null)
+			{
+				DebugModeSingleton.instance.ToggleNonClientPlayerCardBacks();
+			}
+		}
+
 		if(Input.GetKeyDown(KeyCode.R))
 		{
 			ReloadScene();
@@ -603,6 +618,27 @@ public class GameplayManager : MonoBehaviour
 	public void ReloadScene()
 	{
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+	}
+
+	private void SetCurrentPlayerThisClientIs()
+	{
+		foreach(Player player in Players)
+		{
+			if(player.PlayerAIReference == null)
+			{
+				PlayerThatThisClientIs = player;
+				break;
+			}
+		}
+
+		//Maybe a debug thingy here to force set one later.
+
+		//If they are all AIs.
+		if(PlayerThatThisClientIs == null)
+		{
+			PlayerThatThisClientIs = Players[0];
+		}
+
 	}
 
 

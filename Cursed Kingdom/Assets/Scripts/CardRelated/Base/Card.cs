@@ -31,6 +31,8 @@ public class Card : MonoBehaviour , IPointerClickHandler
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private Image cardArtworkImage;
     [SerializeField] private Image cardBorderImage;
+
+    [SerializeField] private GameObject cardBackObject;
     [SerializeField] private CardType thisCardType;
     [SerializeField] private Button clickableAreaButton;
     [SerializeField] private GameplayManager gameplayManager;
@@ -48,6 +50,7 @@ public class Card : MonoBehaviour , IPointerClickHandler
     public TextMeshProUGUI TitleText { get => titleText; set => titleText = value; }
     public Image CardArtworkImage { get => cardArtworkImage; set => cardArtworkImage = value; }
     public Image CardBorderImage { get => cardBorderImage; set => cardBorderImage = value; }
+    public GameObject CardBackObject { get => cardBackObject; set => cardBackObject = value; }
     public CardType ThisCardType { get => thisCardType; }
     public Button ClickableAreaButton { get => clickableAreaButton; set => clickableAreaButton = value; }
     public Image BackgroundSelectedGlow { get => backgroundSelectedGlow; set => backgroundSelectedGlow = value; }

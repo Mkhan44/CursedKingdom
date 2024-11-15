@@ -28,9 +28,14 @@ public class DebugModeSingleton : MonoBehaviour
     [SerializeField] private int movementNumberOverride;
     [SerializeField] private int levelNumberOverride;
 
+    [SerializeField] private bool overrideCardBacksForNonClientPlayer;
+
+    [SerializeField] public TextMeshProUGUI overrideCardBacksText;
+
     public bool IsDebugActive { get => isDebugActive; }
     public int MovementNumberOverride { get => movementNumberOverride; }
     public TextMeshProUGUI TimeScaleToggleText { get => timeScaleToggleText; set => timeScaleToggleText = value; }
+    public bool OverrideCardBacksForNonClientPlayer { get => overrideCardBacksForNonClientPlayer; set => overrideCardBacksForNonClientPlayer = value; }
 
     private void Awake()
     {
@@ -108,6 +113,21 @@ public class DebugModeSingleton : MonoBehaviour
         {
             gameplayManager.useStartDebugMenu = false;
             debugStartScreenToggleText.text = "StartDebugMenu: ON";
+        }
+    }
+
+    public void ToggleNonClientPlayerCardBacks()
+    {
+        OverrideCardBacksForNonClientPlayer = !OverrideCardBacksForNonClientPlayer;
+
+        if(OverrideCardBacksForNonClientPlayer)
+        {
+            overrideCardBacksText.text = "Toggle Cardbacks for opponents: ON";
+            gameplayManager.GetCurrentPlayer().CheckIfCardBackShouldBeTurnedOn();
+        }
+        else
+        {
+            overrideCardBacksText.text = "Toggle Cardbacks for opponents: OFF";
         }
     }
 

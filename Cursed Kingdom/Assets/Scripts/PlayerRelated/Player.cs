@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static Card;
@@ -1641,6 +1642,7 @@ public class Player : MonoBehaviour
             {
                 playerToAttack.DiscardFromHand(CardType.Movement, movementCard);
 				DrawCard(movementCard);
+				CheckIfCardBackShouldBeTurnedOn(movementCard);
 				StartCoroutine(movementCard.LeaveCardEffect());
             }
         }
@@ -1651,6 +1653,7 @@ public class Player : MonoBehaviour
             {
                 playerToAttack.DiscardFromHand(CardType.Support, supportCard);
 				DrawCard(supportCard);
+				CheckIfCardBackShouldBeTurnedOn(supportCard);
                 StartCoroutine(supportCard.LeaveCardEffect());
             }
         }
@@ -2031,24 +2034,22 @@ public class Player : MonoBehaviour
 	//Shows this player's hand on screen.
 	public void ShowHand()
 	{
-		foreach (Card card in CardsInhand)
+		foreach(MovementCard movementCard in GetMovementCardsInHand())
 		{
-			if(card.ThisCardType == Card.CardType.Movement)
-			{
-				MovementCard currentMovementCard = card as MovementCard;
-				currentMovementCard.RemoveListeners();
-				currentMovementCard.AddCardUseListener(GameplayManagerRef);
-				card.gameObject.transform.SetParent(MovementCardsInHandHolderPanel.transform);
-				card.transform.localScale = Vector3.one;
-			}
-			else
-			{
-				SupportCard currentSupportCard = card as SupportCard;
-				currentSupportCard.RemoveListeners();
-				currentSupportCard.AddCardUseListener(GameplayManagerRef);
-				card.gameObject.transform.SetParent(SupportCardsInHandHolderPanel.transform);
-				card.transform.localScale = Vector3.one;
-			}
+			movementCard.RemoveListeners();
+			movementCard.AddCardUseListener(GameplayManagerRef);
+			movementCard.gameObject.transform.SetParent(MovementCardsInHandHolderPanel.transform);
+			movementCard.transform.localScale = Vector3.one;
+			CheckIfCardBackShouldBeTurnedOn(movementCard);
+		}
+
+		foreach(SupportCard supportCard in GetSupportCardsInHand())
+		{
+			supportCard.RemoveListeners();
+			supportCard.AddCardUseListener(GameplayManagerRef);
+			supportCard.gameObject.transform.SetParent(SupportCardsInHandHolderPanel.transform);
+			supportCard.transform.localScale = Vector3.one;
+			CheckIfCardBackShouldBeTurnedOn(supportCard);
 		}
 
 		MovementCardsInHandHolderPanel.SetActive(true);
@@ -2059,6 +2060,33 @@ public class Player : MonoBehaviour
 		}
 
 		ActivateMovementCardVisualEffects();
+	}
+
+	public void CheckIfCardBackShouldBeTurnedOn(Card card = null)
+	{
+		if(DebugModeSingleton.instance != null && DebugModeSingleton.instance.OverrideCardBacksForNonClientPlayer)
+		{
+			foreach(Card cardToOverride in cardsInhand)
+			{
+				cardToOverride.CardBackObject.SetActive(false);
+			}
+			return;
+		}
+
+		if(card == null)
+		{
+			return;
+		}
+
+		
+		if(GameplayManagerRef.PlayerThatThisClientIs != null && GameplayManagerRef.PlayerThatThisClientIs != this && GameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState() != GameplayManagerRef.GameplayPhaseStatemachineRef.gameplayDuelPhaseState)
+		{
+			card.CardBackObject.SetActive(true);
+		}
+		else
+		{
+			card.CardBackObject.SetActive(false);
+		}
 	}
 
 	private void ActivateMovementCardVisualEffects()
