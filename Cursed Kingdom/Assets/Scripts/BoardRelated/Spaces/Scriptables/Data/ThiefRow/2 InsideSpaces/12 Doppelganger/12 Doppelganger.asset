@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 12 Doppelganger
   m_EditorClassIdentifier: 
-  afterDuelEffect: 0
   passingOverSpaceEffect: 0
   isMandatory: 1
   decreasesSpacesToMove: 1
   isNonDuelSpace: 0
   isNegative: 0
+  levelRequirementToGoToThisSpace: 0
   spaceEffects:
   - spaceEffectData: {fileID: 11400000, guid: 3a192458168d7c843a2aaf72989fb12b, type: 2}
     spaceTypeStringHidden: RecoverHealthSpace
-  thisSpaceTypes: 04000000
   spaceName: Doppelganger
   spaceDescription: Recover 3 health.
-  spaceSprite: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
+  spaceSprite: {fileID: 21300000, guid: f7257fa8c9f391447ad8bbe7565cee59, type: 3}
   spaceMaterials:
   - {fileID: 2100000, guid: ee8f17d35716d104c8ad9a530b4dbac7, type: 2}
   - {fileID: 2100000, guid: fa752db494b7d8340b4c53994b177887, type: 2}
   - {fileID: 2100000, guid: 79bc05fd88ff95140af18248c9739c4c, type: 2}
+  StepSoundClipsData: {fileID: 0}
