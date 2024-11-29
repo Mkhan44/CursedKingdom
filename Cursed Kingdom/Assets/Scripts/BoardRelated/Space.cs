@@ -285,7 +285,7 @@ public class Space : MonoBehaviour
         if (!player.IsDefeated)
         {
             //StartCoroutine(WaitASec(player));
-            GoBackToIdle(player);
+            StartCoroutine(GoBackToIdle(player));
         }
         //Player is defeated so their turn ends immediately.
         else
@@ -325,7 +325,8 @@ public class Space : MonoBehaviour
         bool canAllCostsBePaid = false;
         for (int i = 0; i < spaceData.spaceEffects.Count; i++)
         {
-            if (spaceData.spaceEffects[i].spaceEffectData.IsACost && !spaceData.spaceEffects[i].spaceEffectData.OnSpaceTurnStartEffect && !spaceData.spaceEffects[i].spaceEffectData.AfterDuelEffect)
+            if (spaceData.spaceEffects[i].spaceEffectData.IsACost && !spaceData.spaceEffects[i].spaceEffectData.OnSpaceTurnStartEffect 
+            && !spaceData.spaceEffects[i].spaceEffectData.AfterDuelEffect && !spaceData.spaceEffects[i].spaceEffectData.IsAfterDuelEffectAndMustWin)
             {
                 if (!spaceData.spaceEffects[i].spaceEffectData.CanCostBePaid(player))
                 {
@@ -357,7 +358,8 @@ public class Space : MonoBehaviour
                 }
                 //This is too fast. Need a way to wait for each effect then go to the next.
                 numSpaceEffectData = j;
-                if(!spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.OnSpaceTurnStartEffect && !spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.AfterDuelEffect)
+                if(!spaceData.spaceEffects[j].spaceEffectData.OnSpaceTurnStartEffect 
+                && !spaceData.spaceEffects[j].spaceEffectData.AfterDuelEffect && !spaceData.spaceEffects[j].spaceEffectData.IsAfterDuelEffectAndMustWin)
                 {
                     spaceEffectsForPlayerToHandle.Enqueue(spaceData.spaceEffects[numSpaceEffectData].spaceEffectData);
                 }
@@ -381,7 +383,7 @@ public class Space : MonoBehaviour
         if (!player.IsMoving && !player.IsDefeated)
         {
             //StartCoroutine(WaitASec(player));
-            GoBackToIdle(player);
+            StartCoroutine(GoBackToIdle(player));
         }
         //Player is defeated so their turn ends immediately.
         else if(!player.IsMoving && player.IsDefeated) 
@@ -438,7 +440,7 @@ public class Space : MonoBehaviour
             }
             //This is too fast. Need a way to wait for each effect then go to the next.
             numSpaceEffectData = j;
-            if (spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.OnSpaceTurnStartEffect && !spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.AfterDuelEffect)
+            if (spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.OnSpaceTurnStartEffect && !spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.AfterDuelEffect && !spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.IsAfterDuelEffectAndMustWin)
             {
                 spaceEffectsForPlayerToHandle.Enqueue(spaceData.spaceEffects[numSpaceEffectData].spaceEffectData);
             }
@@ -452,6 +454,24 @@ public class Space : MonoBehaviour
 
         //Whatever we already had from passing over effects + the new effects.
         player.SpaceEffectsToHandle = spaceEffectsForPlayerToHandle;
+
+        if (!player.IsMoving)
+        {
+            if (spaceData.IsNegative)
+            {
+                player.Animator.SetBool(Player.NEGATIVEEFFECT, true);
+            }
+            else
+            {
+                player.Animator.SetBool(Player.POSITIVEEFFECT, true);
+            }
+        }
+
+        if (!player.IsDefeated)
+        {
+            //StartCoroutine(WaitASec(player));
+            StartCoroutine(GoBackToIdle(player));
+        }
         
 
         //Revert the space data back if we used debug to change it.
@@ -461,11 +481,94 @@ public class Space : MonoBehaviour
         }
     }
 
-    private async void GoBackToIdle(Player player)
+    public void ApplyEndOfDuelGeneralSpaceEffects(Player player)
+    {
+        //For debug mode.
+        SpaceData cachedSpaceData = spaceData;
+
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            Space tempSpace = DebugModeSingleton.instance.OverrideSpaceLandEffect();
+
+            if (tempSpace != null)
+            {
+                spaceData = tempSpace.spaceData;
+            }
+
+        }
+
+        if (spaceData.spaceEffects.Count < 1)
+        {
+            Debug.LogWarning("Hey, no space effects on this space currently!");
+        }
+
+        Queue<SpaceEffectData> spaceEffectsForPlayerToHandle = new();
+        int numSpaceEffectData;
+        for (int j = 0; j < spaceData.spaceEffects.Count; j++)
+        {
+            //Do the space effect in sequence. We'll check for any external triggers here as well.
+            if (player.IsDefeated)
+            {
+                break;
+            }
+            //This is too fast. Need a way to wait for each effect then go to the next.
+            numSpaceEffectData = j;
+            if (spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.AfterDuelEffect || spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.IsAfterDuelEffectAndMustWin)
+            {
+                if(spaceData.spaceEffects[numSpaceEffectData].spaceEffectData.IsAfterDuelEffectAndMustWin)
+                {
+                    if(gameplayManagerRef.DuelPhaseSMRef.CurrentWinners.Count == 1 && gameplayManagerRef.DuelPhaseSMRef.CurrentWinners[0].PlayerInDuel == player)
+                    {
+                        spaceEffectsForPlayerToHandle.Enqueue(spaceData.spaceEffects[numSpaceEffectData].spaceEffectData);
+                        continue;
+                    }
+                }
+                else
+                {
+                    spaceEffectsForPlayerToHandle.Enqueue(spaceData.spaceEffects[numSpaceEffectData].spaceEffectData);
+                }
+            }
+        }
+
+        //If there are none, exit early.
+        if (spaceEffectsForPlayerToHandle.Count < 1)
+        {
+            return;
+        }
+
+        //Whatever we already had from passing over effects + the new effects.
+        player.SpaceEffectsToHandle = spaceEffectsForPlayerToHandle;
+
+        if (!player.IsMoving)
+        {
+            if (spaceData.IsNegative)
+            {
+                player.Animator.SetBool(Player.NEGATIVEEFFECT, true);
+            }
+            else
+            {
+                player.Animator.SetBool(Player.POSITIVEEFFECT, true);
+            }
+        }
+
+        if (!player.IsDefeated)
+        {
+            //StartCoroutine(WaitASec(player));
+            StartCoroutine(GoBackToIdle(player));
+        }
+
+        //Revert the space data back if we used debug to change it.
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            spaceData = cachedSpaceData;
+        }
+    }
+
+    private IEnumerator GoBackToIdle(Player player)
     {
         SpaceData spaceDataToUse = spaceData;
 
-        await Task.Delay(1300);
+        yield return new WaitForSeconds(1.3f);
         if (spaceDataToUse.IsNegative)
         {
             player.Animator.SetBool(Player.NEGATIVEEFFECT, false);
@@ -475,7 +578,10 @@ public class Space : MonoBehaviour
             player.Animator.SetBool(Player.POSITIVEEFFECT, false);
         }
 
-        player.ShowHand();
+        if(gameplayManagerRef.GetCurrentPlayer() == player)
+        {
+            player.ShowHand();
+        }
         player.StartHandlingSpaceEffects();
     }
 

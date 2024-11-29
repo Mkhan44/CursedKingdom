@@ -17,16 +17,28 @@ public class DuelResultPhaseState : BaseState
     private bool isHandlingSupportCardEffect;
     private int indexOfCurrentSupportCardWeAreHandling;
 
-    private List<DuelPlayerInformation> playersLeftToHandleEndOfDuelEffects;
+    private List<DuelPlayerInformation> playersLeftToHandleEndOfDuelSupportEffects;
+
+    private List<DuelPlayerInformation> playersLeftToHandleEndOfDuelSpaceEffects;
+
+    private DuelPlayerInformation duelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling;
 
     private DuelPlayerInformation duelPlayerInformationWhosSupportCardsWeAreHandling;
+
+    private List<SpaceData.SpaceEffect> spaceEffectsToHandle;
+
+    private SpaceData.SpaceEffect currentSpaceEffectWeAreHandling;
 
     private List<SupportCardData.SupportCardEffect> supportCardEffectsTohandle;
 
     private SupportCardData.SupportCardEffect currentSupportCardEffectWeAreHandling;
 
+    public DuelPlayerInformation DuelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling { get => duelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling; set => duelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling = value; }
     public DuelPlayerInformation DuelPlayerInformationWhosSupportCardsWeAreHandling { get => duelPlayerInformationWhosSupportCardsWeAreHandling; set => duelPlayerInformationWhosSupportCardsWeAreHandling = value; }
-    public List<DuelPlayerInformation> PlayersLeftToHandleEndOfDuelEffects { get => playersLeftToHandleEndOfDuelEffects; set => playersLeftToHandleEndOfDuelEffects = value; }
+    public List<DuelPlayerInformation> PlayersLeftToHandleEndOfDuelSupportEffects { get => playersLeftToHandleEndOfDuelSupportEffects; set => playersLeftToHandleEndOfDuelSupportEffects = value; }
+    public List<DuelPlayerInformation> PlayersLeftToHandleEndOfDuelSpaceEffects { get => playersLeftToHandleEndOfDuelSpaceEffects; set => playersLeftToHandleEndOfDuelSpaceEffects = value; }
+    public List<SpaceData.SpaceEffect> SpaceEffectsToHandle { get => spaceEffectsToHandle; set => spaceEffectsToHandle = value; }
+    public SpaceData.SpaceEffect CurrentSpaceEffectWeAreHandling { get => currentSpaceEffectWeAreHandling; set => currentSpaceEffectWeAreHandling = value; }
     public List<SupportCardData.SupportCardEffect> SupportCardEffectsTohandle { get => supportCardEffectsTohandle; set => supportCardEffectsTohandle = value; }
     public SupportCardData.SupportCardEffect CurrentSupportCardEffectWeAreHandling { get => currentSupportCardEffectWeAreHandling; set => currentSupportCardEffectWeAreHandling = value; }
 
@@ -42,8 +54,13 @@ public class DuelResultPhaseState : BaseState
         isHandlingSupportCardEffect = false;
         indexOfCurrentSupportCardWeAreHandling = 0;
         DuelPlayerInformationWhosSupportCardsWeAreHandling = null;
-        PlayersLeftToHandleEndOfDuelEffects = new();
+        DuelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling = null;
+        PlayersLeftToHandleEndOfDuelSupportEffects = new();
+        PlayersLeftToHandleEndOfDuelSpaceEffects = new();
+        SpaceEffectsToHandle = new();
+        CurrentSupportCardEffectWeAreHandling = null;
         SupportCardEffectsTohandle = new();
+        CurrentSupportCardEffectWeAreHandling = null;
         duelPhaseSM.FadePanelCompletedFadingDuel += TurnOffCameraAfterDuel;
         duelPhaseSM.StartCoroutine(duelPhaseSM.FadePanelActivate(0.5f));
     }
@@ -135,7 +152,7 @@ public class DuelResultPhaseState : BaseState
             }
             else
             {
-                PlayersLeftToHandleEndOfDuelEffects.Add(duelPlayerInformation);
+                PlayersLeftToHandleEndOfDuelSupportEffects.Add(duelPlayerInformation);
             }
         }
 
@@ -144,9 +161,9 @@ public class DuelResultPhaseState : BaseState
 
     private void StartHandlingSupportCardEffects()
     {
-        if(PlayersLeftToHandleEndOfDuelEffects.Count != 0)
+        if(PlayersLeftToHandleEndOfDuelSupportEffects.Count != 0)
         {
-            ActivateEndOfDuelSupportCardEffects(PlayersLeftToHandleEndOfDuelEffects[0]);
+            ActivateEndOfDuelSupportCardEffects(PlayersLeftToHandleEndOfDuelSupportEffects[0]);
         }
         else
         {
@@ -162,16 +179,138 @@ public class DuelResultPhaseState : BaseState
             DiscardSelectedCardsAfterDuel(duelPlayerInformation);
         }
 
+         //Setup the players to handle space effects of.
+        foreach(DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
+        {
+            if(duelPlayerInformation.PlayerInDuel.IsDefeated)
+            {
+                continue;
+            }
+            else
+            {
+                PlayersLeftToHandleEndOfDuelSpaceEffects.Add(duelPlayerInformation);
+            }
+        }
+
+        StartHandlingEndOfDuelSpaceEffects();
+    }
+
+    private void StartHandlingEndOfDuelSpaceEffects()
+    {
+        // currentPlayer.CurrentSpacePlayerIsOn.StartCoroutine(currentPlayer.CurrentSpacePlayerIsOn.PlaySpaceInfoDisplayAnimationUI(currentPlayer));
+        // gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.TurnOnDisplay(currentPlayer.CurrentSpacePlayerIsOn, currentPlayer);
+        // gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += SpaceArtworkDonePopupDone;
+        CurrentSpaceEffectWeAreHandling = null;
+        if(PlayersLeftToHandleEndOfDuelSpaceEffects.Count != 0)
+        {
+            ActivateEndOfDuelSpaceEffects(PlayersLeftToHandleEndOfDuelSpaceEffects[0]);
+        }
+        else
+        {
+            FinishedHandlingEndOfSpaceDuelEffects();
+        }
+    }
+
+    /// <summary>
+    /// Unsubscribe from the current space effect we are handling as it is done.
+    /// </summary>
+    public void HandleCompletionOfEndOfDuelSpaceEffects(Player player = null)
+    {
+        DuelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling.PlayerInDuel.FinishedHandlingCurrentSpaceEffects -= HandleCompletionOfEndOfDuelSpaceEffects;
+        SpaceEffectsToHandle.Clear();
+        StartHandlingEndOfDuelSpaceEffects();
+    }
+
+    public void FinishedHandlingEndOfSpaceDuelEffects()
+    {
         duelPhaseSM.ChangeState(duelPhaseSM.duelNotDuelingPhaseState);
         duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.ChangeState(duelPhaseSM.gameplayManager.GameplayPhaseStatemachineRef.gameplayResolveSpacePhaseState);
+    }
+
+    private void ActivateEndOfDuelSpaceEffects(DuelPlayerInformation playerWhoWeAreHandling)
+    {
+        if(PlayersLeftToHandleEndOfDuelSpaceEffects.Contains(playerWhoWeAreHandling))
+        {
+            PlayersLeftToHandleEndOfDuelSpaceEffects.Remove(playerWhoWeAreHandling);
+        }
+
+        DuelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling = playerWhoWeAreHandling;
+        bool hasAnEndEffect = false;
+        SpaceData spaceData = playerWhoWeAreHandling.PlayerInDuel.CurrentSpacePlayerIsOn.spaceData;
+        Space spaceWeAreUsing = playerWhoWeAreHandling.PlayerInDuel.CurrentSpacePlayerIsOn; 
+
+        //For debug mode.
+        SpaceData cachedSpaceData = spaceData;
+
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            Space tempSpace = DebugModeSingleton.instance.OverrideSpaceLandEffect();
+            spaceWeAreUsing = tempSpace;
+
+            if (tempSpace != null)
+            {
+                spaceData = tempSpace.spaceData;
+            }
+
+        }
+
+        foreach(SpaceData.SpaceEffect spaceEffect in spaceData.spaceEffects)
+        {
+            if(spaceEffect.spaceEffectData.AfterDuelEffect)
+            {
+                hasAnEndEffect = true;
+                CurrentSpaceEffectWeAreHandling = spaceEffect;
+                break;
+            }
+            else if(spaceEffect.spaceEffectData.IsAfterDuelEffectAndMustWin)
+            {
+                if(duelPhaseSM.CurrentWinners.Count == 1 && duelPhaseSM.CurrentWinners.Contains(DuelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling))
+                {
+                    hasAnEndEffect = true;
+                    CurrentSpaceEffectWeAreHandling = spaceEffect;
+                    break;
+                }
+            }
+        }
+
+        //Revert the space data back if we used debug to change it.
+        if (DebugModeSingleton.instance.IsDebugActive)
+        {
+            spaceData = cachedSpaceData;
+        }
+
+        //Do we just skip to calling this activate effect again if this is not true?
+        if(hasAnEndEffect)
+        {
+            if(CurrentSpaceEffectWeAreHandling.spaceEffectData.IsAfterDuelEffectAndMustWin && !duelPhaseSM.CurrentWinners.Contains(DuelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling))
+            {
+                StartHandlingEndOfDuelSpaceEffects();
+            }
+            else
+            {
+                duelPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.TurnOnDisplay(spaceWeAreUsing, DuelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling.PlayerInDuel);
+			    duelPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += BeginExecutingEndOfSpaceEffectsOfCurrentPlayer;
+            }
+        }
+        else
+        {
+            StartHandlingEndOfDuelSpaceEffects();
+        }
+    }
+
+    private void BeginExecutingEndOfSpaceEffectsOfCurrentPlayer(Player player = null)
+    {
+        //Turning off the display will make it go through the space effects.
+        duelPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff -= BeginExecutingEndOfSpaceEffectsOfCurrentPlayer;
+        DuelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling.PlayerInDuel.FinishedHandlingCurrentSpaceEffects += HandleCompletionOfEndOfDuelSpaceEffects;
     }
 
     //Method for applying after duel support card effects.
     private void ActivateEndOfDuelSupportCardEffects(DuelPlayerInformation playerWhoWeAreHandling)
     {
-        if(PlayersLeftToHandleEndOfDuelEffects.Contains(playerWhoWeAreHandling))
+        if(PlayersLeftToHandleEndOfDuelSupportEffects.Contains(playerWhoWeAreHandling))
         {
-            PlayersLeftToHandleEndOfDuelEffects.Remove(playerWhoWeAreHandling);
+            PlayersLeftToHandleEndOfDuelSupportEffects.Remove(playerWhoWeAreHandling);
         }
 
         //Right now this logic will only work for 1 support card. If the player selects 2+ support cards we will need to find a way to
@@ -215,7 +354,6 @@ public class DuelResultPhaseState : BaseState
         }
 
         StartHandlingSupportCardEffects();
-
     }
 
     private void BeginExecutingSupportCardEffectsOfCurrentPlayer()
@@ -275,8 +413,11 @@ public class DuelResultPhaseState : BaseState
     {
         base.Exit();
         isHandlingSupportCardEffect = false;
-        PlayersLeftToHandleEndOfDuelEffects.Clear();
+        CurrentSpaceEffectWeAreHandling = null;
+        PlayersLeftToHandleEndOfDuelSupportEffects.Clear();
+        PlayersLeftToHandleEndOfDuelSpaceEffects.Clear();
         SupportCardEffectsTohandle.Clear();
+        SpaceEffectsToHandle.Clear();
         duelPhaseSM.EnableAbilityButtons();
         duelPhaseSM.ResetDuelParameters();
     }

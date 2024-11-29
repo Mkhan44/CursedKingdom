@@ -17,6 +17,7 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     [SerializeField] private bool onSpaceTurnStartEffect;
     [Tooltip("This should be true if the space effect happens AFTER a duel.")]
     [SerializeField] private bool afterDuelEffect;
+    [SerializeField] private bool isAfterDuelEffectAndMustWin;
     [SerializeField] [TextArea(3,10)] private string effectDescription;
     [Tooltip("Check this box if you want to override the auto-description setup by the code.")]
     [SerializeField] private bool overrideAutoDescription;
@@ -25,6 +26,7 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     public bool IsPositiveEffect { get => isPositiveEffect; set => isPositiveEffect = value; }
     public bool OnSpaceTurnStartEffect { get => onSpaceTurnStartEffect; set => onSpaceTurnStartEffect = value; }
     public bool AfterDuelEffect { get => afterDuelEffect; set => afterDuelEffect = value; }
+    public bool IsAfterDuelEffectAndMustWin { get => isAfterDuelEffectAndMustWin; set => isAfterDuelEffectAndMustWin = value; }
     public string EffectDescription { get => effectDescription; set => effectDescription = value; }
     public bool OverrideAutoDescription { get => overrideAutoDescription; set => overrideAutoDescription = value; }
 
@@ -46,6 +48,11 @@ public class SpaceEffectData : ScriptableObject , ISpaceEffect
     {
         //Usually called after the effect has been completed.
         CompletedEffect(playerReference);
+    }
+
+    public virtual void EndOfDuelEffect(DuelPlayerInformation playerInformation)
+    {
+        CompletedEffect(playerInformation.PlayerInDuel);
     }
 
     public virtual void EndOfTurnEffect(Player playerReference)

@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static Card;
@@ -353,8 +352,6 @@ public class Player : MonoBehaviour
 
 		//DEBUG
 		// UseEliteAbility();
-
-
     }
 
 	public void SetupAIScript()
@@ -3090,7 +3087,7 @@ public class Player : MonoBehaviour
 	#region Space activation
 	public void ApplyCurrentSpaceEffects(Player player)
 	{
-		if (GameplayManagerRef.playerCharacter.GetComponent<Player>() == this)
+		if (GameplayManagerRef.GetCurrentPlayer() == this)
 		{
 			//We'll check states for the phases of the game here to determine whether or not to use the landed on effect/passing effect/start of turn effect.
 			if (gameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayStartResolveSpacePhaseState))
@@ -3101,11 +3098,26 @@ public class Player : MonoBehaviour
 			{
 				CurrentSpacePlayerIsOn.ApplyEndOfTurnSpaceEffects(this);
 			}
+			else if(gameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayDuelPhaseState))
+			{
+				CurrentSpacePlayerIsOn.ApplyEndOfDuelGeneralSpaceEffects(this);
+			}
 			else
 			{
 				CurrentSpacePlayerIsOn.ApplyLandedOnSpaceEffects(this);
 			}
 		}
+		//If we are in a duel and this player is on a space that can activate even though it's not their turn:
+		//This won't work if we have multiple people trying to do effects though.
+		else
+		{
+			if(gameplayManagerRef.GameplayPhaseStatemachineRef.GetCurrentState().GetType() == typeof(GameplayDuelPhaseState))
+			{
+				CurrentSpacePlayerIsOn.ApplyEndOfDuelGeneralSpaceEffects(this);
+			}
+		}
+
+		
 	}
 
 	public void ApplyCurrentStartSpaceEffects()
@@ -3303,7 +3315,6 @@ public class Player : MonoBehaviour
 	public void CompletedHandlingSpaceEffects()
 	{
 		FinishedHandlingCurrentSpaceEffects?.Invoke(this);
-
     }
 
 	public void HasBeenDefeatedEvent()

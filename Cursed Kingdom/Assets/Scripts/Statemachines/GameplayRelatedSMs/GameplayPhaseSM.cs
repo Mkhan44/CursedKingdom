@@ -93,8 +93,6 @@ public class GameplayPhaseSM : BukuStateMachine
 			{
 				yield break;
 			}
-
-			
 		}
 
 		yield return null;

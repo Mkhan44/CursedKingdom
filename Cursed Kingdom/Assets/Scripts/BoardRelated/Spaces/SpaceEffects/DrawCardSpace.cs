@@ -34,7 +34,7 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
         }
         else if(CardTypeToDraw == Card.CardType.Both)
         {
-            Debug.Log("TRYING TO DRAW 2 CARDS");
+            Debug.Log("TRYING TO DRAW 2 TYPES OF CARDS");
             playerReference.DoneDrawingCard += CompletedEffect;
             playerReference.SelectCardTypeToDrawPopup(NumToDraw);
         }
@@ -51,6 +51,26 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
     public override void EndOfTurnEffect(Player playerReference)
     {
         base.EndOfTurnEffect(playerReference);
+    }
+
+    public override void EndOfDuelEffect(DuelPlayerInformation playerInformation)
+    {
+        if(CardTypeToDraw == Card.CardType.Movement)
+        {
+            playerInformation.PlayerInDuel.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Movement, playerInformation.PlayerInDuel, NumToDraw);
+            CompletedEffect(playerInformation.PlayerInDuel);
+        }
+        else if(CardTypeToDraw == Card.CardType.Support)
+        {
+            playerInformation.PlayerInDuel.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Support, playerInformation.PlayerInDuel, NumToDraw);
+            CompletedEffect(playerInformation.PlayerInDuel);
+        }
+        else if(CardTypeToDraw == Card.CardType.Both)
+        {
+            Debug.Log("TRYING TO DRAW 2 TYPES OF CARDS AFTER DUEL");
+            playerInformation.PlayerInDuel.DoneDrawingCard += CompletedEffect;
+            playerInformation.PlayerInDuel.SelectCardTypeToDrawPopup(NumToDraw);
+        }
     }
 
     public override void CompletedEffect(Player playerReference)
