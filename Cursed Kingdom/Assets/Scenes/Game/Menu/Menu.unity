@@ -560,6 +560,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -75
       objectReference: {fileID: 0}
+    - target: {fileID: 7904952771770148605, guid: 459f155fbc0250d408bc25a82af73ca6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 627588882}
+    - target: {fileID: 7904952771770148605, guid: 459f155fbc0250d408bc25a82af73ca6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadGameScene
+      objectReference: {fileID: 0}
     - target: {fileID: 8608917008472717586, guid: 459f155fbc0250d408bc25a82af73ca6, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
