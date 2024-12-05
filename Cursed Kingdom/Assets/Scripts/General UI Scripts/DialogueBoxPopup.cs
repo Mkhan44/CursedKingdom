@@ -13,6 +13,7 @@ public class DialogueBoxPopup : MonoBehaviour
     public static DialogueBoxPopup instance;
 
     public static Action optionChosen;
+    public Action<Player> dialogueBoxClosed;
     public delegate void CalledDelegate();
 
     private const string dialogueAnimBool = "IsOpen";
@@ -269,6 +270,7 @@ public class DialogueBoxPopup : MonoBehaviour
         DestroyChildrenOfParent(ButtonLayoutParent.transform);
         DestroyChildrenOfParent(ImageLayoutParent.transform);
         isActive = false;
+        dialogueBoxClosed?.Invoke(null);
     }
 
     private void DestroyChildrenOfParent(Transform parent)

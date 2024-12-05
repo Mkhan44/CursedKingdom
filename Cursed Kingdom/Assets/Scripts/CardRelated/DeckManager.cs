@@ -259,6 +259,60 @@ public class DeckManager : MonoBehaviour
 
     }
 
+    public void DrawCardsFromDiscardPile(Card.CardType deckTypeToDrawFrom, Player playerDrawingCard, int numCardsToDraw)
+    {
+        List<Card> cardsToDraw = new();
+        if (deckTypeToDrawFrom == Card.CardType.Movement)
+        {
+            if (MovementDiscardPileList.Count < numCardsToDraw)
+            {
+                Debug.LogWarning($"We're trying to draw {numCardsToDraw} cards from the Movement discard pile but there are only {MovementDiscardPileList.Count} cards to draw. Aborting draw attempt.");
+                if (playerDrawingCard.IsHandlingSpaceEffects && !playerDrawingCard.MaxHandSizeExceeded())
+                {
+                    playerDrawingCard.CompletedDrawingForEffect();
+                    return;
+                }
+            }
+            for (int i = 0; i < numCardsToDraw; i++)
+            {
+                //We want to draw from the top, so we use the last one.
+                cardsToDraw.Add(MovementDiscardPileList.Last());
+                MovementDiscardPileList.Remove(MovementDiscardPileList.Last());
+            }
+
+        }
+        else
+        {
+            if (MovementDiscardPileList.Count < numCardsToDraw)
+            {
+                Debug.LogWarning($"We're trying to draw {numCardsToDraw} cards from the Support discard pile but there are only {SupportDiscardPileList.Count} cards to draw. Aborting draw attempt.");
+                if (playerDrawingCard.IsHandlingSpaceEffects && !playerDrawingCard.MaxHandSizeExceeded())
+                {
+                    playerDrawingCard.CompletedDrawingForEffect();
+                    return;
+                }
+            }
+            for (int i = 0; i < numCardsToDraw; i++)
+            {
+                //We want to draw from the top, so we use the last one.
+                cardsToDraw.Add(SupportDiscardPileList.Last());
+                SupportDiscardPileList.Remove(SupportDiscardPileList.Last());
+            }
+        }
+
+        if(cardsToDraw.Count > 0)
+        {
+            playerDrawingCard.DrawCards(cardsToDraw, true);
+        }
+
+        gameplayManager.UpdatePlayerInfoUICardCount(playerDrawingCard);
+
+        if (playerDrawingCard.IsHandlingSpaceEffects && !playerDrawingCard.MaxHandSizeExceeded())
+        {
+            playerDrawingCard.CompletedDrawingForEffect();
+        }
+    }
+
     /// <summary>
     /// 
     /// </summary>

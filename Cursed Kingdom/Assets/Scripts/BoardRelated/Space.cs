@@ -741,6 +741,14 @@ public class Space : MonoBehaviour
             }
             SetIconImage(typeToCheck, iconImage);
         }
+
+        if(spaceData.IsNonDuelSpace)
+        {
+            GameObject tempIcon = Instantiate(iconHolderPrefab, iconHolderParent.transform);
+            Image iconImage = tempIcon.transform.GetChild(0).GetComponentInChildren<Image>();
+            SpaceIconPreset.SpaceIconElement.SpaceIconType typeToCheck = SpaceIconPreset.SpaceIconElement.SpaceIconType.nonDuel;
+            SetIconImage(typeToCheck, iconImage);
+        }
        
     }
 

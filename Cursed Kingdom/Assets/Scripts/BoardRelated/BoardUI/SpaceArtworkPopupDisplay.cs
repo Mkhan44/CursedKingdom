@@ -72,7 +72,6 @@ public class SpaceArtworkPopupDisplay : MonoBehaviour
             count++;
         }
 
-        int indexOfCurrentPlayer = CurrentSpacePlayerIsOn.gameplayManagerRef.Players.IndexOf(CurrentSpacePlayerIsOn.gameplayManagerRef.playerCharacter.GetComponent<Player>());
         CurrentCoroutine = StartCoroutine(WaitTillTurnOff(CurrentSpacePlayerIsOn));
 
         if(DebugModeSingleton.instance.IsDebugActive)
