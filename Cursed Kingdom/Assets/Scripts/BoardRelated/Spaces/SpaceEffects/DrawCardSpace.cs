@@ -22,6 +22,40 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
 
     public override void LandedOnEffect(Player playerReference)
     {
+        if(DrawFromDiscardPile)
+        {
+            if(CardTypeToDraw == Card.CardType.Movement)
+            {
+                if(playerReference.GameplayManagerRef.ThisDeckManager.MovementDiscardPileList.Count < NumToDraw)
+                {
+                    DialogueBoxPopup.instance.ActivatePopupWithJustText("The movement card discard pile does not have enough cards. None will be drawn.", 2.5f);
+                    DialogueBoxPopup.instance.dialogueBoxClosed += CompletedEffect;
+                    return;
+                }
+                playerReference.GameplayManagerRef.ThisDeckManager.DrawCardsFromDiscardPile(Card.CardType.Movement, playerReference, NumToDraw);
+                
+            }
+            else if(CardTypeToDraw == Card.CardType.Support)
+            {
+                if(playerReference.GameplayManagerRef.ThisDeckManager.SupportDiscardPileList.Count < NumToDraw)
+                {
+                    DialogueBoxPopup.instance.ActivatePopupWithJustText("The support card discard pile does not have enough cards. None will be drawn.", 2.5f);
+                    DialogueBoxPopup.instance.dialogueBoxClosed += CompletedEffect;
+                    return;
+                }
+                playerReference.GameplayManagerRef.ThisDeckManager.DrawCardsFromDiscardPile(Card.CardType.Support, playerReference, NumToDraw);
+            }
+            //Make this draw from the discard pile instead of the deck.
+            else if(CardTypeToDraw == Card.CardType.Both)
+            {
+                // Debug.Log("TRYING TO DRAW 2 TYPES OF CARDS");
+                // playerReference.DoneDrawingCard += CompletedEffect;
+                // playerReference.SelectCardTypeToDrawPopup(NumToDraw);
+            }
+
+            return;
+        }
+
         if(CardTypeToDraw == Card.CardType.Movement)
         {
             playerReference.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Movement, playerReference, NumToDraw);
@@ -73,9 +107,18 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
         }
     }
 
+    public void NoCardsInDiscardPilePopupCompletion()
+    {
+
+    }
+
     public override void CompletedEffect(Player playerReference)
     {
-        playerReference.DoneDrawingCard -= CompletedEffect;
+        DialogueBoxPopup.instance.dialogueBoxClosed -= CompletedEffect;
+        if(playerReference != null)
+        {
+            playerReference.DoneDrawingCard -= CompletedEffect;
+        }
         base.CompletedEffect(playerReference);
     }
 
