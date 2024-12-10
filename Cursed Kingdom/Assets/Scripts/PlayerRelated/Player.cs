@@ -3178,10 +3178,28 @@ public class Player : MonoBehaviour
 			}
 
 			ClassData.eliteAbilityData.ActivateEffect(this);
+			
 			if (ClassData.eliteAbilityData.CanBeManuallyActivated)
 			{
 				//GameplayManagerRef.UseAbilityButton.transform.parent.gameObject.SetActive(false);
 			}
+		}
+	}
+
+	//Duel version.
+	public void UseEliteAbility(DuelPlayerInformation duelPlayerInformation)
+	{
+		//Check if cost can be paid since some Elite abilities require a cost to be paid!!!!
+
+		if (ClassData.eliteAbilityData != null)
+		{
+			if(ClassData.eliteAbilityData.HasACost && !ClassData.eliteAbilityData.CanCostBePaid(this))
+			{
+				CompletedEliteAbilityActivation();
+				return;
+			}
+
+			ClassData.eliteAbilityData.ActivateEffect(duelPlayerInformation);
 		}
 	}
 	public void ActivateEliteAbilityEffects()

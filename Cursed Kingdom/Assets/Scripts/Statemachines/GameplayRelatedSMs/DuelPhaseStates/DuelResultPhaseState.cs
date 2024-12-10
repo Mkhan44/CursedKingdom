@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Analytics;
 
@@ -21,9 +22,17 @@ public class DuelResultPhaseState : BaseState
 
     private List<DuelPlayerInformation> playersLeftToHandleEndOfDuelSpaceEffects;
 
+    private List<DuelPlayerInformation> playersLeftToHandleEndOfDuelEliteAbilities;
+
     private DuelPlayerInformation duelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling;
 
     private DuelPlayerInformation duelPlayerInformationWhosSupportCardsWeAreHandling;
+
+    private DuelPlayerInformation duelPlayerInformationWhosEliteAbilityWeAreHandling;
+
+    private EliteAbilityData eliteAbilityToHandle;
+
+    private EliteAbilityData currentEliteAbilityWeAreHandling;
 
     private List<SpaceData.SpaceEffect> spaceEffectsToHandle;
 
@@ -37,10 +46,14 @@ public class DuelResultPhaseState : BaseState
     public DuelPlayerInformation DuelPlayerInformationWhosSupportCardsWeAreHandling { get => duelPlayerInformationWhosSupportCardsWeAreHandling; set => duelPlayerInformationWhosSupportCardsWeAreHandling = value; }
     public List<DuelPlayerInformation> PlayersLeftToHandleEndOfDuelSupportEffects { get => playersLeftToHandleEndOfDuelSupportEffects; set => playersLeftToHandleEndOfDuelSupportEffects = value; }
     public List<DuelPlayerInformation> PlayersLeftToHandleEndOfDuelSpaceEffects { get => playersLeftToHandleEndOfDuelSpaceEffects; set => playersLeftToHandleEndOfDuelSpaceEffects = value; }
+    public List<DuelPlayerInformation> PlayersLeftToHandleEndOfDuelEliteAbilities { get => playersLeftToHandleEndOfDuelEliteAbilities; set => playersLeftToHandleEndOfDuelEliteAbilities = value; }
     public List<SpaceData.SpaceEffect> SpaceEffectsToHandle { get => spaceEffectsToHandle; set => spaceEffectsToHandle = value; }
     public SpaceData.SpaceEffect CurrentSpaceEffectWeAreHandling { get => currentSpaceEffectWeAreHandling; set => currentSpaceEffectWeAreHandling = value; }
     public List<SupportCardData.SupportCardEffect> SupportCardEffectsTohandle { get => supportCardEffectsTohandle; set => supportCardEffectsTohandle = value; }
     public SupportCardData.SupportCardEffect CurrentSupportCardEffectWeAreHandling { get => currentSupportCardEffectWeAreHandling; set => currentSupportCardEffectWeAreHandling = value; }
+    public DuelPlayerInformation DuelPlayerInformationWhosEliteAbilityWeAreHandling { get => duelPlayerInformationWhosEliteAbilityWeAreHandling; set => duelPlayerInformationWhosEliteAbilityWeAreHandling = value; }
+    public EliteAbilityData EliteAbilityToHandle { get => eliteAbilityToHandle; set => eliteAbilityToHandle = value; }
+    public EliteAbilityData CurrentEliteAbilityWeAreHandling { get => currentEliteAbilityWeAreHandling; set => currentEliteAbilityWeAreHandling = value; }
 
     public DuelResultPhaseState(DuelPhaseSM stateMachine) : base(stateName, stateMachine)
     {
@@ -55,6 +68,8 @@ public class DuelResultPhaseState : BaseState
         indexOfCurrentSupportCardWeAreHandling = 0;
         DuelPlayerInformationWhosSupportCardsWeAreHandling = null;
         DuelPlayerInformationWhosEndOfSpaceEffectsWeAreHandling = null;
+        DuelPlayerInformationWhosEliteAbilityWeAreHandling = null;
+        PlayersLeftToHandleEndOfDuelEliteAbilities = new();
         PlayersLeftToHandleEndOfDuelSupportEffects = new();
         PlayersLeftToHandleEndOfDuelSpaceEffects = new();
         SpaceEffectsToHandle = new();
@@ -87,28 +102,7 @@ public class DuelResultPhaseState : BaseState
             if (duelPhaseSM.CurrentWinners.Count > 1)
             {
                 playerInfo.PlayerInDuel.TakeDamage(playerInfo.DamageToTake);
-               // DiscardSelectedCardsAfterDuel(playerInfo);
                 continue;
-
-                //if (duelPhaseSM.CurrentWinners.Count == duelPhaseSM.PlayersInCurrentDuel.Count)
-                //{
-                    
-                //}
-
-                //bool foundMatch = false;
-                //foreach (DuelPlayerInformation winnerInfo in duelPhaseSM.CurrentWinners)
-                //{
-                //    if (playerInfo == winnerInfo)
-                //    {
-                //        foundMatch = true;
-                //    }
-                //}
-                ////Means the player we are looking at was not in the list of Players that won. They lost the duel.
-                //if (!foundMatch)
-                //{
-                //    //Will be more dynamic based on things like if players deal more damage this duel or if that class takes more damage when losing a duel etc.
-                //    playerInfo.PlayerInDuel.TakeDamage(damageToDeal);
-                //}
             }
             //Count should only be 1 for winners list in this case.
             else
@@ -142,6 +136,38 @@ public class DuelResultPhaseState : BaseState
             //DiscardSelectedCardsAfterDuel(playerInfo);
         }
 
+        //Setup the players to handle elite abilities of.
+        foreach(DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
+        {
+            if(duelPlayerInformation.PlayerInDuel.IsDefeated)
+            {
+                //If this player died due to damage calc we'll probably still need to discard everything they have? ...I think death might auto discard but double check this.
+                continue;
+            }
+            else
+            {
+                PlayersLeftToHandleEndOfDuelEliteAbilities.Add(duelPlayerInformation);
+            }
+        }
+
+        StartHandlingEliteAbilityEffects();
+    }
+
+    private void StartHandlingEliteAbilityEffects()
+    {
+        if(PlayersLeftToHandleEndOfDuelEliteAbilities.Count != 0)
+        {
+            ActivateEndOfDuelEliteAbilitiesEffects(PlayersLeftToHandleEndOfDuelEliteAbilities[0]);
+        }
+        else
+        {
+            FinishedHandlingAllEliteAbilities();
+        }
+
+    }
+
+    private void FinishedHandlingAllEliteAbilities()
+    {
         //Setup the players to handle support cards of.
         foreach(DuelPlayerInformation duelPlayerInformation in duelPhaseSM.PlayersInCurrentDuel)
         {
@@ -155,7 +181,6 @@ public class DuelResultPhaseState : BaseState
                 PlayersLeftToHandleEndOfDuelSupportEffects.Add(duelPlayerInformation);
             }
         }
-
         StartHandlingSupportCardEffects();
     }
 
@@ -195,11 +220,35 @@ public class DuelResultPhaseState : BaseState
         StartHandlingEndOfDuelSpaceEffects();
     }
 
+    private void ActivateEndOfDuelEliteAbilitiesEffects(DuelPlayerInformation playerWhoWeAreHandling)
+    {
+        if(PlayersLeftToHandleEndOfDuelEliteAbilities.Contains(playerWhoWeAreHandling))
+        {
+            PlayersLeftToHandleEndOfDuelEliteAbilities.Remove(playerWhoWeAreHandling);
+        }
+
+        if(playerWhoWeAreHandling.PlayerInDuel.ClassData.eliteAbilityData == null || 
+        !playerWhoWeAreHandling.PlayerInDuel.ClassData.eliteAbilityData.IsAfterDuelEffect ||
+        !playerWhoWeAreHandling.PlayerInDuel.CanUseEliteAbility)
+        {
+            StartHandlingEliteAbilityEffects();
+            return;
+        }
+
+        duelPlayerInformationWhosEliteAbilityWeAreHandling = playerWhoWeAreHandling;
+        duelPlayerInformationWhosEliteAbilityWeAreHandling.PlayerInDuel.DoneActivatingEliteAbilityEffect += BeginExecutingEliteAbilitiesOfCurrentPlayer;
+        duelPlayerInformationWhosEliteAbilityWeAreHandling.PlayerInDuel.UseEliteAbility(playerWhoWeAreHandling);
+        
+    }
+
+    private void BeginExecutingEliteAbilitiesOfCurrentPlayer(Player player = null)
+    {
+        duelPlayerInformationWhosEliteAbilityWeAreHandling.PlayerInDuel.DoneActivatingEliteAbilityEffect -= BeginExecutingEliteAbilitiesOfCurrentPlayer;
+        StartHandlingEliteAbilityEffects();
+    }
+
     private void StartHandlingEndOfDuelSpaceEffects()
     {
-        // currentPlayer.CurrentSpacePlayerIsOn.StartCoroutine(currentPlayer.CurrentSpacePlayerIsOn.PlaySpaceInfoDisplayAnimationUI(currentPlayer));
-        // gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.TurnOnDisplay(currentPlayer.CurrentSpacePlayerIsOn, currentPlayer);
-        // gameplayPhaseSM.gameplayManager.SpaceArtworkPopupDisplay.SpaceArtworkDisplayTurnOff += SpaceArtworkDonePopupDone;
         CurrentSpaceEffectWeAreHandling = null;
         if(PlayersLeftToHandleEndOfDuelSpaceEffects.Count != 0)
         {
@@ -414,8 +463,10 @@ public class DuelResultPhaseState : BaseState
         base.Exit();
         isHandlingSupportCardEffect = false;
         CurrentSpaceEffectWeAreHandling = null;
+        CurrentEliteAbilityWeAreHandling = null;
         PlayersLeftToHandleEndOfDuelSupportEffects.Clear();
         PlayersLeftToHandleEndOfDuelSpaceEffects.Clear();
+        PlayersLeftToHandleEndOfDuelEliteAbilities.Clear();
         SupportCardEffectsTohandle.Clear();
         SpaceEffectsToHandle.Clear();
         duelPhaseSM.EnableAbilityButtons();
