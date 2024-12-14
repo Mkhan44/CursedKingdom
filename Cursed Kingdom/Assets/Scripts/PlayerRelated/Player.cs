@@ -2515,6 +2515,7 @@ public class Player : MonoBehaviour
             foreach (MovementCard card in movementCardsInHand)
             {
                 card.gameObject.transform.SetParent(MovementCardsInHandHolderPanel.transform);
+				card.DeselectCard();
             }
         }
 
@@ -2553,6 +2554,7 @@ public class Player : MonoBehaviour
 			foreach(SupportCard card in supportCardsInHand)
 			{
                 card.gameObject.transform.SetParent(SupportCardsInHandHolderPanel.transform);
+				card.DeselectCard();
             }
 		}
 

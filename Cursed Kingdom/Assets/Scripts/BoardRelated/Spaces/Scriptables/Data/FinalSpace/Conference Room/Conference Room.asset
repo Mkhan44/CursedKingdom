@@ -19,12 +19,16 @@ MonoBehaviour:
   isNegative: 0
   levelRequirementToGoToThisSpace: 0
   spaceEffects:
-  - spaceEffectData: {fileID: 11400000, guid: 007b857e5ffac1f4a88c246521b92ccd, type: 2}
-    spaceTypeStringHidden: ConferenceRoomSpace
+  - spaceEffectData: {fileID: 11400000, guid: c29e7c5d8df7f614286639554db56db4, type: 2}
+    spaceTypeStringHidden: RecoverHealthSpace
+  - spaceEffectData: {fileID: 11400000, guid: c18c83715eca4994191f600bfb8d7b12, type: 2}
+    spaceTypeStringHidden: DrawCardSpace
+  - spaceEffectData: {fileID: 11400000, guid: b255a0b63abda344cb21a75d95d6326a, type: 2}
+    spaceTypeStringHidden: AttackSpace
   spaceName: Conference Room
   spaceDescription: 'If you begin your turn on this space: draw 1 support card and
-    gain 1 health. If a duel is commenced with a player that is on this space: The
-    winner can deal 5 damage to an opponent of their choosing.'
+    gain 1 health. If you win a duel while on this space: Deal 5 damage to an opponent
+    of your choice.'
   spaceSprite: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
   spaceMaterials:
   - {fileID: 2100000, guid: 601b7391dfa4c8443aa9845d95181ace, type: 2}

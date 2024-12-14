@@ -14,19 +14,19 @@ public class RecoverHealthSpace : SpaceEffectData, ISpaceEffect
 
     public override void LandedOnEffect(Player playerReference)
     {
-        playerReference.RecoverHealth(HealthToRecover);
+        TheEffect(playerReference);
         base.LandedOnEffect(playerReference);
-        Debug.Log($"Landed on: {this.name} space and should recover: {HealthToRecover} health.");
-       // playerReference.CurrentHealth += HealthToRecover;
     }
 
     public override void StartOfTurnEffect(Player playerReference)
     {
+        TheEffect(playerReference);
         base.StartOfTurnEffect(playerReference);
     }
 
     public override void EndOfTurnEffect(Player playerReference)
     {
+        TheEffect(playerReference);
         base.EndOfTurnEffect(playerReference);
     }
     protected override void UpdateEffectDescription()
@@ -35,6 +35,12 @@ public class RecoverHealthSpace : SpaceEffectData, ISpaceEffect
         {
             EffectDescription = $"recover: {HealthToRecover} health.";
         }
+    }
+
+    private void TheEffect(Player playerReference)
+    {
+        playerReference.RecoverHealth(HealthToRecover);
+        Debug.Log($"Landed on: {this.name} space and should recover: {HealthToRecover} health.");
     }
 
     private void OnEnable()

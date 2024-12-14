@@ -9,16 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d9b03c3f1ed61d4b86bc65a03d4fa36, type: 3}
-  m_Name: ConferenceRoomSpace
+  m_Script: {fileID: 11500000, guid: 7c4f411cfed9a254da7789738d1874c1, type: 3}
+  m_Name: AttackSpace
   m_EditorClassIdentifier: 
   isACost: 0
   isPositiveEffect: 0
-  onSpaceTurnStartEffect: 1
+  onSpaceTurnStartEffect: 0
   afterDuelEffect: 0
-  effectDescription: Do lots of stuff...Will update later lolol.
+  isAfterDuelEffectAndMustWin: 1
+  effectDescription: Inflict 5 damage to 1 player(s) each.
   overrideAutoDescription: 0
-  cardTypeToDraw: 01000000
-  numToDraw: 1
-  healthToRecover: 1
-  damageToDeal: 5
+  damageToGive: 5
+  numPlayersToAttack: 1
+  opponentsCanBeChosen: 1
+  attackAllPlayers: 0

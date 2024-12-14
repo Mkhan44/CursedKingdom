@@ -22,6 +22,74 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
 
     public override void LandedOnEffect(Player playerReference)
     {
+        TheEffect(playerReference);
+    }
+
+    public override void StartOfTurnEffect(Player playerReference)
+    {
+       TheEffect(playerReference);
+    }
+
+    public override void EndOfTurnEffect(Player playerReference)
+    {
+        TheEffect(playerReference);
+    }
+
+    public override void EndOfDuelEffect(DuelPlayerInformation playerInformation)
+    {
+        // if(CardTypeToDraw == Card.CardType.Movement)
+        // {
+        //     playerInformation.PlayerInDuel.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Movement, playerInformation.PlayerInDuel, NumToDraw);
+        //     CompletedEffect(playerInformation.PlayerInDuel);
+        // }
+        // else if(CardTypeToDraw == Card.CardType.Support)
+        // {
+        //     playerInformation.PlayerInDuel.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Support, playerInformation.PlayerInDuel, NumToDraw);
+        //     CompletedEffect(playerInformation.PlayerInDuel);
+        // }
+        // else if(CardTypeToDraw == Card.CardType.Both)
+        // {
+        //     Debug.Log("TRYING TO DRAW 2 TYPES OF CARDS AFTER DUEL");
+        //     playerInformation.PlayerInDuel.DoneDrawingCard += CompletedEffect;
+        //     playerInformation.PlayerInDuel.SelectCardTypeToDrawPopup(NumToDraw);
+        // }
+
+        TheEffect(playerInformation.PlayerInDuel);
+    }
+
+    public void NoCardsInDiscardPilePopupCompletion()
+    {
+
+    }
+
+    public override void CompletedEffect(Player playerReference)
+    {
+        DialogueBoxPopup.instance.dialogueBoxClosed -= CompletedEffect;
+        if(playerReference != null)
+        {
+            playerReference.DoneDrawingCard -= CompletedEffect;
+        }
+        base.CompletedEffect(playerReference);
+    }
+
+    protected override void UpdateEffectDescription()
+    {
+        if (!OverrideAutoDescription)
+        {
+            if(!CanBeEitherCard)
+            {
+                EffectDescription = $"Draw: {NumToDraw} {CardTypeToDraw} card(s)";
+            }
+            else
+            {
+                EffectDescription = $"Draw: {NumToDraw} Movement or Support card(s)";
+            }
+            
+        }
+    }
+
+    private void TheEffect(Player playerReference)
+    {
         if(DrawFromDiscardPile)
         {
             if(CardTypeToDraw == Card.CardType.Movement)
@@ -75,67 +143,6 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
 
 
         Debug.Log($"Landed on: {this.name} space and should draw: {NumToDraw} {CardTypeToDraw} card(s)");
-    }
-
-    public override void StartOfTurnEffect(Player playerReference)
-    {
-        base.StartOfTurnEffect(playerReference);
-    }
-
-    public override void EndOfTurnEffect(Player playerReference)
-    {
-        base.EndOfTurnEffect(playerReference);
-    }
-
-    public override void EndOfDuelEffect(DuelPlayerInformation playerInformation)
-    {
-        if(CardTypeToDraw == Card.CardType.Movement)
-        {
-            playerInformation.PlayerInDuel.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Movement, playerInformation.PlayerInDuel, NumToDraw);
-            CompletedEffect(playerInformation.PlayerInDuel);
-        }
-        else if(CardTypeToDraw == Card.CardType.Support)
-        {
-            playerInformation.PlayerInDuel.GameplayManagerRef.ThisDeckManager.DrawCards(Card.CardType.Support, playerInformation.PlayerInDuel, NumToDraw);
-            CompletedEffect(playerInformation.PlayerInDuel);
-        }
-        else if(CardTypeToDraw == Card.CardType.Both)
-        {
-            Debug.Log("TRYING TO DRAW 2 TYPES OF CARDS AFTER DUEL");
-            playerInformation.PlayerInDuel.DoneDrawingCard += CompletedEffect;
-            playerInformation.PlayerInDuel.SelectCardTypeToDrawPopup(NumToDraw);
-        }
-    }
-
-    public void NoCardsInDiscardPilePopupCompletion()
-    {
-
-    }
-
-    public override void CompletedEffect(Player playerReference)
-    {
-        DialogueBoxPopup.instance.dialogueBoxClosed -= CompletedEffect;
-        if(playerReference != null)
-        {
-            playerReference.DoneDrawingCard -= CompletedEffect;
-        }
-        base.CompletedEffect(playerReference);
-    }
-
-    protected override void UpdateEffectDescription()
-    {
-        if (!OverrideAutoDescription)
-        {
-            if(!CanBeEitherCard)
-            {
-                EffectDescription = $"Draw: {NumToDraw} {CardTypeToDraw} card(s)";
-            }
-            else
-            {
-                EffectDescription = $"Draw: {NumToDraw} Movement or Support card(s)";
-            }
-            
-        }
     }
 
     private void OnEnable()
