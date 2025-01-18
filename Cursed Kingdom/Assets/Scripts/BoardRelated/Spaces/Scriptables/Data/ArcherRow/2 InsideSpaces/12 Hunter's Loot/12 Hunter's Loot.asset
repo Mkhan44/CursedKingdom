@@ -10,22 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
-  m_Name: 6 Stray Arrow Incoming
+  m_Name: 12 Hunter's Loot
   m_EditorClassIdentifier: 
   passingOverSpaceEffect: 0
   isMandatory: 1
   decreasesSpacesToMove: 1
   isNonDuelSpace: 0
-  isNegative: 1
+  isNegative: 0
   levelRequirementToGoToThisSpace: 0
   spaceEffects:
-  - spaceEffectData: {fileID: 11400000, guid: d0bc70942a69abb41b68cbe54123df23, type: 2}
-    spaceTypeStringHidden: LoseHealthSpace
-  - spaceEffectData: {fileID: 11400000, guid: 1b4f10c1348b3c24da09155f8b9d0632, type: 2}
+  - spaceEffectData: {fileID: 11400000, guid: e3a8473a5da111c4d9b5d26125a3c3d8, type: 2}
     spaceTypeStringHidden: DrawCardSpace
-  spaceName: Stray Arrow Incoming!
-  spaceDescription: Lose 2 health then draw 1 movement card.
-  spaceSprite: {fileID: 21300000, guid: f318e7d62ec0f8342b1ff9486d1a6e7f, type: 3}
+  spaceName: Hunter's Loot
+  spaceDescription: Draw 2 support cards.
+  spaceSprite: {fileID: 21300000, guid: 71c1f632c34ab2648852b4c765ca9461, type: 3}
   spaceMaterials:
   - {fileID: 2100000, guid: 959d706bf1bfed64e8025a2a32dc2e24, type: 2}
   - {fileID: 2100000, guid: 22293bc1330bae3478e23007a8a533bc, type: 2}
