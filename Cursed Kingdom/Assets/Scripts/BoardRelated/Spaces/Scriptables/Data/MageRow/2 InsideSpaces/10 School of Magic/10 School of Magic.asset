@@ -12,21 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90069a9319a0f984ea1751d2a7e11c46, type: 3}
   m_Name: 10 School of Magic
   m_EditorClassIdentifier: 
-  afterDuelEffect: 0
-  onSpaceTurnStartEffect: 0
   passingOverSpaceEffect: 0
   isMandatory: 1
   decreasesSpacesToMove: 1
   isNonDuelSpace: 0
   isNegative: 0
+  levelRequirementToGoToThisSpace: 0
   spaceEffects:
   - spaceEffectData: {fileID: 11400000, guid: 8060b85de522ac34a971afa4e83d684e, type: 2}
     spaceTypeStringHidden: DrawCardSpace
-  thisSpaceTypes: 01000000
   spaceName: School of Magic
   spaceDescription: Draw 2 support cards.
-  spaceSprite: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
+  spaceSprite: {fileID: 21300000, guid: 952ad7fe061b2494582e75ea0d33a26c, type: 3}
   spaceMaterials:
   - {fileID: 2100000, guid: 64869b48f973d68448dc3c5e843f6bd0, type: 2}
   - {fileID: 2100000, guid: 76152b70fe1d6114a9075605a8f6c589, type: 2}
   - {fileID: 2100000, guid: 53f72d63cff479242bab7a40f777205a, type: 2}
+  StepSoundClipsData: {fileID: 0}
