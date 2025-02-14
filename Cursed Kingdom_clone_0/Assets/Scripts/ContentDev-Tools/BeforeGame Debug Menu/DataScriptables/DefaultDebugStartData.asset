@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b11a3c7d4b1a1c54a9098bed642c73e6, type: 3}
+  m_Name: DefaultDebugStartData
+  m_EditorClassIdentifier: 
+  numberOfPlayersToUse: 4
+  playerDebugDatas:
+  - typeOfClass: 0
+    startingHealthOverride: 0
+    startingSpaceNameOverride: Mage Start
+    startingLevelOverride: 0
+    movementCardsToStartWithOverride: 0
+    supportCardsToStartWithOverride: 0
+    isAnAIOpponent: 1
+  - typeOfClass: 1
+    startingHealthOverride: 0
+    startingSpaceNameOverride: Thief Start
+    startingLevelOverride: 0
+    movementCardsToStartWithOverride: 0
+    supportCardsToStartWithOverride: 0
+    isAnAIOpponent: 0
+  - typeOfClass: 2
+    startingHealthOverride: 0
+    startingSpaceNameOverride: Warrior Start
+    startingLevelOverride: 0
+    movementCardsToStartWithOverride: 0
+    supportCardsToStartWithOverride: 0
+    isAnAIOpponent: 1
+  - typeOfClass: 3
+    startingHealthOverride: 0
+    startingSpaceNameOverride: Archer Start
+    startingLevelOverride: 0
+    movementCardsToStartWithOverride: 0
+    supportCardsToStartWithOverride: 0
+    isAnAIOpponent: 0
+  debugDeckHolderData: {fileID: 11400000, guid: 14043d1fc8f3af74e8e282ad9e921bab, type: 2}

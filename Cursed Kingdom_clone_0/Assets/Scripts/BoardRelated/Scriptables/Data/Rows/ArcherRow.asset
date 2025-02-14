@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a774ab308883f5a4da954514302a693a, type: 3}
+  m_Name: ArcherRow
+  m_EditorClassIdentifier: 
+  rowPrefab: {fileID: 8489702198041417317, guid: 34275608d65e285498026b78be739348, type: 3}
+  perimeterSpaces:
+  - {fileID: 11400000, guid: 22b6fb65a793d0e488e60440bfabcc29, type: 2}
+  - {fileID: 11400000, guid: ca16e31c92b22c84db51dcac748c6681, type: 2}
+  - {fileID: 11400000, guid: 0299946708c1722439bb29f8adc02f2c, type: 2}
+  - {fileID: 11400000, guid: 4d9aa82f58d11b642bfd2e2ef69dd0da, type: 2}
+  - {fileID: 11400000, guid: a45bc5766a354324a9ba6106571274f7, type: 2}
+  - {fileID: 11400000, guid: 068127cf62c459b459ea1b093f458742, type: 2}
+  - {fileID: 11400000, guid: a6d814df5a0fe684a93c00482cc388bb, type: 2}
+  - {fileID: 11400000, guid: a6da55a194b1cd24281d7661a64bea84, type: 2}
+  insideSpaces:
+  - {fileID: 11400000, guid: a20e89b7dbe732748968543c8ae763c8, type: 2}
+  - {fileID: 11400000, guid: 6314348d8dce652429563c62ca7ce639, type: 2}
+  - {fileID: 11400000, guid: 44d56c50ae1392445b01443a83be34a4, type: 2}
+  - {fileID: 11400000, guid: 7332de8f4aa4016498a9ee73f744d2f9, type: 2}
+  - {fileID: 11400000, guid: f0f362e21d8f12f4bbcec1f6e4e69fdd, type: 2}
+  - {fileID: 11400000, guid: 031fdaddb1de9654bb808855549d2220, type: 2}
+  - {fileID: 11400000, guid: c957dc4d4b00c7e479efca3de01e9168, type: 2}
+  - {fileID: 11400000, guid: 40664d5e971d5f54cb1d7da1e153da8d, type: 2}
+  - {fileID: 11400000, guid: 13f17b39bfd6653488909737a3d2c12a, type: 2}
+  AreaMusic: {fileID: 11400000, guid: 3fab58dc4a1a97f499063dce78a532a0, type: 2}

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c465ab46e455f844b3734b01e62cb14, type: 3}
+  m_Name: Dagger Of Death
+  m_EditorClassIdentifier: 
+  cardTitle: Dagger Of Death
+  cardArtwork: {fileID: 21300000, guid: 2a66492c058e94c45949161eab2baef4, type: 3}
+  supportCardEffects:
+  - supportCardEffectData: {fileID: 11400000, guid: 6bc120d0ad03e3d47bb4eac64a39c865, type: 2}
+    supportTypeStringHidden: DuelAttackBuffEffect
+  - supportCardEffectData: {fileID: 11400000, guid: 66babf8127a97514b92811c047cb07cc, type: 2}
+    supportTypeStringHidden: CurseEffect
+  thisSupportCardType: 1
+  cardDescription: Increase the value of your movement card's attack value by 3 for
+    this duel. You are cursed for 1 turn after using this card.

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce132e6ecaafc6642830a34b57dbb062, type: 3}
+  m_Name: Default Support Card Icons
+  m_EditorClassIdentifier: 
+  supportCardIcons:
+  - supportIconType: 0
+    sprite: {fileID: 21300000, guid: 70a22cb55f734074981a7d650482c784, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - supportIconType: 1
+    sprite: {fileID: 21300000, guid: f8f0289d8502b9048830ee8a211faa9b, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - supportIconType: 2
+    sprite: {fileID: 21300000, guid: cb64e1d1b8e1c6a4cb3a334fc066f31e, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 1}
+  movementSprite: {fileID: 21300000, guid: 70a22cb55f734074981a7d650482c784, type: 3}
+  duelSprite: {fileID: 21300000, guid: f8f0289d8502b9048830ee8a211faa9b, type: 3}
+  specialSprite: {fileID: 21300000, guid: cb64e1d1b8e1c6a4cb3a334fc066f31e, type: 3}

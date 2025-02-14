@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75ab60380ca7c6c42a5b9727de8787a6, type: 3}
+  m_Name: CurseEffect
+  m_EditorClassIdentifier: 
+  isACost: 1
+  isElemental: 0
+  isReaction: 0
+  isAfterDuelEffectAndNeedsToWin: 0
+  isAfterDuelEffect: 1
+  isDuringDuelDamageCalc: 0
+  hasPriorityInDuel: 0
+  numTurnsToCurse: 1
+  curseImmediately: 0
+  numPlayersToAttack: 0
+  opponentsCanBeChosen: 1
+  attackAllPlayers: 0
+  curseUser: 1
