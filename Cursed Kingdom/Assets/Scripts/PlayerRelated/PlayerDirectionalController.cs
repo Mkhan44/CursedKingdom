@@ -90,26 +90,7 @@ public class PlayerDirectionalController : MonoBehaviour
             }
 
         }
-        else if (Mathf.DeltaAngle(0f, yRot) >= 135f && Mathf.DeltaAngle(0f, yRot) <= 225f) // Checking Thief Side
-        {
-            if (isOnThiefSpace)
-            {
-                animationDirection = new Vector2(-1f, 0f); // Facing Left
-            }
-            else if (isOnArcherSpace)
-            {
-                animationDirection = new Vector2(0f, -1f); // Facing Back
-            }
-            else if (isOnMageSpace)
-            {
-                animationDirection = new Vector2(1f, 0f); // Facing Right
-            }
-            else if (isOnWarriorSpace)
-            {
-                animationDirection = new Vector2(0f, 1f); // Facing Front
-            }
-
-        }
+        
         else if (Mathf.DeltaAngle(0f, yRot) >= -135f && Mathf.DeltaAngle(0f, yRot) <= -45f) // Checking Archer Side
         {
             if (isOnArcherSpace)
@@ -125,6 +106,26 @@ public class PlayerDirectionalController : MonoBehaviour
                 animationDirection = new Vector2(1f, 0f); // Facing Right
             }
             else if (isOnThiefSpace)
+            {
+                animationDirection = new Vector2(0f, 1f); // Facing Front
+            }
+
+        }
+        else  // Checking Thief Side
+        {
+            if (isOnThiefSpace)
+            {
+                animationDirection = new Vector2(-1f, 0f); // Facing Left
+            }
+            else if (isOnArcherSpace)
+            {
+                animationDirection = new Vector2(0f, -1f); // Facing Back
+            }
+            else if (isOnMageSpace)
+            {
+                animationDirection = new Vector2(1f, 0f); // Facing Right
+            }
+            else if (isOnWarriorSpace)
             {
                 animationDirection = new Vector2(0f, 1f); // Facing Front
             }
