@@ -10,9 +10,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Card;
 using static ClassData;
+using PurrNet;
 using Random = UnityEngine.Random;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
 	[SerializeField] private PlayerAI playerAIReference;
 	public int playerIDIntVal;
@@ -255,7 +256,13 @@ public class Player : MonoBehaviour
 	public RuntimeAnimatorController AnimatorController { get => animatorController; set => animatorController = value; }
 	public Animator Animator { get => animator; set => animator = value; }
     
+	protected override void OnSpawned(bool asServer)
+    {
+        base.OnSpawned(asServer);
 
+        enabled = isOwner;
+        
+    }
     public void InitializePlayer(ClassData data)
 	{
 		ClassData = data;

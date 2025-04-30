@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using UnityEngine.TextCore;
 using System.Threading.Tasks;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Space : MonoBehaviour
 {
@@ -71,6 +72,10 @@ public class Space : MonoBehaviour
         playersOnThisSpace = new();
         //playersAlreadyMoved = new();
         haveSeparatedPlayersAlready = false;
+        if(SceneManager.GetActiveScene().name != "BoardGameplay")
+        {
+            return;
+        }
         gameplayManagerRef = GameObject.Find("Game Manager").GetComponent<GameplayManager>(); 
     }
 

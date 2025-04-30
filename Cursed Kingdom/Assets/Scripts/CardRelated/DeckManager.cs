@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using PurrNet;
 
-public class DeckManager : MonoBehaviour
+public class DeckManager : NetworkBehaviour
 {
     [SerializeField] private DeckData movementDeckData;
     [SerializeField] private DeckData supportDeckData;
@@ -39,6 +40,14 @@ public class DeckManager : MonoBehaviour
     {
         GameplayManager = this.GetComponent<GameplayManager>();
         IsDiscarding = false;
+    }
+
+    protected override void OnSpawned(bool asServer)
+    {
+        base.OnSpawned(asServer);
+
+        enabled = isOwner;
+        
     }
 
     /// <summary>

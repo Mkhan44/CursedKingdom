@@ -4,11 +4,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using PurrNet;
 using UnityEngine;
 using UnityEngine.UI;
 
 //This script should be attached to the Game Manager object in the hierarchy.
-public class PlayerMovementManager : MonoBehaviour
+public class PlayerMovementManager : NetworkBehaviour
 {
 
 	private const string ISMOVINGPARAMETER = "IsMoving";
@@ -25,6 +26,11 @@ public class PlayerMovementManager : MonoBehaviour
 	public bool HasBeenOveriddenOnce { get => hasBeenOveriddenOnce; }
 
 	private void Start()
+	{
+		Invoke("Started", 0.1f);
+	}
+
+	private void Started()
 	{
 		GameplayManagerRef = GetComponent<GameplayManager>();
 	}

@@ -1809,6 +1809,7 @@ GameObject:
   - component: {fileID: 8243991431265040473}
   - component: {fileID: 7512648070632017256}
   - component: {fileID: 7097982853837446581}
+  - component: {fileID: 8295204921560015569}
   m_Layer: 5
   m_Name: DebugStartCanvas
   m_TagString: Untagged
@@ -1899,6 +1900,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!225 &8295204921560015569
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2195964683177737064}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &2340352171314324861
 GameObject:
   m_ObjectHideFlags: 0
@@ -7569,6 +7582,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61f4c558442809444b45b19318d7dc9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isSetup: 0
+  _prefabId: -2147483648
+  _componentIndex: -2147483648
+  _shouldBePooled: 0
+  _parent: {fileID: 0}
+  _invertedPathToNearestParent: 
+  _directChildren: []
+  _networkRules: {fileID: 0}
+  _visitiblityRules: {fileID: 0}
   useScriptable: 0
   turnOffPanel: 0
   canvasGroup: {fileID: 8310740937551175888}
@@ -7582,6 +7604,7 @@ MonoBehaviour:
   debugElementParentPanelPage2: {fileID: 3180113243975110589}
   defaultDebugStartData: {fileID: 11400000, guid: 4c298a32c75f0a14ba5d0c78e283d8f6, type: 2}
   currentlySelectedStartData: {fileID: 0}
+  boardPrefabDefault: {fileID: 6953770271459722323, guid: 49b3a25a452187b4582aa06b3eb51613, type: 3}
   numberOfPlayers: 0
   numberOfPlayersDropDown: {fileID: 8105003315720237954}
   movementDeckDropdown: {fileID: 2878570370758676408}

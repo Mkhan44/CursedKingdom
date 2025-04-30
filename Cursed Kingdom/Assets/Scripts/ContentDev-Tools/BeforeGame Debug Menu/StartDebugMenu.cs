@@ -8,12 +8,14 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
+using PurrNet;
+using PurrNet.Modules;
 
-public class StartDebugMenu : MonoBehaviour
+public class StartDebugMenu : NetworkBehaviour
 {
     public event Action CheckIfPanelShouldTurnOn;
 
+    private const string SCENENAME = "BoardGameplay";
     public static StartDebugMenu instance;
     public bool useScriptable;
     public bool turnOffPanel;
@@ -28,6 +30,8 @@ public class StartDebugMenu : MonoBehaviour
     public Transform debugElementParentPanelPage2;
     public DebugStartData defaultDebugStartData;
     public DebugStartData currentlySelectedStartData;
+
+    public GameObject boardPrefabDefault;
 
 
     public int numberOfPlayers = 0;
@@ -51,6 +55,16 @@ public class StartDebugMenu : MonoBehaviour
 
     private void Awake()
     {
+        
+    }
+
+    private void Start()
+    {
+        Invoke("Started", 0.1f);
+    }
+
+    private void Started()
+    {
         if (instance == null)
         {
             instance = this;
@@ -59,13 +73,30 @@ public class StartDebugMenu : MonoBehaviour
             CheckIfPanelShouldTurnOn += CheckIfPanelShouldTurnOnOnRestart;
             startGameButton.onClick.AddListener(StartGame);
             useDefaultSettingsButton.onClick.AddListener(UseDefaultSettings);
+            if(SceneManager.GetActiveScene().name != SCENENAME)
+            {
+                turnOffPanel = true;
+            }
             SetupData();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            // if(networkManager != null)
+            // {
+            //     PurrSceneSettings settings = new()
+            //     {
+            //         isPublic = false,
+            //         mode = LoadSceneMode.Single
+            //     };
+            //     networkManager.sceneModule.LoadSceneAsync(SCENENAME , settings);
+            // }
+            // else
+            // {
+            //     SceneManager.LoadScene(SCENENAME);
+            // }
         }
         else
         {
             Destroy(transform.parent.gameObject);
         }
+
     }
 
     private void CheckIfPanelShouldTurnOnOnRestart()
@@ -88,7 +119,19 @@ public class StartDebugMenu : MonoBehaviour
         turnOffPanel = true;
         useScriptable = true;
         TurnOffPanel();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if(networkManager != null)
+        {
+            PurrSceneSettings settings = new()
+            {
+                isPublic = false,
+                mode = LoadSceneMode.Single
+            };
+            networkManager.sceneModule.LoadSceneAsync(SCENENAME , settings);
+        }
+        else
+        {
+            SceneManager.LoadScene(SCENENAME);
+        }
         CheckIfPanelShouldTurnOn?.Invoke();
     }
 
@@ -97,14 +140,29 @@ public class StartDebugMenu : MonoBehaviour
         turnOffPanel = true;
         useScriptable = false;
         TurnOffPanel();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if(networkManager != null)
+        {
+            PurrSceneSettings settings = new()
+            {
+                isPublic = false,
+                mode = LoadSceneMode.Single
+            };
+            networkManager.sceneModule.LoadSceneAsync(SCENENAME , settings);
+        }
+        else
+        {
+            SceneManager.LoadScene(SCENENAME);
+        }
         CheckIfPanelShouldTurnOn?.Invoke();
     }
 
     //This will also need to be called everytime the scene is restarted because we'll need to get the next instance of the gameplayManager!!!!
     private void SetupData()
     {
-        gameplayManager = GameObject.Find("Game Manager").GetComponent<GameplayManager>();
+        if(SceneManager.GetActiveScene().name == SCENENAME)
+        {
+            gameplayManager = GameObject.Find("Game Manager").GetComponent<GameplayManager>();
+        }
         currentlySelectedStartData = defaultDebugStartData;
         SetupSpacesToChooseFromList();
         SetupNumPlayersDropdownOptions();
@@ -397,7 +455,37 @@ public class StartDebugMenu : MonoBehaviour
     {
         if (gameplayManager == null)
         {
-            Debug.LogError("Trying to use the debug menu but can't find the gameplay manager!");
+            Debug.LogWarning("GameplayManager is null. Attempting to spawn in a board prefab.");
+            if(boardPrefabDefault == null)
+            {
+                Debug.LogError("We don't have a default board to spawn in and get spaces from. Aborting.");
+                return;
+            }
+            else
+            {
+                spacesOnCurrentBoardNames = new();
+
+                GameObject boardHolder;
+
+                boardHolder = Instantiate(boardPrefabDefault);
+
+                foreach (Transform child in boardHolder.transform)
+                {
+                    //Rows
+                    foreach (Transform childChild in child)
+                    {
+                        Space childSpace = childChild.GetComponent<Space>();
+
+                        if (childSpace != null && childSpace.gameObject.activeInHierarchy)
+                        {
+                            spacesOnCurrentBoardNames.Add(childSpace.spaceData.spaceName);
+                        }
+                    }
+                }
+
+                Destroy(boardHolder);
+                return;
+            }
         }
 
         if (gameplayManager.boardPrefab != null)

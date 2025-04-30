@@ -36,6 +36,13 @@ public class MovementCard : Card
         SetCardType(CardType.Movement);
     }
 
+    protected override void OnSpawned(bool asServer)
+    {
+        base.OnSpawned(asServer);
+
+        enabled = isOwner;
+        
+    }
     public void CardDataSetup(MovementCardData movementCardData)
     {
         SetupCard(movementCardData);

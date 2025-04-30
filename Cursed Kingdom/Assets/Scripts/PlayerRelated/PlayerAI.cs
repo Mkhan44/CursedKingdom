@@ -5,11 +5,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PurrNet;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerAI : MonoBehaviour
+public class PlayerAI : NetworkBehaviour
 {
     public const float ORIGINALAIDELAYSPEEDINSECONDS = 1.5f;
     [SerializeField] private Player playerReference;

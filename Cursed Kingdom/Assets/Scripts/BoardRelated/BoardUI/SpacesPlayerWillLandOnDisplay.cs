@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using PurrNet;
 
-public class SpacesPlayerWillLandOnDisplay : MonoBehaviour
+public class SpacesPlayerWillLandOnDisplay : NetworkBehaviour
 {
     public GameObject elementPrefab;
     public GameObject contentArea;
@@ -16,6 +17,11 @@ public class SpacesPlayerWillLandOnDisplay : MonoBehaviour
     [SerializeField] public int spaceArtworkChildNumber;
 
     private void Start()
+    {
+        Invoke("Started", 0.3f);
+    }
+
+    private void Started()
     {
         TurnOffDisplay();
     }

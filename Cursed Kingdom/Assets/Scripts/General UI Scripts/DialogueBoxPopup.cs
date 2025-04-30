@@ -4,11 +4,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PurrNet;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogueBoxPopup : MonoBehaviour
+public class DialogueBoxPopup : NetworkBehaviour
 {
     public static DialogueBoxPopup instance;
 
@@ -38,6 +39,17 @@ public class DialogueBoxPopup : MonoBehaviour
     public bool IsActive { get => isActive; }
 
     private void Awake()
+    {
+        
+    }
+
+    private void Start()
+    {
+        Invoke("Started", 0.2f);
+        
+    }
+
+    private void Started()
     {
         blockerPanel.SetActive(true);
         blockerPanel.GetComponent<Image>().raycastTarget = false;

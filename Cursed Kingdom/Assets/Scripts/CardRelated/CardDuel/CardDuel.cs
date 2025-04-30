@@ -3,12 +3,13 @@
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 using System.Collections;
 using System.Collections.Generic;
+using PurrNet;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardDuel : MonoBehaviour , IPointerClickHandler
+public class CardDuel : NetworkBehaviour , IPointerClickHandler
 {
 	protected const string ISHIDDEN = "IsHidden";
 
@@ -67,6 +68,13 @@ public class CardDuel : MonoBehaviour , IPointerClickHandler
     public Animator CardAnimator { get => cardAnimator; set => cardAnimator = value; }
     public CanvasGroup CardCanvasGroup { get => cardCanvasGroup; set => cardCanvasGroup = value; }
 
+	protected override void OnSpawned(bool asServer)
+    {
+        base.OnSpawned(asServer);
+
+        enabled = isOwner;
+        
+    }
     public virtual void SetupCard(Card cardReference)
     {
 		TitleText.text = cardReference.TitleText.text;

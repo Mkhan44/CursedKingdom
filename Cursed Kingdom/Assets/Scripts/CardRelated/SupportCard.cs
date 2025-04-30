@@ -29,6 +29,14 @@ public class SupportCard : Card
 		SetCardType(CardType.Support);
 	}
 
+	protected override void OnSpawned(bool asServer)
+    {
+        base.OnSpawned(asServer);
+
+        enabled = isOwner;
+        
+    }
+
 	public void CardDataSetup(SupportCardData supportCardData)
 	{
 		SetupCard(supportCardData);

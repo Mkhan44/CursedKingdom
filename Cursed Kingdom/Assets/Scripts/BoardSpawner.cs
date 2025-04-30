@@ -5,9 +5,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PurrNet;
 
 //Responsible for setting up the board.
-public class BoardSpawner : MonoBehaviour
+public class BoardSpawner : NetworkBehaviour
 {
     [Header("Data")]
     public BoardLayoutData boardLayoutData;
@@ -19,7 +20,13 @@ public class BoardSpawner : MonoBehaviour
     public float smallSpaceVerticalGap = 1.09f;
     public float smallSpaceHorizontalGap = 2.184f;
 
+    protected override void OnSpawned(bool asServer)
+    {
+        base.OnSpawned(asServer);
 
+        enabled = isOwner;
+        
+    }
     public void SetBoardLayoutData(BoardLayoutData boardLayoutData)
     {
         this.boardLayoutData = boardLayoutData;

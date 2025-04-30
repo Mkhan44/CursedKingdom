@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-public class MenuManager : MonoBehaviour
+using PurrNet;
+using PurrNet.Modules;
+using System;
+public class MenuManager : NetworkBehaviour
 {
     public TextMeshProUGUI versionText;
     public TextMeshProUGUI versionTextMobile;
@@ -24,6 +27,7 @@ public class MenuManager : MonoBehaviour
         desktopMenu.SetActive(false);
         scrollMenu.SetActive(false); */
     }
+
 
     // Update is called once per frame
     private void Update()
@@ -46,7 +50,19 @@ public class MenuManager : MonoBehaviour
 
     public void LoadGameScene()
     {
-        SceneManager.LoadScene("BoardGameplay");
+        if(networkManager != null)
+        {
+            PurrSceneSettings settings = new()
+            {
+                isPublic = false,
+                mode = LoadSceneMode.Single
+            };
+            networkManager.sceneModule.LoadSceneAsync("BoardGameplay" , settings);
+        }
+        else
+        {
+            SceneManager.LoadScene("BoardGameplay");
+        }
     }
     
     public void ExitGame()

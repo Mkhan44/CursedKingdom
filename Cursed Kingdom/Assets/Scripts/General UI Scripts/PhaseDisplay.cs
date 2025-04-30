@@ -4,11 +4,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using PurrNet;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PhaseDisplay : MonoBehaviour
+public class PhaseDisplay : NetworkBehaviour
 {
     public static PhaseDisplay instance;
     public event Action displayTimeCompleted;
@@ -19,6 +20,19 @@ public class PhaseDisplay : MonoBehaviour
     private Coroutine fadeCoroutine;
 
     private void Awake()
+    {
+        instance = this;
+        textPanelDisplay.alpha = 0.0f;
+        phaseText.text = "Test";
+        blockerPanel.SetActive(false);
+    }
+
+    private void Start()
+    {
+       // Invoke("Started" , 0.1f);
+    }
+
+    private void Started()
     {
         instance = this;
         textPanelDisplay.alpha = 0.0f;

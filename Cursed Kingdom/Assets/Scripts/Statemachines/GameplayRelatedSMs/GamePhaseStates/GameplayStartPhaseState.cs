@@ -13,9 +13,11 @@ public class GameplayStartPhaseState : BaseState
 	GameplayPhaseSM gameplayPhaseSM;
 	private const string stateName = "GameplayStartPhase";
     private bool popupAppeared = false;
+    private bool tempFirstTime;
 	public GameplayStartPhaseState(GameplayPhaseSM stateMachine) : base(stateName, stateMachine)
 	{
 		gameplayPhaseSM = stateMachine as GameplayPhaseSM;
+        tempFirstTime = false;
 	}
 
 
@@ -24,7 +26,25 @@ public class GameplayStartPhaseState : BaseState
 		base.Enter();
         PhaseDisplay.instance.TurnOnDisplay("Start phase!", 1.5f);
         PhaseDisplay.instance.displayTimeCompleted += ActivateStartTurnPopup;
+        // if(!tempFirstTime)
+        // {
+        //     DelayStart();
+        //     tempFirstTime = true;
+        // }
+        // else
+        // {
+        //     PhaseDisplay.instance.TurnOnDisplay("Start phase!", 1.5f);
+        //     PhaseDisplay.instance.displayTimeCompleted += ActivateStartTurnPopup;
+        // }
+        
 	}
+
+    public async void DelayStart()
+    {
+        await Task.Delay(1000);
+        PhaseDisplay.instance.TurnOnDisplay("Start phase!", 1.5f);
+        PhaseDisplay.instance.displayTimeCompleted += ActivateStartTurnPopup;
+    }
 
 	public override void UpdateLogic()
 	{

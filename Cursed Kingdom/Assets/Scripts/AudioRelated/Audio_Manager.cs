@@ -5,10 +5,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PurrNet;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Audio_Manager : MonoBehaviour
+public class Audio_Manager : NetworkBehaviour
 {
     public static Audio_Manager Instance;
 
@@ -60,7 +61,14 @@ public class Audio_Manager : MonoBehaviour
         MusicSources = new();
         SfxSources = new();
         SetupNewSFXObjects();
+    }
 
+    protected override void OnSpawned(bool asServer)
+    {
+        base.OnSpawned(asServer);
+
+        enabled = isOwner;
+        
     }
 
     public void SetupNewSFXObjects()

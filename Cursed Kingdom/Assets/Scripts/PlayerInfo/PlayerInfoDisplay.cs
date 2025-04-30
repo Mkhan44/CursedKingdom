@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using PurrNet;
 
-public class PlayerInfoDisplay : MonoBehaviour
+public class PlayerInfoDisplay : NetworkBehaviour
 {
     private const string ISPOISONED = "isPoisoned";
     private const string ISCURSED = "isCursed";

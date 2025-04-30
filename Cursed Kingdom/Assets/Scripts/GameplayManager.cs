@@ -11,8 +11,10 @@ using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 using TMPro;
 using System;
+using PurrNet;
+using PurrNet.Modules;
 
-public class GameplayManager : MonoBehaviour
+public class GameplayManager : NetworkBehaviour
 {
 	//For fade panel.
 	public const string ISFADING = "IsFading";
@@ -101,7 +103,7 @@ public class GameplayManager : MonoBehaviour
 
     //Client vs Server related:
 
-    private Player playerThatThisClientIs;
+    [SerializeField] private Player playerThatThisClientIs;
     //Debug
     public TextMeshProUGUI fpsText;
 	public bool lockFPS;
@@ -150,6 +152,11 @@ public class GameplayManager : MonoBehaviour
     public Player PlayerThatThisClientIs { get => playerThatThisClientIs; set => playerThatThisClientIs = value; }
 
     private void Start()
+	{
+		Invoke("Started", 0.2f);
+	}
+
+	public void Started()
 	{
 		isSpeedupOn = false;
 		FPSCounter();
@@ -261,6 +268,7 @@ public class GameplayManager : MonoBehaviour
 
 		//players[0].InitializePlayer(classdatas[randomNum]);
 		//CardTest();
+
 	}
 
 	public void GetPlayerStatsFromDebug()
@@ -617,7 +625,19 @@ public class GameplayManager : MonoBehaviour
 
 	public void ReloadScene()
 	{
-		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+		if(networkManager != null)
+        {
+            PurrSceneSettings settings = new()
+            {
+                isPublic = false,
+                mode = LoadSceneMode.Single
+            };
+            networkManager.sceneModule.LoadSceneAsync("BoardGameplay" , settings);
+        }
+        else
+        {
+            SceneManager.LoadScene("BoardGameplay");
+        }
 	}
 
 	private void SetCurrentPlayerThisClientIs()
@@ -672,6 +692,19 @@ public class GameplayManager : MonoBehaviour
 	   Player currentPlayer = playerCharacter.GetComponent<Player>();
 
 		return currentPlayer;
+	}
+
+	//Anytime we need to check if an input is valid from a player (Gameplay related stuff) we can check here.
+	private bool IsPlayerInputValidWithCurrentPlayerID(Player playerWeAreChecking)
+	{
+		bool isValid = false;
+
+		if(playerWeAreChecking == PlayerThatThisClientIs)
+		{
+			isValid = true;
+		}
+
+		return isValid;
 	}
 
 	public AudioData GetCurrentAreaPlayerIsInAudioData()
