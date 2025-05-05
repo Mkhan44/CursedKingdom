@@ -40,6 +40,7 @@ public class ClassData : ScriptableObject
     [TextArea(3, 5)]
     public string description;
     public RuntimeAnimatorController animatorController;
+    public RuntimeAnimatorController menuAnimatorController;
     public Sprite defaultPortraitImage;
     public AbilityData abilityData;
     public EliteAbilityData eliteAbilityData;

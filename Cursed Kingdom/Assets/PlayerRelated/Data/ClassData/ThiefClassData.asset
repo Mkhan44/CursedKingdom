@@ -16,8 +16,12 @@ MonoBehaviour:
   startingHealth: 10
   maxSupportCardsToUsePerTurn: 1
   maxMovementCardsToUsePerTurn: 1
-  description: Thief text.
+  description: The thief makes sure that they are always one step ahead of their
+    opponents. Being able to use 2 movement cards per turn-- they can traverse the
+    kingdom at great speeds! The thief prefers to avoid encounters all together whenever
+    possible and instead uses the environment to their advantage.
   animatorController: {fileID: 9100000, guid: 43f2d9b8e1cff8f4e8c8d8b205724f56, type: 2}
+  menuAnimatorController: {fileID: 9100000, guid: 28f4a5958f132a34daf9d033e569c98a, type: 2}
   defaultPortraitImage: {fileID: 21300000, guid: 0d763c40c1a8ad34f81e87f8308b3c05, type: 3}
   abilityData: {fileID: 11400000, guid: 49bc177e45e1aa146aa95aad8904ebbf, type: 2}
   eliteAbilityData: {fileID: 11400000, guid: 193583787f094b34c9f8ea6f32114256, type: 2}
