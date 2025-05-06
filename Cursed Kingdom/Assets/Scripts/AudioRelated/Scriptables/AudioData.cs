@@ -41,6 +41,7 @@ public class AudioData : ScriptableObject
     [SerializeField] private List<SFXClip> sfxClips;
     [Tooltip("This should be true if the board music and duel music have a seamless transition between eachother. Only applicable for music.")]
     [SerializeField] private bool boardAndDuelAreSynced;
+    [SerializeField] private bool menuMusicTracksAreSynced;
 
     public List<MusicClip> MusicClips { get => musicClips; set => musicClips = value; }
     public List<SFXClip> SfxClips { get => sfxClips; set => sfxClips = value; }
