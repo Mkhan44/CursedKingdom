@@ -19,16 +19,17 @@ public class SupportCardDuel : CardDuel
     public TextMeshProUGUI DescriptionText { get => descriptionText; set => descriptionText = value; }
     public Image SupportCardTypeImage { get => supportCardTypeImage; set => supportCardTypeImage = value; }
 
-    public SupportCardDuel(SupportCard suppCardRef)
-	{
-		SupportCardReference = suppCardRef;
-        SetupCard(suppCardRef);
-	}
+    // public SupportCardDuel(SupportCard suppCardRef)
+	// {
+	// 	SupportCardReference = suppCardRef;
+    //     SetupCard(suppCardRef);
+	// }
 
 	public override void SetupCard(Card cardReference)
 	{
         base.SetupCard(cardReference);
         SupportCard suppCardRef = cardReference as SupportCard;
+        SupportCardReference = suppCardRef;
         if (suppCardRef != null)
         {
             SupportCardReference = suppCardRef;

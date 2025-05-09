@@ -53,6 +53,7 @@ public class SpacesPlayerWillLandOnDisplay : NetworkBehaviour
         foreach (Space space in spacesPlayerCanLandOn)
         {
             GameObject newElement = Instantiate(elementPrefab, contentArea.transform);
+            newElement.transform.SetParent(contentArea.transform);
             TextMeshProUGUI spaceName = newElement.transform.GetComponentInChildren<TextMeshProUGUI>();
             Image spaceImage = newElement.transform.GetChild(spaceArtworkChildNumber).GetComponent<Image>();
             Button spaceButton = newElement.transform.GetChild(spaceArtworkChildNumber).GetComponent<Button>();

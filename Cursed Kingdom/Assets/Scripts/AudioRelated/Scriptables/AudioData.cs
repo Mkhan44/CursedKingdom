@@ -46,6 +46,7 @@ public class AudioData : ScriptableObject
     public List<MusicClip> MusicClips { get => musicClips; set => musicClips = value; }
     public List<SFXClip> SfxClips { get => sfxClips; set => sfxClips = value; }
     public bool BoardAndDuelAreSynced { get => boardAndDuelAreSynced; set => boardAndDuelAreSynced = value; }
+    public bool MenuMusicTracksAreSynced { get => menuMusicTracksAreSynced; set => menuMusicTracksAreSynced = value; }
 
     private void OnValidate()
     {

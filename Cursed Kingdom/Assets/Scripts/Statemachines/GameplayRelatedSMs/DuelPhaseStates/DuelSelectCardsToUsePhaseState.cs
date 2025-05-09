@@ -106,12 +106,21 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 		}
 
 		GameObject spawnedMovementCard = GameObject.Instantiate(duelPhaseSM.movementCardDuelPrefab, duelPhaseSM.movementCardDuelHolderPrefab.transform);
+		spawnedMovementCard.transform.SetParent(duelPhaseSM.movementCardDuelHolderPrefab.transform);
 		MovementCardDuel spawnedMovementCardDuel = spawnedMovementCard.GetComponent<MovementCardDuel>();
 		spawnedMovementCardDuel.DuelPhaseSMReference = duelPhaseSM;
 		spawnedMovementCardDuel.SetupCard(movementCards[0]);
+		//Debug.Log($"spawned card animator enabled: {spawnedMovementCardDuel.CardAnimator.isActiveAndEnabled}");
+		spawnedMovementCardDuel.CardAnimator.enabled = true;
+		//Debug.Log($"spawned card animator enabled after: {spawnedMovementCardDuel.CardAnimator.isActiveAndEnabled}");
+		spawnedMovementCardDuel.CardAnimator.Play("Select");
+		//A lot of this isn't needed if we aren't doing networking for some reason...Gotta figure out why networkmanager is borked.
         if (wasForcedDrawDueToNotHavingMovementCardsInHand)
         {
             spawnedMovementCardDuel.IsClickable = false;
+			spawnedMovementCardDuel.GetComponent<LayoutElement>().enabled = false;
+			spawnedMovementCard.GetComponent<RectTransform>().anchoredPosition = new Vector3(0,0,spawnedMovementCard.transform.position.z);
+			spawnedMovementCardDuel.CardAnimator.Play("Select");
         }
 
 
@@ -193,9 +202,14 @@ public class DuelSelectCardsToUsePhaseState : BaseState
 		DeselectSupportCardsButton.interactable = true;
 
         GameObject spawnedSupportCard = GameObject.Instantiate(duelPhaseSM.supportCardDuelPrefab, duelPhaseSM.supportCardDuelHolderPrefab.transform);
+		spawnedSupportCard.transform.SetParent(duelPhaseSM.supportCardDuelHolderPrefab.transform);
         SupportCardDuel spawnedSupportCardDuel = spawnedSupportCard.GetComponent<SupportCardDuel>();
         spawnedSupportCardDuel.DuelPhaseSMReference = duelPhaseSM;
         spawnedSupportCardDuel.SetupCard(supportCards[0]);
+		//Debug.Log($"spawned card animator enabled: {spawnedSupportCardDuel.CardAnimator.isActiveAndEnabled}");
+		spawnedSupportCardDuel.CardAnimator.enabled = true;
+		//Debug.Log($"spawned card animator enabled after: {spawnedSupportCardDuel.CardAnimator.isActiveAndEnabled}");
+		spawnedSupportCardDuel.CardAnimator.Play("Select");
 
         //Debug.Log($"Player {duelPhaseSM.PlayersInCurrentDuel[index].PlayerInDuel.playerIDIntVal} has selected at least 1 support card for the duel.");
 	}

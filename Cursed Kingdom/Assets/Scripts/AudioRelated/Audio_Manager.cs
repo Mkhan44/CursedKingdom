@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PurrNet;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Audio_Manager : NetworkBehaviour
@@ -61,14 +60,6 @@ public class Audio_Manager : NetworkBehaviour
         MusicSources = new();
         SfxSources = new();
         SetupNewSFXObjects();
-    }
-
-    protected override void OnSpawned(bool asServer)
-    {
-        base.OnSpawned(asServer);
-
-        enabled = isOwner;
-        
     }
 
     public void SetupNewSFXObjects()
@@ -264,7 +255,7 @@ public class Audio_Manager : NetworkBehaviour
         return;
     }
 
-    public void PlayAlreadyLoadedMusic(AudioSource audioSourceToPlay, AudioData.MusicClip musicClip, bool pausePreviouslyPlayingTrack = false, bool loop = true, float volume = 1.0f)
+    public void PlayAlreadyLoadedMusic(AudioSource audioSourceToPlay, AudioData.MusicClip musicClip, bool pausePreviouslyPlayingTrack = false, bool loop = true, float volume = 1.0f, bool nextAudioSourceAlreadyPlaying = false)
     {
         if (defaultMusicVolume >= 0 && volume != 0)
         {
@@ -272,7 +263,11 @@ public class Audio_Manager : NetworkBehaviour
         }
 
         audioSourceToPlay.volume = 0f;
-        audioSourceToPlay.Play();
+        if(!nextAudioSourceAlreadyPlaying)
+        {
+            audioSourceToPlay.Play();
+        }
+        
 
         //Fade out other song.
         if (pausePreviouslyPlayingTrack)
@@ -396,7 +391,7 @@ public class Audio_Manager : NetworkBehaviour
         foreach(AudioData.MusicClip musicClip in CurrentMusicAudioData.MusicClips)
         {
             //Play all music that should be simultaneous here.
-            if(CurrentMusicAudioData.BoardAndDuelAreSynced)
+            if(CurrentMusicAudioData.BoardAndDuelAreSynced || CurrentMusicAudioData.MenuMusicTracksAreSynced)
             {
                 if(isFirstTrack)
                 {
@@ -420,6 +415,13 @@ public class Audio_Manager : NetworkBehaviour
                 continue;
             }
             else if(musicClip.TypeOfMusic == AudioData.MusicType.Duel)
+            {
+                PlayMusic(musicClip.Clip, musicClip, true, 0f);
+                StopMusic(MusicSources[MusicSources.Count - 1]);
+                continue;
+            }
+            //May not be good if we want more than 1 track to play at different parts of the menu.
+            else if(musicClip.TypeOfMusic == AudioData.MusicType.Menu)
             {
                 PlayMusic(musicClip.Clip, musicClip, true, 0f);
                 StopMusic(MusicSources[MusicSources.Count - 1]);

@@ -30,16 +30,17 @@ public class MovementCardDuel : CardDuel
     public MovementCard MovementCardReference { get => movementCardReference; set => movementCardReference = value; }
     public TextMeshProUGUI MovementValueText { get => movementValueText; set => movementValueText = value; }
 
-    public MovementCardDuel(MovementCard moveCardRef)
-    {
-        MovementCardReference = moveCardRef;
-        SetupCard(moveCardRef);
-    }
+    // public MovementCardDuel(MovementCard moveCardRef)
+    // {
+    //     MovementCardReference = moveCardRef;
+    //     SetupCard(moveCardRef);
+    // }
 
     public override void SetupCard(Card cardReference)
     {
         base.SetupCard(cardReference);
         MovementCard movementCardRef = cardReference as MovementCard;
+        MovementCardReference = movementCardRef;
         if (movementCardRef != null)
         {
             movementCardReference = movementCardRef;

@@ -17,6 +17,11 @@ public class MenuManager : NetworkBehaviour
     public GameObject scrollMenu;
     public GameObject desktopMenu;
     public GameObject mobileMenu;
+    public AudioData MenuMusicAudioData;
+    public GameObject MusicAudioSourcesGameObjectTemp;
+    public List<AudioSource> MusicAudioSourcesTemp;
+
+    public bool DebugStartClicked;
     public string fadeOut = "FadeOut";
 
     //Testing
@@ -43,9 +48,38 @@ public class MenuManager : NetworkBehaviour
     {
         versionText.text = "ver. " + Application.version;
         versionTextMobile.text = versionText.text;
+        DebugStartClicked = false;
+        if(Audio_Manager.Instance.CurrentlyPlayingMusicInformation.CurrentlyPlayingTrackSource == null || (Audio_Manager.Instance.CurrentMusicAudioData != null && Audio_Manager.Instance.CurrentMusicAudioData != MenuMusicAudioData))
+        {
+            //Pass in our audioData and play music from there since it's the first time we're playing music.
+            Audio_Manager.Instance.NewMusicObjectsSetup += PopulateAudioObjectsList;
+            Audio_Manager.Instance.StartCoroutine(Audio_Manager.Instance.FadeOutCurrentMusicTrackThenSetupNewMusicTracks(MenuMusicAudioData));
+        }
         /* mobileMenu.SetActive(false);
         desktopMenu.SetActive(false);
         scrollMenu.SetActive(false); */
+    }
+
+    private void PopulateAudioObjectsList(AudioData data)
+    {
+        Audio_Manager.Instance.NewMusicObjectsSetup -= PopulateAudioObjectsList;
+        MusicAudioSourcesTemp.Clear();
+        foreach(Transform child in MusicAudioSourcesGameObjectTemp.transform)
+        {
+            AudioSource audioSource = child.GetComponent<AudioSource>();
+            MusicAudioSourcesTemp.Add(audioSource);
+        }
+    }
+
+    public void PlayMusicAndFadeOutOtherOne(int numTrack)
+    {
+        if(numTrack > MenuMusicAudioData.MusicClips.Count || numTrack < 0 || MenuMusicAudioData.MusicClips.Count == 1)
+        {
+            return;
+        }
+
+        Audio_Manager.Instance.PlayAlreadyLoadedMusic(MusicAudioSourcesTemp[numTrack], MenuMusicAudioData.MusicClips[numTrack], false, true, 1, true);
+
     }
 
 
@@ -64,6 +98,11 @@ public class MenuManager : NetworkBehaviour
             {
                 title.SetTrigger(fadeOut);
                 scrollMenu.SetActive(true);
+                if(!DebugStartClicked)
+                {
+                   // PlayMusicAndFadeOutOtherOne(1);
+                }
+                DebugStartClicked = true;
             }
         }
     }

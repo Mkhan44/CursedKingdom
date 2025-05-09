@@ -68,13 +68,6 @@ public class CardDuel : NetworkBehaviour , IPointerClickHandler
     public Animator CardAnimator { get => cardAnimator; set => cardAnimator = value; }
     public CanvasGroup CardCanvasGroup { get => cardCanvasGroup; set => cardCanvasGroup = value; }
 
-	protected override void OnSpawned(bool asServer)
-    {
-        base.OnSpawned(asServer);
-
-        enabled = isOwner;
-        
-    }
     public virtual void SetupCard(Card cardReference)
     {
 		TitleText.text = cardReference.TitleText.text;

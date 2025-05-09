@@ -175,7 +175,9 @@ public class DuelSupportResolutionPhaseState : BaseState
 				foreach(SupportCard supportCard in duelPlayerInformation.SelectedSupportCards)
 				{
 					GameObject spawnedSupportCard = GameObject.Instantiate(duelPhaseSM.supportCardDuelPrefab, duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(1));
+					spawnedSupportCard.transform.SetParent(duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(1));
 					SupportCardDuel spawnedSupportCardDuel = spawnedSupportCard.GetComponent<SupportCardDuel>();
+					spawnedSupportCardDuel.CardAnimator.enabled = true;
 					spawnedSupportCardDuel.DuelPhaseSMReference = duelPhaseSM;
 					spawnedSupportCardDuel.SetupCard(supportCard);
 					spawnedSupportCardDuel.IsClickable = false;
@@ -200,7 +202,9 @@ public class DuelSupportResolutionPhaseState : BaseState
 				foreach(MovementCard movementCard in duelPlayerInformation.SelectedMovementCards)
 				{
 					GameObject spawnedMovementCard = GameObject.Instantiate(duelPhaseSM.movementCardDuelPrefab, duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(0));
+					spawnedMovementCard.transform.SetParent(duelPlayerInformation.CardDuelResolveHolderObject.transform.GetChild(0));
 					MovementCardDuel spawnedMovementCardDuel = spawnedMovementCard.GetComponent<MovementCardDuel>();
+					spawnedMovementCardDuel.CardAnimator.enabled = true;
 					spawnedMovementCardDuel.DuelPhaseSMReference = duelPhaseSM;
 					spawnedMovementCardDuel.SetupCard(movementCard);
 					spawnedMovementCardDuel.IsClickable = false;

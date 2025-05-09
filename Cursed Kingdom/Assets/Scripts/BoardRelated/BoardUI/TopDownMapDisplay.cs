@@ -7,8 +7,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using PurrNet;
 
-public class TopDownMapDisplay : MonoBehaviour
+public class TopDownMapDisplay : NetworkBehaviour
 {
     [SerializeField] private GameObject topDownSpaceInfoPanel;
     [SerializeField] private TextMeshProUGUI titleText;
@@ -52,6 +53,7 @@ public class TopDownMapDisplay : MonoBehaviour
         foreach(SpaceData.SpaceEffect spaceEffect in space.spaceData.spaceEffects)
         {
             GameObject newIcon = Instantiate(IconDescriptionPrefab, IconsLayoutObj.transform);
+            newIcon.transform.SetParent(IconsLayoutObj.transform);
             Image iconImage = newIcon.transform.GetChild(0).GetComponent<Image>();
             TextMeshProUGUI iconDescription = newIcon.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             iconImage.sprite = space.iconHolderParent.transform.GetChild(count).GetChild(0).GetComponent<Image>().sprite;
