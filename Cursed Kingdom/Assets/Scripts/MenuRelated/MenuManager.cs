@@ -1,3 +1,6 @@
+//Code written by Mohamed Riaz Khan of BukuGames.
+//All code is written by me (Above name) unless otherwise stated via comments below.
+//Not authorized for use outside of the Github repository of this game developed by BukuGames.
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -107,10 +110,13 @@ public class MenuManager : NetworkBehaviour
         }
     }
 
-    public void LoadGameScene()
+    public void LoadGameScene(bool ShowDebugMenu = true)
     {
         if(networkManager != null)
         {
+            StartDebugMenuRef.turnOffPanel = ShowDebugMenu;
+            StartDebugMenuRef.useScriptable = true;
+            UpdateDebugStartData();
             PurrSceneSettings settings = new()
             {
                 isPublic = false,
@@ -172,16 +178,51 @@ public class MenuManager : NetworkBehaviour
         playerMainMenuHolderDisplayRef.SelectedMainMenuHolderDisplay += ChangedFocusSelectedCharacter;
     }
 
+    public void AddPlayerManually()
+    {
+        if (ActivePlayers.Count >= 4)
+        {
+            Debug.LogWarning("Already have 4 players.");
+            return;
+        }
+        GameObject newPlayerHolder = Instantiate(PlayerSelectionHolderPrefab, PlayerLayoutParent.transform);
+        newPlayerHolder.transform.SetParent(PlayerLayoutParent.transform, false);
+        PlayerMainMenuHolderDisplay newPlayerHolderDisplayRef = newPlayerHolder.GetComponent<PlayerMainMenuHolderDisplay>();
+        newPlayerHolderDisplayRef.PopulateData(classDatas[0]);
+        AddPlayer(newPlayerHolderDisplayRef);
+        ChangedFocusSelectedCharacter(ActivePlayers[ActivePlayers.Count - 1]);
+        StartDebugMenuRef.NumPlayersOnValueChanged(ActivePlayers.Count);
+    }
+
     public void RemovePlayer(PlayerMainMenuHolderDisplay playerMainMenuHolderDisplayRef)
     {
-        if(ActivePlayers.Count == 1)
+        if (ActivePlayers.Count == 2)
         {
-            Debug.LogWarning("You're trying to remove the final character! No way!");
+            Debug.LogWarning("You must have at least 2 players to play!");
             return;
         }
         playerMainMenuHolderDisplayRef.SelectedMainMenuHolderDisplay -= ChangedFocusSelectedCharacter;
         ActivePlayers.Remove(playerMainMenuHolderDisplayRef);
         Destroy(playerMainMenuHolderDisplayRef.gameObject);
+        StartDebugMenuRef.NumPlayersOnValueChanged(ActivePlayers.Count);
+    }
+
+    public void RemovePlayerManually()
+    {
+        if (ActivePlayers.Count == 2)
+        {
+            Debug.LogWarning("You must have at least 2 players to play!");
+            return;
+        }
+        PlayerMainMenuHolderDisplay playerToRemove = ActivePlayers[ActivePlayers.Count - 1];
+        if (CurrentlySelectedMainMenuHolderDisplay == playerToRemove)
+        {
+            CurrentlySelectedMainMenuHolderDisplay = ActivePlayers[ActivePlayers.Count - 2];
+        }
+        playerToRemove.SelectedMainMenuHolderDisplay -= ChangedFocusSelectedCharacter;
+        ActivePlayers.Remove(playerToRemove);
+        Destroy(playerToRemove.gameObject);
+        StartDebugMenuRef.NumPlayersOnValueChanged(ActivePlayers.Count);
     }
 
     public void ChangeCharacter(ClassData classDataToChangeTo)
@@ -194,11 +235,38 @@ public class MenuManager : NetworkBehaviour
         CurrentlySelectedMainMenuHolderDisplay = playerMainMenuHolderDisplayRef;
         Debug.Log($"Currently focused player in the char selection screen is player: {ActivePlayers.IndexOf(playerMainMenuHolderDisplayRef)} the {playerMainMenuHolderDisplayRef.ClassText}");
     }
-    
+
 
     public void UpdateDebugStartData()
     {
+        if (ActivePlayers.Count != StartDebugMenuRef.defaultDebugStartData.playerDebugDatas.Count)
+        {
+            Debug.LogWarning("Different amount of players compared to the debug data right now!");
+        }
+        int index = 0;
+        foreach (PlayerMainMenuHolderDisplay playerMainMenuHolderDisplay in ActivePlayers)
+        {
+            if (playerMainMenuHolderDisplay.classDataRef.classType == ClassData.ClassType.Magician)
+            {
+                StartDebugMenuRef.defaultDebugStartData.playerDebugDatas[index].startingSpaceNameOverride = "Mage Start";
+            }
+            else if (playerMainMenuHolderDisplay.classDataRef.classType == ClassData.ClassType.Archer)
+            {
+                StartDebugMenuRef.defaultDebugStartData.playerDebugDatas[index].startingSpaceNameOverride = "Archer Start";
+            }
+            else if (playerMainMenuHolderDisplay.classDataRef.classType == ClassData.ClassType.Thief)
+            {
+                StartDebugMenuRef.defaultDebugStartData.playerDebugDatas[index].startingSpaceNameOverride = "Thief Start";
+            }
+            else if (playerMainMenuHolderDisplay.classDataRef.classType == ClassData.ClassType.Warrior)
+            {
+                StartDebugMenuRef.defaultDebugStartData.playerDebugDatas[index].startingSpaceNameOverride = "Warrior Start";
+            }
 
+            StartDebugMenuRef.defaultDebugStartData.playerDebugDatas[index].typeOfClass = playerMainMenuHolderDisplay.classDataRef.classType;
+
+            index++;
+        }
     }
 
     public void RemoveAllPlayers()

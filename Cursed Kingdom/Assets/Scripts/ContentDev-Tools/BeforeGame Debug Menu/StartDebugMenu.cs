@@ -94,12 +94,13 @@ public class StartDebugMenu : NetworkBehaviour
         }
         else
         {
+            instance.CheckIfPanelShouldTurnOnOnRestart();
             Destroy(transform.parent.gameObject);
         }
 
     }
 
-    private void CheckIfPanelShouldTurnOnOnRestart()
+    public void CheckIfPanelShouldTurnOnOnRestart()
     {
         if(turnOffPanel)
         {
@@ -280,7 +281,7 @@ public class StartDebugMenu : NetworkBehaviour
         }
     }
 
-    private void NumPlayersOnValueChanged(int value)
+    public void NumPlayersOnValueChanged(int value)
     {
         if(value < 2)
         {
@@ -288,7 +289,7 @@ public class StartDebugMenu : NetworkBehaviour
             return;
         }
         tipsText.text = $"Tips";
-        currentlySelectedStartData.numberOfPlayersToUse = numberOfPlayersDropDown.value;
+        currentlySelectedStartData.numberOfPlayersToUse = value;
         foreach(Transform child in debugElementParentPanelPage1)
         {
             Destroy(child.gameObject);

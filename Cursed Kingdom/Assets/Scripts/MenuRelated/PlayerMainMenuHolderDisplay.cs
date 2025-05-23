@@ -20,8 +20,11 @@ public class PlayerMainMenuHolderDisplay : NetworkBehaviour
     public TextMeshProUGUI DescriptionText1 { get => DescriptionText; set => DescriptionText = value; }
     public Animator Animator { get => animator; set => animator = value; }
 
+    public ClassData classDataRef;
+
     public void PopulateData(ClassData classData)
     {
+        classDataRef = classData;
         Animator.runtimeAnimatorController = classData.menuAnimatorController;
         ClassText.text = classData.classType.ToString();
         DescriptionText.text = classData.description;
