@@ -47,10 +47,19 @@ public class MenuManager : NetworkBehaviour
     public GameObject PlayerLayoutParentMobile;
 
     public StartDebugMenu StartDebugMenuRef;
-
-    // Start is called before the first frame update
+    
     private void Start()
     {
+        Invoke("Started" , 0.1f);
+    }
+
+    private void Started()
+    {
+        if (Application.isMobilePlatform)
+         {
+            mobileMenu.SetActive(true);
+            desktopMenu.SetActive(false);
+         }
         versionText.text = "ver. " + Application.version;
         versionTextMobile.text = versionText.text;
         DebugStartClicked = false;
@@ -69,7 +78,7 @@ public class MenuManager : NetworkBehaviour
     {
         Audio_Manager.Instance.NewMusicObjectsSetup -= PopulateAudioObjectsList;
         MusicAudioSourcesTemp.Clear();
-        foreach(Transform child in MusicAudioSourcesGameObjectTemp.transform)
+        foreach (Transform child in MusicAudioSourcesGameObjectTemp.transform)
         {
             AudioSource audioSource = child.GetComponent<AudioSource>();
             MusicAudioSourcesTemp.Add(audioSource);
@@ -90,16 +99,15 @@ public class MenuManager : NetworkBehaviour
 
     // Update is called once per frame
     private void Update()
-
     {
-        if (Application.isMobilePlatform)
-        {
-            mobileMenu.SetActive(true);
-            desktopMenu.SetActive(false);
-        }
-        else
-        {
-            if (Input.anyKeyDown || Input.touchCount > 0)
+        // if (Application.isMobilePlatform)
+        // {
+        //     mobileMenu.SetActive(true);
+        //     desktopMenu.SetActive(false);
+        // }
+        //else
+        //{
+            if (Input.anyKeyDown || Input.touchCount > 0 && !Application.isMobilePlatform)
             {
                 title.SetTrigger(fadeOut);
                 scrollMenu.SetActive(true);
@@ -109,27 +117,30 @@ public class MenuManager : NetworkBehaviour
                 }
                 DebugStartClicked = true;
             }
-        }
+        //}
     }
 
-    public void LoadGameScene(bool ShowDebugMenu = true)
+    public void LoadGameScene(bool DontShowDebugMenu = true)
     {
-        if(networkManager != null)
-        {
-            StartDebugMenuRef.turnOffPanel = ShowDebugMenu;
-            StartDebugMenuRef.useScriptable = true;
-            UpdateDebugStartData();
-            PurrSceneSettings settings = new()
-            {
-                isPublic = false,
-                mode = LoadSceneMode.Single
-            };
-            networkManager.sceneModule.LoadSceneAsync("BoardGameplay" , settings);
-        }
-        else
-        {
-            SceneManager.LoadScene("BoardGameplay");
-        }
+        UpdateDebugStartData();
+        StartDebugMenuRef.StartGame();
+        
+        // if (networkManager != null)
+        // {
+        //     StartDebugMenuRef.turnOffPanel = DontShowDebugMenu;
+        //     StartDebugMenuRef.useScriptable = true;
+        //     UpdateDebugStartData();
+        //     PurrSceneSettings settings = new()
+        //     {
+        //         isPublic = false,
+        //         mode = LoadSceneMode.Single
+        //     };
+        //     networkManager.sceneModule.LoadSceneAsync("BoardGameplay", settings);
+        // }
+        // else
+        // {
+        //     SceneManager.LoadScene("BoardGameplay");
+        // }
     }
     
     public void ExitGame()
