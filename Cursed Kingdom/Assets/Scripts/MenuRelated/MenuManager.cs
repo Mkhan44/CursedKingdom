@@ -44,6 +44,8 @@ public class MenuManager : NetworkBehaviour
 
     //Mobile references
 
+    public GameObject PlayerLayoutParentMobile;
+
     public StartDebugMenu StartDebugMenuRef;
 
     // Start is called before the first frame update
@@ -137,39 +139,49 @@ public class MenuManager : NetworkBehaviour
 
     #region Character Select
 
-    public void PopulateCharacterSelection()
+    public void PopulateCharacterSelection(bool isMobile = false)
     {
-        foreach(DebugStartData.PlayerDebugData playerDebugData in StartDebugMenuRef.defaultDebugStartData.playerDebugDatas)
+        GameObject playerParentLayoutHolder = PlayerLayoutParent;
+        if (!isMobile)
         {
-            GameObject newPlayerHolder = Instantiate(PlayerSelectionHolderPrefab, PlayerLayoutParent.transform);
-            newPlayerHolder.transform.SetParent(PlayerLayoutParent.transform, false);
+            playerParentLayoutHolder = PlayerLayoutParent;
+        }
+        else
+        {
+            playerParentLayoutHolder = PlayerLayoutParentMobile;
+        }
+
+
+        foreach (DebugStartData.PlayerDebugData playerDebugData in StartDebugMenuRef.defaultDebugStartData.playerDebugDatas)
+        {
+            GameObject newPlayerHolder = Instantiate(PlayerSelectionHolderPrefab, playerParentLayoutHolder.transform);
+            newPlayerHolder.transform.SetParent(playerParentLayoutHolder.transform, false);
             PlayerMainMenuHolderDisplay newPlayerHolderDisplayRef = newPlayerHolder.GetComponent<PlayerMainMenuHolderDisplay>();
             //Determine class and populate based on that...Needa make this better.
             ClassData classDataWeAreUsing = classDatas[0];
-            if(playerDebugData.typeOfClass == ClassData.ClassType.Archer)
+            if (playerDebugData.typeOfClass == ClassData.ClassType.Archer)
             {
                 classDataWeAreUsing = classDatas[0];
             }
-            else if(playerDebugData.typeOfClass == ClassData.ClassType.Magician)
+            else if (playerDebugData.typeOfClass == ClassData.ClassType.Magician)
             {
                 classDataWeAreUsing = classDatas[1];
             }
-            else if(playerDebugData.typeOfClass == ClassData.ClassType.Thief)
+            else if (playerDebugData.typeOfClass == ClassData.ClassType.Thief)
             {
                 classDataWeAreUsing = classDatas[2];
             }
-            else if(playerDebugData.typeOfClass == ClassData.ClassType.Warrior)
+            else if (playerDebugData.typeOfClass == ClassData.ClassType.Warrior)
             {
                 classDataWeAreUsing = classDatas[3];
             }
             newPlayerHolderDisplayRef.PopulateData(classDataWeAreUsing);
             AddPlayer(newPlayerHolderDisplayRef);
-            if(ActivePlayers.Count == 1)
+            if (ActivePlayers.Count == 1)
             {
                 ChangedFocusSelectedCharacter(ActivePlayers[0]);
             }
         }
-
     }
 
     public void AddPlayer(PlayerMainMenuHolderDisplay playerMainMenuHolderDisplayRef)
@@ -178,15 +190,25 @@ public class MenuManager : NetworkBehaviour
         playerMainMenuHolderDisplayRef.SelectedMainMenuHolderDisplay += ChangedFocusSelectedCharacter;
     }
 
-    public void AddPlayerManually()
+    public void AddPlayerManually(bool isMobile = false)
     {
+        GameObject playerParentLayoutHolder = PlayerLayoutParent;
+        if (!isMobile)
+        {
+            playerParentLayoutHolder = PlayerLayoutParent;
+        }
+        else
+        {
+            playerParentLayoutHolder = PlayerLayoutParentMobile;
+        }
+
         if (ActivePlayers.Count >= 4)
         {
             Debug.LogWarning("Already have 4 players.");
             return;
         }
-        GameObject newPlayerHolder = Instantiate(PlayerSelectionHolderPrefab, PlayerLayoutParent.transform);
-        newPlayerHolder.transform.SetParent(PlayerLayoutParent.transform, false);
+        GameObject newPlayerHolder = Instantiate(PlayerSelectionHolderPrefab, playerParentLayoutHolder.transform);
+        newPlayerHolder.transform.SetParent(playerParentLayoutHolder.transform, false);
         PlayerMainMenuHolderDisplay newPlayerHolderDisplayRef = newPlayerHolder.GetComponent<PlayerMainMenuHolderDisplay>();
         newPlayerHolderDisplayRef.PopulateData(classDatas[0]);
         AddPlayer(newPlayerHolderDisplayRef);
