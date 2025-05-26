@@ -383,6 +383,64 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!1 &495763019 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5369663530448210946, guid: 4f0af0629b12dfc468e7579a7f772bbf, type: 3}
+  m_PrefabInstance: {fileID: 2215888094944261890}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &495763024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495763019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1421004161}
+          m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
+          m_MethodName: set_blocksRaycasts
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1421004161}
+          m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
+          m_MethodName: set_alpha
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 1
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 2215888094944261891}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &508779852 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3735432390263866175, guid: 4f0af0629b12dfc468e7579a7f772bbf, type: 3}
@@ -1597,6 +1655,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5650155985582323311, guid: 459f155fbc0250d408bc25a82af73ca6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1281598350}
+    - targetCorrespondingSourceObject: {fileID: 2631609071039215492, guid: 459f155fbc0250d408bc25a82af73ca6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1833144953}
     - targetCorrespondingSourceObject: {fileID: 1252568884460784774, guid: 459f155fbc0250d408bc25a82af73ca6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 318506139}
@@ -2101,6 +2162,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3129394454755247671, guid: 4cacf4753b577e84d8c3dd71aa8cd9da, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1.644989
+      objectReference: {fileID: 0}
     - target: {fileID: 3180113243975110589, guid: 4cacf4753b577e84d8c3dd71aa8cd9da, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -2116,6 +2181,10 @@ PrefabInstance:
     - target: {fileID: 4316147378540967445, guid: 4cacf4753b577e84d8c3dd71aa8cd9da, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4815111249306348119, guid: 4cacf4753b577e84d8c3dd71aa8cd9da, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.00012207031
       objectReference: {fileID: 0}
     - target: {fileID: 5562588451877135569, guid: 4cacf4753b577e84d8c3dd71aa8cd9da, type: 3}
       propertyPath: m_Pivot.x
@@ -2217,6 +2286,10 @@ PrefabInstance:
       propertyPath: m_BlocksRaycasts
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9040686755482369176, guid: 4cacf4753b577e84d8c3dd71aa8cd9da, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.00012207031
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2225,6 +2298,11 @@ PrefabInstance:
 --- !u!1 &1421004159 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2195964683177737064, guid: 4cacf4753b577e84d8c3dd71aa8cd9da, type: 3}
+  m_PrefabInstance: {fileID: 1421004158}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &1421004161 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 8295204921560015569, guid: 4cacf4753b577e84d8c3dd71aa8cd9da, type: 3}
   m_PrefabInstance: {fileID: 1421004158}
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &1434029872 stripped
@@ -2679,6 +2757,64 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8656971738660420515, guid: 4f0af0629b12dfc468e7579a7f772bbf, type: 3}
   m_PrefabInstance: {fileID: 2215888094944261890}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1833144948 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2631609071039215492, guid: 459f155fbc0250d408bc25a82af73ca6, type: 3}
+  m_PrefabInstance: {fileID: 741459134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1833144953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833144948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1421004161}
+          m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
+          m_MethodName: set_blocksRaycasts
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1421004161}
+          m_TargetAssemblyTypeName: UnityEngine.CanvasGroup, UnityEngine
+          m_MethodName: set_alpha
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 1
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 754395544}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &2022367771
 GameObject:
   m_ObjectHideFlags: 0
@@ -3561,7 +3697,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5830104262586339225, guid: 4f0af0629b12dfc468e7579a7f772bbf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5830104262586339225, guid: 4f0af0629b12dfc468e7579a7f772bbf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -4002,6 +4138,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2335354901953957353, guid: 4f0af0629b12dfc468e7579a7f772bbf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1436910420}
+    - targetCorrespondingSourceObject: {fileID: 5369663530448210946, guid: 4f0af0629b12dfc468e7579a7f772bbf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 495763024}
     - targetCorrespondingSourceObject: {fileID: 9179390221844657920, guid: 4f0af0629b12dfc468e7579a7f772bbf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1380602661}
