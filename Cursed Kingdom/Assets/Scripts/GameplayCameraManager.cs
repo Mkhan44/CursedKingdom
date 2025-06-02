@@ -2,13 +2,12 @@
 //All code is written by me (Above name) unless otherwise stated via comments below.
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 using Cinemachine;
-using PurrNet;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameplayCameraManager : NetworkBehaviour
+public class GameplayCameraManager : MonoBehaviour
 {
     public const string ZOOMTOSPOTNUM = "zoomToSpotNum";
     public const string ISGOINGBACKTODEFAULT = "isGoingBackToDefault";
@@ -61,14 +60,6 @@ public class GameplayCameraManager : NetworkBehaviour
     private void Start()
     {
         TurnOffVirtualCutInCamera();
-    }
-
-    protected override void OnSpawned(bool asServer)
-    {
-        base.OnSpawned(asServer);
-
-        enabled = isOwner;
-        
     }
 
     public void TurnOnVirtualCutInCamera()

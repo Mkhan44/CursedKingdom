@@ -5,10 +5,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PurrNet;
 using UnityEngine;
 
-public class Audio_Manager : NetworkBehaviour
+public class Audio_Manager : MonoBehaviour
 {
     public static Audio_Manager Instance;
 

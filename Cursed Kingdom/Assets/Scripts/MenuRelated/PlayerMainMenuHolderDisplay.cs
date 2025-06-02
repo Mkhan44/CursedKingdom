@@ -1,15 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using PurrNet;
 using UnityEngine;
 using TMPro;
-using PurrNet.Modules;
 using System;
-using PurrNet.Logging;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class PlayerMainMenuHolderDisplay : NetworkBehaviour
+public class PlayerMainMenuHolderDisplay : MonoBehaviour
 {
     public event Action<PlayerMainMenuHolderDisplay> SelectedMainMenuHolderDisplay;
 

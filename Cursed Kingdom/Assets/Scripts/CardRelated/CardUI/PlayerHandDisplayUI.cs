@@ -5,12 +5,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PurrNet;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PlayerHandDisplayUI : NetworkBehaviour , IPointerClickHandler
+public class PlayerHandDisplayUI : MonoBehaviour , IPointerClickHandler
 {
     public const string active = "IsActive";
     public const string hidden = "IsHidden";

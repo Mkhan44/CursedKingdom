@@ -3,13 +3,12 @@
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 using System.Collections;
 using System.Collections.Generic;
-using PurrNet;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardDuel : NetworkBehaviour , IPointerClickHandler
+public class CardDuel : MonoBehaviour , IPointerClickHandler
 {
 	protected const string ISHIDDEN = "IsHidden";
 

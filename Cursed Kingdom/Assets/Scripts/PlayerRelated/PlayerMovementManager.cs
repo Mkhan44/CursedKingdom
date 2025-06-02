@@ -4,12 +4,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using PurrNet;
 using UnityEngine;
 using UnityEngine.UI;
 
 //This script should be attached to the Game Manager object in the hierarchy.
-public class PlayerMovementManager : NetworkBehaviour
+public class PlayerMovementManager : MonoBehaviour
 {
 
 	private const string ISMOVINGPARAMETER = "IsMoving";
@@ -27,12 +26,12 @@ public class PlayerMovementManager : NetworkBehaviour
 
 	private void Start()
 	{
-		Invoke("Started", 0.1f);
+		GameplayManagerRef = GetComponent<GameplayManager>();
 	}
 
 	private void Started()
 	{
-		GameplayManagerRef = GetComponent<GameplayManager>();
+		
 	}
 
 	public void SetupMove(Player playerToMove)

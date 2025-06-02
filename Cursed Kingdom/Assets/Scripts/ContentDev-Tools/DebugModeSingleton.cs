@@ -3,14 +3,12 @@
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 using System.Collections;
 using System.Collections.Generic;
-using PurrNet;
-using PurrNet.Modules;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class DebugModeSingleton : NetworkBehaviour
+public class DebugModeSingleton : MonoBehaviour
 {
     public static DebugModeSingleton instance;
 
@@ -271,13 +269,7 @@ public class DebugModeSingleton : NetworkBehaviour
 
     public void ReloadScene()
     {
-        PurrSceneSettings settings = new()
-        {
-            isPublic = false,
-            mode = LoadSceneMode.Single
-        };
-        networkManager.sceneModule.LoadSceneAsync(SceneManager.GetActiveScene().name , settings);
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 }

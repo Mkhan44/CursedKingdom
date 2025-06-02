@@ -3,25 +3,24 @@
 //Not authorized for use outside of the Github repository of this game developed by BukuGames.
 using System.Collections;
 using System.Collections.Generic;
-using PurrNet;
 using UnityEngine;
 
-public class BukuStateMachine : NetworkBehaviour
+public class BukuStateMachine : MonoBehaviour
 {
     private BaseState currentState;
 
     private void Start()
-    {
-        Invoke("Started" , 0.1f);
-    }
-
-    private void Started()
     {
         currentState = GetInitialState();
         if(currentState != null )
         {
             currentState.Enter();
         }
+    }
+
+    private void Started()
+    {
+        
     }
 
     private void Update()

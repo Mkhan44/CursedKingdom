@@ -4,12 +4,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PurrNet;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogueBoxPopup : NetworkBehaviour
+public class DialogueBoxPopup : MonoBehaviour
 {
     public static DialogueBoxPopup instance;
 

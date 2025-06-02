@@ -11,10 +11,9 @@ using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 using TMPro;
 using System;
-using PurrNet;
-using PurrNet.Modules;
 
-public class GameplayManager : NetworkBehaviour
+
+public class GameplayManager : MonoBehaviour
 {
 	//For fade panel.
 	public const string ISFADING = "IsFading";
@@ -625,19 +624,7 @@ public class GameplayManager : NetworkBehaviour
 
 	public void ReloadScene()
 	{
-		if(networkManager != null)
-        {
-            PurrSceneSettings settings = new()
-            {
-                isPublic = false,
-                mode = LoadSceneMode.Single
-            };
-            networkManager.sceneModule.LoadSceneAsync("BoardGameplay" , settings);
-        }
-        else
-        {
-            SceneManager.LoadScene("BoardGameplay");
-        }
+		SceneManager.LoadScene("BoardGameplay");
 	}
 
 	private void SetCurrentPlayerThisClientIs()

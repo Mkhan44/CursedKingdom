@@ -7,9 +7,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using PurrNet;
 
-public class TopDownMapDisplay : NetworkBehaviour
+public class TopDownMapDisplay : MonoBehaviour
 {
     [SerializeField] private GameObject topDownSpaceInfoPanel;
     [SerializeField] private TextMeshProUGUI titleText;

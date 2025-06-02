@@ -6,11 +6,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-using PurrNet;
-using PurrNet.Modules;
 using System;
-using PurrNet.Logging;
-public class MenuManager : NetworkBehaviour
+public class MenuManager : MonoBehaviour
 {
     public TextMeshProUGUI versionText;
     public TextMeshProUGUI versionTextMobile;
@@ -49,11 +46,6 @@ public class MenuManager : NetworkBehaviour
     public StartDebugMenu StartDebugMenuRef;
     
     private void Start()
-    {
-        Invoke("Started" , 0.1f);
-    }
-
-    private void Started()
     {
         if (Application.isMobilePlatform)
          {

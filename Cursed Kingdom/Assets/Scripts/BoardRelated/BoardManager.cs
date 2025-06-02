@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using PurrNet;
 
-public class BoardManager : NetworkBehaviour
+public class BoardManager : MonoBehaviour
 {
     public List<BoardSpacesData> boardSpacesData;
     public SpaceData middleSpace;
@@ -14,13 +13,7 @@ public class BoardManager : NetworkBehaviour
     {
        
     }
-    protected override void OnSpawned(bool asServer)
-    {
-        base.OnSpawned(asServer);
 
-        enabled = isOwner;
-        
-    }
     private void OnValidate()
     {
        // StartupSetupSpaces();

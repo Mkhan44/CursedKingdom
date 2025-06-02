@@ -8,9 +8,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using PurrNet;
 
-public class Card : NetworkBehaviour , IPointerClickHandler
+public class Card : MonoBehaviour , IPointerClickHandler
 {
     //Events
 
@@ -65,13 +64,6 @@ public class Card : NetworkBehaviour , IPointerClickHandler
     public Vector3 HoveredSize { get => hoveredSize; set => hoveredSize = value; }
     public Color OriginalBackgroundGlowColor { get => originalBackgroundGlowColor; set => originalBackgroundGlowColor = value; }
 
-    protected override void OnSpawned(bool asServer)
-    {
-        base.OnSpawned(asServer);
-
-        enabled = isOwner;
-        
-    }
     protected void SetCardType(CardType cardType)
     {
         //Probably shouldn't use this, and should instead use the property. We just don't want things outside of the cards to touch this value...

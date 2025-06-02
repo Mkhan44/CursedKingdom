@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using PurrNet;
 
-public class SpacesPlayerWillLandOnDisplay : NetworkBehaviour
+public class SpacesPlayerWillLandOnDisplay : MonoBehaviour
 {
     public GameObject elementPrefab;
     public GameObject contentArea;
@@ -18,13 +17,9 @@ public class SpacesPlayerWillLandOnDisplay : NetworkBehaviour
 
     private void Start()
     {
-        Invoke("Started", 0.3f);
-    }
-
-    private void Started()
-    {
         TurnOffDisplay();
     }
+
     public void TurnOnDisplay(List<Space> spacesPlayerCanLandOn)
     {
         this.gameObject.SetActive(true);

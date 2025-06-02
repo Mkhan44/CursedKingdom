@@ -8,10 +8,8 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using UnityEngine.SceneManagement;
-using PurrNet;
-using PurrNet.Modules;
 
-public class StartDebugMenu : NetworkBehaviour
+public class StartDebugMenu : MonoBehaviour
 {
     public event Action CheckIfPanelShouldTurnOn;
 
@@ -120,19 +118,7 @@ public class StartDebugMenu : NetworkBehaviour
         turnOffPanel = true;
         useScriptable = true;
         TurnOffPanel();
-        if(networkManager != null)
-        {
-            PurrSceneSettings settings = new()
-            {
-                isPublic = false,
-                mode = LoadSceneMode.Single
-            };
-            networkManager.sceneModule.LoadSceneAsync(SCENENAME , settings);
-        }
-        else
-        {
-            SceneManager.LoadScene(SCENENAME);
-        }
+        SceneManager.LoadScene(SCENENAME);
         CheckIfPanelShouldTurnOn?.Invoke();
     }
 
@@ -141,19 +127,7 @@ public class StartDebugMenu : NetworkBehaviour
         turnOffPanel = true;
         useScriptable = false;
         TurnOffPanel();
-        if(networkManager != null)
-        {
-            PurrSceneSettings settings = new()
-            {
-                isPublic = false,
-                mode = LoadSceneMode.Single
-            };
-            networkManager.sceneModule.LoadSceneAsync(SCENENAME , settings);
-        }
-        else
-        {
-            SceneManager.LoadScene(SCENENAME);
-        }
+        SceneManager.LoadScene(SCENENAME);
         CheckIfPanelShouldTurnOn?.Invoke();
     }
 

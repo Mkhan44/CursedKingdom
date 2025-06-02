@@ -4,12 +4,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using PurrNet;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PhaseDisplay : NetworkBehaviour
+public class PhaseDisplay : MonoBehaviour
 {
     public static PhaseDisplay instance;
     public event Action displayTimeCompleted;
