@@ -115,6 +115,8 @@ public class MenuManager : MonoBehaviour
     public void LoadGameScene(bool DontShowDebugMenu = true)
     {
         UpdateDebugStartData();
+        StartDebugMenuRef.turnOffPanel = DontShowDebugMenu;
+        StartDebugMenuRef.useScriptable = true;
         StartDebugMenuRef.StartGame();
         
         // if (networkManager != null)

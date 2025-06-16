@@ -50,15 +50,16 @@ public class Audio_Manager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-    }
-    // Start is called before the first frame update
-    private void Start()
-    {
         NewMusicObjectsSetup += SetupMusicTracks;
 
         MusicSources = new();
         SfxSources = new();
         SetupNewSFXObjects();
+    }
+    // Start is called before the first frame update
+    private void Start()
+    {
+        
     }
 
     public void SetupNewSFXObjects()
