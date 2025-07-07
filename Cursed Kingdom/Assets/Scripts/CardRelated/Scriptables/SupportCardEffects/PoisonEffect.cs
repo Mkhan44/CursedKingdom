@@ -56,8 +56,23 @@ public class PoisonEffect : SupportCardEffectData, ISupportEffect
 
         if (OpponentsCanBeChosen)
         {
-            playerReference.DoneAttackingForEffect += CompletedEffect;
-            playerReference.ActivatePlayerToAttackStatusEffectSelectionPopup(NumPlayersToAttack, "poison", NumTurnsToPoison);
+            int numPossiblePlayersToAfflict = 0;
+            foreach (Player player in playerReference.GameplayManagerRef.Players)
+            {
+                if (!player.IsCursed && !player.IsPoisoned && player != playerReference)
+                {
+                    numPossiblePlayersToAfflict++;
+                }
+            }
+            if (numPossiblePlayersToAfflict >= numPlayersToAttack)
+            {
+                playerReference.DoneAttackingForEffect += CompletedEffect;
+                playerReference.ActivatePlayerToAttackStatusEffectSelectionPopup(NumPlayersToAttack, "poison", NumTurnsToPoison);
+            }
+            else
+            {
+                DialogueBoxPopup.instance.ActivatePopupWithJustText("No valid targets to Poison.", 1.5f);
+            }
         }
     }
 

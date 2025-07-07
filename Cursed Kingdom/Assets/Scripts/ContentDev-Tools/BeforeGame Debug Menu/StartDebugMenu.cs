@@ -58,11 +58,6 @@ public class StartDebugMenu : MonoBehaviour
 
     private void Start()
     {
-        Invoke("Started", 0.1f);
-    }
-
-    private void Started()
-    {
         if (instance == null)
         {
             instance = this;
@@ -76,25 +71,17 @@ public class StartDebugMenu : MonoBehaviour
                 turnOffPanel = true;
             }
             SetupData();
-            // if(networkManager != null)
-            // {
-            //     PurrSceneSettings settings = new()
-            //     {
-            //         isPublic = false,
-            //         mode = LoadSceneMode.Single
-            //     };
-            //     networkManager.sceneModule.LoadSceneAsync(SCENENAME , settings);
-            // }
-            // else
-            // {
-            //     SceneManager.LoadScene(SCENENAME);
-            // }
         }
         else
         {
             instance.CheckIfPanelShouldTurnOnOnRestart();
             Destroy(transform.parent.gameObject);
         }
+    }
+
+    private void Started()
+    {
+        
 
     }
 

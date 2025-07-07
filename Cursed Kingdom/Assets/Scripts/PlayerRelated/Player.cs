@@ -445,10 +445,9 @@ public class Player : MonoBehaviour
     {
         List<Tuple<Sprite, string, object, List<object>>> insertedParams = new();
 
-
         foreach (Player player in GameplayManagerRef.Players)
         {
-            if (!player.IsDefeated && player != this)
+            if (!player.IsDefeated && player != this && !player.IsCursed && !player.IsPoisoned)
             {
                 List<object> paramsList = new();
                 paramsList.Add(player);
@@ -479,36 +478,36 @@ public class Player : MonoBehaviour
 
         if (playerTarget != null)
         {
-            if(statusType == "curse")
+			if (statusType == "curse")
 			{
-				if(!playerTarget.IsPoisoned && !playerTarget.IsCursed)
+				if (!playerTarget.IsPoisoned && !playerTarget.IsCursed)
 				{
 					StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, playerTarget, statusType, statusDuration));
 					yield break;
-                }
+				}
 			}
 			else
 			{
-                if (!playerTarget.IsPoisoned && !playerTarget.IsCursed)
-                {
+				if (!playerTarget.IsPoisoned && !playerTarget.IsCursed)
+				{
 					List<SupportCard> supportCardsToBlockWith = GetSupportCardsPlayerCanBlockPoisonWith(playerTarget);
-					if(supportCardsToBlockWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse)
+					if (supportCardsToBlockWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse)
 					{
 						ActivatePlayerBlockPoisonSelectionPopup(playerTarget, supportCardsToBlockWith, statusDuration);
 						yield break;
 					}
 
 					List<SupportCard> supportCardsToNegateWith = GetSupportCardsPlayersCanNegateSupportCardEffectsWith(playerTarget);
-                    if (supportCardsToNegateWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse && !TriedToNegateCurrentSupportCard)
-                    {
+					if (supportCardsToNegateWith.Count > 0 && playerTarget.NumSupportCardsUsedThisTurn < playerTarget.MaxSupportCardsToUse && !TriedToNegateCurrentSupportCard)
+					{
 						TriedToNegateCurrentSupportCard = true;
-                        ActivatePlayerNegateSupportCardSelectionPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
-                        yield break;
-                    }
+						ActivatePlayerNegateSupportCardSelectionPopup(playerTarget, supportCardsToNegateWith, GameplayManagerRef.CurrentSupportCardBeingUsed, GameplayManagerRef.GetCurrentPlayer());
+						yield break;
+					}
 
-                    StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, playerTarget, statusType, statusDuration));
-                    yield break;
-                }
+					StartCoroutine(GameplayManagerRef.GameplayCameraManagerRef.StatusEffectOpponentCutInPopup(this, playerTarget, statusType, statusDuration));
+					yield break;
+				}
             }
         }
         else
