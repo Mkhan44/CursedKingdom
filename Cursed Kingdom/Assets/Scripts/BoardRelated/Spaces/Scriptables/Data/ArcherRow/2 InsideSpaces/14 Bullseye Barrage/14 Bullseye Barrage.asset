@@ -17,6 +17,7 @@ MonoBehaviour:
   decreasesSpacesToMove: 1
   isNonDuelSpace: 0
   isNegative: 0
+  levelRequirementToGoToThisSpace: 0
   spaceEffects:
   - spaceEffectData: {fileID: 11400000, guid: 1fa67fd1bb9107d4fb949fe4b33820a6, type: 2}
     spaceTypeStringHidden: DiscardCardSpace
@@ -25,7 +26,7 @@ MonoBehaviour:
   spaceName: Bullseye Barrage
   spaceDescription: You can discard 3 support cards to deal 2 damage to all other
     players.
-  spaceSprite: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
+  spaceSprite: {fileID: 21300000, guid: 8de3ddc0383de1947abc8ae72d566f3c, type: 3}
   spaceMaterials:
   - {fileID: 2100000, guid: 959d706bf1bfed64e8025a2a32dc2e24, type: 2}
   - {fileID: 2100000, guid: 22293bc1330bae3478e23007a8a533bc, type: 2}

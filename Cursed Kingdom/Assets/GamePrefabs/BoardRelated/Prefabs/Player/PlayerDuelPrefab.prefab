@@ -137,7 +137,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e27a5165698da354f870e07e3ab5c131, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -158,7 +158,7 @@ SpriteRenderer:
   m_SortingLayerID: -391737541
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: -1096353015, guid: 10b34c8fc5a143644bce1faed58012f2, type: 3}
+  m_Sprite: {fileID: 348751076, guid: 10b34c8fc5a143644bce1faed58012f2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -182,9 +182,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   billboardType: 0
+  cameraToBillboardTowards: {fileID: 0}
   lockX: 1
   lockY: 1
-  lockZ: 0
+  lockZ: 1
 --- !u!1 &6264876491439458418
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,7 +15,7 @@ MonoBehaviour:
   active: 1
   temperature:
     m_OverrideState: 1
-    m_Value: 36.5
+    m_Value: 10
   tint:
     m_OverrideState: 1
     m_Value: 0
@@ -31,31 +31,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c01700fd266d6914ababb731e09af2eb, type: 3}
   m_Name: DepthOfField
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   mode:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2
   gaussianStart:
     m_OverrideState: 1
-    m_Value: 12
+    m_Value: 0
   gaussianEnd:
     m_OverrideState: 1
-    m_Value: 35
+    m_Value: 74.6
   gaussianMaxRadius:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 1.5
   highQualitySampling:
     m_OverrideState: 1
     m_Value: 0
   focusDistance:
     m_OverrideState: 1
-    m_Value: 5
+    m_Value: 8.5
   aperture:
     m_OverrideState: 1
-    m_Value: 32
+    m_Value: 15.6
   focalLength:
     m_OverrideState: 1
-    m_Value: 202
+    m_Value: 181
   bladeCount:
     m_OverrideState: 1
     m_Value: 9
@@ -106,11 +106,11 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 6
   dirtTexture:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {fileID: 0}
     dimension: 1
   dirtIntensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -145,7 +145,7 @@ MonoBehaviour:
   active: 0
   mode:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2
   neutralHDRRangeReductionMode:
     m_OverrideState: 0
     m_Value: 2
@@ -191,10 +191,10 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.353
+    m_Value: 0.421
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.379
+    m_Value: 0.173
   rounded:
     m_OverrideState: 1
     m_Value: 0
