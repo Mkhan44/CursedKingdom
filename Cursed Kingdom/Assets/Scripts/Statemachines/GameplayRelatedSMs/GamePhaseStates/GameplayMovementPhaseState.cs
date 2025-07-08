@@ -129,7 +129,7 @@ public class GameplayMovementPhaseState : BaseState
                 {
                     foreach (Player playerOnSpace in space.playersOnThisSpace)
                     {
-                        if (playerOnSpace != currentPlayer && !playersInDuelRange.Contains(playerOnSpace))
+                        if (playerOnSpace != currentPlayer && !playersInDuelRange.Contains(playerOnSpace) && !playerOnSpace.IsDefeated)
                         {
                             if (playersInDuelRange.Count == 0)
                             {
