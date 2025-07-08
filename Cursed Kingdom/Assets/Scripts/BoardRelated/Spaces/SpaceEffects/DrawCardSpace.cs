@@ -92,29 +92,31 @@ public class DrawCardSpace : SpaceEffectData, ISpaceEffect
     {
         if(DrawFromDiscardPile)
         {
-            if(CardTypeToDraw == Card.CardType.Movement)
+            if (CardTypeToDraw == Card.CardType.Movement)
             {
-                if(playerReference.GameplayManagerRef.ThisDeckManager.MovementDiscardPileList.Count < NumToDraw)
+                if (playerReference.GameplayManagerRef.ThisDeckManager.MovementDiscardPileList.Count < NumToDraw)
                 {
                     DialogueBoxPopup.instance.ActivatePopupWithJustText("The movement card discard pile does not have enough cards. None will be drawn.", 2.5f);
                     DialogueBoxPopup.instance.dialogueBoxClosed += CompletedEffect;
                     return;
                 }
                 playerReference.GameplayManagerRef.ThisDeckManager.DrawCardsFromDiscardPile(Card.CardType.Movement, playerReference, NumToDraw);
-                
+                CompletedEffect(playerReference);
+
             }
-            else if(CardTypeToDraw == Card.CardType.Support)
+            else if (CardTypeToDraw == Card.CardType.Support)
             {
-                if(playerReference.GameplayManagerRef.ThisDeckManager.SupportDiscardPileList.Count < NumToDraw)
+                if (playerReference.GameplayManagerRef.ThisDeckManager.SupportDiscardPileList.Count < NumToDraw)
                 {
                     DialogueBoxPopup.instance.ActivatePopupWithJustText("The support card discard pile does not have enough cards. None will be drawn.", 2.5f);
                     DialogueBoxPopup.instance.dialogueBoxClosed += CompletedEffect;
                     return;
                 }
                 playerReference.GameplayManagerRef.ThisDeckManager.DrawCardsFromDiscardPile(Card.CardType.Support, playerReference, NumToDraw);
+                CompletedEffect(playerReference);
             }
             //Make this draw from the discard pile instead of the deck.
-            else if(CardTypeToDraw == Card.CardType.Both)
+            else if (CardTypeToDraw == Card.CardType.Both)
             {
                 // Debug.Log("TRYING TO DRAW 2 TYPES OF CARDS");
                 // playerReference.DoneDrawingCard += CompletedEffect;

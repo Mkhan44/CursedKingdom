@@ -43,7 +43,7 @@ public class GameplayEndPhaseState : BaseState
         }
     }
 
-    public override void Exit() 
+    public override void Exit()
     {
         base.Exit();
         UnsubscribeToPlayerEvents();
@@ -63,7 +63,7 @@ public class GameplayEndPhaseState : BaseState
 
     private void HandleEndOfTurnEffects()
     {
-        if(!currentPlayer.IsDefeated)
+        if (!currentPlayer.IsDefeated)
         {
             gameplayPhaseSM.gameplayManager.ThisDeckManager.DrawCard(Card.CardType.Movement, currentPlayer);
             //THIS DOESN'T WAIT FOR ALL END PHASE EFFS TO HAPPEN BEFORE ENDING THE TURN...MIGHT BE AN ISSUE.
@@ -73,9 +73,9 @@ public class GameplayEndPhaseState : BaseState
         if (!currentPlayer.IsMoving && !currentPlayer.MaxHandSizeExceeded())
         {
             //Reset all player usage counts.
-            foreach(Player player in gameplayPhaseSM.gameplayManager.Players)
+            foreach (Player player in gameplayPhaseSM.gameplayManager.Players)
             {
-                if(!player.IsDefeated)
+                if (!player.IsDefeated)
                 {
                     player.ResetSupportCardUsageCount();
                     player.ResetMovementCardUsageCount();
@@ -132,10 +132,10 @@ public class GameplayEndPhaseState : BaseState
                             break;
                         }
 
-                        if (i == gameplayPhaseSM.gameplayManager.Players.Count && !startingOver)
+                        if (i == gameplayPhaseSM.gameplayManager.Players.Count - 1 && !startingOver)
                         {
                             startingOver = true;
-                            i = 0;
+                            i = -1;
                         }
                     }
 
@@ -233,5 +233,34 @@ public class GameplayEndPhaseState : BaseState
                 }
             }
         }
+    }
+
+    private Player FindNextPlayer(int indexOfCurrentPlayer)
+    {
+        Player nextPlayer = null;
+
+        int numPlayersAfterToCheck = 0;
+        bool startingOver = false;
+        numPlayersAfterToCheck = indexOfCurrentPlayer + 1;
+
+        for (int i = numPlayersAfterToCheck; i < gameplayPhaseSM.gameplayManager.Players.Count; i++)
+        {
+            if (!gameplayPhaseSM.gameplayManager.Players[i].IsDefeated)
+            {
+                gameplayPhaseSM.gameplayManager.playerCharacter = gameplayPhaseSM.gameplayManager.Players[i].GetComponent<Transform>();
+                nextPlayer = gameplayPhaseSM.gameplayManager.Players[i];
+                break;
+            }
+
+            //Loop doesn't start over and instead we just keep the current player...Need to reloop it again starting from 0.
+            if (i == gameplayPhaseSM.gameplayManager.Players.Count && !startingOver)
+            {
+                startingOver = true;
+                FindNextPlayer(0);
+            }
+        }
+
+        return nextPlayer;
+
     }
 }
