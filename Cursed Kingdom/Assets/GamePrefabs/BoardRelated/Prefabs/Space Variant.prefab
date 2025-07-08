@@ -219,7 +219,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e27a5165698da354f870e07e3ab5c131, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -937,6 +937,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -6345285779419725671, guid: 894ade8aac2188648812881ad42ec619, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1443779918105962778}
+    - targetCorrespondingSourceObject: {fileID: -6345285779419725671, guid: 894ade8aac2188648812881ad42ec619, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2910450234942876195}
   m_SourcePrefab: {fileID: 100100000, guid: 894ade8aac2188648812881ad42ec619, type: 3}
 --- !u!1 &463655295303739658 stripped
 GameObject:
@@ -1045,6 +1048,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f9c6a899d02d9f4ebea96907e2d057a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2910450234942876195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3269421924213216450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ae4cf3997f38564cb556659aca21d8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newTexture: {fileID: 0}
+  newNormalMap: {fileID: 0}
 --- !u!1001 &4056104884807661295
 PrefabInstance:
   m_ObjectHideFlags: 0

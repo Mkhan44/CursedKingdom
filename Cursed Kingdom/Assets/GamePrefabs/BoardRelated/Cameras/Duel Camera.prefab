@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8944929776027924585}
   - component: {fileID: 5334149849559054879}
   - component: {fileID: 7724659718298328886}
-  - component: {fileID: 5197701852201140754}
+  - component: {fileID: 577395088718367540}
   m_Layer: 8
   m_Name: Duel Camera
   m_TagString: Untagged
@@ -68,7 +68,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 36
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -164,7 +164,7 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5197701852201140754
+--- !u!114 &577395088718367540
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -173,11 +173,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 2149671440642538234}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Script: {fileID: 11500000, guid: 436275a13d4459746955fc6db5953473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsGlobal: 1
-  priority: 0
-  blendDistance: 0
-  weight: 1
-  sharedProfile: {fileID: 11400000, guid: a8208b881905e4d4f905bee5369a1ba9, type: 2}
+  _active: 0
+  _enableRotation: 1
+  _mouseSense: 1.8
+  _enableTranslation: 1
+  _translationSpeed: 5
+  _enableMovement: 1
+  _movementSpeed: 10
+  _boostedSpeed: 50
+  _boostSpeed: 304
+  _moveUp: 101
+  _moveDown: 113
+  _enableSpeedAcceleration: 0
+  _speedAccelerationFactor: 1.5
+  _initPositonButton: 281
+  cinemachineBrain: {fileID: 7724659718298328886}
