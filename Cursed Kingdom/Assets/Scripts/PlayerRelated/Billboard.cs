@@ -5,6 +5,7 @@ using UnityEngine;
 public class Billboard : MonoBehaviour {
     [SerializeField] private BillboardType billboardType;
     [SerializeField] private Camera cameraToBillboardTowards;
+    [SerializeField] private GameObject playerDuelPrefab;
 
     [Header("Lock Rotation")]
     [SerializeField] private bool lockX;
@@ -42,6 +43,10 @@ public class Billboard : MonoBehaviour {
         case BillboardType.CameraForward:
                 {
                     transform.forward = CameraToBillboardTowards.transform.forward;
+                    if (playerDuelPrefab != null && playerDuelPrefab.transform.position.x <= -60f)
+                    {
+                        transform.forward = -CameraToBillboardTowards.transform.forward;
+                    }
                     break;
                 }
 

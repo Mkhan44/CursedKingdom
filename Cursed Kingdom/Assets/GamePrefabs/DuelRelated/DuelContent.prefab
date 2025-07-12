@@ -159,7 +159,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1268719346424884345}
-  m_LocalRotation: {x: 0, y: 0.9961947, z: -0, w: -0.08715578}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -4.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -768,7 +768,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8429198226835420981}
-  m_LocalRotation: {x: 0, y: 0.9961947, z: -0, w: -0.08715578}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1165,18 +1165,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 845109591773608062, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
-      propertyPath: m_FollowOffset.x
-      value: -1.11
-      objectReference: {fileID: 0}
-    - target: {fileID: 845109591773608062, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
-      propertyPath: m_FollowOffset.y
-      value: 0.76
-      objectReference: {fileID: 0}
-    - target: {fileID: 845109591773608062, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
-      propertyPath: m_FollowOffset.z
-      value: 2.51
-      objectReference: {fileID: 0}
     - target: {fileID: 1153800469057478883, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
       propertyPath: m_LookAt
       value: 
@@ -1224,14 +1212,6 @@ PrefabInstance:
     - target: {fileID: 2557616018142316079, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.0038904015
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825781777934672683, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
-      propertyPath: m_TrackedObjectOffset.x
-      value: -1.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 2825781777934672683, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
-      propertyPath: m_TrackedObjectOffset.y
-      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 3013781819126193290, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
       propertyPath: m_Follow
@@ -1381,14 +1361,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 6298811907146187234, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
-      propertyPath: m_TrackedObjectOffset.x
-      value: -1.29
-      objectReference: {fileID: 0}
-    - target: {fileID: 6298811907146187234, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
-      propertyPath: m_TrackedObjectOffset.y
-      value: 0.54
-      objectReference: {fileID: 0}
     - target: {fileID: 6424583899470667746, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
       propertyPath: m_LookAt
       value: 
@@ -1492,18 +1464,6 @@ PrefabInstance:
     - target: {fileID: 8362239879963375842, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
       propertyPath: m_Layer
       value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8927470585023470263, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
-      propertyPath: m_FollowOffset.x
-      value: -1.91
-      objectReference: {fileID: 0}
-    - target: {fileID: 8927470585023470263, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
-      propertyPath: m_FollowOffset.y
-      value: 0.52
-      objectReference: {fileID: 0}
-    - target: {fileID: 8927470585023470263, guid: 26913c0bb0a09b84985f4e49af6e212b, type: 3}
-      propertyPath: m_FollowOffset.z
-      value: 2.88
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

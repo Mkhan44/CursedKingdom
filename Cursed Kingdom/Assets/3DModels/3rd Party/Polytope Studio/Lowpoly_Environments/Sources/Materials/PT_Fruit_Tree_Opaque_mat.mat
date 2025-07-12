@@ -13,7 +13,8 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _CUSTOMWIND_ON
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _CUSTOMCOLORSTINTING_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -25,7 +26,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseTexture:
-        m_Texture: {fileID: 2800000, guid: afb15b50cc8fcc04daa3ad1af64f1c26, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -84,7 +85,7 @@ Material:
     m_Floats:
     - _AlphaCutoff: 0.5
     - _BumpScale: 1
-    - _CUSTOMCOLORSTINTING: 0
+    - _CUSTOMCOLORSTINTING: 1
     - _CUSTOMWIND: 1
     - _CUSTOMWIND1: 1
     - _Cutoff: 0.5
@@ -94,8 +95,8 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _Gradient: 1
-    - _GradientPower: 1
+    - _Gradient: 0.108
+    - _GradientPower: 3.81
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -124,6 +125,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GroundColor: {r: 0.08490568, g: 0.05234205, b: 0.04846032, a: 1}
-    - _TopColor: {r: 0.4811321, g: 0.4036026, b: 0.2382966, a: 1}
+    - _GroundColor: {r: 0.0754717, g: 0.04276433, b: 0.03809185, a: 1}
+    - _TopColor: {r: 0.1509434, g: 0.13171947, b: 0.13171947, a: 1}
   m_BuildTextureStacks: []
