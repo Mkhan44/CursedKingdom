@@ -17,6 +17,7 @@ MonoBehaviour:
   decreasesSpacesToMove: 1
   isNonDuelSpace: 0
   isNegative: 0
+  levelRequirementToGoToThisSpace: 0
   spaceEffects:
   - spaceEffectData: {fileID: 11400000, guid: 16a8a2db271532e4ba6040b7b76211df, type: 2}
     spaceTypeStringHidden: DiscardCardSpace
@@ -25,8 +26,9 @@ MonoBehaviour:
   spaceName: Swift Swipe
   spaceDescription: You can discard 3 movement cards; Then discard 1 random card 
     and take 1 random card from an opponent of your choice's hand.
-  spaceSprite: {fileID: 21300000, guid: cefd495ed8244bf44a8fd8ffdfe1639c, type: 3}
+  spaceSprite: {fileID: 21300000, guid: a4f0307698db3dc47b43966be8664a23, type: 3}
   spaceMaterials:
   - {fileID: 2100000, guid: ee8f17d35716d104c8ad9a530b4dbac7, type: 2}
   - {fileID: 2100000, guid: fa752db494b7d8340b4c53994b177887, type: 2}
   - {fileID: 2100000, guid: 79bc05fd88ff95140af18248c9739c4c, type: 2}
+  StepSoundClipsData: {fileID: 0}

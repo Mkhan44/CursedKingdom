@@ -44,7 +44,7 @@ public class MenuManager : MonoBehaviour
     public GameObject PlayerLayoutParentMobile;
 
     public StartDebugMenu StartDebugMenuRef;
-    
+
     private void Start()
     {
         if (Application.isMobilePlatform)
