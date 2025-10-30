@@ -7,6 +7,10 @@ using System.Linq;
 
 public class SettingsManager : MonoBehaviour
 {
+    [Header("Platform Prefabs")]
+    public GameObject settingsDesktop;
+    public GameObject settingsMobile;
+
     [Header("Graphics")]
     public TMP_Dropdown qualityDropdown;
     public TMP_Dropdown resolutionDropdown;
@@ -36,6 +40,17 @@ public class SettingsManager : MonoBehaviour
     private const string MusicKey = "MusicVol";
     private const string SfxKey = "SfxVol";
 
+    void Awake()
+    {
+        HandlePlatformSettings();
+    }
+
+    private void HandlePlatformSettings()
+    {
+        bool isMobile = Application.isMobilePlatform;
+        settingsDesktop.SetActive(!isMobile);
+        settingsMobile.SetActive(isMobile);
+    }
     void OnEnable()
     {
         SetupDropdowns();

@@ -73,7 +73,7 @@ QualitySettings:
     skinWeights: 2
     globalTextureMipmapLimit: 0
     textureMipmapLimitSettings: []
-    anisotropicTextures: 0
+    anisotropicTextures: 1
     antiAliasing: 0
     softParticles: 0
     softVegetation: 0
@@ -152,8 +152,8 @@ QualitySettings:
     asyncUploadPersistentBuffer: 1
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 11400000, guid: a1a12e448bd2bdc49be4af5091920762, type: 2}
-    terrainQualityOverrides: 0
-    terrainPixelError: 1
+    terrainQualityOverrides: 1
+    terrainPixelError: 12.8
     terrainDetailDensityScale: 1
     terrainBasemapDistance: 1000
     terrainDetailDistance: 80
@@ -216,7 +216,7 @@ QualitySettings:
     excludedTargetPlatforms: []
   m_TextureMipmapLimitGroupNames: []
   m_PerPlatformDefaultQuality:
-    Android: 3
+    Android: 1
     Lumin: 3
     Nintendo 3DS: 3
     Nintendo Switch: 3
