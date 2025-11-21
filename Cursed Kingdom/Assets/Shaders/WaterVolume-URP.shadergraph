@@ -3278,6 +3278,7 @@
     "m_OutputNode": {
         "m_Id": ""
     },
+    "m_SubDatas": [],
     "m_ActiveTargets": [
         {
             "m_Id": "000ec5bc94f840a482a4360c98471947"
@@ -3302,6 +3303,9 @@
     "m_AlphaClip": false,
     "m_CastShadows": true,
     "m_ReceiveShadows": false,
+    "m_DisableTint": false,
+    "m_AdditionalMotionVectorMode": 0,
+    "m_AlembicMotionVectors": false,
     "m_SupportsLODCrossFade": false,
     "m_CustomEditorGUI": "",
     "m_SupportVFX": false
@@ -3497,10 +3501,10 @@
         "w": 1.0
     },
     "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
     },
     "m_Labels": []
 }
@@ -5641,7 +5645,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 0.0
+        "z": 1.0
     },
     "m_Labels": [
         "X",
@@ -5657,7 +5661,7 @@
     "m_Title": "Opacity",
     "m_Position": {
         "x": -3104.0,
-        "y": -465.0
+        "y": -467.0
     }
 }
 
@@ -6558,7 +6562,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 0.0
+        "z": 1.0
     },
     "m_Labels": [
         "X",
@@ -7726,7 +7730,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 3
@@ -8295,8 +8299,8 @@
     "m_ObjectId": "3fc52df7f53d47deb5e0e5517989752c",
     "m_Title": "UVs (Scaling / Overlap / Scrolling)",
     "m_Position": {
-        "x": -6597.99951171875,
-        "y": 197.0
+        "x": -6598.0,
+        "y": 195.0
     }
 }
 
@@ -8432,7 +8436,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 0.0
+        "z": 1.0
     },
     "m_Labels": [
         "X",
@@ -10433,8 +10437,8 @@
     "m_ObjectId": "5c96eb6f217248b696c87553aebc2cce",
     "m_Title": "Final Color (Water vs Foam)",
     "m_Position": {
-        "x": -1185.9998779296875,
-        "y": 108.00006103515625
+        "x": -1186.0,
+        "y": 109.0
     }
 }
 
@@ -10708,8 +10712,8 @@
     "m_ObjectId": "5feb698bf6bf4302b1c3952b90a9d977",
     "m_Title": "Flatten Normals (Foam)",
     "m_Position": {
-        "x": -298.0000915527344,
-        "y": 659.0001220703125
+        "x": -298.0,
+        "y": 659.0
     }
 }
 
@@ -12750,7 +12754,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 0.0
+        "z": 1.0
     },
     "m_Labels": [
         "X",
@@ -13011,7 +13015,7 @@
     "m_Title": "Surface Normals",
     "m_Position": {
         "x": -4905.0,
-        "y": -29.999975204467775
+        "y": -33.0
     }
 }
 
@@ -13082,7 +13086,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 0.0
+        "z": 1.0
     },
     "m_Labels": [
         "X",
@@ -15067,8 +15071,8 @@
     "m_ObjectId": "9cf25231474e4fef9dce57cae82ab38b",
     "m_Title": "Metallic / Smoothness",
     "m_Position": {
-        "x": -1938.9998779296875,
-        "y": 948.0
+        "x": -1935.0,
+        "y": 945.0
     }
 }
 
@@ -15344,6 +15348,7 @@
     "m_SourceType": 1,
     "m_FunctionName": "NormalLerp",
     "m_FunctionSource": "",
+    "m_FunctionSourceUsePragmas": true,
     "m_FunctionBody": "float3 blend = normalize(float3(InA.rg + InB.rg, InA.b * InB.b));\r\nOut = lerp(lerp(InA, blend, saturate(Ratio * 2)), InB, saturate((Ratio - 0.5) * 2));"
 }
 
@@ -17115,8 +17120,8 @@
     "m_ObjectId": "b3b815c6195349f09b76d5781f379fad",
     "m_Title": "Screen Colour (with refraction)",
     "m_Position": {
-        "x": -3555.999755859375,
-        "y": -1117.0001220703125
+        "x": -3556.0,
+        "y": -1117.0
     }
 }
 
@@ -17847,7 +17852,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 0.0
+        "z": 1.0
     },
     "m_Labels": [
         "X",
@@ -18815,7 +18820,7 @@
         "a": 1.0
     },
     "isMainColor": false,
-    "m_ColorMode": 1
+    "m_ColorMode": 0
 }
 
 {
@@ -19571,7 +19576,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 0.0
+        "z": 1.0
     },
     "m_Labels": [
         "X",
@@ -20344,7 +20349,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 0.0
+        "z": 1.0
     },
     "m_Labels": [
         "X",
@@ -20931,7 +20936,7 @@
     "m_Title": "Vertex Waves",
     "m_Position": {
         "x": -1794.0,
-        "y": -1687.9998779296875
+        "y": -1690.0
     }
 }
 
@@ -21154,7 +21159,7 @@
     "m_DefaultValue": {
         "x": 0.0,
         "y": 0.0,
-        "z": 0.0
+        "z": 1.0
     },
     "m_Labels": [
         "X",
@@ -22287,7 +22292,7 @@
     "m_Title": "Foam",
     "m_Position": {
         "x": -2435.0,
-        "y": 102.99999237060547
+        "y": 104.0
     }
 }
 
@@ -22605,7 +22610,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 3

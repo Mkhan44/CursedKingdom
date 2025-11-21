@@ -26,7 +26,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseTexture:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: ec9045d37c1185f49b154a329342548f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -108,8 +108,8 @@ Material:
     - _Smoothness: 0.384
     - _SmoothnessTextureChannel: 0
     - _SnowAmount: 1
-    - _SnowCoverage: 0.45
-    - _SnowFade: 0.83
+    - _SnowCoverage: 0.223
+    - _SnowFade: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
@@ -128,3 +128,4 @@ Material:
     - _GroundColor: {r: 0.0754717, g: 0.04276433, b: 0.03809185, a: 1}
     - _TopColor: {r: 0.1509434, g: 0.13171947, b: 0.13171947, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
