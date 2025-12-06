@@ -223,7 +223,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 0.2627451}
+      maxColor: {r: 0.8301887, g: 0.8301887, b: 0.8301887, a: 0.2627451}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4774,6 +4774,9 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4874,7 +4877,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8862638433130058144}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8233d90336aea43098adf6dbabd606a2, type: 3}
   m_Name: 
@@ -5428,18 +5431,18 @@ MonoBehaviour:
   - {x: -12.379269, y: -5.264839}
   - {x: -9.264311, y: -8.540891}
   - {x: -9.995366, y: -6.882708}
-  - {x: -12.378065, y: -5.3027143}
-  - {x: -12.798287, y: -4.5493417}
-  - {x: -9.99441, y: -6.9238706}
-  - {x: -9.965367, y: -4.535306}
-  - {x: -12.685151, y: -4.872169}
-  - {x: -13.444389, y: -4.042779}
-  - {x: -9.836545, y: -4.872169}
-  - {x: -9.836545, y: -4.1005177}
-  - {x: -13.327262, y: -3.416651}
-  - {x: -13.249024, y: -2.6089988}
-  - {x: -9.712787, y: -3.416651}
-  - {x: -9.712787, y: -2.6242304}
+  - {x: -12.369673, y: -5.2693224}
+  - {x: -12.789212, y: -4.6803703}
+  - {x: -9.987716, y: -6.8929715}
+  - {x: -9.951505, y: -4.4975886}
+  - {x: -12.659558, y: -5.0570445}
+  - {x: -13.421775, y: -4.167092}
+  - {x: -9.811229, y: -4.887188}
+  - {x: -9.811229, y: -4.109392}
+  - {x: -13.335169, y: -3.5630507}
+  - {x: -13.257311, y: -2.6563177}
+  - {x: -9.720715, y: -3.4624007}
+  - {x: -9.720715, y: -2.668437}
   - {x: -13.319298, y: -2.1154313}
   - {x: -13.853807, y: -1.2658187}
   - {x: -9.781322, y: -2.115431}
@@ -5647,14 +5650,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Shape:
     rid: 1048979256736481362
-  m_Size: {x: -14.94, y: 0, z: -4.8}
-  m_Rotation: {x: 0, y: 0, z: 0, w: 1}
-  m_PivotLocation: 1
-  m_PivotPosition: {x: 0, y: 0, z: 0}
+  m_ShapeRotation: {x: 0, y: 0, z: 0, w: 1}
   m_UnmodifiedMeshVersion: 2779
-  m_ShapeBox:
-    m_Center: {x: -7.500326, y: 0, z: -3.7735367}
-    m_Extent: {x: 0.50000024, y: 0, z: 0.5}
+  m_Size: {x: -14.94, y: 0, z: -4.8}
+  m_LocalCenter: {x: 0, y: 0, z: 0}
   references:
     version: 2
     RefIds:
@@ -5680,6 +5679,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
