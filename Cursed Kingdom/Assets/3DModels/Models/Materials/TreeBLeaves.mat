@@ -11,8 +11,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: 77e1a76a38ecd5a46a270afb12894dd5, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _TRANSLUCENCYONOFF_ON
+  m_ValidKeywords: []
   m_InvalidKeywords:
   - _CUSTOMCOLORSTINTING_ON
   m_LightmapFlags: 4
@@ -112,8 +111,8 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 1
     - _GlossyReflections: 1
-    - _Gradient: 0.402
-    - _GradientPower: 3.08
+    - _Gradient: 0.357
+    - _GradientPower: 2
     - _LeavesThickness: 0.5
     - _Metallic: 0
     - _Mode: 0
@@ -125,14 +124,14 @@ Material:
     - _SNOWONOFF: 0
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
-    - _SnowAmount: 1
-    - _SnowCoverage: 0.45
-    - _SnowGradient: 0.83
+    - _SnowAmount: 0.063
+    - _SnowCoverage: 0.503
+    - _SnowGradient: 0.462
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 1
-    - _TRANSLUCENCYONOFF: 1
+    - _TRANSLUCENCYONOFF: 0
     - _TransAmbient: 0.1
     - _TransDirect: 0.9
     - _TransNormal: 0.5
@@ -142,7 +141,7 @@ Material:
     - _UVSec: 0
     - _WINDMASKONOFF: 0
     - _WindDensity: 3.3
-    - _WindMovement: 0.5
+    - _WindMovement: 0.19
     - _WindStrength: 0.3
     - _WorkflowMode: 1
     - _ZWrite: 0
@@ -150,9 +149,9 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GroundColor: {r: 0.041318845, g: 0.0754717, b: 0.032395873, a: 1}
+    - _GroundColor: {r: 0, g: 0.047169805, b: 0.015008572, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _TopColor: {r: 0.072267726, g: 0.30942136, b: 0.5283019, a: 1}
+    - _TopColor: {r: 0.11233406, g: 0.2104213, b: 0.46695733, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &8952382952111693694
