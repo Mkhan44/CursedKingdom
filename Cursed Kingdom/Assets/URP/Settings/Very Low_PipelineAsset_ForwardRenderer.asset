@@ -25,9 +25,9 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
-  - {fileID: 9000509985080029121}
   - {fileID: 841246019819894906}
-  m_RendererFeatureMap: c12f0d0a253ce87c7a781344ccb4ac0b
+  - {fileID: 9000509985080029121}
+  m_RendererFeatureMap: 7a781344ccb4ac0bc12f0d0a253ce87c
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 0}
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Active: 1
   settings:
     passTag: Occluded
-    Event: 300
+    Event: 500
     filterSettings:
       RenderQueueType: 1
       LayerMask:
