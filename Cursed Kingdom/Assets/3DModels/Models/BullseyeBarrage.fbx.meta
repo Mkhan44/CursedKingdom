@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c803bb26502364e4395c97365ae1d661
+guid: 48bbefbf4bc7c3e4bb1c11972fff88e7
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,13 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Bow
-    second: {fileID: 2100000, guid: 46ee8cf5a0efc1943ae9eb944140efad, type: 2}
+      name: BullseyeBow
+    second: {fileID: 2100000, guid: 6410c897a90f91346b572b1a192a00a5, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Handle
-    second: {fileID: 2100000, guid: d942e0434c620ab46ad1a7d91bf27fa9, type: 2}
+      name: BullseyeGem
+    second: {fileID: 2100000, guid: 4bf54f5bad7185d4faa79bb6c0fe8298, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BullseyeHandle
+    second: {fileID: 2100000, guid: a60b2552b833df84687fa317c97ed36b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -26,8 +31,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -45,7 +48,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.4
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -58,7 +61,7 @@ ModelImporter:
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
@@ -100,7 +103,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.4
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
