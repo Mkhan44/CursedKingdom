@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6337745574522665712}
-  - component: {fileID: 3010395015002445182}
   m_Layer: 0
   m_Name: ConferenceRoomDuelArea
   m_TagString: Untagged
@@ -40,42 +39,6 @@ Transform:
   - {fileID: 2561320720473952360}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3010395015002445182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 321225819222680536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de4039cce26ec664aa67f2a35a6df4f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  releaseShaders: 0
-  m_RendererInfo:
-  - renderer: {fileID: 7711800225202880339}
-    lightmapIndex: 0
-    lightmapOffsetScale: {x: 1.04, y: 1.04, z: -0.0208, w: 0.18134844}
-  - renderer: {fileID: 7387098696459680971}
-    lightmapIndex: 0
-    lightmapOffsetScale: {x: 1.04, y: 1.04, z: -0.0208, w: 0.38349688}
-  - renderer: {fileID: 738605763957669421}
-    lightmapIndex: 0
-    lightmapOffsetScale: {x: 1.04, y: 1.04, z: -0.0208, w: -0.0208}
-  - renderer: {fileID: 5431961587365555774}
-    lightmapIndex: 1
-    lightmapOffsetScale: {x: 1.04, y: 1.04, z: -0.0208, w: -0.0208}
-  m_Lightmaps:
-  - {fileID: 2800000, guid: b21f87678b2a2fe48911e214d3bd8a87, type: 3}
-  - {fileID: 2800000, guid: d5e07a8e60bc8884aa2cf993882a31c3, type: 3}
-  m_LightmapsDir:
-  - {fileID: 2800000, guid: 7cd5582c95587aa47a350d87891525dc, type: 3}
-  - {fileID: 2800000, guid: e3bab7db0253686409248bbdd819ec19, type: 3}
-  m_ShadowMasks:
-  - {fileID: 0}
-  - {fileID: 0}
-  m_LightInfo: []
 --- !u!1 &343834950742607836
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,12 +13,21 @@ ShaderVariantCollection:
       variants:
       - keywords: SOFTMASKABLE
         passType: 0
+      - keywords: SOFTMASKABLE UNITY_UI_ALPHACLIP
+        passType: 0
   - first: {fileID: 4800000, guid: 2933b413a51fc4ff3a83c7ef4177ae84, type: 3}
     second:
       variants:
       - keywords: 
         passType: 0
   - first: {fileID: 4800000, guid: 63261060f5b084969aca3decbe52d1d0, type: 3}
+    second:
+      variants:
+      - keywords: BEVEL_ON SOFTMASKABLE
+        passType: 0
+      - keywords: SOFTMASKABLE
+        passType: 0
+  - first: {fileID: 4800000, guid: e94e1f7424a0a43ac8b7ed672319bb4b, type: 3}
     second:
       variants:
       - keywords: SOFTMASKABLE
