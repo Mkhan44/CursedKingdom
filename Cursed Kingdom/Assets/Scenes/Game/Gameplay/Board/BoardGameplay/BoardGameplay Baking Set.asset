@@ -12,6 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4881f9a2c4d568047b316028d20a8dca, type: 3}
   m_Name: BoardGameplay Baking Set
   m_EditorClassIdentifier: 
+  m_SceneBakeData:
+    m_Keys:
+    - 0c8e01d53a0a3144cbdad4f75a7f01c1
+    m_Values:
+    - hasProbeVolume: 1
+      bakeScene: 1
+      bounds:
+        m_Center: {x: -40.5, y: 1012.5, z: 40.5}
+        m_Extent: {x: 202.5, y: 40.5, z: 121.5}
   singleSceneMode: 1
   dialogNoProbeVolumeInSetShown: 1
   settings:
@@ -670,12 +679,3 @@ MonoBehaviour:
       serializedVersion: 0
       m_Bits: 4294967295
     name: Mask 1
-  m_SceneBakeData:
-    m_Keys:
-    - 0c8e01d53a0a3144cbdad4f75a7f01c1
-    m_Values:
-    - hasProbeVolume: 1
-      bakeScene: 1
-      bounds:
-        m_Center: {x: -40.5, y: 1012.5, z: 40.5}
-        m_Extent: {x: 202.5, y: 40.5, z: 121.5}

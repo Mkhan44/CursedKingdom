@@ -1,8 +1,9 @@
+using config;
+using DG.Tweening;
+using events;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using config;
-using events;
 using UnityEngine;
 using UnityEngine.UI;
 public class CardContainer : MonoBehaviour
@@ -38,10 +39,21 @@ public class CardContainer : MonoBehaviour
     private CardWrapper currentDraggedCard;
     private bool isFirstSetup = true;
     private bool lastDisableCardWrapper;
+    private Canvas canvas;
+    private Image playAreaImage;
+    private Color playAreaDefaultColor;
+    private Tweener playAreaColorTween;
 
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
+        canvas = GetComponentInParent<Canvas>().rootCanvas;
+        if (cardConfig.playArea != null)
+        {
+            playAreaImage = cardConfig.playArea.GetComponent<Image>();
+            if (playAreaImage != null)
+                playAreaDefaultColor = playAreaImage.color;
+        }
         InitCards();
     }
 
@@ -69,9 +81,9 @@ public class CardContainer : MonoBehaviour
     private float GetCardVerticalDisplacement(int index)
     {
         if (cards.Count < 3) return 0;
-        // Associate a vertical displacement based on the index in the cards list
-        // so that the center card is at max displacement while the edges are at 0 displacement
-        return maxHeightDisplacement *
+        var scaleFactor = canvas != null ? canvas.scaleFactor : 1f;
+        var scaledDisplacement = maxHeightDisplacement * scaleFactor;
+        return scaledDisplacement *
                (1 - Mathf.Pow(index - (cards.Count - 1) / 2f, 2) / Mathf.Pow((cards.Count - 1) / 2f, 2));
     }
 
@@ -170,6 +182,7 @@ public class CardContainer : MonoBehaviour
         SetCardsRotation();
         SetCardsUILayers();
         UpdateCardOrder();
+        UpdatePlayAreaColor();
     }
 
     private void SetCardsUILayers()
@@ -177,6 +190,23 @@ public class CardContainer : MonoBehaviour
         for (var i = 0; i < cards.Count; i++)
         {
             cards[i].uiLayer = cardConfig.defaultSortOrder + i;
+        }
+    }
+
+    private void UpdatePlayAreaColor()
+    {
+        if (playAreaImage == null) return;
+
+        var targetColor = currentDraggedCard != null && IsCursorInPlayArea()
+            ? cardConfig.playAreaHighlightColor
+            : playAreaDefaultColor;
+
+        if (playAreaImage.color != targetColor)
+        {
+            playAreaColorTween?.Kill();
+            playAreaColorTween = playAreaImage
+                .DOColor(targetColor, cardConfig.playAreaColorDuration)
+                .SetEase(cardConfig.playAreaColorEase);
         }
     }
 
@@ -203,43 +233,52 @@ public class CardContainer : MonoBehaviour
 
     private void SetCardsPosition()
     {
-        // Compute the total width of all the cards in global space
         var cardsTotalWidth = cards.Sum(card => card.width * card.transform.lossyScale.x);
-        // Compute the width of the container in global space
         var containerWidth = rectTransform.rect.width * transform.lossyScale.x;
         if (forceFitContainer && cardsTotalWidth > containerWidth)
-        {
             DistributeChildrenToFitContainer(cardsTotalWidth);
-        }
         else
-        {
             DistributeChildrenWithoutOverlap(cardsTotalWidth);
-        }
     }
 
     private void DistributeChildrenToFitContainer(float childrenTotalWidth)
     {
-        // Get the width of the container
         var width = rectTransform.rect.width * transform.lossyScale.x;
-        // Get the distance between each child
         var distanceBetweenChildren = (width - childrenTotalWidth) / (cards.Count - 1);
-        // Set all children's positions to be evenly spaced out
         var currentX = transform.position.x - width / 2;
-        foreach (CardWrapper child in cards)
+        var hoveredIndex = cards.FindIndex(c => c.IsHovered);
+        var scaledPushDistance = cardConfig.hoverPushDistance * (canvas != null ? canvas.scaleFactor : 1f);
+        for (var i = 0; i < cards.Count; i++)
         {
-            var adjustedChildWidth = child.width * child.transform.lossyScale.x;
-            child.targetPosition = new Vector2(currentX + adjustedChildWidth / 2, transform.position.y);
+            var adjustedChildWidth = cards[i].width * cards[i].transform.lossyScale.x;
+            var pushOffset = 0f;
+            if (hoveredIndex >= 0 && i != hoveredIndex)
+            {
+                pushOffset = i < hoveredIndex
+                    ? -scaledPushDistance
+                    : scaledPushDistance;
+            }
+            cards[i].targetPosition = new Vector2(currentX + adjustedChildWidth / 2 + pushOffset, transform.position.y);
             currentX += adjustedChildWidth + distanceBetweenChildren;
         }
     }
-
+ 
     private void DistributeChildrenWithoutOverlap(float childrenTotalWidth)
     {
         var currentPosition = GetAnchorPositionByAlignment(childrenTotalWidth);
-        foreach (CardWrapper child in cards)
+        var hoveredIndex = cards.FindIndex(c => c.IsHovered);
+        var scaledPushDistance = cardConfig.hoverPushDistance * (canvas != null ? canvas.scaleFactor : 1f);
+        for (var i = 0; i < cards.Count; i++)
         {
-            var adjustedChildWidth = child.width * child.transform.lossyScale.x;
-            child.targetPosition = new Vector2(currentPosition + adjustedChildWidth / 2, transform.position.y);
+            var adjustedChildWidth = cards[i].width * cards[i].transform.lossyScale.x;
+            var pushOffset = 0f;
+            if (hoveredIndex >= 0 && i != hoveredIndex)
+            {
+                pushOffset = i < hoveredIndex
+                    ? -scaledPushDistance
+                    : scaledPushDistance;
+            }
+            cards[i].targetPosition = new Vector2(currentPosition + adjustedChildWidth / 2 + pushOffset, transform.position.y);
             currentPosition += adjustedChildWidth;
         }
     }
@@ -285,6 +324,8 @@ public class CardContainer : MonoBehaviour
             }
         }
         currentDraggedCard = null;
+        if (playAreaImage != null)
+            playAreaImage.color = playAreaDefaultColor;
     }
 
     public void DestroyCard(CardWrapper card)

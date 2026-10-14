@@ -3,11 +3,11 @@ using DG.Tweening;
 using events;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class CardWrapper : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
     IPointerUpHandler
 {
-
     public float targetRotation;
     public Vector2 targetPosition;
     public float targetVerticalDisplacement;
@@ -20,8 +20,10 @@ public class CardWrapper : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public CardContainer container;
 
     private bool isHovered;
+    public bool IsHovered => isHovered;
     private bool isDragged;
     private bool isEntering;
+    private bool isScrollAreaHeld;
     private Vector2 dragStartPos;
     public bool preventCardInteraction;
 
@@ -45,6 +47,27 @@ public class CardWrapper : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private void Start()
     {
         canvas = GetComponent<Canvas>();
+        RegisterScrollAreaEvents();
+    }
+
+    private void RegisterScrollAreaEvents()
+    {
+        var scrollRect = GetComponentInChildren<ScrollRect>(true);
+        if (scrollRect == null) return;
+
+        var et = scrollRect.GetComponent<EventTrigger>()
+                 ?? scrollRect.gameObject.AddComponent<EventTrigger>();
+
+        AddTriggerEntry(et, EventTriggerType.PointerDown, _ => OnScrollAreaPointerDown());
+        AddTriggerEntry(et, EventTriggerType.PointerUp, _ => OnScrollAreaPointerUp());
+    }
+
+    private void AddTriggerEntry(EventTrigger et, EventTriggerType type,
+        UnityEngine.Events.UnityAction<BaseEventData> callback)
+    {
+        var entry = new EventTrigger.Entry { eventID = type };
+        entry.callback.AddListener(callback);
+        et.triggers.Add(entry);
     }
 
     private void Update()
@@ -134,10 +157,10 @@ public class CardWrapper : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         rectTransform.position = target;
         lastTweenedPosition = target;
     }
+
     public void MoveOffScreen()
     {
         rectTransform.position = new Vector2(Screen.width + rectTransform.rect.width, rectTransform.position.y + 500);
-
     }
 
     public void PlayEntryAnimation()
@@ -166,13 +189,25 @@ public class CardWrapper : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         scaleTween?.Kill();
     }
 
+    // Called by EventTrigger on the ScrollRect GameObject
+    public void OnScrollAreaPointerDown()
+    {
+        isScrollAreaHeld = true;
+        if (cardConfig.bringToFrontOnDrag)
+            canvas.sortingOrder = cardConfig.zoomedSortOrder;
+    }
+
+    public void OnScrollAreaPointerUp()
+    {
+        isScrollAreaHeld = false;
+        canvas.sortingOrder = uiLayer;
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (isDragged || preventCardInteraction) return;
         if (cardConfig.bringToFrontOnHover)
-        {
             canvas.sortingOrder = cardConfig.zoomedSortOrder;
-        }
         cardConfig?.OnCardHover?.Invoke(new CardHover(this));
         isHovered = true;
     }
@@ -187,8 +222,10 @@ public class CardWrapper : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (preventCardInteraction) return;
+        if (preventCardInteraction || isScrollAreaHeld) return;
         isDragged = true;
+        if (cardConfig.bringToFrontOnDrag)
+            canvas.sortingOrder = cardConfig.zoomedSortOrder;
 
         // Kill position tween so the card doesn't fight the cursor
         positionTween?.Kill();
@@ -202,6 +239,7 @@ public class CardWrapper : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerUp(PointerEventData eventData)
     {
         isDragged = false;
+        canvas.sortingOrder = uiLayer;
         // Reset so UpdatePosition fires a fresh tween on the next frame
         lastTweenedPosition = Vector2.negativeInfinity;
         container.OnCardDragEnd();

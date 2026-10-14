@@ -287,10 +287,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 180
       objectReference: {fileID: 0}
-    - target: {fileID: 2461497947193884349, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 8f93f0f3e9613ff45a5a90bc0d23b0f1, type: 3}
     - target: {fileID: 2540337655516234583, guid: 13a9812ec7b89124caf3eea8fb70bd4d, type: 3}
       propertyPath: m_SizeDelta.x
       value: 219.7634
@@ -642,7 +638,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &5234973180050057412
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -656,6 +652,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1

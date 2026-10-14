@@ -20,14 +20,19 @@ namespace config {
         [SerializeField]
         public float overrideYPosition = -1;
 
+        [Tooltip("How far neighbouring cards are pushed away when a card is hovered.")]
+        [Range(0f, 200f)]
+        public float hoverPushDistance = 50f;
+
         [Header("UI Layer")]
         [Tooltip("This is the sorting order of the first card when it is not zoomed in. Subsequent cards will have a higher sorting order.")]
         [SerializeField]
         public int defaultSortOrder;
         
         [SerializeField]
+        public bool bringToFrontOnDrag;
         public bool bringToFrontOnHover;
-        
+
         [Tooltip("This is the sorting order of the card when it is zoomed in.")]
         [SerializeField]
         public int zoomedSortOrder;
@@ -76,6 +81,9 @@ namespace config {
         [Header("Card Play Area")]
         [SerializeField]
         public RectTransform playArea;
+        public Color playAreaHighlightColor = new Color(0f, 1f, 0f, 0.8f);
+        public float playAreaColorDuration = 0.2f;
+        public Ease playAreaColorEase = Ease.OutCubic;
 
         [SerializeField]
         public bool destroyOnPlay;

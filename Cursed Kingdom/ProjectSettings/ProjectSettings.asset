@@ -72,6 +72,7 @@ PlayerSettings:
   androidStartInFullscreen: 1
   androidRenderOutsideSafeArea: 0
   androidUseSwappy: 0
+  androidDisplayOptions: 1
   androidBlitType: 0
   androidResizeableActivity: 0
   androidDefaultWindowWidth: 1920
@@ -908,24 +909,27 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   scriptingDefineSymbols:
-    Android: UNITY_VISUAL_SCRIPTING
+    Android: UNITY_VISUAL_SCRIPTING;DOTWEEN
     CloudRendering: UNITY_VISUAL_SCRIPTING
-    EmbeddedLinux: UNITY_VISUAL_SCRIPTING
-    LinuxHeadlessSimulation: UNITY_VISUAL_SCRIPTING
-    Nintendo Switch: UNITY_VISUAL_SCRIPTING
-    Nintendo Switch 2: UNITY_VISUAL_SCRIPTING
-    PS4: UNITY_VISUAL_SCRIPTING
-    PS5: UNITY_VISUAL_SCRIPTING
-    QNX: UNITY_VISUAL_SCRIPTING
+    EmbeddedLinux: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    GameCoreScarlett: DOTWEEN
+    GameCoreXboxOne: DOTWEEN
+    Kepler: DOTWEEN
+    LinuxHeadlessSimulation: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    Nintendo Switch: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    Nintendo Switch 2: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    PS4: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    PS5: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    QNX: UNITY_VISUAL_SCRIPTING;DOTWEEN
     Server: UNITY_VISUAL_SCRIPTING
     Stadia: UNITY_VISUAL_SCRIPTING
-    Standalone: UNITY_VISUAL_SCRIPTING
-    VisionOS: UNITY_VISUAL_SCRIPTING
-    WebGL: UNITY_VISUAL_SCRIPTING
-    Windows Store Apps: UNITY_VISUAL_SCRIPTING
-    XboxOne: UNITY_VISUAL_SCRIPTING
-    iPhone: UNITY_VISUAL_SCRIPTING
-    tvOS: UNITY_VISUAL_SCRIPTING
+    Standalone: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    VisionOS: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    WebGL: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    Windows Store Apps: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    XboxOne: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    iPhone: UNITY_VISUAL_SCRIPTING;DOTWEEN
+    tvOS: UNITY_VISUAL_SCRIPTING;DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
